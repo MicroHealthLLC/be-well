@@ -1,25 +1,55 @@
 <template>
   <v-row>
     <v-col>
-      <div class="d-flex justify-center">
+      <div class="d-flex justify-center align-center main-container">
         <v-card v-if="!confirm" max-width="600">
-          <v-card-title>Sign Up</v-card-title>
+          <v-card-title class="d-flex flex-column"
+            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
+            <p class="text-body-1">Please sign up below</p></v-card-title
+          >
           <v-card-text>
-            <v-form>
-              <v-text-field v-model="email" label="Email"></v-text-field>
+            <v-form ref="signupform" v-model="valid">
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="[(v) => !!v || 'Email is required']"
+                required
+              ></v-text-field>
               <v-text-field
                 v-model="password"
                 label="Password"
                 type="password"
+                :rules="[(v) => !!v || 'Password is required']"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                :rules="[
+                  (v) => !!v || 'Confirm Password is required',
+                  (v) => v === password || 'Passwords must match',
+                ]"
+                required
+                validate-on-blur
               ></v-text-field>
             </v-form>
           </v-card-text>
-          <v-card-actions>
-            <v-btn @click="attemptSignUp">Sign Up</v-btn>
+          <v-card-actions class="d-flex flex-column">
+            <v-btn @click="attemptSignUp" color="var(--mh-blue)" block dark
+              >Sign Up</v-btn
+            >
+            <p class="mt-4">
+              Already have an account?
+              <router-link to="/login">Login</router-link>
+            </p>
           </v-card-actions>
         </v-card>
         <v-card v-else max-width="600">
-          <v-card-title>Confirm Code</v-card-title>
+          <v-card-title class="d-flex flex-column"
+            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
+            <p class="text-body-1">Confirm Verification Code</p></v-card-title
+          >
           <v-card-text>
             <v-text-field
               v-model="code"
@@ -27,7 +57,9 @@
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="confirmCode">Submit</v-btn>
+            <v-btn @click="confirmCode" color="var(--mh-blue)" block dark
+              >Submit</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -43,15 +75,17 @@ export default {
     return {
       email: "",
       password: "",
+      confirmPassword: "",
       confirm: false,
       code: "",
       error: "",
+      valid: true,
     };
   },
   methods: {
     ...mapActions(["confirmSignUp", "login", "signUp"]),
     async attemptSignUp() {
-      if (!this.email || !this.password) {
+      if (this.$refs.signupform.validate()) {
         return;
       } else {
         try {
@@ -77,7 +111,7 @@ export default {
             code: this.code,
           });
           await this.login({ username: this.email, password: this.password });
-          this.$router.push("/");
+          this.$router.push("/home");
         } catch (error) {
           console.log(error);
           this.error = error;
@@ -88,4 +122,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.main-container {
+  height: 100vh;
+}
+a {
+  text-decoration: none;
+}
+</style>

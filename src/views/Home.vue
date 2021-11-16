@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <h2>Home</h2>
-      <p>Hello {{ user.attributes.email }}</p>
+      <p v-if="user">Hello {{ user.attributes.email }}</p>
       <v-btn @click="logOutUser" color="primary">Logout</v-btn>
     </v-col>
   </v-row>
