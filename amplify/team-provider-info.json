@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-wellbeeing-dev-190252-authRole",
+      "UnauthRoleArn": "arn:aws:iam::692490654217:role/amplify-wellbeeing-dev-190252-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::692490654217:role/amplify-wellbeeing-dev-190252-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-wellbeeing-dev-190252-deployment",
+      "UnauthRoleName": "amplify-wellbeeing-dev-190252-unauthRole",
+      "StackName": "amplify-wellbeeing-dev-190252",
+      "StackId": "arn:aws:cloudformation:us-east-1:692490654217:stack/amplify-wellbeeing-dev-190252/b1af91e0-4689-11ec-9a10-1213fdb3e837",
+      "AmplifyAppId": "d1i1dumyzwv0r6"
+    }
+  }
+}
