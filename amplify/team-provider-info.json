@@ -10,6 +10,11 @@
       "StackName": "amplify-wellbeeing-dev-190252",
       "StackId": "arn:aws:cloudformation:us-east-1:692490654217:stack/amplify-wellbeeing-dev-190252/b1af91e0-4689-11ec-9a10-1213fdb3e837",
       "AmplifyAppId": "d1i1dumyzwv0r6"
+    },
+    "categories": {
+      "auth": {
+        "wellbeeinge2bd9338": {}
+      }
     }
   }
 }
