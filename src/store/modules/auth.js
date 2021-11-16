@@ -39,7 +39,7 @@ export default {
         return Promise.reject(error);
       }
     },
-    async AuthenticatorAssertionResponse({ commit }) {
+    async fetchCurrentUser({ commit }) {
       const userInfo = await Auth.currentUserInfo();
       commit("SET_USER", userInfo);
     },
