@@ -7,12 +7,6 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/home",
-    name: "Home",
-    component: Home,
-    meta: { requiresAuth: true },
-  },
-  {
     path: "/login",
     name: "Login",
     component: () =>
@@ -23,6 +17,44 @@ const routes = [
     name: "SignUp",
     component: () =>
       import(/* webpackChunkName: "signup" */ "../views/SignUp.vue"),
+  },
+  {
+    path: "/",
+    redirect: "/home",
+  },
+  {
+    path: "/home",
+    name: "Home",
+    component: Home,
+    meta: { requiresAuth: true },
+  },
+  // {
+  //   path: "/activities",
+  //   name: "Activities",
+  //   component: () =>
+  //     import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
+  //   meta: { requiresAuth: true },
+  // },
+  {
+    path: "/health",
+    name: "Health",
+    component: () =>
+      import(/* webpackChunkName: "health" */ "../views/Health.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/nutrition",
+    name: "Nutrition",
+    component: () =>
+      import(/* webpackChunkName: "nutrition" */ "../views/Nutrition.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: () =>
+      import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
+    meta: { requiresAuth: true },
   },
 ];
 
