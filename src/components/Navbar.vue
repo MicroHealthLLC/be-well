@@ -10,7 +10,7 @@
       <router-link to="/home"
         ><v-img src="../assets/well-being-logo.png" width="150"
       /></router-link>
-
+      <!-- Main Navigation Items -->
       <v-tabs
         v-if="!$vuetify.breakpoint.xsOnly"
         color="var(--mh-blue)"
@@ -30,14 +30,23 @@
           ><v-icon class="mr-1">mdi-food-apple</v-icon>Nutrition</v-tab
         >
       </v-tabs>
-
+      <!-- User Dropdown Menu -->
       <v-menu v-if="!$vuetify.breakpoint.xsOnly" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
             <v-icon>mdi-account-circle</v-icon>
           </v-btn>
         </template>
-        <v-list>
+        <v-list dense>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Signed in as</v-list-item-title>
+              <v-list-item-subtitle>{{
+                user.attributes.email
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
           <v-list-item to="/profile">
             <v-list-item-title>Profile</v-list-item-title>
           </v-list-item>
@@ -47,7 +56,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <!-- Side Navigation -->
+    <!-- Mobile Side Navigation -->
     <v-navigation-drawer v-model="drawer" temporary app>
       <v-list dense>
         <v-list-item-group color="var(--mh-orange)">
@@ -91,14 +100,17 @@
           <v-list-item to="/profile" link>
             <v-list-item-icon><v-icon>mdi-account</v-icon></v-list-item-icon>
             <v-list-item-content
-              ><v-list-item-title
-                >Profile</v-list-item-title
-              ></v-list-item-content
-            >
+              ><v-list-item-title>Profile</v-list-item-title>
+              <v-list-item-subtitle>{{
+                user.attributes.email
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
           </v-list-item>
         </v-list>
         <div class="pa-2">
-          <v-btn color="var(--mh-blue)" block dark> Logout </v-btn>
+          <v-btn @click="logOutUser" color="var(--mh-blue)" block dark>
+            Logout
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -106,7 +118,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Navbar",
   data() {
@@ -120,6 +132,9 @@ export default {
       await this.logout();
       this.$router.push("/login");
     },
+  },
+  computed: {
+    ...mapGetters(["user"]),
   },
 };
 </script>
