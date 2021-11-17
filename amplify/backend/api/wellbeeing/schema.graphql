@@ -1,0 +1,16 @@
+type Reminder @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  category: String!
+  level: String!
+  frequency: String!
+  contentType: String!
+  time: String!
+}
+
+type Goal @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  category: String!
+  progress: Int!
+  dueDate: AWSDate!
+}
