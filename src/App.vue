@@ -32,14 +32,59 @@ export default {
     //
   }),
   methods: {
-    ...mapActions(["fetchCurrentUser"]),
-    ...mapMutations(["CLOSE_SNACKBAR"]),
+    ...mapActions(["fetchCurrentUser", "fetchReminders"]),
+    ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
+    checkReminders() {
+      // Get current time for check
+      const now = new Date();
+      const minutes = now.getMinutes();
+      const hour = now.getHours();
+      // Compare current time with each reminder
+      this.filteredReminders.forEach((reminder) => {
+        const time = reminder.time.split(":");
+        if (time[0] == hour && time[1] == minutes) {
+          console.log("Reminder found: Display Notification");
+          this.notify(reminder);
+        } else {
+          console.log("Reminder not found");
+        }
+      });
+    },
+    frequencyDays(frequency) {
+      if (frequency == "Mon/Wed/Fri") {
+        return [1, 3, 5];
+      } else if (frequency == "Tues/Thurs") {
+        return [2, 4];
+      } else {
+        return [0, 1, 2, 3, 4, 5, 6];
+      }
+    },
   },
   computed: {
-    ...mapGetters(["snackbar", "user"]),
+    ...mapGetters(["reminders", "remindersOn", "snackbar", "user"]),
+    filteredReminders() {
+      const now = new Date();
+      const day = now.getDay();
+      // Only return reminders with matching alarm day
+      return this.reminders.filter((reminder) =>
+        this.frequencyDays(reminder.frequency).includes(day)
+      );
+    },
   },
   mounted() {
     this.fetchCurrentUser();
+    this.fetchReminders();
+    this.TOGGLE_REMINDERS_ON(true);
+  },
+  watch: {
+    remindersOn(newSwitchValue) {
+      if (newSwitchValue) {
+        this.intervalId = setInterval(this.checkReminders, 60000);
+      } else {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    },
   },
 };
 </script>
