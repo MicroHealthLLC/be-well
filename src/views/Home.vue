@@ -5,10 +5,23 @@
       <span class="text-h6 text-sm-h5">Create Your Own Goals</span>
       <v-divider class="mb-4"></v-divider>
       <v-card class="pa-4 mb-4" elevation="5">
-        <div v-for="(goal, index) in goals" :key="index">
+        <div v-if="goals.length == 0" class="d-flex text-center flex-column">
+          <div class="text-body-1 mb-3">You currently have no goals set!</div>
+          <div>
+            <v-btn
+              @click="openNewGoalForm"
+              color="var(--mh-blue)"
+              dark
+              max-width="300"
+              ><v-icon class="mr-2">mdi-flag</v-icon> Add Goal</v-btn
+            >
+          </div>
+        </div>
+
+        <div v-else v-for="(goal, index) in goals" :key="index">
           <div class="grid my-4">
             <div class="text-subtitle-2 clickable">
-              <div @click="openGoalForm(goal, index)">
+              <div @click="openGoalForm(goal)">
                 <v-icon class="mr-2" color="primary">mdi-flag</v-icon
                 >{{ goal.title }}
               </div>
@@ -17,7 +30,7 @@
                   goal.category
                 }}</v-chip>
                 <v-chip color="info" outlined small
-                  >Due Date: {{ goal.due_date }}</v-chip
+                  >Due Date: {{ goal.dueDate }}</v-chip
                 >
               </div>
             </div>
@@ -31,7 +44,15 @@
 
           <v-divider v-if="index != goals.length - 1"></v-divider>
         </div>
-        <div class="d-flex justify-end mt-5">
+        <div v-if="goals.length > 0" class="d-flex justify-space-between mt-10">
+          <v-btn
+            v-if="goals.length < 3"
+            @click="openNewGoalForm"
+            color="var(--mh-blue)"
+            :small="$vuetify.breakpoint.xsOnly"
+            dark
+            >Add Another Goal</v-btn
+          >
           <v-btn
             to="/activities"
             text
@@ -101,9 +122,15 @@
       </div>
     </v-col>
     <!-- Dialog Form -->
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog v-model="dialog" max-width="600">
       <v-card>
-        <v-card-title>Edit Goal</v-card-title>
+        <v-card-title
+          ><span v-if="goal.id">Edit Goal</span><span v-else>Add Goal</span>
+          <v-spacer></v-spacer>
+          <v-btn @click="closeGoalForm" fab depressed x-small outlined
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-text-field v-model="goal.title" label="Title"></v-text-field>
@@ -122,7 +149,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="goal.due_date"
+                  v-model="goal.dueDate"
                   label="Due Date"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -131,17 +158,17 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="goal.due_date"
+                v-model="goal.dueDate"
                 @input="menu = false"
               ></v-date-picker>
             </v-menu>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="updateGoal" color="var(--mh-blue)" depressed dark
+          <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark
             >Submit</v-btn
           >
-          <v-btn @click="closeGoalForm" outlined depressed>Close</v-btn>
+          <v-btn @click="removeGoal({ id: goal.id })" outlined>Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -149,6 +176,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -166,31 +195,12 @@ export default {
         "Yoga",
       ],
       goal: {
+        id: 0,
         title: "",
         category: "",
-        due_date: "",
+        dueDate: "",
+        progress: 0,
       },
-      goalIndex: 0,
-      goals: [
-        {
-          title: "Improve my flexibility",
-          progress: 25,
-          category: "Yoga",
-          due_date: "2021-11-21",
-        },
-        {
-          title: "Reduce my back pain when working",
-          progress: 42,
-          category: "Ergonomics",
-          due_date: "2021-11-26",
-        },
-        {
-          title: "Improve my posture",
-          progress: 10,
-          category: "Posture",
-          due_date: "2021-12-24",
-        },
-      ],
       articles: [
         {
           title: "Title 1",
@@ -254,18 +264,53 @@ export default {
     };
   },
   methods: {
-    openGoalForm(goal, index) {
+    ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
+    async saveGoal() {
+      try {
+        if (this.goal.id) {
+          await this.updateGoalById({
+            id: this.goal.id,
+            title: this.goal.title,
+            category: this.goal.category,
+            dueDate: this.goal.dueDate,
+            progress: this.goal.progress,
+          });
+        } else {
+          await this.addGoal(this.goal);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteGoal(id) {
+      try {
+        await this.removeGoal(id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    openNewGoalForm() {
+      this.dialog = true;
+      this.goal = {
+        title: "",
+        category: "",
+        dueDate: "",
+        progress: 0,
+      };
+    },
+    openGoalForm(goal) {
       this.dialog = true;
       this.goal = goal;
-      this.goalIndex = index;
     },
     closeGoalForm() {
       this.dialog = false;
     },
-    updateGoal() {
-      this.goals[this.goalIndex] = this.goal;
-      this.dialog = false;
-    },
+  },
+  computed: {
+    ...mapGetters(["goals"]),
+  },
+  mounted() {
+    this.fetchGoals();
   },
 };
 </script>
