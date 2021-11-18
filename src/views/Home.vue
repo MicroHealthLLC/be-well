@@ -44,7 +44,10 @@
 
           <v-divider v-if="index != goals.length - 1"></v-divider>
         </div>
-        <div v-if="goals.length > 0" class="d-flex justify-space-between mt-10">
+        <div
+          v-if="goals.length > 0"
+          class="d-flex flex-column flex-sm-row justify-sm-space-between mt-10"
+        >
           <v-btn
             v-if="goals.length < 3"
             @click="openNewGoalForm"
@@ -55,6 +58,7 @@
           >
           <v-btn
             to="/activities"
+            class="mt-4 mt-sm-0"
             text
             color="info"
             :small="$vuetify.breakpoint.xsOnly"
