@@ -28,13 +28,13 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
-  // {
-  //   path: "/activities",
-  //   name: "Activities",
-  //   component: () =>
-  //     import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
-  //   meta: { requiresAuth: true },
-  // },
+  {
+    path: "/activities",
+    name: "Activities",
+    component: () =>
+      import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
+    meta: { requiresAuth: true },
+  },
   {
     path: "/health",
     name: "Health",

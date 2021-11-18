@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import authStore from "./modules/auth";
 import goalStore from "./modules/goal-store";
+import reminderStore from "./modules/reminder-store";
 
 Vue.use(Vuex);
 
@@ -21,5 +22,5 @@ export default new Vuex.Store({
   getters: {
     snackbar: (state) => state.snackbar,
   },
-  modules: { authStore, goalStore },
+  modules: { authStore, goalStore, reminderStore },
 });
