@@ -132,12 +132,19 @@
           >
         </v-card-title>
         <v-card-text>
-          <v-form ref="form" v-model="valid">
-            <v-text-field v-model="goal.title" label="Title"></v-text-field>
+          <v-form ref="goalform" v-model="valid">
+            <v-text-field
+              v-model="goal.title"
+              label="Title"
+              :rules="[(v) => !!v || 'Title is required']"
+              required
+            ></v-text-field>
             <v-select
               v-model="goal.category"
               :items="categories"
               label="Category"
+              :rules="[(v) => !!v || 'Category is required']"
+              required
             ></v-select>
             <v-menu
               v-model="menu"
@@ -155,6 +162,8 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
+                  :rules="[(v) => !!v || 'Due Date is required']"
+                  required
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -165,10 +174,17 @@
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark
+          <v-btn
+            @click="saveGoal"
+            class="px-10"
+            color="var(--mh-blue)"
+            depressed
+            dark
             >Submit</v-btn
           >
-          <v-btn @click="removeGoal({ id: goal.id })" outlined>Delete</v-btn>
+          <v-btn v-if="goal.id" @click="deleteGoal({ id: goal.id })" outlined
+            >Delete</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -266,6 +282,10 @@ export default {
   methods: {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
     async saveGoal() {
+      if (!this.$refs.goalform.validate()) {
+        return;
+      }
+
       try {
         if (this.goal.id) {
           await this.updateGoalById({
@@ -281,6 +301,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
+
+      this.closeGoalForm();
     },
     async deleteGoal(id) {
       try {
@@ -288,6 +310,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
+
+      this.closeGoalForm();
     },
     openNewGoalForm() {
       this.dialog = true;

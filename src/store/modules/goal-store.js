@@ -11,26 +11,41 @@ export default {
     goals: [],
   },
   actions: {
-    async addGoal({ dispatch }, goal) {
+    async addGoal({ commit, dispatch }, goal) {
       try {
         await API.graphql(graphqlOperation(createGoal, { input: goal }));
         dispatch("fetchGoals");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Goal Successfully Added!",
+          color: "var(--mh-green)",
+        });
       } catch (error) {
         console.log(error);
       }
     },
-    async updateGoalById({ dispatch }, goal) {
+    async updateGoalById({ commit, dispatch }, goal) {
       try {
         await API.graphql(graphqlOperation(updateGoal, { input: goal }));
         dispatch("fetchGoals");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Goal Successfully Updated!",
+          color: "var(--mh-green)",
+        });
       } catch (error) {
         console.log(error);
       }
     },
-    async removeGoal({ dispatch }, id) {
+    async removeGoal({ commit, dispatch }, id) {
       try {
         await API.graphql(graphqlOperation(deleteGoal, { input: id }));
         dispatch("fetchGoals");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Goal Removed",
+          color: "var(--mh-orange)",
+        });
       } catch (error) {
         console.log(error);
       }
@@ -38,7 +53,6 @@ export default {
     async fetchGoals({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listGoals));
-        console.log(res);
         commit("SET_GOALS", res.data.listGoals.items);
       } catch (error) {
         console.log(error);
