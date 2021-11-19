@@ -13,14 +13,17 @@ export default new Vuex.Store({
       message: "",
       color: "",
     },
+    saving: false,
   },
   actions: {},
   mutations: {
     SET_SNACKBAR: (state, snackbar) => (state.snackbar = snackbar),
     CLOSE_SNACKBAR: (state) => (state.snackbar.show = false),
+    TOGGLE_SAVING: (state, isSaving) => (state.saving = isSaving),
   },
   getters: {
     snackbar: (state) => state.snackbar,
+    saving: (state) => state.saving,
   },
   modules: { authStore, goalStore, reminderStore },
 });

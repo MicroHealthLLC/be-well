@@ -43,6 +43,22 @@ export default {
       const userInfo = await Auth.currentUserInfo();
       commit("SET_USER", userInfo);
     },
+    async updateUser({ commit, dispatch }, userDetails) {
+      try {
+        commit("TOGGLE_SAVING", true);
+        let user = await Auth.currentAuthenticatedUser();
+        await Auth.updateUserAttributes(user, userDetails);
+        dispatch("fetchCurrentUser");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Profile Successfully Updated!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
   },
   mutations: {
     SET_USER: (state, user) => (state.user = user),
