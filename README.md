@@ -1,7 +1,15 @@
 # well-beeing
 
 ## Project setup
+
 ```
+dnf install git
+dnf install npm
+mkdir /var/www
+cd /var/www
+
+git clone https://github.com/MicroHealthLLC/well-beeing.git
+
 npm install
 ```
 
