@@ -17,11 +17,13 @@ npm install
 ```
 npm run serve
 ```
+Default port will be URL:8080
 
 ### Compiles and minifies for production
 ```
 npm run build
 ```
+Default port will be URL:8080
 
 ### Lints and fixes files
 ```
