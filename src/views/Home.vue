@@ -74,15 +74,35 @@
 
       <div class="grid-container mb-6">
         <v-card v-for="(video, index) in videos" :key="index" elevation="5">
-          <img class="image" :src="video.img" width="100%" />
-          <v-card-title>{{ video.title }}</v-card-title>
-          <v-card-subtitle>{{ video.author }}</v-card-subtitle>
+          <img
+            class="image"
+            :src="video.snippet.thumbnails.standard.url"
+            width="100%"
+          />
+          <v-card-title class="video-title text-body-1 font-weight-bold"
+            ><span class="clamp-two-lines">{{
+              video.snippet.title
+            }}</span></v-card-title
+          >
+          <v-card-subtitle>{{
+            video.snippet.videoOwnerChannelTitle
+          }}</v-card-subtitle>
           <v-card-text>
-            {{ video.text }}
+            <span class="clamp-two-lines">{{ video.snippet.description }}</span>
           </v-card-text>
           <v-card-actions class="align-end">
-            <v-btn text color="primary">View</v-btn>
-            <v-btn text color="primary">Add Reminder</v-btn>
+            <v-btn
+              @click="openVideoURL(video.snippet.resourceId.videoId)"
+              text
+              color="primary"
+              >View Video</v-btn
+            >
+            <v-btn
+              @click="playVideo(video.snippet.resourceId.videoId)"
+              text
+              color="primary"
+              >Add Reminder</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -192,16 +212,31 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="play">
+      <div class="video-container">
+        <iframe
+          :src="embedVideoURL"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import youtube from "../apis/youtube";
 
 export default {
+  name: "Home",
   data() {
     return {
       dialog: false,
+      play: false,
+      embedVideoURL: "",
       valid: true,
       menu: false,
       categories: [
@@ -241,26 +276,7 @@ export default {
           img: "/img/nutrition.jpg",
         },
       ],
-      videos: [
-        {
-          title: "Title 4",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/yoga.jpg",
-        },
-        {
-          title: "Title 5",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/weight-training.jpg",
-        },
-        {
-          title: "Title 6",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/endurance.jpg",
-        },
-      ],
+      videos: [],
       podcasts: [
         {
           title: "Title 7",
@@ -333,11 +349,28 @@ export default {
     closeGoalForm() {
       this.dialog = false;
     },
+    openVideoURL(videoId) {
+      console.log(videoId);
+      window.open(`https://www.youtube.com/watch?v=${videoId}`);
+    },
+    playVideo(videoId) {
+      this.play = true;
+      this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
+    },
   },
   computed: {
     ...mapGetters(["goals"]),
   },
-  mounted() {
+  async mounted() {
+    const res = await youtube.get("", {
+      params: {
+        playlistId: process.env.VUE_APP_YOUTUBE_PLAYLIST_ID,
+      },
+    });
+
+    this.videos = res.data.items;
+
+    console.log(res);
     this.fetchGoals();
   },
 };
@@ -372,4 +405,27 @@ export default {
 .clickable {
   cursor: pointer;
 }
+.clamp-two-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.video-title {
+  min-height: 80px;
+  align-content: flex-start;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+/* iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+} */
 </style>

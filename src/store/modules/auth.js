@@ -21,9 +21,13 @@ export default {
       commit("SET_USER", null);
       return await Auth.signOut();
     },
-    async signUp(_, { username, password, email }) {
+    async signUp(_, { username, password }) {
       try {
-        await Auth.signUp({ username, password, attributes: { email } });
+        await Auth.signUp({
+          username,
+          password,
+          attributes: { email: username },
+        });
         return Promise.resolve();
       } catch (error) {
         console.log(error);

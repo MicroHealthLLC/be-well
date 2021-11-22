@@ -25,6 +25,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
+
 export default {
   components: { Navbar, WelcomeBanner },
   name: "App",

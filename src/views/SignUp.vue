@@ -85,20 +85,20 @@ export default {
   methods: {
     ...mapActions(["confirmSignUp", "login", "signUp"]),
     async attemptSignUp() {
-      if (this.$refs.signupform.validate()) {
+      if (!this.$refs.signupform.validate()) {
         return;
-      } else {
-        try {
-          await this.signUp({
-            username: this.email,
-            email: this.email,
-            password: this.password,
-          });
-          this.confirm = true;
-        } catch (error) {
-          console.log(error);
-          this.error = error;
-        }
+      }
+      
+      try {
+        await this.signUp({
+          username: this.email,
+          email: this.email,
+          password: this.password,
+        });
+        this.confirm = true;
+      } catch (error) {
+        console.log(error);
+        this.error = error;
       }
     },
     async confirmCode() {
