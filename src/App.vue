@@ -99,4 +99,7 @@ export default {
 .main-wrapper {
   background-color: #f0f3f7;
 }
+.clickable {
+  cursor: pointer;
+}
 </style>

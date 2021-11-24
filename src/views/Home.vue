@@ -73,38 +73,11 @@
       <v-divider class="mb-4"></v-divider>
 
       <div class="grid-container mb-6">
-        <v-card v-for="(video, index) in videos" :key="index" elevation="5">
-          <img
-            class="image"
-            :src="video.snippet.thumbnails.standard.url"
-            width="100%"
-          />
-          <v-card-title class="video-title text-body-1 font-weight-bold"
-            ><span class="clamp-two-lines">{{
-              video.snippet.title
-            }}</span></v-card-title
-          >
-          <v-card-subtitle>{{
-            video.snippet.videoOwnerChannelTitle
-          }}</v-card-subtitle>
-          <v-card-text>
-            <span class="clamp-two-lines">{{ video.snippet.description }}</span>
-          </v-card-text>
-          <v-card-actions class="align-end">
-            <v-btn
-              @click="openVideoURL(video.snippet.resourceId.videoId)"
-              text
-              color="primary"
-              >View Video</v-btn
-            >
-            <v-btn
-              @click="playVideo(video.snippet.resourceId.videoId)"
-              text
-              color="primary"
-              >Add Reminder</v-btn
-            >
-          </v-card-actions>
-        </v-card>
+        <video-card
+          v-for="(video, index) in videos"
+          :key="index"
+          :video="video"
+        />
       </div>
 
       <!-- Latest Podcasts -->
@@ -212,31 +185,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="play">
-      <div class="video-container">
-        <iframe
-          :src="embedVideoURL"
-          width="100%"
-          height="100%"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </v-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import youtube from "../apis/youtube";
+import VideoCard from "../components/VideoCard.vue";
 
 export default {
+  components: { VideoCard },
   name: "Home",
   data() {
     return {
       dialog: false,
-      play: false,
-      embedVideoURL: "",
       valid: true,
       menu: false,
       categories: [
@@ -349,14 +311,6 @@ export default {
     closeGoalForm() {
       this.dialog = false;
     },
-    openVideoURL(videoId) {
-      console.log(videoId);
-      window.open(`https://www.youtube.com/watch?v=${videoId}`);
-    },
-    playVideo(videoId) {
-      this.play = true;
-      this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
-    },
   },
   computed: {
     ...mapGetters(["goals"]),
@@ -369,8 +323,6 @@ export default {
     });
 
     this.videos = res.data.items;
-
-    console.log(res);
     this.fetchGoals();
   },
 };
@@ -402,30 +354,4 @@ export default {
     grid-template-columns: 1fr;
   }
 }
-.clickable {
-  cursor: pointer;
-}
-.clamp-two-lines {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.video-title {
-  min-height: 80px;
-  align-content: flex-start;
-}
-.video-container {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  height: 0;
-}
-/* iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-} */
 </style>
