@@ -85,7 +85,7 @@ export default {
   methods: {
     ...mapActions(["confirmSignUp", "login", "signUp"]),
     async attemptSignUp() {
-      if (this.$refs.signupform.validate()) {
+      if (!this.$refs.signupform.validate()) {
         return;
       } else {
         try {
