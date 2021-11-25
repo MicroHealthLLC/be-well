@@ -7,7 +7,15 @@ import vuetify from "./plugins/vuetify";
 import Amplify from "aws-amplify";
 import aws_exports from "./aws-exports";
 
-Amplify.configure(aws_exports);
+Amplify.configure({
+  ...aws_exports,
+  Auth: {
+    mandatorySignIn: true,
+    region: process.env.VUE_APP_AWS_REGION,
+    uerPoolId: process.env.VUE_APP_AWS_IDENTITY_POOL_ID,
+    clientId: process.env.VUE_APP_AWS_POOL_WEB_CLIENT_ID,
+  },
+});
 
 Vue.config.productionTip = false;
 
