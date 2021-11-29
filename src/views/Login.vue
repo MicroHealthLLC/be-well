@@ -4,8 +4,9 @@
       <div class="d-flex justify-center align-center main-container">
         <v-card max-width="600">
           <v-card-title class="d-flex flex-column"
-            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img
-          ><p class="text-body-1">Sign in to Well Beeing</p></v-card-title>
+            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
+            <p class="text-body-1">Sign in to Well Beeing</p></v-card-title
+          >
           <v-card-text>
             <v-form ref="form" v-model="valid">
               <v-text-field
@@ -24,7 +25,13 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
-            <v-btn color="var(--mh-blue)" @click="userLogin" block dark
+            <v-btn
+              color="var(--mh-blue)"
+              @click="userLogin"
+              :loading="loading"
+              :disabled="loading"
+              :dark="!loading"
+              block
               >Login</v-btn
             >
             <p class="mt-4">
@@ -38,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -69,6 +76,9 @@ export default {
         this.error = error;
       }
     },
+  },
+  computed: {
+    ...mapGetters(["loading"]),
   },
 };
 </script>

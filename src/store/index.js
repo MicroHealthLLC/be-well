@@ -14,16 +14,19 @@ export default new Vuex.Store({
       color: "",
     },
     saving: false,
+    loading: false,
   },
   actions: {},
   mutations: {
     SET_SNACKBAR: (state, snackbar) => (state.snackbar = snackbar),
     CLOSE_SNACKBAR: (state) => (state.snackbar.show = false),
     TOGGLE_SAVING: (state, isSaving) => (state.saving = isSaving),
+    TOGGLE_LOADING: (state, isLoading) => (state.loading = isLoading),
   },
   getters: {
     snackbar: (state) => state.snackbar,
     saving: (state) => state.saving,
+    loading: (state) => state.loading,
   },
   modules: { authStore, goalStore, reminderStore },
 });

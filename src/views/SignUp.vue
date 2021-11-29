@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card v-if="!confirm" max-width="600">
+        <v-card max-width="600">
           <v-card-title class="d-flex flex-column"
             ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
             <p class="text-body-1">Please sign up below</p></v-card-title
@@ -51,7 +51,13 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
-            <v-btn @click="attemptSignUp" color="var(--mh-blue)" block dark
+            <v-btn
+              @click="attemptSignUp"
+              color="var(--mh-blue)"
+              :disabled="loading"
+              :loading="loading"
+              :dark="!loading"
+              block
               >Sign Up</v-btn
             >
             <p class="mt-4">
@@ -60,30 +66,13 @@
             </p>
           </v-card-actions>
         </v-card>
-        <v-card v-else max-width="600">
-          <v-card-title class="d-flex flex-column"
-            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
-            <p class="text-body-1">Confirm Verification Code</p></v-card-title
-          >
-          <v-card-text>
-            <v-text-field
-              v-model="code"
-              label="Confirmation Code"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn @click="confirmCode" color="var(--mh-blue)" block dark
-              >Submit</v-btn
-            >
-          </v-card-actions>
-        </v-card>
       </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -92,14 +81,12 @@ export default {
       password: "",
       phoneNumber: "",
       confirmPassword: "",
-      confirm: false,
-      code: "",
       error: "",
       valid: true,
     };
   },
   methods: {
-    ...mapActions(["confirmSignUp", "login", "signUp"]),
+    ...mapActions(["login", "signUp"]),
     async attemptSignUp() {
       if (!this.$refs.signupform.validate()) {
         return;
@@ -113,30 +100,20 @@ export default {
             password: this.password,
             phoneNumber: this.phoneNumber,
           });
-          this.confirm = true;
-        } catch (error) {
-          console.log(error);
-          this.error = error;
-        }
-      }
-    },
-    async confirmCode() {
-      if (!this.email || !this.code) {
-        return;
-      } else {
-        try {
-          await this.confirmSignUp({
-            username: this.email,
-            code: this.code,
+
+          this.$router.push({
+            name: "Verify",
+            params: { email: this.email, password: this.password },
           });
-          await this.login({ username: this.email, password: this.password });
-          this.$router.push("/home");
         } catch (error) {
           console.log(error);
           this.error = error;
         }
       }
     },
+  },
+  computed: {
+    ...mapGetters(["loading"]),
   },
 };
 </script>
