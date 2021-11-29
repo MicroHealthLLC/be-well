@@ -33,6 +33,21 @@
                 required
                 validate-on-blur
               ></v-text-field>
+              <v-text-field
+                v-model="phoneNumber"
+                label="Phone Number"
+                :rules="[
+                  (v) => !!v || 'Phone Number is required',
+                  (v) => v.length === 12 || 'Incorrect phone number format',
+                  (v) =>
+                    v.match(/[0-9]{3}-[0-9]{3}-[0-9]{4}/) != null ||
+                    'Incorrect phone number format',
+                ]"
+                required
+                validate-on-blur
+                hint="Format: 123-456-7890"
+                persistent-hint
+              ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
@@ -75,6 +90,7 @@ export default {
     return {
       email: "",
       password: "",
+      phoneNumber: "",
       confirmPassword: "",
       confirm: false,
       code: "",
@@ -88,11 +104,14 @@ export default {
       if (!this.$refs.signupform.validate()) {
         return;
       } else {
+        this.phoneNumber = "+1" + this.phoneNumber.split("-").join("");
+
         try {
           await this.signUp({
             username: this.email,
             email: this.email,
             password: this.password,
+            phoneNumber: this.phoneNumber,
           });
           this.confirm = true;
         } catch (error) {
