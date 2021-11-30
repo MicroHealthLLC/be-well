@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card class="pa-5" max-width="600">
+        <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
           <v-alert
             v-model="hasError"
             type="error"

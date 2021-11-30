@@ -32,6 +32,7 @@
                 <v-chip color="info" outlined small
                   >Due Date: {{ goal.dueDate }}</v-chip
                 >
+                <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
               </div>
             </div>
             <v-slider
