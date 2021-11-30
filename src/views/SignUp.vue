@@ -19,8 +19,14 @@
               <v-text-field
                 v-model="email"
                 label="Email"
-                :rules="[(v) => !!v || 'Email is required']"
+                :rules="[
+                  (v) => !!v || 'Email is required',
+                  (v) =>
+                    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                    'Not a valid email address',
+                ]"
                 required
+                validate-on-blur
               ></v-text-field>
               <v-text-field
                 v-model="password"

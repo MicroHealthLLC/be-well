@@ -19,8 +19,14 @@
               <v-text-field
                 v-model="username"
                 label="Email"
-                :rules="[(v) => !!v || 'Email is required']"
+                :rules="[
+                  (v) => !!v || 'Email is required',
+                  (v) =>
+                    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                    'Not a valid email address',
+                ]"
                 required
+                validate-on-blur
               ></v-text-field>
               <v-text-field
                 v-model="password"
@@ -29,7 +35,10 @@
                 :rules="[(v) => !!v || 'Password is required']"
                 required
               ></v-text-field>
-              <p class="mt-4">Forgot password? <router-link to="/reset-password">Reset</router-link></p>
+              <p class="mt-4">
+                Forgot password?
+                <router-link to="/reset-password">Reset</router-link>
+              </p>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
