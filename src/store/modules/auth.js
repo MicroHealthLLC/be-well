@@ -100,6 +100,24 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
+    async changePassword({ commit }, { oldPassword, newPassword }) {
+      try {
+        commit("TOGGLE_SAVING", true);
+        const user = await Auth.currentAuthenticatedUser();
+        await Auth.changePassword(user, oldPassword, newPassword);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Password Successfully Updated!",
+          color: "var(--mh-green)",
+        });
+        commit("TOGGLE_SAVING", false);
+      } catch (error) {
+        console.log(error);
+        commit("TOGGLE_SAVING", false);
+        return Promise.reject(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
   },
   mutations: {
     SET_USER: (state, user) => (state.user = user),
