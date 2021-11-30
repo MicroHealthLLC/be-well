@@ -29,6 +29,7 @@
                 :rules="[(v) => !!v || 'Password is required']"
                 required
               ></v-text-field>
+              <p class="mt-4">Forgot password? <router-link to="/reset-password">Reset</router-link></p>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex flex-column">
