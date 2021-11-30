@@ -2,7 +2,14 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card max-width="600">
+        <v-card class="pa-5" max-width="600">
+          <v-alert
+            v-model="hasError"
+            type="error"
+            transition="scroll-y-transition"
+            dismissible
+            >{{ error }}</v-alert
+          >
           <v-card-title class="d-flex flex-column"
             ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
             <p class="text-body-1">Confirm Verification Code</p></v-card-title
@@ -43,6 +50,9 @@
               block
               >Resend Code</v-btn
             >
+            <p class="mt-4">
+              Already Verified? <router-link to="/login">Login</router-link>
+            </p>
           </v-card-actions>
         </v-card>
       </div>
@@ -58,6 +68,8 @@ export default {
       email: "",
       password: "",
       code: "",
+      error: "",
+      hasError: false,
     };
   },
   methods: {
@@ -85,17 +97,23 @@ export default {
             this.$router.push("/login");
           }
         } catch (error) {
-          console.log(error);
-          this.error = error;
+          this.hasError = true;
+          this.error = error.message;
         }
       }
     },
     async resendCode() {
       if (!this.email) {
-        console.log("No email provided");
+        this.hasError = true;
+        this.error = "No Email provided";
         return;
       } else {
-        await this.resendConfirmationCode(this.email);
+        try {
+          await this.resendConfirmationCode(this.email);
+        } catch (error) {
+          this.hasError = true;
+          this.error = error.message;
+        }
       }
     },
   },

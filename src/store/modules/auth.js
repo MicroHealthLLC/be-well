@@ -74,9 +74,10 @@ export default {
         });
         commit("TOGGLE_LOADING", false);
         console.log("code resent successfully");
-      } catch (err) {
+      } catch (error) {
         commit("TOGGLE_LOADING", false);
-        console.log("error resending code: ", err);
+        console.log(error);
+        return Promise.reject(error);
       }
     },
     async fetchCurrentUser({ commit }) {

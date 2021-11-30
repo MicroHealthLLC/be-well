@@ -2,7 +2,14 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card max-width="600">
+        <v-card class="pa-5" max-width="600">
+          <v-alert
+            v-model="hasError"
+            type="error"
+            transition="scroll-y-transition"
+            dismissible
+            >{{ error }}</v-alert
+          >
           <v-card-title class="d-flex flex-column"
             ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
             <p class="text-body-1">Sign in to Well Beeing</p></v-card-title
@@ -48,6 +55,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  name: "Login",
   data() {
     return {
       username: "",
@@ -55,6 +63,7 @@ export default {
       email: "",
       error: "",
       valid: true,
+      hasError: false,
     };
   },
   methods: {
@@ -72,8 +81,8 @@ export default {
 
         this.$router.push("/home");
       } catch (error) {
-        console.log(error);
-        this.error = error;
+        this.hasError = true;
+        this.error = error.message;
       }
     },
   },

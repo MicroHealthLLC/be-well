@@ -2,7 +2,14 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
-        <v-card max-width="600">
+        <v-card class="pa-5" max-width="600">
+          <v-alert
+            v-model="hasError"
+            type="error"
+            transition="scroll-y-transition"
+            dismissible
+            >{{ error }}</v-alert
+          >
           <v-card-title class="d-flex flex-column"
             ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
             <p class="text-body-1">Please sign up below</p></v-card-title
@@ -83,6 +90,7 @@ export default {
       confirmPassword: "",
       error: "",
       valid: true,
+      hasError: false,
     };
   },
   methods: {
@@ -91,14 +99,12 @@ export default {
       if (!this.$refs.signupform.validate()) {
         return;
       } else {
-        this.phoneNumber = "+1" + this.phoneNumber.split("-").join("");
-
         try {
           await this.signUp({
             username: this.email,
             email: this.email,
             password: this.password,
-            phoneNumber: this.phoneNumber,
+            phoneNumber: "+1" + this.phoneNumber.split("-").join(""),
           });
 
           this.$router.push({
@@ -106,8 +112,8 @@ export default {
             params: { email: this.email, password: this.password },
           });
         } catch (error) {
-          console.log(error);
-          this.error = error;
+          this.hasError = true;
+          this.error = error.message;
         }
       }
     },
