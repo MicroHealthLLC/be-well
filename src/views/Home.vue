@@ -32,9 +32,13 @@
                 <v-chip color="info" outlined small
                   >Due Date: {{ goal.dueDate }}</v-chip
                 >
+                <div v-if="goal.progress == 100" class="d-inline text-h5">
+                  🎉
+                </div>
               </div>
             </div>
             <v-slider
+              @end="updateGoalProgress(goal)"
               class="d-flex align-center mt-10 mt-sm-0"
               v-model="goal.progress"
               thumb-label="always"
@@ -285,6 +289,13 @@ export default {
       }
 
       this.closeGoalForm();
+    },
+    async updateGoalProgress(goal) {
+      try {
+        await this.updateGoalById({ id: goal.id, progress: goal.progress });
+      } catch (error) {
+        console.log(error);
+      }
     },
     async deleteGoal(id) {
       try {

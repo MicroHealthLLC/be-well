@@ -5,7 +5,12 @@
       <v-divider class="mb-4"></v-divider>
 
       <v-card class="mb-6">
-        <v-data-table :headers="headers" :items="items" hide-default-footer disable-sort>
+        <v-data-table
+          :headers="headers"
+          :items="items"
+          hide-default-footer
+          disable-sort
+        >
           <template v-slot:item.link="{ item }">
             <a :href="item.href" target="_blank">{{ item.link }}</a>
           </template>
@@ -56,35 +61,31 @@ export default {
       items: [
         {
           title: "Be Well",
-          link:
-            "Microhealth Sharepoint",
-            href: "https://microhealth.sharepoint.com/sites/BeWellMovement?OR=Teams-HL&CT=1636389032479"
+          link: "Microhealth Sharepoint",
+          href: "https://microhealth.sharepoint.com/sites/BeWellMovement?OR=Teams-HL&CT=1636389032479",
         },
         {
           title: "USPSTF",
           link: "Preventative Screening Tool",
-          href: "https://www.uspreventiveservicestaskforce.org/webview/#!/"
+          href: "https://www.uspreventiveservicestaskforce.org/webview/#!/",
         },
       ],
       articles: [
         {
           title: "Title 1",
-          text:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           author: "First-name Last-name",
           img: "/img/ergonomics.jpg",
         },
         {
           title: "Title 2",
-          text:
-            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
           author: "First-name Last-name",
           img: "/img/meditate.jpg",
         },
         {
           title: "Title 3",
-          text:
-            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
           author: "First-name Last-name",
           img: "/img/nutrition.jpg",
         },
@@ -106,5 +107,8 @@ export default {
 }
 ::v-deep .text-start:first-child {
   font-weight: 500;
+}
+a {
+  text-decoration: none;
 }
 </style>
