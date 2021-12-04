@@ -329,7 +329,7 @@ export default {
   async mounted() {
     const res = await youtube.get("", {
       params: {
-        playlistId: process.env.VUE_APP_YOUTUBE_PLAYLIST_ID,
+        playlistId: process.env.VUE_APP_BEGINNER_YOGA_PLAYLIST_ID,
       },
     });
 
