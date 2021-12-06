@@ -77,18 +77,11 @@
       <v-divider class="mb-4"></v-divider>
 
       <div class="grid-container mb-6">
-        <v-card v-for="(video, index) in videos" :key="index" elevation="5">
-          <img class="image" :src="video.img" width="100%" />
-          <v-card-title>{{ video.title }}</v-card-title>
-          <v-card-subtitle>{{ video.author }}</v-card-subtitle>
-          <v-card-text>
-            {{ video.text }}
-          </v-card-text>
-          <v-card-actions class="align-end">
-            <v-btn text color="primary">View</v-btn>
-            <v-btn text color="primary">Add Reminder</v-btn>
-          </v-card-actions>
-        </v-card>
+        <video-card
+          v-for="(video, index) in videos"
+          :key="index"
+          :video="video"
+        />
       </div>
 
       <!-- Latest Podcasts -->
@@ -201,8 +194,12 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import youtube from "../apis/youtube";
+import VideoCard from "../components/VideoCard.vue";
 
 export default {
+  components: { VideoCard },
+  name: "Home",
   data() {
     return {
       dialog: false,
@@ -245,26 +242,7 @@ export default {
           img: "/img/nutrition.jpg",
         },
       ],
-      videos: [
-        {
-          title: "Title 4",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/yoga.jpg",
-        },
-        {
-          title: "Title 5",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/weight-training.jpg",
-        },
-        {
-          title: "Title 6",
-          text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: "First-name Last-name",
-          img: "/img/endurance.jpg",
-        },
-      ],
+      videos: [],
       podcasts: [
         {
           title: "Title 7",
@@ -348,7 +326,14 @@ export default {
   computed: {
     ...mapGetters(["goals"]),
   },
-  mounted() {
+  async mounted() {
+    const res = await youtube.get("", {
+      params: {
+        playlistId: process.env.VUE_APP_BEGINNER_YOGA_PLAYLIST_ID,
+      },
+    });
+
+    this.videos = res.data.items;
     this.fetchGoals();
   },
 };
@@ -379,8 +364,5 @@ export default {
   .grid {
     grid-template-columns: 1fr;
   }
-}
-.clickable {
-  cursor: pointer;
 }
 </style>

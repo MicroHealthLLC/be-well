@@ -25,6 +25,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
+
 export default {
   components: { Navbar, WelcomeBanner },
   name: "App",
@@ -97,5 +98,8 @@ export default {
 }
 .main-wrapper {
   background-color: #f0f3f7;
+}
+.clickable {
+  cursor: pointer;
 }
 </style>

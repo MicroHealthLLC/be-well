@@ -43,10 +43,58 @@ const routes = [
   },
   {
     path: "/activities",
+    redirect: "/activities/reminders",
     name: "Activities",
     component: () =>
       import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "articles",
+        name: "Articles",
+        component: () =>
+          import(
+            /* webpackChunkName: "articles" */ "../views/Activities/Articles.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "blogs",
+        name: "Blogs",
+        component: () =>
+          import(
+            /* webpackChunkName: "blogs" */ "../views/Activities/Blogs.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "podcasts",
+        name: "Podcasts",
+        component: () =>
+          import(
+            /* webpackChunkName: "podcasts" */ "../views/Activities/Podcasts.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "reminders",
+        name: "Reminders",
+        component: () =>
+          import(
+            /* webpackChunkName: "reminders" */ "../views/Activities/Reminders.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "videos",
+        name: "Videos",
+        component: () =>
+          import(
+            /* webpackChunkName: "videos" */ "../views/Activities/Videos.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+    ],
   },
   {
     path: "/health",

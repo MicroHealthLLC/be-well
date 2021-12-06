@@ -5,7 +5,7 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "view-content") {
     console.log("VIEW CONTENT");
-    clients.openWindow("https://www.microhealthllc.com/");
+    clients.openWindow("/activities/videos");
   } else if (event.action == "snooze") {
     console.log("SNOOZE");
   } else {
