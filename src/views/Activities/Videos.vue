@@ -69,34 +69,42 @@ export default {
       categories: [
         {
           title: "Endurance",
+          query: "endurance",
           key: "ENDURANCE",
         },
         {
           title: "Ergonomics",
+          query: "ergonomics",
           key: "ERGONOMICS",
         },
         {
           title: "Meditation",
+          query: "meditation",
           key: "MEDITATION",
         },
         {
           title: "Muscle Tone/Movement",
+          query: "muscle-tone-movement",
           key: "MUSCLE",
         },
         {
           title: "Posture",
+          query: "posture",
           key: "POSTURE",
         },
         {
           title: "Stress Relief",
+          query: "stress-relief",
           key: "STRESS_RELIEF",
         },
         {
           title: "Stretching",
+          query: "stretching",
           key: "STRETCHING",
         },
         {
           title: "Yoga",
+          query: "yoga",
           key: "YOGA",
         },
       ],
@@ -137,11 +145,26 @@ export default {
     },
   },
   async mounted() {
+    if (this.$route.query.category) {
+      this.selectedCategory = this.categories.findIndex(
+        (category) => this.$route.query.category == category.query
+      );
+    }
+
     await this.fetchCategoryVideos();
   },
   watch: {
     selectedCategory() {
-      this.fetchCategoryVideos();
+      let categoryQuery = this.categories[this.selectedCategory].query;
+
+      if (this.$route.query.category != categoryQuery) {
+        this.$router.replace({
+          name: "Videos",
+          query: { category: this.categories[this.selectedCategory].query },
+        });
+
+        this.fetchCategoryVideos();
+      }
     },
   },
 };
