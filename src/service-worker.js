@@ -5,7 +5,7 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "view-content") {
     clients.openWindow(
-      `/activities/videos?=${categoryQuery(event.notification.data.category)}`
+      `/activities/videos?category=${categoryQuery(event.notification.data.category)}`
     );
   } else if (event.action == "snooze") {
     console.log("SNOOZE");

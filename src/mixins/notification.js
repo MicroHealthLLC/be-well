@@ -3,10 +3,10 @@ export const notification = {
     return {
       imageURLs: {
         Endurance: "/img/endurance.jpg",
-        Ergonomics: "img/ergonomics.jpg",
+        Ergonomics: "/img/ergonomics.jpg",
         Meditation: "/img/meditate.jpg",
         "Muscle Tone/Movement": "/img/weight-training.jpg",
-        Posture: "img/posture.jpg",
+        Posture: "/img/posture.jpg",
         "Stress Relief": "/img/stress-relief.jpg",
         Stretching: "/img/stretching.jpg",
         Yoga: "/img/yoga.jpg",
