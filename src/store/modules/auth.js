@@ -82,7 +82,12 @@ export default {
     },
     async fetchCurrentUser({ commit }) {
       const userInfo = await Auth.currentUserInfo();
-      commit("SET_USER", userInfo);
+      const userCredentials = await Auth.currentAuthenticatedUser();
+      const groups =
+        userCredentials.signInUserSession.accessToken.payload["cognito:groups"] || [];
+      const isEditor = groups.includes("Editors");
+
+      commit("SET_USER", { ...userInfo, isEditor: isEditor });
     },
     async updateUser({ commit, dispatch }, userDetails) {
       try {

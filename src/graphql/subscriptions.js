@@ -88,3 +88,42 @@ export const onDeleteGoal = /* GraphQL */ `
     }
   }
 `;
+export const onCreateArticle = /* GraphQL */ `
+  subscription OnCreateArticle {
+    onCreateArticle {
+      id
+      author
+      title
+      body
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArticle = /* GraphQL */ `
+  subscription OnUpdateArticle {
+    onUpdateArticle {
+      id
+      author
+      title
+      body
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArticle = /* GraphQL */ `
+  subscription OnDeleteArticle {
+    onDeleteArticle {
+      id
+      author
+      title
+      body
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;

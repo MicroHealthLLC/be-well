@@ -13,7 +13,6 @@
           class="px-5"
           active-class="btn-route"
           to="/activities/articles"
-          disabled
           >Articles</v-btn
         >
         <v-btn

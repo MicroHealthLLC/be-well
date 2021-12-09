@@ -14,3 +14,29 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   progress: Int!
   dueDate: AWSDate!
 }
+
+type Article
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  author: String!
+  title: String!
+  body: String!
+  category: Category!
+}
+
+enum Category {
+  ENDURANCE
+  ERGONOMICS
+  MEDITATION
+  MUSCLE
+  POSTURE
+  STRESS_RELIEF
+  STRETCHING
+  YOGA
+}

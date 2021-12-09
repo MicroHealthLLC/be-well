@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import articleStore from "./modules/article-store";
 import authStore from "./modules/auth";
 import goalStore from "./modules/goal-store";
 import reminderStore from "./modules/reminder-store";
@@ -28,5 +29,5 @@ export default new Vuex.Store({
     saving: (state) => state.saving,
     loading: (state) => state.loading,
   },
-  modules: { authStore, goalStore, reminderStore },
+  modules: { articleStore, authStore, goalStore, reminderStore },
 });
