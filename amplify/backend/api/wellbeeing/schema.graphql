@@ -17,6 +17,11 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 
 type Article
   @model
+  @key(
+    name: "articlesByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "articlesByCategory"
+  )
   @auth(
     rules: [
       { allow: groups, groups: ["Editors"] }
@@ -28,6 +33,8 @@ type Article
   title: String!
   body: String!
   category: Category!
+  level: Level!
+  createdAt: AWSDateTime!
 }
 
 enum Category {
@@ -39,4 +46,10 @@ enum Category {
   STRESS_RELIEF
   STRETCHING
   YOGA
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }

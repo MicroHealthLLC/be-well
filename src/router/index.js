@@ -48,7 +48,26 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
     meta: { requiresAuth: true },
+    props: true,
     children: [
+      {
+        path: "articles/view/:articleId",
+        name: "Article",
+        component: () =>
+          import(
+            /* webpackChunkName: "newArticle" */ "../views/Activities/Article.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "articles/edit/:articleId",
+        name: "EditArticle",
+        component: () =>
+          import(
+            /* webpackChunkName: "EditArticle" */ "../views/Activities/EditArticle.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
       {
         path: "articles",
         name: "Articles",

@@ -19,7 +19,9 @@
       ><div class="clamp-three-lines">{{ article.body }}</div></v-card-text
     >
     <v-card-actions class="align-end">
-      <v-btn color="primary" text>Read Article</v-btn>
+      <v-btn :to="`/activities/articles/view/${article.id}`" color="primary" text
+        >Read Article</v-btn
+      >
     </v-card-actions>
   </v-card>
 </template>

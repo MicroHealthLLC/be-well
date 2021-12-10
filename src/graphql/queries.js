@@ -81,6 +81,7 @@ export const getArticle = /* GraphQL */ `
       title
       body
       category
+      level
       createdAt
       updatedAt
     }
@@ -99,6 +100,38 @@ export const listArticles = /* GraphQL */ `
         title
         body
         category
+        level
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const articlesByCategory = /* GraphQL */ `
+  query ArticlesByCategory(
+    $category: Category
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelArticleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    articlesByCategory(
+      category: $category
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        author
+        title
+        body
+        category
+        level
         createdAt
         updatedAt
       }

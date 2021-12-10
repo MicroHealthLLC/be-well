@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <div class="d-flex justify-space-between mb-2">
-        <div class="text-h6 text-sm-h5">New Article</div>
+        <div class="text-h6 text-sm-h5">Edit Article</div>
         <v-btn
           class="my-5 my-sm-0"
           to="/activities/articles"
@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import ArticleForm from "../../components/ArticleForm.vue";
 export default {
-  name: "NewArticle",
+  name: "EditArticle",
   components: {
     ArticleForm,
   },
@@ -34,26 +34,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["article", "user"]),
+    ...mapGetters(["article"]),
   },
   methods: {
-    ...mapMutations(["SET_ARTICLE"]),
+    ...mapActions(["fetchArticle"]),
   },
   mounted() {
-    this.SET_ARTICLE({
-      title: "",
-      author: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
-      category: "",
-      level: "BEGINNER",
-      body: "",
-    });
-  },
-  watch: {
-    article() {
-      if (this.article.id) {
-        this.$router.push(`/activities/articles/edit/${this.article.id}`);
-      }
-    },
+    this.fetchArticle(this.$route.params.articleId);
   },
 };
 </script>

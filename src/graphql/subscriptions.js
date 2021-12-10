@@ -96,6 +96,7 @@ export const onCreateArticle = /* GraphQL */ `
       title
       body
       category
+      level
       createdAt
       updatedAt
     }
@@ -109,6 +110,7 @@ export const onUpdateArticle = /* GraphQL */ `
       title
       body
       category
+      level
       createdAt
       updatedAt
     }
@@ -122,6 +124,7 @@ export const onDeleteArticle = /* GraphQL */ `
       title
       body
       category
+      level
       createdAt
       updatedAt
     }
