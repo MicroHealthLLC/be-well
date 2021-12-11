@@ -20,7 +20,12 @@
       >
     </div>
     <v-card class="pa-sm-10" flat color="#f0f3f7">
-      <v-card-title class="text-h4 break-word">{{ article.title }}</v-card-title>
+      <v-chip :color="levelColor" class="category-chip ml-4" x-small label>{{
+        article.level
+      }}</v-chip>
+      <v-card-title class="text-h4 break-word">{{
+        article.title
+      }}</v-card-title>
       <v-card-subtitle class="d-flex flex-column"
         ><div>By {{ article.author }}</div>
         <div class="mt-2">
@@ -35,7 +40,9 @@
       >
       <v-divider class="mx-5 pa-0" color="#9ec64c"></v-divider>
       <v-card-text
-        ><div class="keep-white-space">{{ article.body }}</div></v-card-text
+        ><div class="keep-white-space text--primary text-sm-body-1">
+          {{ article.body }}
+        </div></v-card-text
       >
     </v-card>
   </div>
@@ -71,6 +78,13 @@ export default {
   },
   computed: {
     ...mapGetters(["article", "isEditor"]),
+    levelColor() {
+      return this.article.level == "BEGINNER"
+        ? "var(--mh-green)"
+        : this.article.level == "INTERMEDIATE"
+        ? "var(--mh-orange)"
+        : "error";
+    },
   },
   methods: {
     ...mapActions(["fetchArticle"]),
@@ -96,5 +110,13 @@ export default {
 }
 .break-word {
   word-break: break-word;
+}
+.category-chip {
+  color: white;
+  position: relative;
+  top: 15px;
+}
+::selection {
+  background-color: var(--mh-orange);
 }
 </style>
