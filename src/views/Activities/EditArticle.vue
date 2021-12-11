@@ -1,10 +1,9 @@
 <template>
   <v-row>
     <v-col>
-      <div class="d-flex justify-space-between mb-2">
+      <div class="d-flex justify-space-between mb-2 align-center">
         <div class="text-h6 text-sm-h5">Edit Article</div>
         <v-btn
-          class="my-5 my-sm-0"
           to="/activities/articles"
           exact-path
           color="#2f53b6"

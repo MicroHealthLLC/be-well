@@ -11,6 +11,7 @@
         ><v-icon>mdi-arrow-left</v-icon>Articles</v-btn
       >
       <v-btn
+        v-if="isEditor"
         :to="`/activities/articles/edit/${this.article.id}`"
         class="ml-2"
         outlined
@@ -69,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["article"]),
+    ...mapGetters(["article", "isEditor"]),
   },
   methods: {
     ...mapActions(["fetchArticle"]),

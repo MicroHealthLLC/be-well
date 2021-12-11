@@ -1,15 +1,9 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <!-- Beginner Articles -->
-    <div class="d-flex justify-space-between">
-      <span class="text-h6 text-sm-h5"
-        >Beginner {{ categoryTitle }} Articles</span
-      >
-      <v-btn to="/activities/articles/new" color="var(--mh-blue)" small dark
-        >Add Article <v-icon small right>mdi-plus</v-icon></v-btn
-      >
-    </div>
-
+    <span class="text-h6 text-sm-h5"
+      >Beginner {{ categoryTitle }} Articles</span
+    >
     <v-divider class="mb-4"></v-divider>
 
     <div v-if="beginnerArticles.length > 0" class="grid-container mb-6">
@@ -25,15 +19,9 @@
     </div>
 
     <!-- Intermediate Articles -->
-    <div class="d-flex justify-space-between">
-      <span class="text-h6 text-sm-h5"
-        >Intermediate {{ categoryTitle }} Articles</span
-      >
-      <v-btn to="/activities/articles/new" color="var(--mh-blue)" small dark
-        >Add Article <v-icon small right>mdi-plus</v-icon></v-btn
-      >
-    </div>
-
+    <span class="text-h6 text-sm-h5"
+      >Intermediate {{ categoryTitle }} Articles</span
+    >
     <v-divider class="mb-4"></v-divider>
 
     <div v-if="intermediateArticles.length > 0" class="grid-container mb-6">
@@ -49,15 +37,9 @@
     </div>
 
     <!-- Advanced Articles -->
-    <div class="d-flex justify-space-between">
-      <span class="text-h6 text-sm-h5"
-        >Advanced {{ categoryTitle }} Articles</span
-      >
-      <v-btn to="/activities/articles/new" color="var(--mh-blue)" small dark
-        >Add Article <v-icon small right>mdi-plus</v-icon></v-btn
-      >
-    </div>
-
+    <span class="text-h6 text-sm-h5"
+      >Advanced {{ categoryTitle }} Articles</span
+    >
     <v-divider class="mb-4"></v-divider>
 
     <div v-if="advancedArticles.length > 0" class="grid-container mb-6">
@@ -71,12 +53,23 @@
       <v-icon class="mr-2">mdi-file-document-outline</v-icon> No Advanced
       Articles...
     </div>
+    <v-btn
+      v-if="isEditor"
+      to="/activities/articles/new"
+      class="floating-btn"
+      color="var(--mh-blue)"
+      fab
+      large
+      dark
+      ><v-icon large>mdi-plus</v-icon></v-btn
+    >
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ArticleCard from "../../components/ArticleCard.vue";
+
 export default {
   name: "Articles",
   props: ["selectedCategory"],
@@ -132,6 +125,7 @@ export default {
       "advancedArticles",
       "beginnerArticles",
       "intermediateArticles",
+      "isEditor",
     ]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
@@ -165,5 +159,12 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+}
+.floating-btn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 7vw;
+  margin-bottom: 7vh;
 }
 </style>
