@@ -1,5 +1,5 @@
 <template>
-  <v-card class="article-card" elevation="5">
+  <v-card :class="leftBorder" elevation="5">
     <v-card-title class="article-title text-body-1 font-weight-bold">
       <div class="clamp-two-lines">{{ article.title }}</div>
     </v-card-title>
@@ -19,7 +19,10 @@
       ><div class="clamp-three-lines">{{ article.body }}</div></v-card-text
     >
     <v-card-actions class="align-end">
-      <v-btn :to="`/activities/articles/view/${article.id}`" color="primary" text
+      <v-btn
+        :to="`/activities/articles/view/${article.id}`"
+        color="primary"
+        text
         >Read Article</v-btn
       >
     </v-card-actions>
@@ -68,6 +71,15 @@ export default {
       return this.categories[category] || "";
     },
   },
+  computed: {
+    leftBorder() {
+      return {
+        "beginner-card": this.article.level == "BEGINNER",
+        "intermediate-card": this.article.level == "INTERMEDIATE",
+        "advanced-card": this.article.level == "ADVANCED",
+      };
+    },
+  },
 };
 </script>
 
@@ -89,7 +101,13 @@ export default {
   align-content: flex-start;
   word-break: break-word;
 }
-.article-card {
+.beginner-card {
   border-left: 7.5px solid var(--mh-green);
+}
+.intermediate-card {
+  border-left: 7.5px solid var(--mh-orange);
+}
+.advanced-card {
+  border-left: 7.5px solid #ff5252;
 }
 </style>
