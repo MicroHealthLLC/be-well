@@ -42,7 +42,8 @@ export default {
     this.SET_ARTICLE({
       title: "",
       author: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
-      category: "",
+      lastEditedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
+      category: "ENDURANCE",
       level: "BEGINNER",
       body: "",
     });

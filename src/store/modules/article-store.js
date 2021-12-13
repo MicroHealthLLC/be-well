@@ -15,6 +15,7 @@ export default {
     article: {
       title: "",
       author: "",
+      lastEditedBy: "",
       category: "",
       level: "BEGINNER",
       body: "",
@@ -40,7 +41,8 @@ export default {
     },
     async updateArticle({ commit }, article) {
       try {
-        await API.graphql(graphqlOperation(updateArticle, { input: article }));
+        const res = await API.graphql(graphqlOperation(updateArticle, { input: article }));
+        commit("SET_ARTICLE", res.data.updateArticle);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Article Successfully Updated!",

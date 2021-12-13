@@ -93,6 +93,7 @@ export const onCreateArticle = /* GraphQL */ `
     onCreateArticle {
       id
       author
+      lastEditedBy
       title
       body
       category
@@ -107,6 +108,7 @@ export const onUpdateArticle = /* GraphQL */ `
     onUpdateArticle {
       id
       author
+      lastEditedBy
       title
       body
       category
@@ -121,6 +123,7 @@ export const onDeleteArticle = /* GraphQL */ `
     onDeleteArticle {
       id
       author
+      lastEditedBy
       title
       body
       category

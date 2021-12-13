@@ -30,6 +30,7 @@ type Article
   ) {
   id: ID!
   author: String!
+  lastEditedBy: String!
   title: String!
   body: String!
   category: Category!

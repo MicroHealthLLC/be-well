@@ -78,6 +78,7 @@ export const getArticle = /* GraphQL */ `
     getArticle(id: $id) {
       id
       author
+      lastEditedBy
       title
       body
       category
@@ -97,6 +98,7 @@ export const listArticles = /* GraphQL */ `
       items {
         id
         author
+        lastEditedBy
         title
         body
         category
@@ -128,6 +130,7 @@ export const articlesByCategory = /* GraphQL */ `
       items {
         id
         author
+        lastEditedBy
         title
         body
         category

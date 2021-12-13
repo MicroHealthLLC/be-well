@@ -2,31 +2,42 @@
   <v-card class="pa-sm-10">
     <v-card-text>
       <v-form>
-        <v-text-field v-model="article.title" label="Title"></v-text-field>
-        <v-text-field v-model="article.author" label="Author"></v-text-field>
-        <v-select
-          v-model="article.category"
-          :items="categories"
-          item-text="name"
-          item-value="value"
-          label="Category"
-          :rules="[(v) => !!v || 'Category is required']"
-          required
-        ></v-select>
-        <v-select
-          v-model="article.level"
-          label="Level"
-          :items="levels"
-          item-text="name"
-          item-value="value"
-        ></v-select>
-        <v-textarea
-          v-model="article.body"
-          label="Body"
-          outlined
-          auto-grow
-          filled
-        ></v-textarea>
+        <div class="grid">
+          <v-text-field
+            v-model="article.title"
+            class="title"
+            label="Title"
+          ></v-text-field>
+          <v-text-field v-model="createdBy" label="Author"></v-text-field>
+          <v-text-field
+            v-model="lastEditedBy"
+            label="Last Edited By"
+          ></v-text-field>
+          <v-select
+            v-model="article.category"
+            :items="categories"
+            item-text="name"
+            item-value="value"
+            label="Category"
+            :rules="[(v) => !!v || 'Category is required']"
+            required
+          ></v-select>
+          <v-select
+            v-model="article.level"
+            label="Level"
+            :items="levels"
+            item-text="name"
+            item-value="value"
+          ></v-select>
+          <v-textarea
+            v-model="article.body"
+            class="body"
+            label="Body"
+            outlined
+            auto-grow
+            filled
+          ></v-textarea>
+        </div>
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-end">
@@ -108,6 +119,24 @@ export default {
     isEditing() {
       return this.article.id;
     },
+    createdBy() {
+      if (this.isEditing) {
+        return `${this.article.author} at ${new Date(
+          this.article.createdAt
+        ).toLocaleString()}`;
+      } else {
+        return this.article.author;
+      }
+    },
+    lastEditedBy() {
+      if (this.isEditing) {
+        return `${this.article.lastEditedBy} at ${new Date(
+          this.article.updatedAt
+        ).toLocaleString()}`;
+      } else {
+        return this.article.lastEditedBy;
+      }
+    },
   },
   methods: {
     ...mapActions(["addArticle", "deleteArticle", "updateArticle"]),
@@ -119,6 +148,7 @@ export default {
           category: this.article.category,
           level: this.article.level.toUpperCase(),
           author: this.article.author,
+          lastEditedBy: this.article.author,
         });
       } catch (error) {
         console.log(error);
@@ -131,6 +161,7 @@ export default {
         body: this.article.body,
         category: this.article.category,
         level: this.article.level.toUpperCase(),
+        lastEditedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
       });
     },
     async removeArticle() {
@@ -144,5 +175,14 @@ export default {
 <style scoped>
 .keep-white-space {
   white-space: pre;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+}
+.title,
+.body {
+  grid-column: 1 / span 2;
 }
 </style>

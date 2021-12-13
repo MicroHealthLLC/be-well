@@ -114,6 +114,7 @@ export const createArticle = /* GraphQL */ `
     createArticle(input: $input, condition: $condition) {
       id
       author
+      lastEditedBy
       title
       body
       category
@@ -131,6 +132,7 @@ export const updateArticle = /* GraphQL */ `
     updateArticle(input: $input, condition: $condition) {
       id
       author
+      lastEditedBy
       title
       body
       category
@@ -148,6 +150,7 @@ export const deleteArticle = /* GraphQL */ `
     deleteArticle(input: $input, condition: $condition) {
       id
       author
+      lastEditedBy
       title
       body
       category
