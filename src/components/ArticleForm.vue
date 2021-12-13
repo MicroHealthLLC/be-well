@@ -1,17 +1,24 @@
 <template>
   <v-card class="pa-sm-10">
     <v-card-text>
-      <v-form>
+      <v-form ref="articleform" v-model="formValid">
         <div class="grid">
           <v-text-field
             v-model="article.title"
             class="title"
             label="Title"
+            :rules="[(v) => !!v || 'Title is required']"
+            required
           ></v-text-field>
-          <v-text-field v-model="createdBy" label="Author"></v-text-field>
+          <v-text-field
+            v-model="createdBy"
+            label="Author"
+            readonly
+          ></v-text-field>
           <v-text-field
             v-model="lastEditedBy"
             label="Last Edited By"
+            readonly
           ></v-text-field>
           <v-select
             v-model="article.category"
@@ -28,6 +35,8 @@
             :items="levels"
             item-text="name"
             item-value="value"
+            :rules="[(v) => !!v || 'Level is required']"
+            required
           ></v-select>
           <v-textarea
             v-model="article.body"
@@ -36,6 +45,8 @@
             outlined
             auto-grow
             filled
+            :rules="[(v) => !!v || 'Body is required']"
+            required
           ></v-textarea>
         </div>
       </v-form>
@@ -64,6 +75,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      formValid: true,
       levels: [
         {
           name: "Beginner",
@@ -141,6 +153,10 @@ export default {
   methods: {
     ...mapActions(["addArticle", "deleteArticle", "updateArticle"]),
     async addNewArticle() {
+      if (!this.$refs.articleform.validate()) {
+        return;
+      }
+
       try {
         await this.addArticle({
           title: this.article.title,
@@ -155,6 +171,10 @@ export default {
       }
     },
     async update() {
+      if (!this.$refs.articleform.validate()) {
+        return;
+      }
+
       await this.updateArticle({
         id: this.article.id,
         title: this.article.title,
