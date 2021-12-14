@@ -35,7 +35,7 @@
         <template v-slot:item.category="{ item }">
           <span
             ><v-icon class="mr-4">{{ categoryIcon(item.category) }}</v-icon>
-            {{ item.category }}</span
+            {{ categoryString(item.category) }}</span
           >
         </template>
         <template v-slot:item.level="{ item }">
@@ -90,13 +90,17 @@
             <v-select
               v-model="reminder.category"
               :items="categories"
+              item-text="name"
+              item-value="value"
               label="Category"
               :rules="[(v) => !!v || 'Category is required']"
               required
             ></v-select>
             <v-select
               v-model="reminder.level"
-              :items="['Beginner', 'Intermediate', 'Advanced']"
+              :items="levels"
+              item-text="name"
+              item-value="value"
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
               required
@@ -179,24 +183,62 @@ export default {
         time: null,
       },
       categories: [
-        "Endurance",
-        "Ergonomics",
-        "Meditation",
-        "Muscle Tone/Movement",
-        "Posture",
-        "Stress Relief",
-        "Stretching",
-        "Yoga",
+        {
+          name: "Endurance",
+          value: "ENDURANCE",
+        },
+        {
+          name: "Ergonomics",
+          value: "ERGONOMICS",
+        },
+        {
+          name: "Meditation",
+          value: "MEDITATION",
+        },
+        {
+          name: "Muscle Tone/Movement",
+          value: "MUSCLE",
+        },
+        {
+          name: "Posture",
+          value: "POSTURE",
+        },
+        {
+          name: "Stress Relief",
+          value: "STRESS_RELIEF",
+        },
+        {
+          name: "Stretching",
+          value: "STRETCHING",
+        },
+        {
+          name: "Yoga",
+          value: "YOGA",
+        },
+      ],
+      levels: [
+        {
+          name: "Beginner",
+          value: "BEGINNER",
+        },
+        {
+          name: "Intermediate",
+          value: "INTERMEDIATE",
+        },
+        {
+          name: "Advanced",
+          value: "ADVANCED",
+        },
       ],
       categoryIcons: {
-        Endurance: "mdi-run",
-        Ergonomics: "mdi-seat-recline-extra",
-        Meditation: "mdi-meditation",
-        "Muscle Tone/Movement": "mdi-weight-lifter",
-        Posture: "mdi-human-male",
-        "Stress Relief": "mdi-head-heart",
-        Stretching: "mdi-human",
-        Yoga: "mdi-yoga",
+        ENDURANCE: "mdi-run",
+        ERGONOMICS: "mdi-seat-recline-extra",
+        MEDITATION: "mdi-meditation",
+        MUSCLE: "mdi-weight-lifter",
+        POSTURE: "mdi-human-male",
+        STRESS_RELIEF: "mdi-head-heart",
+        STRETCHING: "mdi-human",
+        YOGA: "mdi-yoga",
       },
       headers: [
         {
@@ -292,12 +334,15 @@ export default {
     categoryIcon(category) {
       return this.categoryIcons[category] || "";
     },
+    categoryString(categoryENUM) {
+      return this.categories.find((category) => category.value == categoryENUM).name;
+    },
     levelColor(level) {
-      return level == "Beginner"
+      return level == "BEGINNER"
         ? "var(--mh-green)"
-        : level == "Intermediate"
+        : level == "INTERMEDIATE"
         ? "var(--mh-orange)"
-        : level == "Advanced"
+        : level == "ADVANCED"
         ? "error"
         : "primary";
     },

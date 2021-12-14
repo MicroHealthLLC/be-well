@@ -1,16 +1,5 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <v-chip-group v-model="selectedCategory" class="mb-2 categories" mandatory>
-      <v-chip
-        v-for="(category, index) in categories"
-        :key="index"
-        color="primary"
-        outlined
-        filter
-        >{{ category.title }}</v-chip
-      >
-    </v-chip-group>
-
     <!-- Beginner Videos -->
     <span class="text-h6 text-sm-h5">Beginner {{ categoryTitle }} Videos</span>
     <v-divider class="mb-4"></v-divider>
@@ -57,12 +46,12 @@ import youtube from "../../apis/youtube";
 
 export default {
   name: "Videos",
+  props: ["selectedCategory"],
   components: {
     VideoCard,
   },
   data() {
     return {
-      selectedCategory: 0,
       beginnerVideos: [],
       intermediateVideos: [],
       advancedVideos: [],
@@ -145,12 +134,6 @@ export default {
     },
   },
   async mounted() {
-    if (this.$route.query.category) {
-      this.selectedCategory = this.categories.findIndex(
-        (category) => this.$route.query.category == category.query
-      );
-    }
-
     await this.fetchCategoryVideos();
   },
   watch: {
@@ -173,15 +156,11 @@ export default {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
 }
 .image {
   max-height: 200px;
   object-fit: cover;
-}
-.categories {
-  white-space: nowrap;
-  overflow-x: auto;
 }
 </style>

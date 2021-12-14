@@ -48,13 +48,41 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
     meta: { requiresAuth: true },
+    props: true,
     children: [
+      {
+        path: "articles/view/:articleId",
+        name: "Article",
+        component: () =>
+          import(
+            /* webpackChunkName: "newArticle" */ "../views/Activities/Article.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "articles/edit/:articleId",
+        name: "EditArticle",
+        component: () =>
+          import(
+            /* webpackChunkName: "EditArticle" */ "../views/Activities/EditArticle.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
       {
         path: "articles",
         name: "Articles",
         component: () =>
           import(
             /* webpackChunkName: "articles" */ "../views/Activities/Articles.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "articles/new",
+        name: "NewArticle",
+        component: () =>
+          import(
+            /* webpackChunkName: "newArticle" */ "../views/Activities/NewArticle.vue"
           ),
         meta: { requiresAuth: true },
       },
@@ -122,6 +150,9 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes,
 });
 

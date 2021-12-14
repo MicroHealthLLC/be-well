@@ -93,6 +93,7 @@ export default {
 .video-title {
   min-height: 80px;
   align-content: flex-start;
+  word-break: break-word;
 }
 .video-container {
   position: relative;
