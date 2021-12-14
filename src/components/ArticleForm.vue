@@ -89,6 +89,10 @@ export default {
           name: "Advanced",
           value: "ADVANCED",
         },
+        {
+          name: "N/A",
+          value: "NOT_APPLICABLE",
+        },
       ],
       categories: [
         {
