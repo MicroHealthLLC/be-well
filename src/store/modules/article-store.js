@@ -62,7 +62,7 @@ export default {
     },
     async fetchArticles({ commit }) {
       try {
-        const res = await API.graphql(graphqlOperation(listArticles));
+        const res = await API.graphql(graphqlOperation(listArticles, {limit: 6}));
         commit("SET_ARTICLES", res.data.listArticles.items);
       } catch (error) {
         console.log(error);
