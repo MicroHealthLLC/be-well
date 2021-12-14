@@ -9,7 +9,7 @@ export default {
       try {
         commit("TOGGLE_LOADING", true);
         await Auth.signIn({ username, password });
-        
+
         dispatch("fetchCurrentUser");
         commit("TOGGLE_LOADING", false);
         return Promise.resolve("Success");
@@ -23,14 +23,22 @@ export default {
       commit("SET_USER", null);
       return await Auth.signOut();
     },
-    async signUp({ commit }, { username, password, email, phoneNumber }) {
+    async signUp(
+      { commit },
+      { username, firstName, lastName, password, email, phoneNumber }
+    ) {
       try {
         commit("TOGGLE_LOADING", true);
 
         await Auth.signUp({
           username,
           password,
-          attributes: { email: email, phone_number: phoneNumber },
+          attributes: {
+            email: email,
+            phone_number: phoneNumber,
+            given_name: firstName,
+            family_name: lastName,
+          },
         });
 
         commit("SET_SNACKBAR", {

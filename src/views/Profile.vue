@@ -20,37 +20,43 @@
               <v-card-title class="pb-0">Details</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
-                <v-text-field
-                  v-model="given_name"
-                  label="First Name"
-                ></v-text-field>
-                <v-text-field
-                  v-model="family_name"
-                  label="Last Name"
-                ></v-text-field>
-                <v-menu
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
+                <v-form ref="profileform" v-model="formValid">
+                  <v-text-field
+                    v-model="given_name"
+                    label="First Name"
+                    :rules="[(v) => !!v || 'First Name is required']"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="family_name"
+                    label="Last Name"
+                    :rules="[(v) => !!v || 'Last Name is required']"
+                    required
+                  ></v-text-field>
+                  <v-menu
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="birthdate"
+                        label="Date of Birth"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
                       v-model="birthdate"
-                      label="Date of Birth"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="birthdate"
-                    @input="menu = false"
-                  ></v-date-picker>
-                </v-menu>
+                      @input="menu = false"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-form>
               </v-card-text>
               <v-card-actions class="d-flex justify-end">
                 <v-btn
@@ -91,7 +97,9 @@
                     type="password"
                     :rules="[
                       (v) => !!v || 'Password is required',
-                      (v) => v !== oldPassword || 'New password must be different from current',
+                      (v) =>
+                        v !== oldPassword ||
+                        'New password must be different from current',
                     ]"
                     required
                   ></v-text-field>
@@ -107,9 +115,9 @@
                     validate-on-blur
                   ></v-text-field>
                   <p class="mt-2">
-                    * Password must be 8 or more characters long, contain at least
-                    1 number, 1 special character, 1 uppercase letter, and 1
-                    lowercase letter
+                    * Password must be 8 or more characters long, contain at
+                    least 1 number, 1 special character, 1 uppercase letter, and
+                    1 lowercase letter
                   </p>
                 </v-form>
               </v-card-text>
@@ -138,6 +146,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      formValid: true,
       menu: false,
       given_name: "",
       family_name: "",
@@ -152,6 +161,10 @@ export default {
   methods: {
     ...mapActions(["changePassword", "updateUser"]),
     async editProfile() {
+      if (!this.$refs.profileform.validate()) {
+        return;
+      }
+
       try {
         await this.updateUser({
           given_name: this.given_name,
