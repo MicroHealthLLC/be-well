@@ -27,7 +27,7 @@
               </div>
               <div class="mt-2">
                 <v-chip class="mr-2" color="info" outlined small>{{
-                  goal.category
+                  categoryString(goal.category)
                 }}</v-chip>
                 <v-chip color="info" outlined small
                   >Due Date: {{ goal.dueDate }}</v-chip
@@ -143,6 +143,8 @@
             <v-select
               v-model="goal.category"
               :items="categories"
+              item-text="name"
+              item-value="value"
               label="Category"
               :rules="[(v) => !!v || 'Category is required']"
               required
@@ -206,14 +208,38 @@ export default {
       valid: true,
       menu: false,
       categories: [
-        "Endurance",
-        "Ergonomics",
-        "Meditation",
-        "Muscle Tone/Movement",
-        "Posture",
-        "Stress Relief",
-        "Stretching",
-        "Yoga",
+        {
+          name: "Endurance",
+          value: "ENDURANCE",
+        },
+        {
+          name: "Ergonomics",
+          value: "ERGONOMICS",
+        },
+        {
+          name: "Meditation",
+          value: "MEDITATION",
+        },
+        {
+          name: "Muscle Tone/Movement",
+          value: "MUSCLE",
+        },
+        {
+          name: "Posture",
+          value: "POSTURE",
+        },
+        {
+          name: "Stress Relief",
+          value: "STRESS_RELIEF",
+        },
+        {
+          name: "Stretching",
+          value: "STRETCHING",
+        },
+        {
+          name: "Yoga",
+          value: "YOGA",
+        },
       ],
       goal: {
         id: 0,
@@ -321,6 +347,10 @@ export default {
     },
     closeGoalForm() {
       this.dialog = false;
+    },
+    categoryString(categoryENUM) {
+      return this.categories.find((category) => category.value == categoryENUM)
+        .name;
     },
   },
   computed: {
