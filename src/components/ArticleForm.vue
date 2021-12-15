@@ -52,7 +52,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-end">
-      <v-btn v-if="isEditing" @click="removeArticle" color="error" outlined
+      <v-btn
+        v-if="isEditing"
+        @click="deleteDialog = true"
+        color="error"
+        outlined
         >Delete</v-btn
       >
       <v-btn
@@ -67,6 +71,28 @@
         >Update Article</v-btn
       >
     </v-card-actions>
+    <v-dialog v-model="deleteDialog">
+      <v-card>
+        <v-card-title>Delete Article?</v-card-title>
+        <v-card-text
+          >Are you sure you want to delete <strong>{{ article.title }}</strong
+          >?</v-card-text
+        >
+        <v-card-actions class="justify-end">
+          <v-btn @click="deleteDialog = false" color="secondary" small outlined
+            >Cancel</v-btn
+          >
+          <v-btn
+            @click="removeArticle"
+            class="px-5"
+            color="var(--mh-blue)"
+            small
+            dark
+            >Delete</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -75,6 +101,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      deleteDialog: false,
       formValid: true,
       levels: [
         {
@@ -190,6 +217,7 @@ export default {
     },
     async removeArticle() {
       await this.deleteArticle(this.article.id);
+      this.deleteDialog = false;
       this.$router.push("/activities/articles");
     },
   },

@@ -1,15 +1,21 @@
 <template>
   <div>
-    <v-app-bar absolute app>
-      <v-icon
+    <v-app-bar fixed app>
+      <!-- Hamburger Menu -->
+      <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.xsOnly"
         @click="drawer = !drawer"
-        class="mr-2"
-        >mdi-menu</v-icon
-      >
+      ></v-app-bar-nav-icon>
+
+      <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
+      <!-- App Logo -->
       <router-link to="/home"
-        ><v-img src="../assets/well-being-logo.png" width="150"
+        ><v-img src="../assets/well-being-logo.png" width="125"
       /></router-link>
+
+      <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
+      <div v-if="$vuetify.breakpoint.xsOnly" class="hidden-block"></div>
+      
       <!-- Main Navigation Items -->
       <v-tabs
         v-if="!$vuetify.breakpoint.xsOnly"
@@ -17,6 +23,7 @@
         slider-size="4"
         centered
         optional
+        dense
       >
         <v-tabs-slider color="var(--mh-green)"></v-tabs-slider>
         <v-tab to="/home"><v-icon class="mr-1">mdi-home</v-icon>Home</v-tab>
@@ -97,7 +104,7 @@
       <template v-slot:append>
         <v-divider></v-divider>
         <v-list dense>
-          <v-list-item to="/profile" link>
+          <v-list-item to="/profile" color="var(--mh-orange)" link>
             <v-list-item-icon><v-icon>mdi-account</v-icon></v-list-item-icon>
             <v-list-item-content
               ><v-list-item-title>Profile</v-list-item-title>
@@ -142,5 +149,8 @@ export default {
 <style scoped>
 a.v-tab {
   text-transform: capitalize;
+}
+.hidden-block {
+  width: 48px;
 }
 </style>

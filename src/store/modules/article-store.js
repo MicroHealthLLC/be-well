@@ -41,7 +41,9 @@ export default {
     },
     async updateArticle({ commit }, article) {
       try {
-        const res = await API.graphql(graphqlOperation(updateArticle, { input: article }));
+        const res = await API.graphql(
+          graphqlOperation(updateArticle, { input: article })
+        );
         commit("SET_ARTICLE", res.data.updateArticle);
         commit("SET_SNACKBAR", {
           show: true,
@@ -62,7 +64,9 @@ export default {
     },
     async fetchArticles({ commit }) {
       try {
-        const res = await API.graphql(graphqlOperation(listArticles, {limit: 6}));
+        const res = await API.graphql(
+          graphqlOperation(listArticles, { limit: 6 })
+        );
         commit("SET_ARTICLES", res.data.listArticles.items);
       } catch (error) {
         console.log(error);
@@ -78,11 +82,16 @@ export default {
         console.log(error);
       }
     },
-    async deleteArticle(_, id) {
+    async deleteArticle({ commit }, id) {
       try {
         await API.graphql(
           graphqlOperation(deleteArticle, { input: { id: id } })
         );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Article Removed",
+          color: "var(--mh-orange)",
+        });
       } catch (error) {
         console.log(error);
       }
