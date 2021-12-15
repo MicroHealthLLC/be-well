@@ -29,6 +29,18 @@
                 validate-on-blur
               ></v-text-field>
               <v-text-field
+                v-model="firstName"
+                label="First Name"
+                :rules="[(v) => !!v || 'First Name is required']"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="lastName"
+                label="Last Name"
+                :rules="[(v) => !!v || 'Last Name is required']"
+                required
+              ></v-text-field>
+              <v-text-field
                 v-model="password"
                 label="Password"
                 type="password"
@@ -92,6 +104,8 @@ export default {
     return {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
       confirmPassword: "",
       error: "",
@@ -109,6 +123,8 @@ export default {
           await this.signUp({
             username: this.email,
             email: this.email,
+            firstName: this.firstName,
+            lastName: this.lastName,
             password: this.password,
             phoneNumber: "+1" + this.phoneNumber.split("-").join(""),
           });
