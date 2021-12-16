@@ -19,7 +19,10 @@
         ><v-icon left small>mdi-pencil</v-icon>Edit</v-btn
       >
     </div>
-    <v-card class="pa-sm-10" flat color="#f0f3f7">
+
+    <ArticleLoader v-if="loading" />
+
+    <v-card v-else class="pa-sm-10" flat color="#f0f3f7">
       <v-chip :color="levelColor" class="category-chip ml-4" x-small label>{{
         article.level
       }}</v-chip>
@@ -50,7 +53,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import ArticleLoader from "../../components/ArticleLoader.vue";
 export default {
+  components: { ArticleLoader },
   name: "Article",
   data() {
     return {
@@ -77,7 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["article", "isEditor"]),
+    ...mapGetters(["article", "isEditor", "loading"]),
     levelColor() {
       return this.article.level == "BEGINNER"
         ? "var(--mh-green)"

@@ -55,12 +55,14 @@ export default {
       }
     },
     async fetchArticle({ commit }, id) {
+      commit("TOGGLE_LOADING", true);
       try {
         const res = await API.graphql(graphqlOperation(getArticle, { id: id }));
         commit("SET_ARTICLE", res.data.getArticle);
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_LOADING", false);
     },
     async fetchArticles({ commit }) {
       try {
