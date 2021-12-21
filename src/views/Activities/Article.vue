@@ -43,10 +43,8 @@
       >
       <v-divider class="mx-5 pa-0" color="#9ec64c"></v-divider>
       <v-card-text
-        ><div class="keep-white-space text--primary text-sm-body-1">
-          {{ article.body }}
-        </div></v-card-text
-      >
+        ><div v-html="article.body" class="article-body"></div
+      ></v-card-text>
     </v-card>
   </div>
 </template>
@@ -121,7 +119,59 @@ export default {
   position: relative;
   top: 15px;
 }
-::selection {
+.article-body ::selection {
   background-color: var(--mh-orange);
+}
+.article-body >>> h1 {
+  color: #000000de;
+  font-size: 2rem !important;
+  font-weight: 400;
+  line-height: 2.5rem;
+  letter-spacing: 0.0073529412em !important;
+  font-family: "Roboto", sans-serif !important;
+  margin: 10px 0 20px;
+}
+.article-body >>> h2 {
+  color: #000000de;
+  font-size: 1.5rem !important;
+  font-weight: 500;
+  letter-spacing: normal;
+  font-family: "Roboto", sans-serif !important;
+  margin: 10px 0 20px;
+}
+.article-body >>> h3 {
+  color: #000000de;
+  font-size: 1.25rem !important;
+  font-weight: 500;
+  letter-spacing: 0.0125em !important;
+  font-family: "Roboto", sans-serif !important;
+  margin: 10px 0 20px;
+}
+.article-body >>> p {
+  color: #000000de;
+  font-size: 16px;
+}
+::v-deep .article-body ul p,
+::v-deep .article-body ol p {
+  margin: 0 !important;
+}
+::v-deep .article-body ul,
+::v-deep .article-body ol {
+  margin-left: 25px !important;
+}
+.article-body >>> ul,
+.article-body >>> ol {
+  margin-bottom: 16px;
+}
+.article-body >>> blockquote {
+  border-left: 0.25em solid var(--mh-green);
+  padding-left: 1em;
+  margin: 20px 0 !important;
+}
+.article-body >>> blockquote * {
+  color: #6a737d;
+}
+.article-body >>> p img {
+  width: 100%;
 }
 </style>

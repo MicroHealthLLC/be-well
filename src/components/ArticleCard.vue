@@ -16,7 +16,9 @@
       </div></v-card-subtitle
     >
     <v-card-text
-      ><div class="clamp-three-lines">{{ article.body }}</div></v-card-text
+      ><div class="clamp-three-lines">
+        {{ strippedArticleBody }}
+      </div></v-card-text
     >
     <v-card-actions class="align-end">
       <v-btn
@@ -78,6 +80,18 @@ export default {
         "intermediate-card": this.article.level == "INTERMEDIATE",
         "advanced-card": this.article.level == "ADVANCED",
       };
+    },
+    strippedArticleBody() {
+      if (this.article.body.indexOf("<p>") !== -1) {
+        return this.article.body
+          .substring(
+            this.article.body.indexOf("<p>") + 3,
+            this.article.body.lastIndexOf("</p>")
+          )
+          .replace(/<(.|\n)*?>/g, "");
+      } else {
+        return "No preview available...";
+      }
     },
   },
 };

@@ -38,16 +38,8 @@
             :rules="[(v) => !!v || 'Level is required']"
             required
           ></v-select>
-          <v-textarea
-            v-model="article.body"
-            class="body"
-            label="Body"
-            outlined
-            auto-grow
-            filled
-            :rules="[(v) => !!v || 'Body is required']"
-            required
-          ></v-textarea>
+          <!-- Rich text editor -->
+          <TiptapEditor class="body" />
         </div>
       </v-form>
     </v-card-text>
@@ -98,7 +90,12 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import TiptapEditor from "./TitptapEditor.vue";
+
 export default {
+  components: {
+    TiptapEditor,
+  },
   data() {
     return {
       deleteDialog: false,
