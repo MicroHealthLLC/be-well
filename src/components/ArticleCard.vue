@@ -79,6 +79,7 @@ export default {
         "beginner-card": this.article.level == "BEGINNER",
         "intermediate-card": this.article.level == "INTERMEDIATE",
         "advanced-card": this.article.level == "ADVANCED",
+        "default-card": this.article.level == "NOT_APPLICABLE",
       };
     },
     strippedArticleBody() {
@@ -123,5 +124,8 @@ export default {
 }
 .advanced-card {
   border-left: 7.5px solid #ff5252;
+}
+.default-card {
+  border-left: 7.5px solid lightslategray;
 }
 </style>
