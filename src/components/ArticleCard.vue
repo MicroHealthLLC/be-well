@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="leftBorder" elevation="5">
+  <v-card class="d-flex flex-column" :class="leftBorder" elevation="5">
     <v-card-title class="article-title text-body-1 font-weight-bold">
       <div class="clamp-two-lines">{{ article.title }}</div>
     </v-card-title>
@@ -20,7 +20,7 @@
         {{ strippedArticleBody }}
       </div></v-card-text
     >
-    <v-card-actions class="align-end">
+    <v-card-actions class="fill-height align-end">
       <v-btn
         :to="`/activities/articles/view/${article.id}`"
         color="primary"
