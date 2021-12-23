@@ -84,6 +84,8 @@ export const getArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }
@@ -104,6 +106,8 @@ export const listArticles = /* GraphQL */ `
         category
         level
         createdAt
+        image
+        imageCredit
         updatedAt
       }
       nextToken
@@ -136,6 +140,8 @@ export const articlesByCategory = /* GraphQL */ `
         category
         level
         createdAt
+        image
+        imageCredit
         updatedAt
       }
       nextToken

@@ -41,7 +41,17 @@
           }}</v-chip>
         </div></v-card-subtitle
       >
+      <div v-if="article.imageURL" class="mb-5">
+        <v-divider class="mx-5 mb-5 pa-0" color="#9ec64c"></v-divider>
+        <v-img
+          :src="article.imageURL"
+          class="header-image mx-5 fill-width"
+        ></v-img
+        ><span class="text-caption px-5">Photo By {{ article.imageCredit }}</span>
+      </div>
+
       <v-divider class="mx-5 pa-0" color="#9ec64c"></v-divider>
+
       <v-card-text
         ><div v-html="article.body" class="article-body"></div
       ></v-card-text>

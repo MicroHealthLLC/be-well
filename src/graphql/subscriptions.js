@@ -99,6 +99,8 @@ export const onCreateArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }
@@ -114,6 +116,8 @@ export const onUpdateArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }
@@ -129,6 +133,8 @@ export const onDeleteArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }

@@ -36,6 +36,8 @@ type Article
   category: Category!
   level: Level!
   createdAt: AWSDateTime!
+  image: String
+  imageCredit: String
 }
 
 enum Category {

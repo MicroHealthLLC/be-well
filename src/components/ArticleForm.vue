@@ -38,6 +38,34 @@
             :rules="[(v) => !!v || 'Level is required']"
             required
           ></v-select>
+          <v-file-input
+            v-if="newImage"
+            v-model="article.image"
+            @change="uploadImage"
+            @click:clear="removeImage"
+            label="Header Photo"
+            accept="image/*"
+            prepend-icon="mdi-camera"
+          ></v-file-input>
+          <v-text-field
+            v-else
+            @click:clear="removeImage"
+            v-model="article.image"
+            label="Header Photo"
+            prepend-icon="mdi-camera"
+            clearable
+          ></v-text-field>
+          <v-text-field
+            v-model="article.imageCredit"
+            label="Photo By"
+            :disabled="!article.image"
+          ></v-text-field>
+          <!-- Header Image -->
+          <v-img
+            v-if="article.imageURL"
+            :src="article.imageURL"
+            class="header-image mb-5"
+          ></v-img>
           <!-- Rich text editor -->
           <TiptapEditor class="body" />
         </div>
@@ -47,7 +75,7 @@
       <v-btn
         v-if="isEditing"
         @click="deleteDialog = true"
-        color="error"
+        color="secondary"
         outlined
         >Delete</v-btn
       >
@@ -177,6 +205,11 @@ export default {
         return this.article.lastEditedBy;
       }
     },
+    newImage() {
+      let imageType = typeof this.article.image;
+
+      return !this.article.image || !this.article.id || imageType != "string";
+    },
   },
   methods: {
     ...mapActions(["addArticle", "deleteArticle", "updateArticle"]),
@@ -193,6 +226,8 @@ export default {
           level: this.article.level.toUpperCase(),
           author: this.article.author,
           lastEditedBy: this.article.author,
+          image: this.article.image,
+          imageCredit: this.article.imageCredit,
         });
       } catch (error) {
         console.log(error);
@@ -210,12 +245,24 @@ export default {
         category: this.article.category,
         level: this.article.level.toUpperCase(),
         lastEditedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
+        image: this.article.image,
+        imageCredit: this.article.imageCredit,
       });
     },
     async removeArticle() {
       await this.deleteArticle(this.article.id);
       this.deleteDialog = false;
       this.$router.push("/activities/articles");
+    },
+    uploadImage(e) {
+      if (e) {
+        const file = e;
+        this.article.imageURL = URL.createObjectURL(file);
+      }
+    },
+    removeImage() {
+      this.article.imageURL = null;
+      this.article.imageCredit = "";
     },
   },
 };
@@ -231,7 +278,8 @@ export default {
   grid-column-gap: 1rem;
 }
 .title,
-.body {
+.body,
+.header-image {
   grid-column: 1 / span 2;
 }
 </style>

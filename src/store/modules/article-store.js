@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import {
   createArticle,
   deleteArticle,
@@ -19,16 +19,22 @@ export default {
       category: "",
       level: "BEGINNER",
       body: "",
+      image: null,
+      imageURL: "",
+      imageCredit: "",
     },
     articles: [],
   },
   actions: {
-    async addArticle({ commit, dispatch }, goal) {
+    async addArticle({ commit }, article) {
       try {
+        if (article.image) {
+          const image = await Storage.put(article.image.name, article.image);
+          article.image = image.key;
+        }
         const res = await API.graphql(
-          graphqlOperation(createArticle, { input: goal })
+          graphqlOperation(createArticle, { input: article })
         );
-        dispatch("fetchArticles");
         commit("SET_ARTICLE", res.data.createArticle);
         commit("SET_SNACKBAR", {
           show: true,
@@ -41,10 +47,25 @@ export default {
     },
     async updateArticle({ commit }, article) {
       try {
+        if (article.image) {
+          const image = await Storage.put(article.image.name, article.image);
+          article.image = image.key;
+        }
         const res = await API.graphql(
           graphqlOperation(updateArticle, { input: article })
         );
-        commit("SET_ARTICLE", res.data.updateArticle);
+        if (res.data.updateArticle.image) {
+          const image = await Storage.get(res.data.updateArticle.image);
+          commit("SET_ARTICLE", {
+            ...res.data.updateArticle,
+            imageURL: image,
+          });
+        } else {
+          commit("SET_ARTICLE", {
+            ...res.data.updateArticle,
+            imageURL: null,
+          });
+        }
         commit("SET_SNACKBAR", {
           show: true,
           message: "Article Successfully Updated!",
@@ -58,7 +79,19 @@ export default {
       commit("TOGGLE_LOADING", true);
       try {
         const res = await API.graphql(graphqlOperation(getArticle, { id: id }));
-        commit("SET_ARTICLE", res.data.getArticle);
+
+        if (res.data.getArticle.image) {
+          const image = await Storage.get(res.data.getArticle.image);
+          commit("SET_ARTICLE", {
+            ...res.data.getArticle,
+            imageURL: image,
+          });
+        } else {
+          commit("SET_ARTICLE", {
+            ...res.data.getArticle,
+            imageURL: null,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
