@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex justify-center flex-column mx-auto article-container">
     <div class="d-flex justify-end mb-2 align-center">
       <v-btn
         to="/activities/articles"
@@ -22,14 +22,14 @@
 
     <ArticleLoader v-if="loading" />
 
-    <v-card v-else class="pa-sm-10" flat color="#f0f3f7">
-      <v-chip :color="levelColor" class="category-chip ml-4" x-small label>{{
+    <v-card v-else class="px-0" flat color="#f0f3f7">
+      <v-chip :color="levelColor" class="category-chip" x-small label>{{
         article.level
       }}</v-chip>
-      <v-card-title class="text-h4 break-word">{{
+      <v-card-title class="px-0 text-h4 break-word">{{
         article.title
       }}</v-card-title>
-      <v-card-subtitle class="d-flex flex-column"
+      <v-card-subtitle class="d-flex flex-column px-0"
         ><div>By {{ article.author }}</div>
         <div class="mt-2">
           <v-chip class="mr-2" color="primary" small outlined
@@ -41,18 +41,29 @@
           }}</v-chip>
         </div></v-card-subtitle
       >
-      <div v-if="article.imageURL" class="mb-5">
-        <v-divider class="mx-5 mb-5 pa-0" color="#9ec64c"></v-divider>
+      <div v-if="article.imageURL" class="px-0 mb-5">
+        <v-divider class="mx-0 mb-5 pa-0" color="#9ec64c"></v-divider>
         <v-img
+          lazy-src="/img/placeholder.png"
           :src="article.imageURL"
-          class="header-image mx-5 fill-width"
-        ></v-img
-        ><span class="text-caption px-5">Photo By {{ article.imageCredit }}</span>
+          class="header-image mx-0 fill-width"
+          ><template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                size="50"
+                width="5"
+                indeterminate
+                color="var(--mh-orange)"
+              ></v-progress-circular>
+            </v-row> </template></v-img
+        ><span class="text-caption px-0"
+          >Photo By {{ article.imageCredit }}</span
+        >
       </div>
 
-      <v-divider class="mx-5 pa-0" color="#9ec64c"></v-divider>
+      <v-divider class="mx-0 pa-0" color="#9ec64c"></v-divider>
 
-      <v-card-text
+      <v-card-text class="px-0"
         ><div v-html="article.body" class="article-body"></div
       ></v-card-text>
     </v-card>
@@ -118,6 +129,9 @@ export default {
 </script>
 
 <style scoped>
+.article-container {
+  max-width: 1100px;
+}
 .keep-white-space {
   white-space: break-spaces;
 }
