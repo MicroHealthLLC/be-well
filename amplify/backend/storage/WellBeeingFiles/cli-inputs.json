@@ -1,0 +1,16 @@
+{
+  "resourceName": "WellBeeingFiles",
+  "policyUUID": "f3e08e09",
+  "bucketName": "wellbeeing3f58a2ecb03248c2988066b315cb3ceb",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

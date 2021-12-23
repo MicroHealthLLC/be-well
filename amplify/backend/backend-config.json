@@ -50,5 +50,12 @@
       "providerPlugin": "awscloudformation",
       "type": "manual"
     }
+  },
+  "storage": {
+    "WellBeeingFiles": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
   }
 }
