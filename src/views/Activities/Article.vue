@@ -174,6 +174,7 @@ export default {
 .article-body >>> p {
   color: #000000de;
   font-size: 16px;
+  line-height: 1.75;
 }
 ::v-deep .article-body ul p,
 ::v-deep .article-body ol p {

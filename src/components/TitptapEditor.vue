@@ -96,6 +96,7 @@ export default {
 }
 ::v-deep .tiptap-vuetify-editor__content p {
   font-size: 16px;
+  line-height: 1.75;
 }
 ::v-deep .theme--light.v-sheet--outlined {
   border-color: #969696;
