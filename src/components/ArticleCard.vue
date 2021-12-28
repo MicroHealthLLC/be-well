@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="leftBorder" elevation="5">
+  <v-card class="d-flex flex-column" :class="leftBorder" elevation="5">
     <v-card-title class="article-title text-body-1 font-weight-bold">
       <div class="clamp-two-lines">{{ article.title }}</div>
     </v-card-title>
@@ -16,9 +16,11 @@
       </div></v-card-subtitle
     >
     <v-card-text
-      ><div class="clamp-three-lines">{{ article.body }}</div></v-card-text
+      ><div class="clamp-three-lines">
+        {{ strippedArticleBody }}
+      </div></v-card-text
     >
-    <v-card-actions class="align-end">
+    <v-card-actions class="fill-height align-end">
       <v-btn
         :to="`/activities/articles/view/${article.id}`"
         color="primary"
@@ -77,7 +79,20 @@ export default {
         "beginner-card": this.article.level == "BEGINNER",
         "intermediate-card": this.article.level == "INTERMEDIATE",
         "advanced-card": this.article.level == "ADVANCED",
+        "default-card": this.article.level == "NOT_APPLICABLE",
       };
+    },
+    strippedArticleBody() {
+      if (this.article.body.indexOf("<p>") !== -1) {
+        return this.article.body
+          .substring(
+            this.article.body.indexOf("<p>") + 3,
+            this.article.body.lastIndexOf("</p>")
+          )
+          .replace(/<(.|\n)*?>/g, "");
+      } else {
+        return "No preview available...";
+      }
     },
   },
 };
@@ -109,5 +124,8 @@ export default {
 }
 .advanced-card {
   border-left: 7.5px solid #ff5252;
+}
+.default-card {
+  border-left: 7.5px solid lightslategray;
 }
 </style>

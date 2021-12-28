@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "wellbeeinge2bd9338_identitypool_e2bd9338",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "wellbee2bd9338",
     "userPoolName": "wellbeeinge2bd9338_userpool_e2bd9338",
     "autoVerifiedAttributes": [

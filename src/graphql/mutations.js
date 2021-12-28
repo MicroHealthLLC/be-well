@@ -120,6 +120,8 @@ export const createArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }
@@ -138,6 +140,8 @@ export const updateArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }
@@ -156,6 +160,8 @@ export const deleteArticle = /* GraphQL */ `
       category
       level
       createdAt
+      image
+      imageCredit
       updatedAt
     }
   }

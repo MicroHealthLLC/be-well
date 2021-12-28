@@ -14,6 +14,7 @@
         <span class="text-h6 text-sm-h5">My Activity Reminders</span>
         <v-switch
           v-model="remind"
+          @change="requestPermission"
           class="mt-1 ml-3"
           color="#2f53b6"
           hide-details
@@ -335,7 +336,8 @@ export default {
       return this.categoryIcons[category] || "";
     },
     categoryString(categoryENUM) {
-      return this.categories.find((category) => category.value == categoryENUM).name;
+      return this.categories.find((category) => category.value == categoryENUM)
+        .name;
     },
     levelColor(level) {
       return level == "BEGINNER"
@@ -345,6 +347,11 @@ export default {
         : level == "ADVANCED"
         ? "error"
         : "primary";
+    },
+    requestPermission() {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
     },
   },
   computed: {
