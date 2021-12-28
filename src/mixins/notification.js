@@ -2,14 +2,24 @@ export const notification = {
   data() {
     return {
       imageURLs: {
-        Endurance: "/img/endurance.jpg",
-        Ergonomics: "/img/ergonomics.jpg",
-        Meditation: "/img/meditate.jpg",
-        "Muscle Tone/Movement": "/img/weight-training.jpg",
-        Posture: "/img/posture.jpg",
-        "Stress Relief": "/img/stress-relief.jpg",
-        Stretching: "/img/stretching.jpg",
-        Yoga: "/img/yoga.jpg",
+        ENDURANCE: "/img/endurance.jpg",
+        ERGONOMICS: "/img/ergonomics.jpg",
+        MEDITATION: "/img/meditate.jpg",
+        MUSCLE: "/img/weight-training.jpg",
+        POSTURE: "/img/posture.jpg",
+        STRESS_RELIEF: "/img/stress-relief.jpg",
+        STRETCHING: "/img/stretching.jpg",
+        YOGA: "/img/yoga.jpg",
+      },
+      categories: {
+        ENDURANCE: "Endurance",
+        ERGONOMICS: "Ergonomics",
+        MEDITATION: "Meditation",
+        MUSCLE: "Muscle Tone/Movement",
+        POSTURE: "Posture",
+        STRESS_RELIEF: "Stress Relief",
+        STRETCHING: "Stretching",
+        YOGA: "Yoga",
       },
     };
   },
@@ -23,7 +33,10 @@ export const notification = {
       // Let's check whether notification permissions have already been granted
       else if (Notification.permission === "granted") {
         // If it's okay let's create a notification
-        reg.showNotification(activity.category, this.notification(activity));
+        reg.showNotification(
+          this.categoryString(activity.category),
+          this.notification(activity)
+        );
       }
       // Otherwise, we need to ask the user for permission
       else if (Notification.permission !== "denied") {
@@ -31,7 +44,7 @@ export const notification = {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
             reg.showNotification(
-              activity.category,
+              this.categoryString(activity.category),
               this.notification(activity)
             );
           }
@@ -59,6 +72,9 @@ export const notification = {
     },
     imageURL(category) {
       return this.imageURLs[category] || "";
+    },
+    categoryString(category) {
+      return this.categories[category] || "";
     },
   },
 };

@@ -25,13 +25,12 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
+import { notification } from "./mixins/notification";
 
 export default {
   components: { Navbar, WelcomeBanner },
   name: "App",
-  data: () => ({
-    //
-  }),
+  mixins: [notification],
   methods: {
     ...mapActions(["fetchCurrentUser", "fetchReminders"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),

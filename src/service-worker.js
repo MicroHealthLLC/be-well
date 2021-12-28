@@ -5,8 +5,11 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "view-content") {
     clients.openWindow(
-      `/activities/videos?category=${categoryQuery(event.notification.data.category)}`
+      `/activities/videos?category=${categoryQuery(
+        event.notification.data.category
+      )}`
     );
+    console.log(event);
   } else if (event.action == "snooze") {
     console.log("SNOOZE");
   } else {
@@ -16,15 +19,15 @@ self.addEventListener("notificationclick", (event) => {
 
 function categoryQuery(key) {
   const categories = {
-    Endurance: "endurance",
-    Ergonomics: "ergonomics",
-    Meditation: "meditation",
-    "Muscle Tone/Movement": "muscle-tone-movement",
-    Posture: "posture",
-    "Stress Relief": "stress-relief",
-    Stretching: "stretching",
-    Yoga: "yoga",
+    ENDURANCE: "endurance",
+    ERGONOMICS: "ergonomics",
+    MEDITATION: "meditation",
+    MUSCLE: "muscle-tone-movement",
+    POSTURE: "posture",
+    STRESS_RELIEF: "stress-relief",
+    STRETCHING: "stretching",
+    YOGA: "yoga",
   };
 
-  return categories[key];
+  return categories[key] || "endurance";
 }
