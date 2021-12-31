@@ -73,33 +73,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ArticleLoader from "../../components/ArticleLoader.vue";
+import utilitiesMixin from "../../mixins/utilities-mixin";
+
 export default {
   components: { ArticleLoader },
   name: "Article",
-  data() {
-    return {
-      categoryIcons: {
-        ENDURANCE: "mdi-run",
-        ERGONOMICS: "mdi-seat-recline-extra",
-        MEDITATION: "mdi-meditation",
-        MUSCLE: "mdi-weight-lifter",
-        POSTURE: "mdi-human-male",
-        STRESS_RELIEF: "mdi-head-heart",
-        STRETCHING: "mdi-human",
-        YOGA: "mdi-yoga",
-      },
-      categories: {
-        ENDURANCE: "Endurance",
-        ERGONOMICS: "Ergonomics",
-        MEDITATION: "Meditation",
-        MUSCLE: "Muscle Tone/Movement",
-        POSTURE: "Posture",
-        STRESS_RELIEF: "Stress Relief",
-        STRETCHING: "Stretching",
-        YOGA: "Yoga",
-      },
-    };
-  },
+  mixins: [utilitiesMixin],
   computed: {
     ...mapGetters(["article", "isEditor", "loading"]),
     levelColor() {
@@ -114,12 +93,6 @@ export default {
     ...mapActions(["fetchArticle"]),
     formatDate(date) {
       return new Date(date).toDateString();
-    },
-    categoryIcon(category) {
-      return this.categoryIcons[category] || "";
-    },
-    categoryString(category) {
-      return this.categories[category] || "";
     },
   },
   mounted() {

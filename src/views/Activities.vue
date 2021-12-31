@@ -57,54 +57,14 @@
 </template>
 
 <script>
+import utilitiesMixin from "../mixins/utilities-mixin";
 export default {
   name: "Activities",
+  mixins: [utilitiesMixin],
   data() {
     return {
       mounted: false,
       selectedCategory: 0,
-      categories: [
-        {
-          title: "Endurance",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Meditation",
-          query: "meditation",
-          key: "MEDITATION",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          query: "muscle-tone-movement",
-          key: "MUSCLE",
-        },
-        {
-          title: "Posture",
-          query: "posture",
-          key: "POSTURE",
-        },
-        {
-          title: "Stress Relief",
-          query: "stress-relief",
-          key: "STRESS_RELIEF",
-        },
-        {
-          title: "Stretching",
-          query: "stretching",
-          key: "STRETCHING",
-        },
-        {
-          title: "Yoga",
-          query: "yoga",
-          key: "YOGA",
-        },
-      ],
     };
   },
   computed: {

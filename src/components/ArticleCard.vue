@@ -32,45 +32,19 @@
 </template>
 
 <script>
+import utilitiesMixin from "../mixins/utilities-mixin";
+
 export default {
+  name: "ArticleCard",
+  mixins: [utilitiesMixin],
   props: {
     article: {
       type: Object,
     },
   },
-  data() {
-    return {
-      categoryIcons: {
-        ENDURANCE: "mdi-run",
-        ERGONOMICS: "mdi-seat-recline-extra",
-        MEDITATION: "mdi-meditation",
-        MUSCLE: "mdi-weight-lifter",
-        POSTURE: "mdi-human-male",
-        STRESS_RELIEF: "mdi-head-heart",
-        STRETCHING: "mdi-human",
-        YOGA: "mdi-yoga",
-      },
-      categories: {
-        ENDURANCE: "Endurance",
-        ERGONOMICS: "Ergonomics",
-        MEDITATION: "Meditation",
-        MUSCLE: "Muscle Tone/Movement",
-        POSTURE: "Posture",
-        STRESS_RELIEF: "Stress Relief",
-        STRETCHING: "Stretching",
-        YOGA: "Yoga",
-      },
-    };
-  },
   methods: {
     formatDate(date) {
       return new Date(date).toDateString();
-    },
-    categoryIcon(category) {
-      return this.categoryIcons[category] || "";
-    },
-    categoryString(category) {
-      return this.categories[category] || "";
     },
   },
   computed: {
