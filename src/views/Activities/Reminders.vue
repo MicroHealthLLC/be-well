@@ -41,7 +41,7 @@
         </template>
         <template v-slot:item.level="{ item }">
           <v-chip small :color="levelColor(item.level)" dark>{{
-            item.level
+            levelTitle(item.level)
           }}</v-chip>
         </template>
         <template v-slot:item.actions="{ item }">
@@ -91,7 +91,7 @@
             <v-select
               v-model="reminder.category"
               :items="categories"
-              item-text="name"
+              item-text="title"
               item-value="value"
               label="Category"
               :rules="[(v) => !!v || 'Category is required']"
@@ -100,7 +100,7 @@
             <v-select
               v-model="reminder.level"
               :items="levels"
-              item-text="name"
+              item-text="title"
               item-value="value"
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
@@ -166,11 +166,11 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { notification } from "../../mixins/notification.js";
+import utilitiesMixin from "../../mixins/utilities-mixin.js";
 
 export default {
   name: "Activities",
-  mixins: [notification],
+  mixins: [utilitiesMixin],
   data() {
     return {
       dialog: false,
@@ -183,64 +183,20 @@ export default {
         contentType: "",
         time: null,
       },
-      categories: [
-        {
-          name: "Endurance",
-          value: "ENDURANCE",
-        },
-        {
-          name: "Ergonomics",
-          value: "ERGONOMICS",
-        },
-        {
-          name: "Meditation",
-          value: "MEDITATION",
-        },
-        {
-          name: "Muscle Tone/Movement",
-          value: "MUSCLE",
-        },
-        {
-          name: "Posture",
-          value: "POSTURE",
-        },
-        {
-          name: "Stress Relief",
-          value: "STRESS_RELIEF",
-        },
-        {
-          name: "Stretching",
-          value: "STRETCHING",
-        },
-        {
-          name: "Yoga",
-          value: "YOGA",
-        },
-      ],
-      levels: [
-        {
-          name: "Beginner",
-          value: "BEGINNER",
-        },
-        {
-          name: "Intermediate",
-          value: "INTERMEDIATE",
-        },
-        {
-          name: "Advanced",
-          value: "ADVANCED",
-        },
-      ],
-      categoryIcons: {
-        ENDURANCE: "mdi-run",
-        ERGONOMICS: "mdi-seat-recline-extra",
-        MEDITATION: "mdi-meditation",
-        MUSCLE: "mdi-weight-lifter",
-        POSTURE: "mdi-human-male",
-        STRESS_RELIEF: "mdi-head-heart",
-        STRETCHING: "mdi-human",
-        YOGA: "mdi-yoga",
-      },
+      // levels: [
+      //   {
+      //     name: "Beginner",
+      //     value: "BEGINNER",
+      //   },
+      //   {
+      //     name: "Intermediate",
+      //     value: "INTERMEDIATE",
+      //   },
+      //   {
+      //     name: "Advanced",
+      //     value: "ADVANCED",
+      //   },
+      // ],
       headers: [
         {
           text: "Category",
@@ -262,11 +218,6 @@ export default {
           text: "Content Type",
           value: "contentType",
         },
-        // {
-        //   text: "Cycle",
-        //   value: "cycle",
-        //   sortable: false,
-        // },
         {
           text: "Actions",
           value: "actions",
@@ -331,13 +282,6 @@ export default {
         contentType: "",
         time: null,
       };
-    },
-    categoryIcon(category) {
-      return this.categoryIcons[category] || "";
-    },
-    categoryString(categoryENUM) {
-      return this.categories.find((category) => category.value == categoryENUM)
-        .name;
     },
     levelColor(level) {
       return level == "BEGINNER"

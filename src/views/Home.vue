@@ -145,7 +145,7 @@
             <v-select
               v-model="goal.category"
               :items="categories"
-              item-text="name"
+              item-text="title"
               item-value="value"
               label="Category"
               :rules="[(v) => !!v || 'Category is required']"
@@ -201,49 +201,17 @@ import { mapActions, mapGetters } from "vuex";
 import youtube from "../apis/youtube";
 import VideoCard from "../components/VideoCard.vue";
 import ArticleCard from "../components/ArticleCard.vue";
+import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
   components: { ArticleCard, VideoCard },
   name: "Home",
+  mixins: [utilitiesMixin],
   data() {
     return {
       dialog: false,
       valid: true,
       menu: false,
-      categories: [
-        {
-          name: "Endurance",
-          value: "ENDURANCE",
-        },
-        {
-          name: "Ergonomics",
-          value: "ERGONOMICS",
-        },
-        {
-          name: "Meditation",
-          value: "MEDITATION",
-        },
-        {
-          name: "Muscle Tone/Movement",
-          value: "MUSCLE",
-        },
-        {
-          name: "Posture",
-          value: "POSTURE",
-        },
-        {
-          name: "Stress Relief",
-          value: "STRESS_RELIEF",
-        },
-        {
-          name: "Stretching",
-          value: "STRETCHING",
-        },
-        {
-          name: "Yoga",
-          value: "YOGA",
-        },
-      ],
       goal: {
         id: 0,
         title: "",
@@ -336,10 +304,6 @@ export default {
     },
     closeGoalForm() {
       this.dialog = false;
-    },
-    categoryString(categoryENUM) {
-      return this.categories.find((category) => category.value == categoryENUM)
-        .name;
     },
   },
   computed: {
