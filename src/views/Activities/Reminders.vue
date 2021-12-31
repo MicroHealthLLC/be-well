@@ -41,7 +41,7 @@
         </template>
         <template v-slot:item.level="{ item }">
           <v-chip small :color="levelColor(item.level)" dark>{{
-            item.level
+            levelTitle(item.level)
           }}</v-chip>
         </template>
         <template v-slot:item.actions="{ item }">
@@ -100,7 +100,7 @@
             <v-select
               v-model="reminder.level"
               :items="levels"
-              item-text="name"
+              item-text="title"
               item-value="value"
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
@@ -183,20 +183,20 @@ export default {
         contentType: "",
         time: null,
       },
-      levels: [
-        {
-          name: "Beginner",
-          value: "BEGINNER",
-        },
-        {
-          name: "Intermediate",
-          value: "INTERMEDIATE",
-        },
-        {
-          name: "Advanced",
-          value: "ADVANCED",
-        },
-      ],
+      // levels: [
+      //   {
+      //     name: "Beginner",
+      //     value: "BEGINNER",
+      //   },
+      //   {
+      //     name: "Intermediate",
+      //     value: "INTERMEDIATE",
+      //   },
+      //   {
+      //     name: "Advanced",
+      //     value: "ADVANCED",
+      //   },
+      // ],
       headers: [
         {
           text: "Category",

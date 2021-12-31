@@ -51,6 +51,24 @@ export default {
           value: "YOGA",
         },
       ],
+      levels: [
+        {
+          title: "Beginner",
+          value: "BEGINNER",
+        },
+        {
+          title: "Intermediate",
+          value: "INTERMEDIATE",
+        },
+        {
+          title: "Advanced",
+          value: "ADVANCED",
+        },
+        {
+          title: "N/A",
+          value: "NOT_APPLICABLE",
+        },
+      ],
     };
   },
   methods: {
@@ -118,6 +136,9 @@ export default {
       } else {
         return "";
       }
+    },
+    levelTitle(value) {
+      return this.levels.find((level) => level.value == value).title || "";
     },
   },
 };

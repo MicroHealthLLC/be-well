@@ -23,7 +23,7 @@
           <v-select
             v-model="article.category"
             :items="categories"
-            item-text="name"
+            item-text="title"
             item-value="value"
             label="Category"
             :rules="[(v) => !!v || 'Category is required']"
@@ -33,7 +33,7 @@
             v-model="article.level"
             label="Level"
             :items="levels"
-            item-text="name"
+            item-text="title"
             item-value="value"
             :rules="[(v) => !!v || 'Level is required']"
             required
@@ -118,68 +118,19 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import utilitiesMixin from "../mixins/utilities-mixin";
 import TiptapEditor from "./TitptapEditor.vue";
 
 export default {
+  name: "ArticleForm",
   components: {
     TiptapEditor,
   },
+  mixins: [utilitiesMixin],
   data() {
     return {
       deleteDialog: false,
       formValid: true,
-      levels: [
-        {
-          name: "Beginner",
-          value: "BEGINNER",
-        },
-        {
-          name: "Intermediate",
-          value: "INTERMEDIATE",
-        },
-        {
-          name: "Advanced",
-          value: "ADVANCED",
-        },
-        {
-          name: "N/A",
-          value: "NOT_APPLICABLE",
-        },
-      ],
-      categories: [
-        {
-          name: "Endurance",
-          value: "ENDURANCE",
-        },
-        {
-          name: "Ergonomics",
-          value: "ERGONOMICS",
-        },
-        {
-          name: "Meditation",
-          value: "MEDITATION",
-        },
-        {
-          name: "Muscle Tone/Movement",
-          value: "MUSCLE",
-        },
-        {
-          name: "Posture",
-          value: "POSTURE",
-        },
-        {
-          name: "Stress Relief",
-          value: "STRESS_RELIEF",
-        },
-        {
-          name: "Stretching",
-          value: "STRETCHING",
-        },
-        {
-          name: "Yoga",
-          value: "YOGA",
-        },
-      ],
     };
   },
   computed: {
