@@ -1,9 +1,6 @@
 <template>
   <v-card elevation="5">
-    <div
-      @click="playVideo(video.snippet.resourceId.videoId)"
-      class="img-container clickable"
-    >
+    <div @click="playVideo(video.resourceId)" class="img-container clickable">
       <img
         class="image"
         :src="video.snippet.thumbnails.standard.url"
@@ -20,7 +17,7 @@
       }}</span></v-card-title
     >
     <v-card-subtitle>{{
-      video.snippet.videoOwnerChannelTitle
+      video.snippet.channelTitle
     }}</v-card-subtitle>
     <v-card-text>
       <span class="clamp-two-lines">{{ video.snippet.description }}</span>
