@@ -139,3 +139,39 @@ export const onDeleteArticle = /* GraphQL */ `
     }
   }
 `;
+export const onCreateVideo = /* GraphQL */ `
+  subscription OnCreateVideo {
+    onCreateVideo {
+      id
+      resourceId
+      level
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateVideo = /* GraphQL */ `
+  subscription OnUpdateVideo {
+    onUpdateVideo {
+      id
+      resourceId
+      level
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteVideo = /* GraphQL */ `
+  subscription OnDeleteVideo {
+    onDeleteVideo {
+      id
+      resourceId
+      level
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
