@@ -37,104 +37,105 @@
         :video="video"
       />
     </div>
+
+    <!-- Test Videos -->
+    <span class="text-h6 text-sm-h5">Test Videos</span>
+    <v-btn @click="openDialog">Add Video</v-btn>
+    <v-divider class="mb-4"></v-divider>
+
+    <div class="grid-container mb-6">
+      <video-card
+        v-for="(video, index) in videos"
+        :key="index"
+        :video="video"
+      />
+    </div>
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card>
+        <v-card-title>Add Video</v-card-title>
+        <v-card-text>
+          <v-form ref="videoform" v-model="valid">
+            <v-text-field
+              v-model="newVideo.resourceId"
+              label="YouTube Video Link"
+            ></v-text-field>
+            <v-select
+              v-model="newVideo.category"
+              :items="categories"
+              item-text="title"
+              item-value="value"
+              label="Category"
+              :rules="[(v) => !!v || 'Category is required']"
+              required
+            ></v-select>
+            <v-select
+              v-model="newVideo.level"
+              :items="levels"
+              item-text="title"
+              item-value="value"
+              label="Level"
+              :rules="[(v) => !!v || 'Level is required']"
+              required
+            ></v-select>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="addNewVideo" color="var(--mh-blue)" dark
+            >Add Video</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import VideoCard from "../../components/VideoCard.vue";
-import youtube from "../../apis/youtube";
+// import youtube from "../../apis/youtube";
+import { mapActions, mapGetters } from "vuex";
+import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   name: "Videos",
+  mixins: [utilitiesMixin],
   props: ["selectedCategory"],
   components: {
     VideoCard,
   },
   data() {
     return {
-      beginnerVideos: [],
-      intermediateVideos: [],
-      advancedVideos: [],
-      categories: [
-        {
-          title: "Endurance",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Meditation",
-          query: "meditation",
-          key: "MEDITATION",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          query: "muscle-tone-movement",
-          key: "MUSCLE",
-        },
-        {
-          title: "Posture",
-          query: "posture",
-          key: "POSTURE",
-        },
-        {
-          title: "Stress Relief",
-          query: "stress-relief",
-          key: "STRESS_RELIEF",
-        },
-        {
-          title: "Stretching",
-          query: "stretching",
-          key: "STRETCHING",
-        },
-        {
-          title: "Yoga",
-          query: "yoga",
-          key: "YOGA",
-        },
-      ],
+      dialog: false,
+      valid: true,
+      newVideo: {
+        resourceId: "",
+        category: "",
+        level: "",
+      },
     };
   },
   methods: {
-    async fetchCategoryVideos() {
-      const key = this.categories[this.selectedCategory].key;
-
-      const res = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_BEGINNER_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.beginnerVideos = res.data.items;
-
-      const res2 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_INTERMEDIATE_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.intermediateVideos = res2.data.items;
-
-      const res3 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_ADVANCED_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.advancedVideos = res3.data.items;
+    ...mapActions(["addVideo", "fetchCategoryVideos"]),
+    addNewVideo() {
+      this.addVideo(this.newVideo);
+    },
+    openDialog() {
+      this.dialog = true;
     },
   },
   computed: {
+    ...mapGetters([
+      "advancedVideos",
+      "beginnerVideos",
+      "intermediateVideos",
+      "videos",
+    ]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
   },
   async mounted() {
-    await this.fetchCategoryVideos();
+    const key = this.categories[this.selectedCategory].value;
+    await this.fetchCategoryVideos(key);
   },
   watch: {
     selectedCategory() {
@@ -146,7 +147,8 @@ export default {
           query: { category: this.categories[this.selectedCategory].query },
         });
 
-        this.fetchCategoryVideos();
+        const key = this.categories[this.selectedCategory].value;
+        this.fetchCategoryVideos(key);
       }
     },
   },
