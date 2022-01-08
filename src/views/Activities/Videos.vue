@@ -4,12 +4,16 @@
     <span class="text-h6 text-sm-h5">Beginner {{ categoryTitle }} Videos</span>
     <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
+    <div v-if="beginnerVideos.length > 0" class="grid-container mb-6">
       <video-card
         v-for="(video, index) in beginnerVideos"
         :key="index"
         :video="video"
       />
+    </div>
+    <div v-else class="d-flex justify-center align-center py-10">
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Beginner
+      Videos...
     </div>
 
     <!-- Intermediate Videos -->
@@ -18,24 +22,32 @@
     >
     <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
+    <div v-if="intermediateVideos.length > 0" class="grid-container mb-6">
       <video-card
         v-for="(video, index) in intermediateVideos"
         :key="index"
         :video="video"
       />
     </div>
+    <div v-else class="d-flex justify-center align-center py-10">
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Intermediate
+      Videos...
+    </div>
 
     <!-- Advanced Videos -->
     <span class="text-h6 text-sm-h5">Advanced {{ categoryTitle }} Videos</span>
     <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
+    <div v-if="advancedVideos.length > 0" class="grid-container mb-6">
       <video-card
         v-for="(video, index) in advancedVideos"
         :key="index"
         :video="video"
       />
+    </div>
+    <div v-else class="d-flex justify-center align-center py-10">
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Advanced
+      Videos...
     </div>
     <!-- Add Video Dialog -->
     <v-dialog v-model="dialog" max-width="600">

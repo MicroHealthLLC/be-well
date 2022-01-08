@@ -26,10 +26,8 @@ export default {
             id: res.data.createVideo.resourceId,
           },
         }).then((res) => {
-          console.log(res);
-
           let newVideo = res.data.items[0];
-
+          // Add video to videos in state if currently on same category page
           if (currentCategory) {
             commit("ADD_VIDEO", {
               ...video,
