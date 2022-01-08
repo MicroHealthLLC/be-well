@@ -28,10 +28,11 @@
         >View Video</v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn v-if="isEditor" @click="removeVideo" icon
+      <v-btn v-if="isEditor" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
       >
     </v-card-actions>
+    <!-- Play Video Modal -->
     <v-dialog v-model="play" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
@@ -43,6 +44,30 @@
             allowfullscreen
           ></iframe>
         </div>
+      </v-card>
+    </v-dialog>
+    <!-- Delete Video Dialog -->
+    <v-dialog v-model="deleteDialog">
+      <v-card>
+        <v-card-title>Delete Video?</v-card-title>
+        <v-card-text
+          >Are you sure you want to delete
+          <strong>{{ video.snippet.title }}</strong
+          >?</v-card-text
+        >
+        <v-card-actions class="justify-end">
+          <v-btn @click="deleteDialog = false" color="secondary" small outlined
+            >Cancel</v-btn
+          >
+          <v-btn
+            @click="removeVideo"
+            class="px-5"
+            color="var(--mh-blue)"
+            small
+            dark
+            >Delete</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-card>
@@ -61,6 +86,7 @@ export default {
     return {
       play: false,
       embedVideoURL: "",
+      deleteDialog: false,
     };
   },
   methods: {
@@ -71,6 +97,9 @@ export default {
     playVideo(videoId) {
       this.play = true;
       this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
+    },
+    openDeleteDialog() {
+      this.deleteDialog = true;
     },
     removeVideo() {
       this.deleteVideo(this.video.id);

@@ -72,7 +72,9 @@
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark>Submit</v-btn>
+          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark
+            >Submit</v-btn
+          >
           <v-btn @click="dialog = false" color="secondary" outlined
             >Cancel</v-btn
           >
@@ -126,6 +128,7 @@ export default {
           this.newVideo.category ==
           this.categories[this.selectedCategory].value,
       });
+      this.dialog = false;
     },
     openDialog() {
       this.resetForm();
