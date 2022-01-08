@@ -16,9 +16,7 @@
         video.snippet.title
       }}</span></v-card-title
     >
-    <v-card-subtitle>{{
-      video.snippet.channelTitle
-    }}</v-card-subtitle>
+    <v-card-subtitle>{{ video.snippet.channelTitle }}</v-card-subtitle>
     <v-card-text>
       <span class="clamp-two-lines">{{ video.snippet.description }}</span>
     </v-card-text>
@@ -28,6 +26,10 @@
         text
         color="primary"
         >View Video</v-btn
+      >
+      <v-spacer></v-spacer>
+      <v-btn v-if="isEditor" @click="removeVideo" icon
+        ><v-icon>mdi-delete</v-icon></v-btn
       >
     </v-card-actions>
     <v-dialog v-model="play" overlay-opacity="0.9">
@@ -47,6 +49,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "VideoCard",
   props: {
@@ -61,6 +64,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["deleteVideo"]),
     openVideoURL(videoId) {
       window.open(`https://www.youtube.com/watch?v=${videoId}`);
     },
@@ -68,6 +72,12 @@ export default {
       this.play = true;
       this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
     },
+    removeVideo() {
+      this.deleteVideo(this.video.id);
+    },
+  },
+  computed: {
+    ...mapGetters(["isEditor"]),
   },
   watch: {
     play(isPlaying) {

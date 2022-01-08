@@ -1,5 +1,5 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { createVideo, } from "@/graphql/mutations"; // prettier-ignore
+import { createVideo, deleteVideo } from "@/graphql/mutations"; // prettier-ignore
 import { listVideos, videosByCategory } from "@/graphql/queries"; // prettier-ignore
 import axios from "axios";
 
@@ -11,7 +11,7 @@ export default {
     awsVideos: [],
   },
   actions: {
-    async addVideo({ commit }, video) {
+    async addVideo({ commit }, { video, currentCategory }) {
       try {
         const res = await API.graphql(
           graphqlOperation(createVideo, { input: video })
@@ -27,7 +27,19 @@ export default {
           },
         }).then((res) => {
           console.log(res);
-          commit("ADD_VIDEO", res.data.items[0]);
+
+          let newVideo = res.data.items[0];
+
+          if (currentCategory) {
+            commit("ADD_VIDEO", {
+              ...video,
+              contentDetails: newVideo.contentDetails,
+              etag: newVideo.etag,
+              youtubeId: newVideo.id,
+              kind: newVideo.kind,
+              snippet: newVideo.snippet,
+            });
+          }
         });
       } catch (error) {
         console.log(error);
@@ -100,11 +112,28 @@ export default {
         console.log(error);
       }
     },
+    async deleteVideo({ commit }, id) {
+      try {
+        await API.graphql(graphqlOperation(deleteVideo, { input: { id: id } }));
+        commit("DELETE_VIDEO", id);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Video Removed",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     ADD_VIDEO: (state, video) => state.videos.push(video),
     SET_VIDEOS: (state, videos) => (state.videos = videos),
     SET_AWS_VIDEOS: (state, videos) => (state.awsVideos = videos),
+    DELETE_VIDEO: (state, id) => {
+      let deleteIndex = state.videos.findIndex((video) => video.id == id);
+      state.videos.splice(deleteIndex, 1);
+    },
   },
   getters: {
     videos: (state) => state.videos,

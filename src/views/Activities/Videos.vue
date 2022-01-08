@@ -37,19 +37,7 @@
         :video="video"
       />
     </div>
-
-    <!-- Test Videos -->
-    <span class="text-h6 text-sm-h5">Test Videos</span>
-    <v-btn @click="openDialog">Add Video</v-btn>
-    <v-divider class="mb-4"></v-divider>
-
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in videos"
-        :key="index"
-        :video="video"
-      />
-    </div>
+    <!-- Add Video Dialog -->
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
         <v-card-title>Add Video</v-card-title>
@@ -58,6 +46,10 @@
             <v-text-field
               v-model="newVideo.resourceId"
               label="YouTube Video Link"
+              hint="Ex: https://www.youtube.com/watch?v=XXXXXX"
+              persistent-hint
+              :rules="[(v) => !!v || 'YouTube Video Link is required']"
+              required
             ></v-text-field>
             <v-select
               v-model="newVideo.category"
@@ -79,13 +71,25 @@
             ></v-select>
           </v-form>
         </v-card-text>
-        <v-card-actions>
-          <v-btn @click="addNewVideo" color="var(--mh-blue)" dark
-            >Add Video</v-btn
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark>Submit</v-btn>
+          <v-btn @click="dialog = false" color="secondary" outlined
+            >Cancel</v-btn
           >
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Floating Add Video Button -->
+    <v-btn
+      v-if="isEditor"
+      @click="openDialog"
+      class="floating-btn"
+      color="var(--mh-blue)"
+      fab
+      large
+      dark
+      ><v-icon large>mdi-plus</v-icon></v-btn
+    >
   </div>
 </template>
 
@@ -116,10 +120,26 @@ export default {
   methods: {
     ...mapActions(["addVideo", "fetchCategoryVideos"]),
     addNewVideo() {
-      this.addVideo(this.newVideo);
+      this.addVideo({
+        video: this.newVideo,
+        currentCategory:
+          this.newVideo.category ==
+          this.categories[this.selectedCategory].value,
+      });
     },
     openDialog() {
+      this.resetForm();
       this.dialog = true;
+      if (this.$refs.videoform) {
+        this.$refs.videoform.resetValidation();
+      }
+    },
+    resetForm() {
+      this.newVideo = {
+        resourceId: "",
+        category: "",
+        level: "",
+      };
     },
   },
   computed: {
@@ -127,6 +147,7 @@ export default {
       "advancedVideos",
       "beginnerVideos",
       "intermediateVideos",
+      "isEditor",
       "videos",
     ]),
     categoryTitle() {
@@ -164,5 +185,12 @@ export default {
 .image {
   max-height: 200px;
   object-fit: cover;
+}
+.floating-btn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 7vw;
+  margin-bottom: 7vh;
 }
 </style>
