@@ -39,8 +39,18 @@ export default {
             });
           }
         });
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Video Successfully Added!",
+          color: "var(--mh-green)",
+        });
       } catch (error) {
         console.log(error);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: `Error: ${error.message}`,
+          color: "var(--mh-orange)",
+        });
       }
     },
     async fetchVideos({ commit }) {
@@ -51,8 +61,6 @@ export default {
           .map((video) => video.resourceId)
           .join(",");
 
-        console.log(videoIds);
-
         await axios({
           method: "GET",
           url: youtubeURL,
@@ -62,7 +70,6 @@ export default {
             id: videoIds,
           },
         }).then((res) => {
-          console.log(res);
           commit("SET_VIDEOS", res.data.items);
         });
       } catch (error) {
