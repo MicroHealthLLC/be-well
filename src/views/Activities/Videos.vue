@@ -12,8 +12,7 @@
       />
     </div>
     <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Beginner
-      Videos...
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Beginner Videos...
     </div>
 
     <!-- Intermediate Videos -->
@@ -30,8 +29,7 @@
       />
     </div>
     <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Intermediate
-      Videos...
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Intermediate Videos...
     </div>
 
     <!-- Advanced Videos -->
@@ -46,8 +44,7 @@
       />
     </div>
     <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Advanced
-      Videos...
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Advanced Videos...
     </div>
     <!-- Add Video Dialog -->
     <v-dialog v-model="dialog" max-width="600">
@@ -56,12 +53,17 @@
         <v-card-text>
           <v-form ref="videoform" v-model="valid">
             <v-text-field
-              v-model="newVideo.resourceId"
+              v-model="urlInput"
+              @keydown.space.prevent
               label="YouTube Video Link"
               hint="Ex: https://www.youtube.com/watch?v=XXXXXX"
               persistent-hint
-              :rules="[(v) => !!v || 'YouTube Video Link is required']"
+              :rules="[
+                (v) => !!v || 'YouTube Video Link is required',
+                (v) => urlCheck(v) || 'Not a valid URL',
+              ]"
               required
+              validate-on-blur
             ></v-text-field>
             <v-select
               v-model="newVideo.category"
@@ -109,7 +111,6 @@
 
 <script>
 import VideoCard from "../../components/VideoCard.vue";
-// import youtube from "../../apis/youtube";
 import { mapActions, mapGetters } from "vuex";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 
@@ -129,11 +130,18 @@ export default {
         category: "",
         level: "",
       },
+      urlInput: "",
     };
   },
   methods: {
     ...mapActions(["addVideo", "fetchCategoryVideos"]),
     addNewVideo() {
+      if (!this.$refs.videoform.validate()) {
+        return;
+      }
+      // Extract YouTube id from user provided URL
+      this.newVideo.resourceId = this.extractResourceId(this.urlInput);
+      // Boolean is passed for current category to determine if user is on same page
       this.addVideo({
         video: this.newVideo,
         currentCategory:
@@ -150,11 +158,23 @@ export default {
       }
     },
     resetForm() {
+      this.urlInput = "";
       this.newVideo = {
         resourceId: "",
         category: "",
         level: "",
       };
+    },
+    urlCheck(url) {
+      return url.includes("youtube.com") || url.includes("youtu.be");
+    },
+    extractResourceId(url) {
+      let regExp =
+        /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;
+
+      let match = url.match(regExp);
+
+      return match ? url.match(regExp)[7] : "YouTube ID not found";
     },
   },
   computed: {
