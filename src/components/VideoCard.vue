@@ -21,14 +21,11 @@
       <span class="clamp-two-lines">{{ video.snippet.description }}</span>
     </v-card-text>
     <v-card-actions class="align-end">
-      <v-btn
-        @click="playVideo(video.snippet.resourceId.videoId)"
-        text
-        color="primary"
+      <v-btn @click="playVideo(video.resourceId)" text color="primary"
         >View Video</v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn v-if="isEditor" @click="openDeleteDialog" icon
+      <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
       >
     </v-card-actions>
@@ -103,10 +100,14 @@ export default {
     },
     removeVideo() {
       this.deleteVideo(this.video.id);
+      this.deleteDialog = false;
     },
   },
   computed: {
     ...mapGetters(["isEditor"]),
+    showDeleteBtn() {
+      return this.isEditor && this.$route.name != "Home";
+    },
   },
   watch: {
     play(isPlaying) {
