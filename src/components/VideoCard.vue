@@ -1,11 +1,7 @@
 <template>
   <v-card elevation="5">
     <div @click="playVideo(video.resourceId)" class="img-container clickable">
-      <img
-        class="image"
-        :src="video.snippet.thumbnails.standard.url"
-        width="100%"
-      />
+      <img class="image" :src="thumbnail" width="100%" />
       <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
       </div>
@@ -107,6 +103,15 @@ export default {
     ...mapGetters(["isEditor"]),
     showDeleteBtn() {
       return this.isEditor && this.$route.name != "Home";
+    },
+    thumbnail() {
+      return (
+        this.video.snippet.thumbnails.standard?.url ||
+        this.video.snippet.thumbnails.medium?.url ||
+        this.video.snippet.thumbnails.high?.url ||
+        this.video.snippet.thumbnails.default?.url ||
+        ""
+      );
     },
   },
   watch: {
