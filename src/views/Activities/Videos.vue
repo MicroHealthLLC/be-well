@@ -152,6 +152,7 @@ export default {
     },
     openDialog() {
       this.resetForm();
+      this.newVideo.category = this.categories[this.selectedCategory].value;
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
