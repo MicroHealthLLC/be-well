@@ -117,6 +117,46 @@ export default {
         console.log(error);
       }
     },
+    async fetchLatestVideos({ commit }) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(listVideos, { limit: 3 })
+        );
+        const awsVideos = res.data.listVideos.items;
+        const videoIds = res.data.listVideos.items
+          .map((video) => video.resourceId)
+          .join(",");
+
+        await axios({
+          method: "GET",
+          url: youtubeURL,
+          params: {
+            part: "contentDetails,snippet",
+            key: process.env.VUE_APP_YOUTUBE_API_KEY,
+            id: videoIds,
+          },
+        }).then((res) => {
+          let mergedVideos = [];
+          res.data.items.forEach((item) => {
+            let video = awsVideos.find(
+              (awsVideo) => awsVideo.resourceId == item.id
+            );
+            // Combine both AWS video reference and YouTube video data
+            mergedVideos.push({
+              ...video,
+              contentDetails: item.contentDetails,
+              etag: item.etag,
+              youtubeId: item.id,
+              kind: item.kind,
+              snippet: item.snippet,
+            });
+          });
+          commit("SET_VIDEOS", mergedVideos);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async deleteVideo({ commit }, id) {
       try {
         await API.graphql(graphqlOperation(deleteVideo, { input: { id: id } }));
