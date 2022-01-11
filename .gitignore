@@ -44,4 +44,8 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 amplify/team-provider-info.json
+<<<<<<< HEAD
 amplify/backend/api/wellbeeing/resolvers
+=======
+amplify/backend/api/wellbeeing/resolvers
+>>>>>>> e76f7427dc6f0f150ef8603f1780e6bb7d007326
