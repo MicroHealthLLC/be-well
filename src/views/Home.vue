@@ -322,7 +322,7 @@ export default {
   async mounted() {
     this.fetchLatestVideos();
     this.fetchGoals();
-    this.fetchArticles();
+    this.fetchArticles({ limit: 6 });
   },
 };
 </script>

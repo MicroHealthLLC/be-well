@@ -97,10 +97,10 @@ export default {
       }
       commit("TOGGLE_LOADING", false);
     },
-    async fetchArticles({ commit }) {
+    async fetchArticles({ commit }, filters) {
       try {
         const res = await API.graphql(
-          graphqlOperation(listArticles, { limit: 6 })
+          graphqlOperation(listArticles, filters)
         );
         commit("SET_ARTICLES", res.data.listArticles.items);
       } catch (error) {

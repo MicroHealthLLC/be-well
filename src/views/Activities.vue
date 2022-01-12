@@ -32,25 +32,47 @@
           >Blogs</v-btn
         >
       </v-btn-toggle>
+      <!-- Category Selector -->
       <v-chip-group
         v-if="$route.name == 'Videos' || $route.name == 'Articles'"
         v-model="selectedCategory"
-        class="mt-2 mb-2 mb-sm-2 mt-sm-4 categories"
+        class="mt-2 mt-sm-4 categories"
         mandatory
       >
         <v-chip
           v-for="(category, index) in categories"
           :key="index"
+          class="mb-0"
           color="primary"
           outlined
           filter
-          >{{ category.title }}</v-chip
+          >{{ category.title
+          }}<v-icon right small>{{ category.icon }}</v-icon></v-chip
+        > 
+      </v-chip-group>
+      <!-- Level Selector -->
+      <v-chip-group
+        v-if="$route.name == 'Videos' || $route.name == 'Articles'"
+        v-model="selectedLevel"
+        class="levels"
+        mandatory
+      >
+        <v-chip
+          v-for="(level, index) in levels"
+          :key="index"
+          class="mt-0"
+          color="primary"
+          small
+          filter
+          outlined
+          >{{ level.title }}</v-chip
         >
       </v-chip-group>
       <!-- Activities Content -->
       <router-view
         v-if="mounted"
         :selectedCategory="selectedCategory"
+        :selectedLevel="selectedLevel"
       ></router-view>
     </v-col>
   </v-row>
@@ -65,6 +87,7 @@ export default {
     return {
       mounted: false,
       selectedCategory: 0,
+      selectedLevel: 0,
     };
   },
   computed: {
@@ -101,7 +124,8 @@ export default {
 .v-btn--active >>> .v-btn__content {
   color: #5f772e;
 }
-.categories {
+.categories,
+.levels {
   white-space: nowrap;
   overflow-x: auto;
 }

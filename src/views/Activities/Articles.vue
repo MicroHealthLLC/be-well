@@ -2,55 +2,20 @@
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <!-- Beginner Articles -->
     <span class="text-h6 text-sm-h5"
-      >Beginner {{ categoryTitle }} Articles</span
+      >{{ levels[selectedLevel].title }} {{ categoryTitle }} Articles</span
     >
     <v-divider class="mb-4"></v-divider>
 
-    <div v-if="beginnerArticles.length > 0" class="grid-container mb-6">
+    <div v-if="articles.length > 0" class="grid-container mb-6">
       <article-card
-        v-for="(article, index) in beginnerArticles"
+        v-for="(article, index) in articles"
         :key="index"
         :article="article"
       />
     </div>
     <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-file-document-outline</v-icon> No Beginner
-      Articles...
-    </div>
-
-    <!-- Intermediate Articles -->
-    <span class="text-h6 text-sm-h5"
-      >Intermediate {{ categoryTitle }} Articles</span
-    >
-    <v-divider class="mb-4"></v-divider>
-
-    <div v-if="intermediateArticles.length > 0" class="grid-container mb-6">
-      <article-card
-        v-for="(article, index) in intermediateArticles"
-        :key="index"
-        :article="article"
-      />
-    </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-file-document-outline</v-icon> No Intermediate
-      Articles...
-    </div>
-
-    <!-- Advanced Articles -->
-    <span class="text-h6 text-sm-h5"
-      >Advanced {{ categoryTitle }} Articles</span
-    >
-    <v-divider class="mb-4"></v-divider>
-
-    <div v-if="advancedArticles.length > 0" class="grid-container mb-6">
-      <article-card
-        v-for="(article, index) in advancedArticles"
-        :key="index"
-        :article="article"
-      />
-    </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-file-document-outline</v-icon> No Advanced
+      <v-icon class="mr-2">mdi-file-document-outline</v-icon> No
+      {{ levels[selectedLevel].title }}
       Articles...
     </div>
     <v-btn
@@ -69,85 +34,67 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ArticleCard from "../../components/ArticleCard.vue";
+import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   name: "Articles",
-  props: ["selectedCategory"],
+  props: ["selectedCategory", "selectedLevel"],
+  mixins: [utilitiesMixin],
   components: { ArticleCard },
-  data() {
-    return {
-      categories: [
-        {
-          title: "Endurance",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Meditation",
-          query: "meditation",
-          key: "MEDITATION",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          query: "muscle-tone-movement",
-          key: "MUSCLE",
-        },
-        {
-          title: "Posture",
-          query: "posture",
-          key: "POSTURE",
-        },
-        {
-          title: "Stress Relief",
-          query: "stress-relief",
-          key: "STRESS_RELIEF",
-        },
-        {
-          title: "Stretching",
-          query: "stretching",
-          key: "STRETCHING",
-        },
-        {
-          title: "Yoga",
-          query: "yoga",
-          key: "YOGA",
-        },
-      ],
-    };
-  },
   computed: {
-    ...mapGetters([
-      "advancedArticles",
-      "beginnerArticles",
-      "intermediateArticles",
-      "isEditor",
-    ]),
+    ...mapGetters(["articles", "isEditor"]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
   },
   methods: {
-    ...mapActions(["fetchCategoryArticles"]),
+    ...mapActions(["fetchArticles"]),
   },
   mounted() {
-    this.fetchCategoryArticles(this.categories[this.selectedCategory].key);
+    let category = this.categories[this.selectedCategory].value;
+    let level = this.levels[this.selectedLevel].value;
+
+    this.fetchArticles({
+      filter: { category: { eq: category }, level: { eq: level } },
+    });
   },
   watch: {
     selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
 
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Articles",
-          query: { category: this.categories[this.selectedCategory].query },
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
         });
 
-        this.fetchCategoryArticles(this.categories[this.selectedCategory].key);
+        this.fetchArticles({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
+      }
+    },
+    selectedLevel() {
+      let categoryQuery = this.levels[this.selectedLevel].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
+
+      if (this.$route.query.category != categoryQuery) {
+        this.$router.replace({
+          name: "Articles",
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
+        });
+
+        this.fetchArticles({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
       }
     },
   },
