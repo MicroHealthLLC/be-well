@@ -53,14 +53,15 @@ export default {
         });
       }
     },
-    async fetchVideos({ commit }) {
+    async fetchVideos({ commit }, filters) {
       try {
-        const res = await API.graphql(graphqlOperation(listVideos));
-        commit("SET_AWS_VIDEOS", res.data.listVideos);
+        // First fetch AWS video references
+        const res = await API.graphql(graphqlOperation(listVideos, filters));
+        const awsVideos = res.data.listVideos.items;
         const videoIds = res.data.listVideos.items
           .map((video) => video.resourceId)
           .join(",");
-
+        // Then grab YouTube video data based on ids from above response
         await axios({
           method: "GET",
           url: youtubeURL,
@@ -70,7 +71,22 @@ export default {
             id: videoIds,
           },
         }).then((res) => {
-          commit("SET_VIDEOS", res.data.items);
+          let mergedVideos = [];
+          res.data.items.forEach((item) => {
+            let video = awsVideos.find(
+              (awsVideo) => awsVideo.resourceId == item.id
+            );
+            // Combine both AWS video reference and YouTube video data
+            mergedVideos.push({
+              ...video,
+              contentDetails: item.contentDetails,
+              etag: item.etag,
+              youtubeId: item.id,
+              kind: item.kind,
+              snippet: item.snippet,
+            });
+          });
+          commit("SET_VIDEOS", mergedVideos);
         });
       } catch (error) {
         console.log(error);

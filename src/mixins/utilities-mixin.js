@@ -158,4 +158,9 @@ export default {
       );
     },
   },
+  computed: {
+    filteredLevels() {
+      return this.levels.filter(level => level.value != "NOT_APPLICABLE")
+    }
+  }
 };

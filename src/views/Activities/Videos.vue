@@ -1,51 +1,23 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <!-- Beginner Videos -->
-    <span class="text-h6 text-sm-h5">Beginner {{ categoryTitle }} Videos</span>
-    <v-divider class="mb-4"></v-divider>
-
-    <div v-if="beginnerVideos.length > 0" class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in beginnerVideos"
-        :key="index"
-        :video="video"
-      />
-    </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Beginner Videos...
-    </div>
-
-    <!-- Intermediate Videos -->
+    <!-- Selected Videos -->
     <span class="text-h6 text-sm-h5"
-      >Intermediate {{ categoryTitle }} Videos</span
+      >{{ levels[selectedLevel].title }} {{ categoryTitle }} Videos</span
     >
     <v-divider class="mb-4"></v-divider>
 
-    <div v-if="intermediateVideos.length > 0" class="grid-container mb-6">
+    <div v-if="videos.length > 0" class="grid-container mb-6">
       <video-card
-        v-for="(video, index) in intermediateVideos"
+        v-for="(video, index) in videos"
         :key="index"
         :video="video"
       />
     </div>
     <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Intermediate Videos...
+      <v-icon class="mr-2">mdi-video-vintage</v-icon> No
+      {{ levels[selectedLevel].title }} Videos...
     </div>
 
-    <!-- Advanced Videos -->
-    <span class="text-h6 text-sm-h5">Advanced {{ categoryTitle }} Videos</span>
-    <v-divider class="mb-4"></v-divider>
-
-    <div v-if="advancedVideos.length > 0" class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in advancedVideos"
-        :key="index"
-        :video="video"
-      />
-    </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No Advanced Videos...
-    </div>
     <!-- Add Video Dialog -->
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
@@ -117,7 +89,7 @@ import utilitiesMixin from "../../mixins/utilities-mixin";
 export default {
   name: "Videos",
   mixins: [utilitiesMixin],
-  props: ["selectedCategory"],
+  props: ["selectedCategory", "selectedLevel"],
   components: {
     VideoCard,
   },
@@ -134,7 +106,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addVideo", "fetchCategoryVideos"]),
+    ...mapActions(["addVideo", "fetchVideos"]),
     addNewVideo() {
       if (!this.$refs.videoform.validate()) {
         return;
@@ -146,13 +118,15 @@ export default {
         video: this.newVideo,
         currentCategory:
           this.newVideo.category ==
-          this.categories[this.selectedCategory].value,
+            this.categories[this.selectedCategory].value &&
+          this.newVideo.level == this.levels[this.selectedLevel].value,
       });
       this.dialog = false;
     },
     openDialog() {
       this.resetForm();
       this.newVideo.category = this.categories[this.selectedCategory].value;
+      this.newVideo.level = this.levels[this.selectedLevel].value;
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
@@ -191,21 +165,49 @@ export default {
     },
   },
   async mounted() {
-    const key = this.categories[this.selectedCategory].value;
-    await this.fetchCategoryVideos(key);
+    let category = this.categories[this.selectedCategory].value;
+    let level = this.levels[this.selectedLevel].value;
+    this.fetchVideos({
+      filter: { category: { eq: category }, level: { eq: level } },
+    });
   },
   watch: {
     selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
 
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Videos",
-          query: { category: this.categories[this.selectedCategory].query },
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
         });
 
-        const key = this.categories[this.selectedCategory].value;
-        this.fetchCategoryVideos(key);
+        this.fetchVideos({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
+      }
+    },
+    selectedLevel() {
+      let levelQuery = this.levels[this.selectedLevel].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
+
+      if (this.$route.query.category != levelQuery) {
+        this.$router.replace({
+          name: "Videos",
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
+        });
+
+        this.fetchVideos({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
       }
     },
   },

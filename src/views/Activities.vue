@@ -48,7 +48,7 @@
           filter
           >{{ category.title
           }}<v-icon right small>{{ category.icon }}</v-icon></v-chip
-        > 
+        >
       </v-chip-group>
       <!-- Level Selector -->
       <v-chip-group
@@ -58,7 +58,7 @@
         mandatory
       >
         <v-chip
-          v-for="(level, index) in levels"
+          v-for="(level, index) in filteredLevels"
           :key="index"
           class="mt-0"
           color="primary"
