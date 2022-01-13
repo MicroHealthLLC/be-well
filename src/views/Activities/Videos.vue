@@ -13,9 +13,19 @@
         :video="video"
       />
     </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-video-vintage</v-icon> No
-      {{ levels[selectedLevel].title }} Videos...
+    <div v-else class="d-flex flex-column justify-center align-center py-10">
+      <div>
+        <v-icon class="mr-2">mdi-video-vintage</v-icon> No
+        {{ levels[selectedLevel].title }} Videos...
+      </div>
+      <v-btn
+        v-if="isEditor"
+        @click="openDialog"
+        class="mt-5"
+        color="primary"
+        text
+        >Add a New Video</v-btn
+      >
     </div>
 
     <!-- Add Video Dialog -->

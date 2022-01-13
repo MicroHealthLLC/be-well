@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <!-- Beginner Articles -->
+    <!-- Selected Articles -->
     <span class="text-h6 text-sm-h5"
       >{{ levels[selectedLevel].title }} {{ categoryTitle }} Articles</span
     >
@@ -13,10 +13,15 @@
         :article="article"
       />
     </div>
-    <div v-else class="d-flex justify-center align-center py-10">
-      <v-icon class="mr-2">mdi-file-document-outline</v-icon> No
-      {{ levels[selectedLevel].title }}
-      Articles...
+    <div v-else class="d-flex flex-column justify-center align-center py-10">
+      <div>
+        <v-icon class="mr-2">mdi-file-document-outline</v-icon> No
+        {{ levels[selectedLevel].title }}
+        Articles...
+      </div>
+      <v-btn v-if="isEditor" to="/activities/articles/new" class="mt-5" color="primary" text
+        >Add a New Article</v-btn
+      >
     </div>
     <v-btn
       v-if="isEditor"
