@@ -1,152 +1,223 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <!-- Beginner Videos -->
-    <span class="text-h6 text-sm-h5">Beginner {{ categoryTitle }} Videos</span>
-    <v-divider class="mb-4"></v-divider>
-
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in beginnerVideos"
-        :key="index"
-        :video="video"
-      />
-    </div>
-
-    <!-- Intermediate Videos -->
+    <!-- Selected Videos -->
     <span class="text-h6 text-sm-h5"
-      >Intermediate {{ categoryTitle }} Videos</span
+      >{{ levels[selectedLevel].title }} {{ categoryTitle }} Videos</span
     >
     <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
+    <div v-if="videos.length > 0" class="grid-container mb-6">
       <video-card
-        v-for="(video, index) in intermediateVideos"
+        v-for="(video, index) in videos"
         :key="index"
         :video="video"
       />
     </div>
-
-    <!-- Advanced Videos -->
-    <span class="text-h6 text-sm-h5">Advanced {{ categoryTitle }} Videos</span>
-    <v-divider class="mb-4"></v-divider>
-
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in advancedVideos"
-        :key="index"
-        :video="video"
-      />
+    <div v-else class="d-flex flex-column justify-center align-center py-10">
+      <div>
+        <v-icon class="mr-2">mdi-video-vintage</v-icon> No
+        {{ levels[selectedLevel].title }} Videos...
+      </div>
+      <v-btn
+        v-if="isEditor"
+        @click="openDialog"
+        class="mt-5"
+        color="primary"
+        text
+        >Add a New Video</v-btn
+      >
     </div>
+
+    <!-- Add Video Dialog -->
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card>
+        <v-card-title>Add Video</v-card-title>
+        <v-card-text>
+          <v-form ref="videoform" v-model="valid">
+            <v-text-field
+              v-model="urlInput"
+              @keydown.space.prevent
+              label="YouTube Video Link"
+              hint="Ex: https://www.youtube.com/watch?v=XXXXXX"
+              persistent-hint
+              :rules="[
+                (v) => !!v || 'YouTube Video Link is required',
+                (v) => urlCheck(v) || 'Not a valid URL',
+              ]"
+              required
+              validate-on-blur
+            ></v-text-field>
+            <v-select
+              v-model="newVideo.category"
+              :items="categories"
+              item-text="title"
+              item-value="value"
+              label="Category"
+              :rules="[(v) => !!v || 'Category is required']"
+              required
+            ></v-select>
+            <v-select
+              v-model="newVideo.level"
+              :items="levels"
+              item-text="title"
+              item-value="value"
+              label="Level"
+              :rules="[(v) => !!v || 'Level is required']"
+              required
+            ></v-select>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark
+            >Submit</v-btn
+          >
+          <v-btn @click="dialog = false" color="secondary" outlined
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- Floating Add Video Button -->
+    <v-btn
+      v-if="isEditor"
+      @click="openDialog"
+      class="floating-btn"
+      color="var(--mh-blue)"
+      fab
+      large
+      dark
+      ><v-icon large>mdi-plus</v-icon></v-btn
+    >
   </div>
 </template>
 
 <script>
 import VideoCard from "../../components/VideoCard.vue";
-import youtube from "../../apis/youtube";
+import { mapActions, mapGetters } from "vuex";
+import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   name: "Videos",
-  props: ["selectedCategory"],
+  mixins: [utilitiesMixin],
+  props: ["selectedCategory", "selectedLevel"],
   components: {
     VideoCard,
   },
   data() {
     return {
-      beginnerVideos: [],
-      intermediateVideos: [],
-      advancedVideos: [],
-      categories: [
-        {
-          title: "Endurance",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Meditation",
-          query: "meditation",
-          key: "MEDITATION",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          query: "muscle-tone-movement",
-          key: "MUSCLE",
-        },
-        {
-          title: "Posture",
-          query: "posture",
-          key: "POSTURE",
-        },
-        {
-          title: "Stress Relief",
-          query: "stress-relief",
-          key: "STRESS_RELIEF",
-        },
-        {
-          title: "Stretching",
-          query: "stretching",
-          key: "STRETCHING",
-        },
-        {
-          title: "Yoga",
-          query: "yoga",
-          key: "YOGA",
-        },
-      ],
+      dialog: false,
+      valid: true,
+      newVideo: {
+        resourceId: "",
+        category: "",
+        level: "",
+      },
+      urlInput: "",
     };
   },
   methods: {
-    async fetchCategoryVideos() {
-      const key = this.categories[this.selectedCategory].key;
-
-      const res = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_BEGINNER_${key}_PLAYLIST_ID`],
-        },
+    ...mapActions(["addVideo", "fetchVideos"]),
+    addNewVideo() {
+      if (!this.$refs.videoform.validate()) {
+        return;
+      }
+      // Extract YouTube id from user provided URL
+      this.newVideo.resourceId = this.extractResourceId(this.urlInput);
+      // Boolean is passed for current category to determine if user is on same page
+      this.addVideo({
+        video: this.newVideo,
+        currentCategory:
+          this.newVideo.category ==
+            this.categories[this.selectedCategory].value &&
+          this.newVideo.level == this.levels[this.selectedLevel].value,
       });
+      this.dialog = false;
+    },
+    openDialog() {
+      this.resetForm();
+      this.newVideo.category = this.categories[this.selectedCategory].value;
+      this.newVideo.level = this.levels[this.selectedLevel].value;
+      this.dialog = true;
+      if (this.$refs.videoform) {
+        this.$refs.videoform.resetValidation();
+      }
+    },
+    resetForm() {
+      this.urlInput = "";
+      this.newVideo = {
+        resourceId: "",
+        category: "",
+        level: "",
+      };
+    },
+    urlCheck(url) {
+      return url.includes("youtube.com") || url.includes("youtu.be");
+    },
+    extractResourceId(url) {
+      let regExp =
+        /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;
 
-      this.beginnerVideos = res.data.items;
+      let match = url.match(regExp);
 
-      const res2 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_INTERMEDIATE_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.intermediateVideos = res2.data.items;
-
-      const res3 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_ADVANCED_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.advancedVideos = res3.data.items;
+      return match ? url.match(regExp)[7] : "YouTube ID not found";
     },
   },
   computed: {
+    ...mapGetters([
+      "advancedVideos",
+      "beginnerVideos",
+      "intermediateVideos",
+      "isEditor",
+      "videos",
+    ]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
   },
   async mounted() {
-    await this.fetchCategoryVideos();
+    let category = this.categories[this.selectedCategory].value;
+    let level = this.levels[this.selectedLevel].value;
+    this.fetchVideos({
+      filter: { category: { eq: category }, level: { eq: level } },
+    });
   },
   watch: {
     selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
 
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Videos",
-          query: { category: this.categories[this.selectedCategory].query },
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
         });
 
-        this.fetchCategoryVideos();
+        this.fetchVideos({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
+      }
+    },
+    selectedLevel() {
+      let levelQuery = this.levels[this.selectedLevel].query;
+      let category = this.categories[this.selectedCategory].value;
+      let level = this.levels[this.selectedLevel].value;
+
+      if (this.$route.query.category != levelQuery) {
+        this.$router.replace({
+          name: "Videos",
+          query: {
+            category: this.categories[this.selectedCategory].query,
+            level: this.levels[this.selectedLevel].query,
+          },
+        });
+
+        this.fetchVideos({
+          filter: { category: { eq: category }, level: { eq: level } },
+        });
       }
     },
   },
@@ -162,5 +233,12 @@ export default {
 .image {
   max-height: 200px;
   object-fit: cover;
+}
+.floating-btn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 7vw;
+  margin-bottom: 7vh;
 }
 </style>

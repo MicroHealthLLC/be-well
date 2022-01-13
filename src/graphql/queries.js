@@ -114,6 +114,37 @@ export const listArticles = /* GraphQL */ `
     }
   }
 `;
+export const getVideo = /* GraphQL */ `
+  query GetVideo($id: ID!) {
+    getVideo(id: $id) {
+      id
+      resourceId
+      level
+      category
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listVideos = /* GraphQL */ `
+  query ListVideos(
+    $filter: ModelVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category
@@ -142,6 +173,35 @@ export const articlesByCategory = /* GraphQL */ `
         createdAt
         image
         imageCredit
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const videosByCategory = /* GraphQL */ `
+  query VideosByCategory(
+    $category: Category
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    videosByCategory(
+      category: $category
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        resourceId
+        level
+        category
+        createdAt
         updatedAt
       }
       nextToken

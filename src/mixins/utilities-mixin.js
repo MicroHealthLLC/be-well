@@ -63,18 +63,22 @@ export default {
         {
           title: "Beginner",
           value: "BEGINNER",
+          query: "beginner",
         },
         {
           title: "Intermediate",
           value: "INTERMEDIATE",
+          query: "intermediate",
         },
         {
           title: "Advanced",
           value: "ADVANCED",
+          query: "advanced",
         },
         {
           title: "N/A",
           value: "NOT_APPLICABLE",
+          query: "not-applicable",
         },
       ],
     };
@@ -154,4 +158,9 @@ export default {
       );
     },
   },
+  computed: {
+    filteredLevels() {
+      return this.levels.filter(level => level.value != "NOT_APPLICABLE")
+    }
+  }
 };

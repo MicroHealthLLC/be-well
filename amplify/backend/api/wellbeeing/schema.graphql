@@ -40,6 +40,26 @@ type Article
   imageCredit: String
 }
 
+type Video
+  @model
+  @key(
+    name: "videosByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "videosByCategory"
+  )
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  resourceId: String!
+  level: Level!
+  category: Category!
+  createdAt: AWSDateTime!
+}
+
 enum Category {
   ENDURANCE
   ERGONOMICS

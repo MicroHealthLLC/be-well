@@ -76,12 +76,22 @@
       <span class="text-h6 text-sm-h5">Latest Videos</span>
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-6">
+      <div
+        v-if="videos.length > 0"
+        class="mb-6"
+        :class="{
+          'grid-container': videos.length < 3,
+          'grid-container-fit': videos.length > 2,
+        }"
+      >
         <video-card
           v-for="(video, index) in videos"
           :key="index"
           :video="video"
         />
+      </div>
+      <div v-else class="d-flex justify-center align-center py-10">
+        <v-icon class="mr-2">mdi-video-vintage</v-icon> No Videos...
       </div>
       <div v-if="videos.length == 3" class="d-flex justify-end">
         <v-btn to="/activities/videos" color="primary" text>View All</v-btn>
@@ -198,7 +208,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import youtube from "../apis/youtube";
+// import youtube from "../apis/youtube";
 import VideoCard from "../components/VideoCard.vue";
 import ArticleCard from "../components/ArticleCard.vue";
 import utilitiesMixin from "../mixins/utilities-mixin";
@@ -219,7 +229,6 @@ export default {
         dueDate: "",
         progress: 0,
       },
-      videos: [],
       podcasts: [
         {
           title: "Title 7",
@@ -247,6 +256,7 @@ export default {
       "addGoal",
       "fetchArticles",
       "fetchGoals",
+      "fetchLatestVideos",
       "removeGoal",
       "updateGoalById",
     ]),
@@ -307,24 +317,23 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["articles", "goals"]),
+    ...mapGetters(["articles", "goals", "videos"]),
   },
   async mounted() {
-    const res = await youtube.get("", {
-      params: {
-        playlistId: process.env.VUE_APP_BEGINNER_YOGA_PLAYLIST_ID,
-      },
-    });
-
-    this.videos = res.data.items;
+    this.fetchLatestVideos();
     this.fetchGoals();
-    this.fetchArticles();
+    this.fetchArticles({ limit: 6 });
   },
 };
 </script>
 
 <style scoped>
 .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+.grid-container-fit {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
