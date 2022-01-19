@@ -1,14 +1,6 @@
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import {
-  createArticle,
-  deleteArticle,
-  updateArticle,
-} from "@/graphql/mutations";
-import {
-  articlesByCategory,
-  listArticles,
-  getArticle,
-} from "@/graphql/queries";
+import { createArticle, createFavoriteArticle, deleteArticle, deleteFavoriteArticle, updateArticle, } from "@/graphql/mutations"; // prettier-ignore
+import { articlesByCategory, listArticles, getArticle, } from "@/graphql/queries"; // prettier-ignore
 
 export default {
   state: {
@@ -24,6 +16,7 @@ export default {
       imageCredit: "",
     },
     articles: [],
+    favoriteArticles: [],
   },
   actions: {
     async addArticle({ commit }, article) {
@@ -100,7 +93,7 @@ export default {
     async fetchArticles({ commit }, filters) {
       try {
         const res = await API.graphql(
-          graphqlOperation(listArticles, filters)
+          graphqlOperation(listArticles, { ...filters, items: ["title"] })
         );
         commit("SET_ARTICLES", res.data.listArticles.items);
       } catch (error) {
@@ -131,11 +124,101 @@ export default {
         console.log(error);
       }
     },
+    // Favorite Article Queries and Mutations
+    async addFavoriteArticle({ commit, dispatch }, favoriteArticle) {
+      try {
+        await API.graphql(
+          graphqlOperation(createFavoriteArticle, {
+            input: favoriteArticle,
+          })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Favorite Article Successfully Added!",
+          color: "var(--mh-green)",
+        });
+        dispatch("fetchAllFavoriteArticles");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchAllFavoriteArticles({ commit }) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(` 
+            query FavoriteArticles {
+              listFavoriteArticles {
+                items {
+                  id
+                  articleId
+                }
+              }
+            }
+          `)
+        );
+        commit("SET_FAVORITE_ARTICLES", res.data.listFavoriteArticles.items);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchFavoriteArticles({ commit }, category) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(` 
+            query FavoriteArticles {
+              listFavoriteArticles(filter: {category: {eq: ${category}}}) {
+                items {
+                  id
+                  articleId
+                  article {
+                    author
+                    body
+                    category
+                    createdAt
+                    id
+                    image
+                    imageCredit
+                    lastEditedBy
+                    level
+                    title
+                    updatedAt
+                  }
+                }
+              }
+            }
+          `)
+        );
+        commit("SET_FAVORITE_ARTICLES", res.data.listFavoriteArticles.items);
+        commit(
+          "SET_ARTICLES",
+          res.data.listFavoriteArticles.items.map((article) => article.article)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteFavoriteArticle({ commit, dispatch }, id) {
+      try {
+        await API.graphql(
+          graphqlOperation(deleteFavoriteArticle, { input: { id: id } })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Favorite Article Removed",
+          color: "var(--mh-orange)",
+        });
+        dispatch("fetchAllFavoriteArticles");
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     ADD_ARTICLE: (state, article) => state.articles.push(article),
     SET_ARTICLES: (state, articles) => (state.articles = articles),
     SET_ARTICLE: (state, article) => (state.article = article),
+    SET_FAVORITE_ARTICLES: (state, articles) =>
+      (state.favoriteArticles = articles),
   },
   getters: {
     article: (state) => state.article,
@@ -146,5 +229,6 @@ export default {
       state.articles.filter((article) => article.level == "INTERMEDIATE"),
     advancedArticles: (state) =>
       state.articles.filter((article) => article.level == "ADVANCED"),
+    favoriteArticles: (state) => state.favoriteArticles,
   },
 };

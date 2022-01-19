@@ -81,6 +81,28 @@ export default {
           query: "not-applicable",
         },
       ],
+      filters: [
+        {
+          title: "Beginner",
+          value: "BEGINNER",
+          query: "beginner",
+        },
+        {
+          title: "Intermediate",
+          value: "INTERMEDIATE",
+          query: "intermediate",
+        },
+        {
+          title: "Advanced",
+          value: "ADVANCED",
+          query: "advanced",
+        },
+        {
+          title: "Favorite",
+          value: "FAVORITE",
+          query: "favorites",
+        },
+      ],
     };
   },
   methods: {
@@ -160,7 +182,7 @@ export default {
   },
   computed: {
     filteredLevels() {
-      return this.levels.filter(level => level.value != "NOT_APPLICABLE")
-    }
-  }
+      return this.levels.filter((level) => level.value != "NOT_APPLICABLE");
+    },
+  },
 };

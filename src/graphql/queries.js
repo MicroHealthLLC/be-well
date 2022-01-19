@@ -145,6 +145,56 @@ export const listVideos = /* GraphQL */ `
     }
   }
 `;
+export const getFavoriteArticle = /* GraphQL */ `
+  query GetFavoriteArticle($id: ID!) {
+    getFavoriteArticle(id: $id) {
+      id
+      articleId
+      category
+      level
+      article {
+        id
+        author
+        lastEditedBy
+        title
+        body
+        category
+        level
+        createdAt
+        image
+        imageCredit
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listFavoriteArticles = /* GraphQL */ `
+  query ListFavoriteArticles(
+    $filter: ModelFavoriteArticleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoriteArticles(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        articleId
+        category
+        level
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category

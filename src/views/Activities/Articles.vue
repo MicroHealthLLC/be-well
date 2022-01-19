@@ -2,7 +2,7 @@
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <!-- Selected Articles -->
     <span class="text-h6 text-sm-h5"
-      >{{ levels[selectedLevel].title }} {{ categoryTitle }} Articles</span
+      >{{ filters[selectedFilter].title }} {{ categoryTitle }} Articles</span
     >
     <v-divider class="mb-4"></v-divider>
 
@@ -16,10 +16,15 @@
     <div v-else class="d-flex flex-column justify-center align-center py-10">
       <div>
         <v-icon class="mr-2">mdi-file-document-outline</v-icon> No
-        {{ levels[selectedLevel].title }}
+        {{ filters[selectedFilter].title }}
         Articles...
       </div>
-      <v-btn v-if="isEditor" to="/activities/articles/new" class="mt-5" color="primary" text
+      <v-btn
+        v-if="isEditor"
+        to="/activities/articles/new"
+        class="mt-5"
+        color="primary"
+        text
         >Add a New Article</v-btn
       >
     </div>
@@ -43,7 +48,7 @@ import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   name: "Articles",
-  props: ["selectedCategory", "selectedLevel"],
+  props: ["selectedCategory", "selectedFilter"],
   mixins: [utilitiesMixin],
   components: { ArticleCard },
   computed: {
@@ -53,53 +58,67 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchArticles"]),
+    ...mapActions(["fetchArticles", "fetchFavoriteArticles"]),
   },
   mounted() {
     let category = this.categories[this.selectedCategory].value;
-    let level = this.levels[this.selectedLevel].value;
+    let filter = this.filters[this.selectedFilter].value;
 
-    this.fetchArticles({
-      filter: { category: { eq: category }, level: { eq: level } },
-    });
+    if (this.selectedFilter < 3) {
+      this.fetchArticles({
+        filter: { category: { eq: category }, level: { eq: filter } },
+      });
+    } else {
+      this.fetchFavoriteArticles(category);
+    }
   },
   watch: {
     selectedCategory() {
+      console.log("Selected Category Watcher");
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
-      let level = this.levels[this.selectedLevel].value;
-
+      let filter = this.filters[this.selectedFilter].value;
+      // Update query params
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Articles",
           query: {
             category: this.categories[this.selectedCategory].query,
-            level: this.levels[this.selectedLevel].query,
+            filter: this.filters[this.selectedFilter].query,
           },
-        });
-
-        this.fetchArticles({
-          filter: { category: { eq: category }, level: { eq: level } },
         });
       }
+      // Fetch Articles by selected filter
+      if (this.selectedFilter < 3) {
+        this.fetchArticles({
+          filter: { category: { eq: category }, level: { eq: filter } },
+        });
+      } else {
+        this.fetchFavoriteArticles(category);
+      }
     },
-    selectedLevel() {
-      let categoryQuery = this.levels[this.selectedLevel].query;
+    selectedFilter() {
+      console.log("Selected Filter Watcher");
+      let filterQuery = this.filters[this.selectedFilter].query;
       let category = this.categories[this.selectedCategory].value;
-      let level = this.levels[this.selectedLevel].value;
-
-      if (this.$route.query.category != categoryQuery) {
+      let filter = this.filters[this.selectedFilter].value;
+      // Update query params
+      if (this.$route.query.filter != filterQuery) {
         this.$router.replace({
           name: "Articles",
           query: {
             category: this.categories[this.selectedCategory].query,
-            level: this.levels[this.selectedLevel].query,
+            filter: this.filters[this.selectedFilter].query,
           },
         });
-
+      }
+      // Fetch Articles by selected filter
+      if (this.selectedFilter < 3) {
         this.fetchArticles({
-          filter: { category: { eq: category }, level: { eq: level } },
+          filter: { category: { eq: category }, level: { eq: filter } },
         });
+      } else {
+        this.fetchFavoriteArticles(category);
       }
     },
   },
