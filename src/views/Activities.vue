@@ -68,7 +68,7 @@
           >{{ level.title }}</v-chip
         >
         <v-chip class="mt-0" color="primary" small filter outlined
-          >Favorites</v-chip
+          >My Favorites</v-chip
         >
       </v-chip-group>
       <!-- Activities Content -->

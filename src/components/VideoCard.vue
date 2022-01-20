@@ -37,7 +37,8 @@
             allowfullscreen
           ></iframe>
         </div>
-        <v-card-title class="d-flex justify-space-between"
+        <v-card-title
+          class="d-flex justify-space-between align-start flex-nowrap"
           ><div>
             {{ video.snippet.title }}
           </div>
@@ -46,10 +47,11 @@
               v-if="favoriteReference"
               @click="removeFavorite"
               color="var(--mh-orange)"
+              title="Remove from favorites"
               icon
               ><v-icon>mdi-star</v-icon></v-btn
             >
-            <v-btn v-else @click="addFavorite" icon
+            <v-btn v-else @click="addFavorite" title="Add to favorites" icon
               ><v-icon>mdi-star-outline</v-icon></v-btn
             >
           </div></v-card-title
@@ -136,6 +138,7 @@ export default {
       this.deleteFavoriteVideo(this.favoriteReference.id);
       if (this.$route.query.filter == "favorites") {
         this.DELETE_VIDEO(this.video.id);
+        this.play = false;
       }
     },
   },

@@ -19,7 +19,7 @@
         {{ filters[selectedFilter].title }} Videos...
       </div>
       <v-btn
-        v-if="isEditor"
+        v-if="showAddBtn"
         @click="openDialog"
         class="mt-5"
         color="primary"
@@ -79,7 +79,7 @@
     </v-dialog>
     <!-- Floating Add Video Button -->
     <v-btn
-      v-if="isEditor"
+      v-if="showAddBtn"
       @click="openDialog"
       class="floating-btn"
       color="var(--mh-blue)"
@@ -178,11 +178,20 @@ export default {
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
+    showAddBtn() {
+      return this.isEditor && this.isLevel;
+    },
+    isLevel() {
+      let filter = this.filters[this.selectedFilter].value;
+      return (
+        filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
+      );
+    },
   },
   async mounted() {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
-    if (this.selectedFilter < 3) {
+    if (this.isLevel) {
       this.fetchVideos({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
@@ -206,7 +215,7 @@ export default {
           },
         });
 
-        if (this.selectedFilter < 3) {
+        if (this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });
@@ -229,7 +238,7 @@ export default {
           },
         });
 
-        if (this.selectedFilter < 3) {
+        if (this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });

@@ -29,7 +29,7 @@
       <v-card-title class="px-0 text-h4 break-word">{{
         article.title
       }}</v-card-title>
-      <v-card-subtitle class="d-flex flex-column px-0"
+      <v-card-subtitle class="d-flex flex-column px-0 pb-0"
         ><div>By {{ article.author }}</div>
         <div class="d-flex justify-space-between mt-2">
           <div>
@@ -61,6 +61,7 @@
           lazy-src="/img/placeholder.png"
           :src="article.imageURL"
           class="header-image mx-0 fill-width"
+          max-height="600"
           ><template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular

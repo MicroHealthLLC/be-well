@@ -56,6 +56,12 @@ export default {
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
+    isLevel() {
+      let filter = this.filters[this.selectedFilter].value;
+      return (
+        filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
+      );
+    },
   },
   methods: {
     ...mapActions(["fetchArticles", "fetchFavoriteArticles"]),
@@ -64,7 +70,7 @@ export default {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
 
-    if (this.selectedFilter < 3) {
+    if (this.isLevel) {
       this.fetchArticles({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
@@ -74,7 +80,6 @@ export default {
   },
   watch: {
     selectedCategory() {
-      console.log("Selected Category Watcher");
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
@@ -89,7 +94,7 @@ export default {
         });
       }
       // Fetch Articles by selected filter
-      if (this.selectedFilter < 3) {
+      if (this.isLevel) {
         this.fetchArticles({
           filter: { category: { eq: category }, level: { eq: filter } },
         });
@@ -98,7 +103,6 @@ export default {
       }
     },
     selectedFilter() {
-      console.log("Selected Filter Watcher");
       let filterQuery = this.filters[this.selectedFilter].query;
       let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
@@ -113,7 +117,7 @@ export default {
         });
       }
       // Fetch Articles by selected filter
-      if (this.selectedFilter < 3) {
+      if (this.isLevel) {
         this.fetchArticles({
           filter: { category: { eq: category }, level: { eq: filter } },
         });
