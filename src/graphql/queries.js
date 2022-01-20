@@ -195,6 +195,47 @@ export const listFavoriteArticles = /* GraphQL */ `
     }
   }
 `;
+export const getFavoriteVideo = /* GraphQL */ `
+  query GetFavoriteVideo($id: ID!) {
+    getFavoriteVideo(id: $id) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listFavoriteVideos = /* GraphQL */ `
+  query ListFavoriteVideos(
+    $filter: ModelFavoriteVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoriteVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        videoId
+        category
+        level
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category

@@ -298,3 +298,75 @@ export const deleteFavoriteArticle = /* GraphQL */ `
     }
   }
 `;
+export const createFavoriteVideo = /* GraphQL */ `
+  mutation CreateFavoriteVideo(
+    $input: CreateFavoriteVideoInput!
+    $condition: ModelFavoriteVideoConditionInput
+  ) {
+    createFavoriteVideo(input: $input, condition: $condition) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateFavoriteVideo = /* GraphQL */ `
+  mutation UpdateFavoriteVideo(
+    $input: UpdateFavoriteVideoInput!
+    $condition: ModelFavoriteVideoConditionInput
+  ) {
+    updateFavoriteVideo(input: $input, condition: $condition) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteFavoriteVideo = /* GraphQL */ `
+  mutation DeleteFavoriteVideo(
+    $input: DeleteFavoriteVideoInput!
+    $condition: ModelFavoriteVideoConditionInput
+  ) {
+    deleteFavoriteVideo(input: $input, condition: $condition) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

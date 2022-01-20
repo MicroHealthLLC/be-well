@@ -68,6 +68,14 @@ type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
   article: Article @connection(fields: ["articleId"])
 }
 
+type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  videoId: ID!
+  category: Category!
+  level: Level!
+  video: Video @connection(fields: ["videoId"])
+}
+
 enum Category {
   ENDURANCE
   ERGONOMICS

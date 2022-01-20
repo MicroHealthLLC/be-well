@@ -2,7 +2,7 @@
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <!-- Selected Videos -->
     <span class="text-h6 text-sm-h5"
-      >{{ levels[selectedLevel].title }} {{ categoryTitle }} Videos</span
+      >{{ filters[selectedFilter].title }} {{ categoryTitle }} Videos</span
     >
     <v-divider class="mb-4"></v-divider>
 
@@ -16,7 +16,7 @@
     <div v-else class="d-flex flex-column justify-center align-center py-10">
       <div>
         <v-icon class="mr-2">mdi-video-vintage</v-icon> No
-        {{ levels[selectedLevel].title }} Videos...
+        {{ filters[selectedFilter].title }} Videos...
       </div>
       <v-btn
         v-if="isEditor"
@@ -99,7 +99,7 @@ import utilitiesMixin from "../../mixins/utilities-mixin";
 export default {
   name: "Videos",
   mixins: [utilitiesMixin],
-  props: ["selectedCategory", "selectedLevel"],
+  props: ["selectedCategory", "selectedFilter"],
   components: {
     VideoCard,
   },
@@ -116,7 +116,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addVideo", "fetchVideos"]),
+    ...mapActions([
+      "addVideo",
+      "fetchVideos",
+      "fetchFavoriteVideos",
+      "fetchAllFavoriteVideos",
+    ]),
     addNewVideo() {
       if (!this.$refs.videoform.validate()) {
         return;
@@ -129,14 +134,14 @@ export default {
         currentCategory:
           this.newVideo.category ==
             this.categories[this.selectedCategory].value &&
-          this.newVideo.level == this.levels[this.selectedLevel].value,
+          this.newVideo.level == this.levels[this.selectedFilter].value,
       });
       this.dialog = false;
     },
     openDialog() {
       this.resetForm();
       this.newVideo.category = this.categories[this.selectedCategory].value;
-      this.newVideo.level = this.levels[this.selectedLevel].value;
+      this.newVideo.level = this.levels[this.selectedFilter].value;
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
@@ -176,48 +181,61 @@ export default {
   },
   async mounted() {
     let category = this.categories[this.selectedCategory].value;
-    let level = this.levels[this.selectedLevel].value;
-    this.fetchVideos({
-      filter: { category: { eq: category }, level: { eq: level } },
-    });
+    let filter = this.filters[this.selectedFilter].value;
+    if (this.selectedFilter < 3) {
+      this.fetchVideos({
+        filter: { category: { eq: category }, level: { eq: filter } },
+      });
+    } else {
+      this.fetchFavoriteVideos(category);
+    }
+    this.fetchAllFavoriteVideos();
   },
   watch: {
     selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
-      let level = this.levels[this.selectedLevel].value;
+      let filter = this.filters[this.selectedFilter].value;
 
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Videos",
           query: {
             category: this.categories[this.selectedCategory].query,
-            level: this.levels[this.selectedLevel].query,
+            filter: this.filters[this.selectedFilter].query,
           },
         });
 
-        this.fetchVideos({
-          filter: { category: { eq: category }, level: { eq: level } },
-        });
+        if (this.selectedFilter < 3) {
+          this.fetchVideos({
+            filter: { category: { eq: category }, level: { eq: filter } },
+          });
+        } else {
+          this.fetchFavoriteVideos(category);
+        }
       }
     },
-    selectedLevel() {
-      let levelQuery = this.levels[this.selectedLevel].query;
+    selectedFilter() {
+      let filterQuery = this.filters[this.selectedFilter].query;
       let category = this.categories[this.selectedCategory].value;
-      let level = this.levels[this.selectedLevel].value;
+      let filter = this.filters[this.selectedFilter].value;
 
-      if (this.$route.query.category != levelQuery) {
+      if (this.$route.query.filter != filterQuery) {
         this.$router.replace({
           name: "Videos",
           query: {
             category: this.categories[this.selectedCategory].query,
-            level: this.levels[this.selectedLevel].query,
+            filter: this.filters[this.selectedFilter].query,
           },
         });
 
-        this.fetchVideos({
-          filter: { category: { eq: category }, level: { eq: level } },
-        });
+        if (this.selectedFilter < 3) {
+          this.fetchVideos({
+            filter: { category: { eq: category }, level: { eq: filter } },
+          });
+        } else {
+          this.fetchFavoriteVideos(category);
+        }
       }
     },
   },
