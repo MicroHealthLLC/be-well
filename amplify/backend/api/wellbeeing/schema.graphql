@@ -60,6 +60,22 @@ type Video
   createdAt: AWSDateTime!
 }
 
+type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  articleId: ID!
+  category: Category!
+  level: Level!
+  article: Article @connection(fields: ["articleId"])
+}
+
+type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  videoId: ID!
+  category: Category!
+  level: Level!
+  video: Video @connection(fields: ["videoId"])
+}
+
 enum Category {
   ENDURANCE
   ERGONOMICS

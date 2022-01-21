@@ -145,6 +145,97 @@ export const listVideos = /* GraphQL */ `
     }
   }
 `;
+export const getFavoriteArticle = /* GraphQL */ `
+  query GetFavoriteArticle($id: ID!) {
+    getFavoriteArticle(id: $id) {
+      id
+      articleId
+      category
+      level
+      article {
+        id
+        author
+        lastEditedBy
+        title
+        body
+        category
+        level
+        createdAt
+        image
+        imageCredit
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listFavoriteArticles = /* GraphQL */ `
+  query ListFavoriteArticles(
+    $filter: ModelFavoriteArticleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoriteArticles(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        articleId
+        category
+        level
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getFavoriteVideo = /* GraphQL */ `
+  query GetFavoriteVideo($id: ID!) {
+    getFavoriteVideo(id: $id) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listFavoriteVideos = /* GraphQL */ `
+  query ListFavoriteVideos(
+    $filter: ModelFavoriteVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoriteVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        videoId
+        category
+        level
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category

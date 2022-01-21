@@ -53,7 +53,7 @@
       <!-- Level Selector -->
       <v-chip-group
         v-if="$route.name == 'Videos' || $route.name == 'Articles'"
-        v-model="selectedLevel"
+        v-model="selectedFilter"
         class="levels"
         mandatory
       >
@@ -67,12 +67,15 @@
           outlined
           >{{ level.title }}</v-chip
         >
+        <v-chip class="mt-0" color="primary" small filter outlined
+          >My Favorites</v-chip
+        >
       </v-chip-group>
       <!-- Activities Content -->
       <router-view
         v-if="mounted"
         :selectedCategory="selectedCategory"
-        :selectedLevel="selectedLevel"
+        :selectedFilter="selectedFilter"
       ></router-view>
     </v-col>
   </v-row>
@@ -87,7 +90,7 @@ export default {
     return {
       mounted: false,
       selectedCategory: 0,
-      selectedLevel: 0,
+      selectedFilter: 0,
     };
   },
   computed: {

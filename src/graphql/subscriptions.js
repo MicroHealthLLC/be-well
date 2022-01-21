@@ -175,3 +175,144 @@ export const onDeleteVideo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateFavoriteArticle = /* GraphQL */ `
+  subscription OnCreateFavoriteArticle($owner: String!) {
+    onCreateFavoriteArticle(owner: $owner) {
+      id
+      articleId
+      category
+      level
+      article {
+        id
+        author
+        lastEditedBy
+        title
+        body
+        category
+        level
+        createdAt
+        image
+        imageCredit
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateFavoriteArticle = /* GraphQL */ `
+  subscription OnUpdateFavoriteArticle($owner: String!) {
+    onUpdateFavoriteArticle(owner: $owner) {
+      id
+      articleId
+      category
+      level
+      article {
+        id
+        author
+        lastEditedBy
+        title
+        body
+        category
+        level
+        createdAt
+        image
+        imageCredit
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteFavoriteArticle = /* GraphQL */ `
+  subscription OnDeleteFavoriteArticle($owner: String!) {
+    onDeleteFavoriteArticle(owner: $owner) {
+      id
+      articleId
+      category
+      level
+      article {
+        id
+        author
+        lastEditedBy
+        title
+        body
+        category
+        level
+        createdAt
+        image
+        imageCredit
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateFavoriteVideo = /* GraphQL */ `
+  subscription OnCreateFavoriteVideo($owner: String!) {
+    onCreateFavoriteVideo(owner: $owner) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateFavoriteVideo = /* GraphQL */ `
+  subscription OnUpdateFavoriteVideo($owner: String!) {
+    onUpdateFavoriteVideo(owner: $owner) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteFavoriteVideo = /* GraphQL */ `
+  subscription OnDeleteFavoriteVideo($owner: String!) {
+    onDeleteFavoriteVideo(owner: $owner) {
+      id
+      videoId
+      category
+      level
+      video {
+        id
+        resourceId
+        level
+        category
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

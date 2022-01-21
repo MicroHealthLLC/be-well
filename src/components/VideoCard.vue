@@ -37,6 +37,27 @@
             allowfullscreen
           ></iframe>
         </div>
+        <v-card-title
+          class="d-flex justify-space-between align-start flex-nowrap"
+          ><div>
+            {{ video.snippet.title }}
+          </div>
+          <div>
+            <v-btn
+              v-if="favoriteReference"
+              @click="removeFavorite"
+              color="var(--mh-orange)"
+              title="Remove from favorites"
+              icon
+              ><v-icon>mdi-star</v-icon></v-btn
+            >
+            <v-btn v-else @click="addFavorite" title="Add to favorites" icon
+              ><v-icon>mdi-star-outline</v-icon></v-btn
+            >
+          </div></v-card-title
+        >
+        <v-card-subtitle>{{ video.snippet.channelTitle }}</v-card-subtitle>
+        <v-card-text>{{ video.snippet.description }}</v-card-text>
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
@@ -67,7 +88,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "VideoCard",
   props: {
@@ -83,7 +104,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["deleteVideo"]),
+    ...mapActions([
+      "addFavoriteVideo",
+      "deleteVideo",
+      "deleteFavoriteVideo",
+      "fetchFavoriteVideos",
+    ]),
+    ...mapMutations(["DELETE_VIDEO"]),
     openVideoURL(videoId) {
       window.open(`https://www.youtube.com/watch?v=${videoId}`);
     },
@@ -98,9 +125,25 @@ export default {
       this.deleteVideo(this.video.id);
       this.deleteDialog = false;
     },
+    addFavorite() {
+      let favoriteVideo = {
+        videoId: this.video.id,
+        category: this.video.category,
+        level: this.video.level,
+      };
+
+      this.addFavoriteVideo(favoriteVideo);
+    },
+    removeFavorite() {
+      this.deleteFavoriteVideo(this.favoriteReference.id);
+      if (this.$route.query.filter == "favorites") {
+        this.DELETE_VIDEO(this.video.id);
+        this.play = false;
+      }
+    },
   },
   computed: {
-    ...mapGetters(["isEditor"]),
+    ...mapGetters(["isEditor", "favoriteVideos"]),
     showDeleteBtn() {
       return this.isEditor && this.$route.name != "Home";
     },
@@ -111,6 +154,11 @@ export default {
         this.video.snippet.thumbnails.high?.url ||
         this.video.snippet.thumbnails.default?.url ||
         ""
+      );
+    },
+    favoriteReference() {
+      return this.favoriteVideos.find(
+        (video) => video.videoId == this.video.id
       );
     },
   },

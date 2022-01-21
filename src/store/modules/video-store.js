@@ -1,5 +1,5 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { createVideo, deleteVideo } from "@/graphql/mutations"; // prettier-ignore
+import { createFavoriteVideo, createVideo, deleteFavoriteVideo, deleteVideo } from "@/graphql/mutations"; // prettier-ignore
 import { listVideos, videosByCategory } from "@/graphql/queries"; // prettier-ignore
 import axios from "axios";
 
@@ -9,6 +9,7 @@ export default {
   state: {
     videos: [],
     awsVideos: [],
+    favoriteVideos: [],
   },
   actions: {
     async addVideo({ commit }, { video, currentCategory }) {
@@ -186,6 +187,113 @@ export default {
         console.log(error);
       }
     },
+    // Favorite Video Queries and Mutations
+    async addFavoriteVideo({ commit, dispatch }, favoriteVideo) {
+      try {
+        await API.graphql(
+          graphqlOperation(createFavoriteVideo, { input: favoriteVideo })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Favorite Video Successfully Added!",
+          color: "var(--mh-green)",
+        });
+        dispatch("fetchAllFavoriteVideos");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchAllFavoriteVideos({ commit }) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(` 
+            query FavoriteVideos {
+              listFavoriteVideos {
+                items {
+                  id
+                  videoId
+                }
+              }
+            }
+          `)
+        );
+        commit("SET_FAVORITE_VIDEOS", res.data.listFavoriteVideos.items);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchFavoriteVideos({ commit }, category) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(` 
+            query FavoriteVideos {
+              listFavoriteVideos(filter: {category: {eq: ${category}}}) {
+                items {
+                  id
+                  videoId
+                  video {
+                    category
+                    createdAt
+                    id
+                    level
+                    resourceId
+                    updatedAt
+                  }
+                }
+              }
+            }
+          `)
+        );
+        const awsVideos = res.data.listFavoriteVideos.items.map(
+          (item) => item.video
+        );
+        const videoIds = awsVideos.map((video) => video.resourceId).join(",");
+        // Then grab YouTube video data based on ids from above response
+        await axios({
+          method: "GET",
+          url: youtubeURL,
+          params: {
+            part: "contentDetails,snippet",
+            key: process.env.VUE_APP_YOUTUBE_API_KEY,
+            id: videoIds,
+          },
+        }).then((res) => {
+          let mergedVideos = [];
+          res.data.items.forEach((item) => {
+            let video = awsVideos.find(
+              (awsVideo) => awsVideo.resourceId == item.id
+            );
+            // Combine both AWS video reference and YouTube video data
+            mergedVideos.push({
+              ...video,
+              contentDetails: item.contentDetails,
+              etag: item.etag,
+              youtubeId: item.id,
+              kind: item.kind,
+              snippet: item.snippet,
+            });
+          });
+          commit("SET_VIDEOS", mergedVideos);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteFavoriteVideo({ commit, dispatch }, id) {
+      try {
+        await API.graphql(
+          graphqlOperation(deleteFavoriteVideo, { input: { id: id } })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Favorite Video Removed",
+          color: "var(--mh-orange)",
+        });
+        dispatch("fetchAllFavoriteVideos");
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     ADD_VIDEO: (state, video) => state.videos.push(video),
@@ -195,6 +303,7 @@ export default {
       let deleteIndex = state.videos.findIndex((video) => video.id == id);
       state.videos.splice(deleteIndex, 1);
     },
+    SET_FAVORITE_VIDEOS: (state, videos) => (state.favoriteVideos = videos),
   },
   getters: {
     videos: (state) => state.videos,
@@ -204,5 +313,6 @@ export default {
       state.videos.filter((video) => video.level == "INTERMEDIATE"),
     advancedVideos: (state) =>
       state.videos.filter((video) => video.level == "ADVANCED"),
+    favoriteVideos: (state) => state.favoriteVideos,
   },
 };
