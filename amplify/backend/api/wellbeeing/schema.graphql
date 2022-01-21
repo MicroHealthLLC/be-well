@@ -77,14 +77,22 @@ type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
 }
 
 enum Category {
-  ENDURANCE
-  ERGONOMICS
+  # Deprecated
   MEDITATION
   MUSCLE
   POSTURE
   STRESS_RELIEF
   STRETCHING
   YOGA
+  # New
+  BALANCE
+  ENDURANCE
+  ERGONOMICS
+  FLEXIBILITY_MOBILITY
+  MIND
+  NUTRITION
+  RECOVERY
+  STRENGTH
 }
 
 enum Level {
