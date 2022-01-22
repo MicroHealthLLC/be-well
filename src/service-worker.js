@@ -4,10 +4,12 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "view-content") {
+    let content = contentType(event.notification.data.contentType);
     let category = categoryQuery(event.notification.data.category);
     let level = levelQuery(event.notification.data.level);
+
     clients.openWindow(
-      `/activities/videos?category=${category}&filter=${level}`
+      `/activities/${content}?category=${category}&filter=${level}`
     );
     console.log(event);
   } else if (event.action == "snooze") {
@@ -40,4 +42,13 @@ function levelQuery(key) {
   };
 
   return levels[key] || "beginner";
+}
+
+function contentType(key) {
+  const contentTypes = {
+    Articles: "articles",
+    Videos: "videos",
+  };
+
+  return contentTypes[key] || "videos";
 }

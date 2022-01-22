@@ -116,7 +116,7 @@
             <v-select
               v-model="reminder.contentType"
               label="Content Type"
-              :items="['Articles', 'Blogs', 'Podcasts', 'Videos']"
+              :items="['Articles','Videos']"
               :rules="[(v) => !!v || 'Content Type is required']"
               required
             ></v-select>
