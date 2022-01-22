@@ -103,9 +103,16 @@ export default {
     },
   },
   mounted() {
+    // Check for category query parameter in URL to set category
     if (this.$route.query.category) {
       this.selectedCategory = this.categories.findIndex(
         (category) => this.$route.query.category == category.query
+      );
+    }
+    // Check for filter query parameter in URL to set filter
+    if (this.$route.query.filter) {
+      this.selectedFilter = this.filters.findIndex(
+        (filter) => this.$route.query.filter == filter.query
       );
     }
     this.mounted = true;
