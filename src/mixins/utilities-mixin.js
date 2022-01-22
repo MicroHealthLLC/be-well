@@ -26,7 +26,7 @@ export default {
         {
           title: "Flexibility & Mobility",
           icon: "mdi-yoga",
-          query: "flexibility-&-mobility",
+          query: "flexibility-mobility",
           value: "FLEXIBILITY_MOBILITY",
           image: "/img/flexibility_mobility.jpg",
         },
@@ -56,7 +56,7 @@ export default {
           icon: "mdi-weight-lifter",
           query: "strength",
           value: "STRENGTH",
-          image: "/img/recovery.jpg",
+          image: "/img/strength.jpg",
         },
       ],
       levels: [

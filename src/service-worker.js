@@ -4,10 +4,10 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "view-content") {
+    let category = categoryQuery(event.notification.data.category);
+    let level = levelQuery(event.notification.data.level);
     clients.openWindow(
-      `/activities/videos?category=${categoryQuery(
-        event.notification.data.category
-      )}`
+      `/activities/videos?category=${category}&filter=${level}`
     );
     console.log(event);
   } else if (event.action == "snooze") {
@@ -19,15 +19,25 @@ self.addEventListener("notificationclick", (event) => {
 
 function categoryQuery(key) {
   const categories = {
+    BALANCE: "balance",
     ENDURANCE: "endurance",
     ERGONOMICS: "ergonomics",
-    MEDITATION: "meditation",
-    MUSCLE: "muscle-tone-movement",
-    POSTURE: "posture",
-    STRESS_RELIEF: "stress-relief",
-    STRETCHING: "stretching",
-    YOGA: "yoga",
+    FLEXIBILITY_MOBILITY: "flexibility-mobility",
+    MIND: "mind",
+    NUTRITION: "nutrition",
+    RECOVERY: "recovery",
+    STRENGTH: "strength",
   };
 
   return categories[key] || "endurance";
+}
+
+function levelQuery(key) {
+  const levels = {
+    BEGINNER: "beginner",
+    INTERMEDIATE: "intermediate",
+    ADVANCED: "advanced",
+  };
+
+  return levels[key] || "beginner";
 }
