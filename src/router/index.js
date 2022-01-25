@@ -87,20 +87,20 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: "blogs",
-        name: "Blogs",
-        component: () =>
-          import(
-            /* webpackChunkName: "blogs" */ "../views/Activities/Blogs.vue"
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
         path: "podcasts",
         name: "Podcasts",
         component: () =>
           import(
             /* webpackChunkName: "podcasts" */ "../views/Activities/Podcasts.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "goals",
+        name: "Goals",
+        component: () =>
+          import(
+            /* webpackChunkName: "goals" */ "../views/Activities/Goals.vue"
           ),
         meta: { requiresAuth: true },
       },
