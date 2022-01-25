@@ -1,77 +1,75 @@
 <template>
-  <v-row>
-    <v-col>
-      <!-- Goals Table -->
-      <span class="text-h6 text-sm-h5">Create Your Own Goals</span>
-      <v-divider class="mb-4"></v-divider>
-      <v-card class="pa-4 mb-4" elevation="5">
-        <div v-if="goals.length == 0" class="d-flex text-center flex-column">
-          <div class="text-body-1 mb-3">You currently have no goals set!</div>
-          <div>
-            <v-btn
-              @click="openNewGoalForm"
-              color="var(--mh-blue)"
-              dark
-              max-width="300"
-              ><v-icon class="mr-2">mdi-flag</v-icon> Add Goal</v-btn
-            >
-          </div>
-        </div>
-
-        <div v-else v-for="(goal, index) in goals" :key="index">
-          <div class="grid my-4">
-            <div class="text-subtitle-2 clickable">
-              <div @click="openGoalForm(goal)">
-                <v-icon class="mr-2" color="primary">mdi-flag</v-icon
-                >{{ goal.title }}
-              </div>
-              <div class="mt-2">
-                <v-chip class="mr-2" color="info" outlined small>{{
-                  categoryString(goal.category)
-                }}</v-chip>
-                <v-chip color="info" outlined small
-                  >Due Date: {{ goal.dueDate }}</v-chip
-                >
-                <div v-if="goal.progress == 100" class="d-inline text-h5">
-                  🎉
-                </div>
-              </div>
-            </div>
-            <v-slider
-              @end="updateGoalProgress(goal)"
-              class="d-flex align-center mt-10 mt-sm-0"
-              v-model="goal.progress"
-              thumb-label="always"
-              hide-details
-            ></v-slider>
-          </div>
-
-          <v-divider v-if="index != goals.length - 1"></v-divider>
-        </div>
-        <div
-          v-if="goals.length > 0"
-          class="d-flex flex-column flex-sm-row justify-sm-space-between mt-10"
-        >
+  <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
+    <!-- Goals Table -->
+    <span class="text-h6 text-sm-h5">My Goals</span>
+    <v-divider class="mb-4"></v-divider>
+    <v-card class="pa-4 mb-4" elevation="5">
+      <div v-if="goals.length == 0" class="d-flex text-center flex-column">
+        <div class="text-body-1 mb-3">You currently have no goals set!</div>
+        <div>
           <v-btn
-            v-if="goals.length < 3"
             @click="openNewGoalForm"
             color="var(--mh-blue)"
-            :small="$vuetify.breakpoint.xsOnly"
             dark
-            >Add Another Goal</v-btn
-          >
-          <v-btn
-            to="/activities"
-            class="mt-4 mt-sm-0"
-            text
-            color="info"
-            :small="$vuetify.breakpoint.xsOnly"
-            >Schedule Activity Reminders
-            <v-icon class="ml-2" small>mdi-arrow-right</v-icon></v-btn
+            max-width="300"
+            ><v-icon class="mr-2">mdi-flag</v-icon> Add Goal</v-btn
           >
         </div>
-      </v-card>
-    </v-col>
+      </div>
+
+      <div v-else v-for="(goal, index) in goals" :key="index">
+        <div class="grid my-4">
+          <div class="text-subtitle-2 clickable">
+            <div @click="openGoalForm(goal)">
+              <v-icon class="mr-2" color="primary">mdi-flag</v-icon
+              >{{ goal.title }}
+            </div>
+            <div class="mt-2">
+              <v-chip class="mr-2" color="info" outlined small>{{
+                categoryString(goal.category)
+              }}</v-chip>
+              <v-chip color="info" outlined small
+                >Due Date: {{ goal.dueDate }}</v-chip
+              >
+              <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
+            </div>
+          </div>
+          <v-slider
+            @end="updateGoalProgress(goal)"
+            class="d-flex align-center mt-10 mt-sm-0"
+            v-model="goal.progress"
+            thumb-label="always"
+            hide-details
+          ></v-slider>
+        </div>
+
+        <v-divider v-if="index != goals.length - 1"></v-divider>
+      </div>
+      <div
+        v-if="goals.length > 0"
+        class="d-flex flex-column flex-sm-row justify-sm-space-between mt-10"
+      >
+        <v-btn
+          v-if="goals.length < 3"
+          @click="openNewGoalForm"
+          color="var(--mh-blue)"
+          :small="$vuetify.breakpoint.xsOnly"
+          dark
+          >Add Another Goal</v-btn
+        >
+        <v-btn
+          to="/activities"
+          class="mt-4 mt-sm-0 ml-sm-auto"
+          text
+          exact-path
+          color="info"
+          :small="$vuetify.breakpoint.xsOnly"
+          >Schedule Activity Reminders
+          <v-icon class="ml-2" small>mdi-arrow-right</v-icon></v-btn
+        >
+      </div>
+    </v-card>
+
     <!-- Dialog Form -->
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
@@ -141,7 +139,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -229,4 +227,21 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+::v-deep .v-slider__thumb {
+  height: 20px;
+  width: 20px;
+}
+::v-deep .v-slider--horizontal .v-slider__track-container {
+  height: 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

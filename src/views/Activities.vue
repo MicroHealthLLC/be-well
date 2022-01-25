@@ -8,6 +8,9 @@
         color="var(--mh-green)"
         dense
       >
+        <v-btn class="px-5" active-class="btn-route" to="/activities/goals"
+          >Goals</v-btn
+        >
         <v-btn class="px-5" active-class="btn-route" to="/activities/reminders"
           >Reminders</v-btn
         >
@@ -96,6 +99,7 @@ export default {
   computed: {
     navVisible() {
       return (
+        this.$route.name == "Goals" ||
         this.$route.name == "Reminders" ||
         this.$route.name == "Articles" ||
         this.$route.name == "Videos"
