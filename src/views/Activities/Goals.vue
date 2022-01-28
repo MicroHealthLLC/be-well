@@ -163,9 +163,18 @@
               required
             ></v-select>
             <v-text-field
+              :disabled="goal.id"
               v-model.number="goal.stepCount"
               label="Number of Goal Steps"
               type="number"
+              min="1"
+              max="10"
+              :rules="[
+                (v) => !!v || 'Step Count is required',
+                (v) => v > 0 || 'Must be greater than 0',
+                (v) => v < 11 || 'Max Step Count is 10',
+              ]"
+              required
             ></v-text-field>
             <v-menu
               v-model="menu"
