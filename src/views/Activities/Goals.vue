@@ -53,31 +53,56 @@
               <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
             </div>
           </div>
-
-          <div class="d-flex align-center">
-            <v-progress-linear
-              :value="(goal.progress / goal.stepCount) * 100"
-              color="var(--mh-green)"
-              height="20"
-              rounded
-            ></v-progress-linear>
-            <div class="text-h5 font-weight-bold mx-5">
-              <span class="goal-progress-text">{{ goal.progress }}</span
-              >/{{ goal.stepCount }}
+          <!-- Progressbar -->
+          <div
+            class="
+              d-flex
+              flex-column
+              d-sm-flex
+              flex-sm-row
+              align-sm-center
+              mt-3 mt-sm-0
+            "
+          >
+            <div class="d-flex align-center goal-progressbar">
+              <v-progress-linear
+                :value="(goal.progress / goal.stepCount) * 100"
+                color="var(--mh-green)"
+                height="20"
+                rounded
+              ></v-progress-linear>
+              <div class="text-sm-h5 font-weight-bold ml-5 mx-sm-5">
+                <span class="goal-progress-text">{{ goal.progress }}</span
+                >/{{ goal.stepCount }}
+              </div>
             </div>
-            <v-btn-toggle dense rounded dark background-color="white">
-              <v-btn @click="updateGoalProgress(goal)" color="#2f53b6"
-                ><v-icon>mdi-plus-circle</v-icon></v-btn
+            <v-btn-toggle
+              class="mx-auto mx-sm-0 mt-3 mt-sm-0"
+              dense
+              rounded
+              dark
+              background-color="white"
+            >
+              <v-btn
+                @click="updateGoalProgress(goal)"
+                color="#2f53b6"
+                :small="$vuetify.breakpoint.xsOnly"
+                ><v-icon :small="$vuetify.breakpoint.xsOnly"
+                  >mdi-plus-circle</v-icon
+                ></v-btn
               >
-              <v-btn @click="decreaseGoalProgress(goal)" color="#2f53b6"
+              <v-btn
+                @click="decreaseGoalProgress(goal)"
+                color="#2f53b6"
+                :small="$vuetify.breakpoint.xsOnly"
                 ><v-icon>mdi-minus</v-icon></v-btn
               >
             </v-btn-toggle>
           </div>
         </div>
-
         <v-divider v-if="index != incompleteGoals.length - 1"></v-divider>
       </div>
+      <!-- Reminders Link -->
       <div v-if="incompleteGoals.length > 0" class="d-flex justify-end mt-10">
         <v-btn
           to="/activities"
@@ -323,6 +348,9 @@ export default {
 }
 .goal-progress-text {
   color: gray;
+}
+.goal-progressbar {
+  width: 100%;
 }
 .placeholder-text {
   color: rgba(0, 0, 0, 0.38);
