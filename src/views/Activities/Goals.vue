@@ -1,65 +1,87 @@
 <template>
-  <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <!-- Goals Table -->
-    <span class="text-h6 text-sm-h5">My Goals</span>
+  <div>
+    <div
+      class="
+        d-sm-flex
+        justify-space-between
+        align-center
+        mt-2
+        mb-2 mb-sm-2
+        mt-sm-4
+      "
+    >
+      <div class="d-flex justify-space-between align-center">
+        <span class="text-h6 text-sm-h5">My Goals</span>
+      </div>
+      <v-btn
+        @click="openNewGoalForm"
+        color="#2f53b6"
+        class="my-5 my-sm-0"
+        :disabled="!(incompleteGoals.length < 3)"
+        :dark="incompleteGoals.length < 3"
+        :block="$vuetify.breakpoint.xsOnly"
+        >Add New</v-btn
+      >
+    </div>
     <v-divider class="mb-4"></v-divider>
+    <!-- Goals Table -->
     <v-card class="pa-4 mb-4" elevation="5">
-      <div v-if="goals.length == 0" class="d-flex text-center flex-column">
-        <div class="text-body-1 mb-3">You currently have no goals set!</div>
-        <div>
-          <v-btn
-            @click="openNewGoalForm"
-            color="var(--mh-blue)"
-            dark
-            max-width="300"
-            ><v-icon class="mr-2">mdi-flag</v-icon> Add Goal</v-btn
-          >
+      <div
+        v-if="incompleteGoals.length == 0"
+        class="d-flex text-center flex-column"
+      >
+        <div class="mt-4">
+          <v-icon color="grey" x-large>mdi-flag</v-icon>
+          <p class="placeholder-text">You currently have no Goals set</p>
         </div>
       </div>
 
-      <div v-else v-for="(goal, index) in goals" :key="index">
+      <div v-else v-for="(goal, index) in incompleteGoals" :key="index">
         <div class="grid my-4">
           <div class="text-subtitle-2 clickable">
             <div @click="openGoalForm(goal)">
-              <v-icon class="mr-2" color="primary">mdi-flag</v-icon
+              <v-icon class="mr-2" color="#2f53b6">mdi-flag</v-icon
               >{{ goal.title }}
             </div>
             <div class="mt-2">
-              <v-chip class="mr-2" color="info" outlined small>{{
+              <v-chip class="mr-2" color="#2f53b6" outlined small>{{
                 categoryString(goal.category)
               }}</v-chip>
-              <v-chip color="info" outlined small
+              <v-chip color="#2f53b6" outlined small
                 >Due Date: {{ goal.dueDate }}</v-chip
               >
               <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
             </div>
           </div>
-          <v-slider
-            @end="updateGoalProgress(goal)"
-            class="d-flex align-center mt-10 mt-sm-0"
-            v-model="goal.progress"
-            thumb-label="always"
-            hide-details
-          ></v-slider>
+
+          <div class="d-flex align-center">
+            <v-progress-linear
+              :value="(goal.progress / goal.stepCount) * 100"
+              color="var(--mh-green)"
+              height="20"
+              rounded
+            ></v-progress-linear>
+            <div class="text-h5 font-weight-bold mx-5">
+              <span class="goal-progress-text">{{ goal.progress }}</span
+              >/{{ goal.stepCount }}
+            </div>
+            <v-btn-toggle dense rounded dark background-color="white">
+              <v-btn @click="updateGoalProgress(goal)" color="#2f53b6"
+                ><v-icon>mdi-plus-circle</v-icon></v-btn
+              >
+              <v-btn @click="decreaseGoalProgress(goal)" color="#2f53b6"
+                ><v-icon>mdi-minus</v-icon></v-btn
+              >
+            </v-btn-toggle>
+          </div>
         </div>
 
-        <v-divider v-if="index != goals.length - 1"></v-divider>
+        <v-divider v-if="index != incompleteGoals.length - 1"></v-divider>
       </div>
-      <div
-        v-if="goals.length > 0"
-        class="d-flex flex-column flex-sm-row justify-sm-space-between mt-10"
-      >
-        <v-btn
-          v-if="goals.length < 3"
-          @click="openNewGoalForm"
-          color="var(--mh-blue)"
-          :small="$vuetify.breakpoint.xsOnly"
-          dark
-          >Add Another Goal</v-btn
-        >
+      <div v-if="incompleteGoals.length > 0" class="d-flex justify-end mt-10">
         <v-btn
           to="/activities"
-          class="mt-4 mt-sm-0 ml-sm-auto"
+          class="mt-4 mt-sm-0"
           text
           exact-path
           color="info"
@@ -69,6 +91,24 @@
         >
       </div>
     </v-card>
+
+    <!-- Completed Goals -->
+    <div v-if="completedGoals.length > 0" class="mt-10">
+      <span class="text-h6 text-sm-h5">Completed Goals</span>
+      <v-divider class="mb-4"></v-divider>
+      <v-row>
+        <v-col
+          v-for="(goal, index) in completedGoals"
+          :key="index"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+        >
+          <GoalCard :goal="goal"></GoalCard>
+        </v-col>
+      </v-row>
+    </div>
 
     <!-- Dialog Form -->
     <v-dialog v-model="dialog" max-width="600">
@@ -97,6 +137,11 @@
               :rules="[(v) => !!v || 'Category is required']"
               required
             ></v-select>
+            <v-text-field
+              v-model.number="goal.stepCount"
+              label="Number of Goal Steps"
+              type="number"
+            ></v-text-field>
             <v-menu
               v-model="menu"
               :close-on-content-click="false"
@@ -145,10 +190,14 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import utilitiesMixin from "../../mixins/utilities-mixin";
+import GoalCard from "../../components/GoalCard.vue";
 
 export default {
   name: "Goals",
   mixins: [utilitiesMixin],
+  components: {
+    GoalCard,
+  },
   data() {
     return {
       dialog: false,
@@ -160,6 +209,9 @@ export default {
         category: "",
         dueDate: "",
         progress: 0,
+        stepCount: 1,
+        isComplete: false,
+        completedCount: 0,
       },
     };
   },
@@ -187,8 +239,32 @@ export default {
       this.closeGoalForm();
     },
     async updateGoalProgress(goal) {
+      let updatedProgress = goal.progress + 1;
+      let isComplete = updatedProgress == goal.stepCount;
+      let completedCount = isComplete ? 1 : 0;
+
       try {
-        await this.updateGoalById({ id: goal.id, progress: goal.progress });
+        await this.updateGoalById({
+          id: goal.id,
+          progress: updatedProgress,
+          isComplete: isComplete,
+          completedCount: goal.completedCount + completedCount,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async decreaseGoalProgress(goal) {
+      let updatedProgress = goal.progress - 1;
+      if (updatedProgress < 0) {
+        return;
+      }
+
+      try {
+        await this.updateGoalById({
+          id: goal.id,
+          progress: updatedProgress,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -208,6 +284,8 @@ export default {
         category: "",
         dueDate: "",
         progress: 0,
+        stepCount: 1,
+        completedCount: 0,
       };
     },
     openGoalForm(goal) {
@@ -220,6 +298,12 @@ export default {
   },
   computed: {
     ...mapGetters(["goals"]),
+    incompleteGoals() {
+      return this.goals.filter((goal) => !goal.isComplete);
+    },
+    completedGoals() {
+      return this.goals.filter((goal) => goal.isComplete);
+    },
   },
   async mounted() {
     this.fetchGoals();
@@ -228,20 +312,19 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .v-slider__thumb {
-  height: 20px;
-  width: 20px;
-}
-::v-deep .v-slider--horizontal .v-slider__track-container {
-  height: 10px;
-}
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
 }
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
   }
+}
+.goal-progress-text {
+  color: gray;
+}
+.placeholder-text {
+  color: rgba(0, 0, 0, 0.38);
 }
 </style>

@@ -45,7 +45,10 @@ export const getGoal = /* GraphQL */ `
       title
       category
       progress
+      stepCount
       dueDate
+      isComplete
+      completedCount
       createdAt
       updatedAt
       owner
@@ -64,7 +67,10 @@ export const listGoals = /* GraphQL */ `
         title
         category
         progress
+        stepCount
         dueDate
+        isComplete
+        completedCount
         createdAt
         updatedAt
         owner
