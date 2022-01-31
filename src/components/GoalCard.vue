@@ -1,7 +1,7 @@
 <template>
-  <div @click="isFlipped = !isFlipped" class="flip-card">
-    <div class="flip-card-inner clickable" :class="{ 'is-flipped': isFlipped }">
-      <div class="flip-card-front">
+  <div class="flip-card">
+    <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
+      <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
         <v-badge
           class="completed-count"
           :content="goal.completedCount"
@@ -22,17 +22,21 @@
           <div>{{ goal.title }}</div>
         </div>
         <div class="pa-4 card-body">
-          <v-icon class="checkmark" x-large color="white"
-            >mdi-checkbox-marked-circle-outline</v-icon
+          <transition name="fade"
+            ><v-icon v-if="!isFlipped" class="checkmark" x-large color="white"
+              >mdi-checkbox-marked-circle-outline</v-icon
+            ></transition
           >
         </div>
       </div>
       <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
-        <div>
+        <div @click="isFlipped = !isFlipped" class="clickable">
           <p class="d-flex justify-space-between text-caption ma-0">
             <span class="font-weight-bold">Category: </span
             ><v-chip x-small color="white"
-              ><v-icon class="mr-1" x-small>{{ categoryIcon(goal.category) }}</v-icon
+              ><v-icon class="mr-1" x-small>{{
+                categoryIcon(goal.category)
+              }}</v-icon
               >{{ categoryString(goal.category) }}</v-chip
             >
           </p>
@@ -147,5 +151,12 @@ export default {
   background-color: var(--mh-blue);
   color: white;
   transform: rotateY(180deg);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
