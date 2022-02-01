@@ -65,5 +65,7 @@ export default {
   },
   getters: {
     goals: (state) => state.goals,
+    completedGoals: (state) => state.goals.filter((goal) => goal.isComplete),
+    incompleteGoals: (state) => state.goals.filter((goal) => !goal.isComplete),
   },
 };

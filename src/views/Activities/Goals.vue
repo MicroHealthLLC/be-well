@@ -13,15 +13,25 @@
       <div class="d-flex justify-space-between align-center">
         <span class="text-h6 text-sm-h5">My Goals</span>
       </div>
-      <v-btn
-        @click="openNewGoalForm"
-        color="#2f53b6"
-        class="my-5 my-sm-0"
-        :disabled="!(incompleteGoals.length < 3)"
-        :dark="incompleteGoals.length < 3"
-        :block="$vuetify.breakpoint.xsOnly"
-        >Add New</v-btn
-      >
+      <v-tooltip :disabled="incompleteGoals.length < 3" max-width="200" bottom>
+        <template v-slot:activator="{ on }">
+          <div v-on="on">
+            <v-btn
+              @click="openNewGoalForm"
+              color="#2f53b6"
+              class="my-5 my-sm-0"
+              :disabled="!(incompleteGoals.length < 3)"
+              :dark="incompleteGoals.length < 3"
+              :block="$vuetify.breakpoint.xsOnly"
+              >Add New</v-btn
+            >
+          </div>
+        </template>
+        <div class="text-center">
+          Don't overload your goals! Focus on the 3 you have before adding more
+          goals.
+        </div>
+      </v-tooltip>
     </div>
     <v-divider class="mb-4"></v-divider>
     <!-- Goals Table -->
@@ -163,7 +173,7 @@
               required
             ></v-select>
             <v-text-field
-              :disabled="goal.id"
+              :disabled="goal.id != null || goal.id != undefined"
               v-model.number="goal.stepCount"
               label="Number of Goal Steps"
               type="number"
@@ -331,13 +341,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["goals"]),
-    incompleteGoals() {
-      return this.goals.filter((goal) => !goal.isComplete);
-    },
-    completedGoals() {
-      return this.goals.filter((goal) => goal.isComplete);
-    },
+    ...mapGetters(["completedGoals", "incompleteGoals"]),
   },
   async mounted() {
     this.fetchGoals();

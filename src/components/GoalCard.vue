@@ -49,14 +49,31 @@
             >{{ goal.completedCount }}
           </p>
         </div>
-        <v-btn @click="repeatGoal(goal)" outlined dark s>Repeat Goal</v-btn>
+        <v-tooltip
+          :disabled="incompleteGoals.length < 3"
+          max-width="200"
+          bottom
+        >
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="d-flex justify-center">
+              <v-btn
+                @click="repeatGoal(goal)"
+                :disabled="incompleteGoals.length > 2"
+                outlined
+                dark
+                >Repeat Goal</v-btn
+              >
+            </div>
+          </template>
+          <div class="text-center">Active goals maximum has been met</div>
+        </v-tooltip>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import utilitiesMixin from "./../mixins/utilities-mixin";
 
 export default {
@@ -70,6 +87,9 @@ export default {
     return {
       isFlipped: false,
     };
+  },
+  computed: {
+    ...mapGetters(["incompleteGoals"]),
   },
   methods: {
     ...mapActions(["updateGoalById"]),
