@@ -27,13 +27,6 @@
           disabled
           >Podcasts</v-btn
         >
-        <v-btn
-          class="px-5"
-          active-class="btn-route"
-          to="/activities/blogs"
-          disabled
-          >Blogs</v-btn
-        >
       </v-btn-toggle>
       <!-- Category Selector -->
       <v-chip-group
