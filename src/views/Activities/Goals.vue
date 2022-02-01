@@ -13,24 +13,21 @@
       <div class="d-flex justify-space-between align-center">
         <span class="text-h6 text-sm-h5">My Goals</span>
       </div>
-      <v-tooltip :disabled="incompleteGoals.length < 3" max-width="200" bottom>
+      <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
         <template v-slot:activator="{ on }">
           <div v-on="on">
             <v-btn
               @click="openNewGoalForm"
               color="#2f53b6"
               class="my-5 my-sm-0"
-              :disabled="!(incompleteGoals.length < 3)"
-              :dark="incompleteGoals.length < 3"
+              :disabled="!(incompleteGoals.length < 5)"
+              :dark="incompleteGoals.length < 5"
               :block="$vuetify.breakpoint.xsOnly"
               >Add New</v-btn
             >
           </div>
         </template>
-        <div class="text-center">
-          Don't overload your goals! Focus on the 3 you have before adding more
-          goals.
-        </div>
+        <div class="text-center">Active Goals maximum has been met</div>
       </v-tooltip>
     </div>
     <v-divider class="mb-4"></v-divider>

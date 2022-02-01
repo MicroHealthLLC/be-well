@@ -50,7 +50,7 @@
           </p>
         </div>
         <v-tooltip
-          :disabled="incompleteGoals.length < 3"
+          :disabled="incompleteGoals.length < 5"
           max-width="200"
           bottom
         >
@@ -58,14 +58,14 @@
             <div v-on="on" class="d-flex justify-center">
               <v-btn
                 @click="repeatGoal(goal)"
-                :disabled="incompleteGoals.length > 2"
+                :disabled="incompleteGoals.length > 4"
                 outlined
                 dark
                 >Repeat Goal</v-btn
               >
             </div>
           </template>
-          <div class="text-center">Active goals maximum has been met</div>
+          <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
     </div>
