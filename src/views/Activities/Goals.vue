@@ -51,12 +51,13 @@
               >{{ goal.title }}
             </div>
             <div class="mt-2">
-              <v-chip class="mr-2" color="#2f53b6" outlined small>{{
-                categoryString(goal.category)
-              }}</v-chip>
-              <v-chip color="#2f53b6" outlined small
-                >Due Date: {{ goal.dueDate }}</v-chip
+              <v-chip class="mr-2" color="#2f53b6" outlined small
+                ><v-icon class="mr-1" small>{{
+                  categoryIcon(goal.category)
+                }}</v-icon
+                >{{ categoryString(goal.category) }}</v-chip
               >
+              <v-chip title="Due Date" color="#2f53b6" outlined small>{{ goal.dueDate }}</v-chip>
               <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
             </div>
           </div>

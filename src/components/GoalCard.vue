@@ -41,7 +41,7 @@
             >
           </p>
           <p class="d-flex justify-space-between text-caption ma-0">
-            <span class="font-weight-bold">Completed: </span
+            <span class="font-weight-bold">Last Completed: </span
             >{{ new Date(goal.updatedAt).toDateString() }}
           </p>
           <p class="d-flex justify-space-between text-caption">
