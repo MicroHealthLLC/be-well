@@ -12,6 +12,15 @@
         :key="index"
         :video="video"
       />
+      <div class="grid-full-width">
+        <v-pagination
+          v-model="page"
+          @input="fetchSelectedPage"
+          @next="fetchNextPage"
+          @previous="fetchPreviousPage"
+          :length="totalPages"
+        ></v-pagination>
+      </div>
     </div>
     <div v-else class="d-flex flex-column justify-center align-center py-10">
       <div>
@@ -107,6 +116,8 @@ export default {
     return {
       dialog: false,
       valid: true,
+      page: 1,
+      start: 0,
       newVideo: {
         resourceId: "",
         category: "",
@@ -119,6 +130,7 @@ export default {
     ...mapActions([
       "addVideo",
       "fetchVideos",
+      "fetchYTVideos",
       "fetchFavoriteVideos",
       "fetchAllFavoriteVideos",
     ]),
@@ -166,9 +178,23 @@ export default {
 
       return match ? url.match(regExp)[7] : "YouTube ID not found";
     },
+    fetchNextPage() {
+      this.start += 12;
+      this.fetchYTVideos(this.start);
+    },
+    fetchPreviousPage() {
+      this.start -= 12;
+      this.fetchYTVideos(this.start);
+    },
+    fetchSelectedPage(page) {
+      this.page = page;
+      this.start = (page - 1) * 12;
+      this.fetchYTVideos(this.start);
+    },
   },
   computed: {
     ...mapGetters([
+      "awsVideos",
       "advancedVideos",
       "beginnerVideos",
       "intermediateVideos",
@@ -187,6 +213,9 @@ export default {
         filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
       );
     },
+    totalPages() {
+      return Math.ceil(this.awsVideos.length / 12);
+    },
   },
   async mounted() {
     let category = this.categories[this.selectedCategory].value;
@@ -202,6 +231,7 @@ export default {
   },
   watch: {
     selectedCategory() {
+      this.page = 1;
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
@@ -225,6 +255,7 @@ export default {
       }
     },
     selectedFilter() {
+      this.page = 1;
       let filterQuery = this.filters[this.selectedFilter].query;
       let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
@@ -256,6 +287,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+}
+.grid-full-width {
+  grid-column: 1/-1;
 }
 .image {
   max-height: 200px;
