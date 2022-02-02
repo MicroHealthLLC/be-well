@@ -54,44 +54,49 @@ export default {
         });
       }
     },
-    async fetchVideos({ commit }, filters) {
+    async fetchVideos({ commit, dispatch }, filters) {
       try {
         // First fetch AWS video references
         const res = await API.graphql(graphqlOperation(listVideos, filters));
         const awsVideos = res.data.listVideos.items;
-        const videoIds = res.data.listVideos.items
-          .map((video) => video.resourceId)
-          .join(",");
-        // Then grab YouTube video data based on ids from above response
-        await axios({
-          method: "GET",
-          url: youtubeURL,
-          params: {
-            part: "contentDetails,snippet",
-            key: process.env.VUE_APP_YOUTUBE_API_KEY,
-            id: videoIds,
-          },
-        }).then((res) => {
-          let mergedVideos = [];
-          res.data.items.forEach((item) => {
-            let video = awsVideos.find(
-              (awsVideo) => awsVideo.resourceId == item.id
-            );
-            // Combine both AWS video reference and YouTube video data
-            mergedVideos.push({
-              ...video,
-              contentDetails: item.contentDetails,
-              etag: item.etag,
-              youtubeId: item.id,
-              kind: item.kind,
-              snippet: item.snippet,
-            });
-          });
-          commit("SET_VIDEOS", mergedVideos);
-        });
+        commit("SET_AWS_VIDEOS", awsVideos);
+        dispatch("fetchYTVideos", 0);
       } catch (error) {
         console.log(error);
       }
+    },
+    async fetchYTVideos({ commit, getters }, start) {
+      const videoIds = getters.awsVideos
+        .slice(start, start + 12)
+        .map((video) => video.resourceId)
+        .join(",");
+      // Then grab YouTube video data based on ids from above response
+      await axios({
+        method: "GET",
+        url: youtubeURL,
+        params: {
+          part: "contentDetails,snippet",
+          key: process.env.VUE_APP_YOUTUBE_API_KEY,
+          id: videoIds,
+        },
+      }).then((res) => {
+        let mergedVideos = [];
+        res.data.items.forEach((item) => {
+          let video = getters.awsVideos.find(
+            (awsVideo) => awsVideo.resourceId == item.id
+          );
+          // Combine both AWS video reference and YouTube video data
+          mergedVideos.push({
+            ...video,
+            contentDetails: item.contentDetails,
+            etag: item.etag,
+            youtubeId: item.id,
+            kind: item.kind,
+            snippet: item.snippet,
+          });
+        });
+        commit("SET_VIDEOS", mergedVideos);
+      });
     },
     async fetchCategoryVideos({ commit }, category) {
       try {
@@ -222,7 +227,7 @@ export default {
         console.log(error);
       }
     },
-    async fetchFavoriteVideos({ commit }, category) {
+    async fetchFavoriteVideos({ commit, dispatch }, category) {
       try {
         const res = await API.graphql(
           graphqlOperation(` 
@@ -247,34 +252,8 @@ export default {
         const awsVideos = res.data.listFavoriteVideos.items.map(
           (item) => item.video
         );
-        const videoIds = awsVideos.map((video) => video.resourceId).join(",");
-        // Then grab YouTube video data based on ids from above response
-        await axios({
-          method: "GET",
-          url: youtubeURL,
-          params: {
-            part: "contentDetails,snippet",
-            key: process.env.VUE_APP_YOUTUBE_API_KEY,
-            id: videoIds,
-          },
-        }).then((res) => {
-          let mergedVideos = [];
-          res.data.items.forEach((item) => {
-            let video = awsVideos.find(
-              (awsVideo) => awsVideo.resourceId == item.id
-            );
-            // Combine both AWS video reference and YouTube video data
-            mergedVideos.push({
-              ...video,
-              contentDetails: item.contentDetails,
-              etag: item.etag,
-              youtubeId: item.id,
-              kind: item.kind,
-              snippet: item.snippet,
-            });
-          });
-          commit("SET_VIDEOS", mergedVideos);
-        });
+        commit("SET_AWS_VIDEOS", awsVideos);
+        dispatch("fetchYTVideos", 0);
       } catch (error) {
         console.log(error);
       }
@@ -306,6 +285,7 @@ export default {
     SET_FAVORITE_VIDEOS: (state, videos) => (state.favoriteVideos = videos),
   },
   getters: {
+    awsVideos: (state) => state.awsVideos,
     videos: (state) => state.videos,
     beginnerVideos: (state) =>
       state.videos.filter((video) => video.level == "BEGINNER"),
