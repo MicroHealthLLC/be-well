@@ -16,8 +16,6 @@
         <v-pagination
           v-model="page"
           @input="fetchSelectedPage"
-          @next="fetchNextPage"
-          @previous="fetchPreviousPage"
           :length="totalPages"
         ></v-pagination>
       </div>
@@ -177,14 +175,6 @@ export default {
       let match = url.match(regExp);
 
       return match ? url.match(regExp)[7] : "YouTube ID not found";
-    },
-    fetchNextPage() {
-      this.start += 12;
-      this.fetchYTVideos(this.start);
-    },
-    fetchPreviousPage() {
-      this.start -= 12;
-      this.fetchYTVideos(this.start);
     },
     fetchSelectedPage(page) {
       this.page = page;
