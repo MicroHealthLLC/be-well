@@ -35,8 +35,9 @@
         class="mt-2 mt-sm-4 categories"
         mandatory
       >
+        <v-chip class="mb-0" color="primary" filter outlined>All</v-chip>
         <v-chip
-          v-for="(category, index) in categories"
+          v-for="(category, index) in filteredCategories"
           :key="index"
           class="mb-0"
           color="primary"
@@ -54,17 +55,14 @@
         mandatory
       >
         <v-chip
-          v-for="(level, index) in filteredLevels"
+          v-for="(level, index) in filters"
           :key="index"
           class="mt-0"
           color="primary"
           small
           filter
           outlined
-          >{{ level.title }}</v-chip
-        >
-        <v-chip class="mt-0" color="primary" small filter outlined
-          >My Favorites</v-chip
+          >{{ level.label }}</v-chip
         >
       </v-chip-group>
       <!-- Activities Content -->

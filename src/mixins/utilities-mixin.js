@@ -3,6 +3,13 @@ export default {
     return {
       categories: [
         {
+          title: "",
+          icon: "",
+          query: "all",
+          value: "ALL",
+          image: "",
+        },
+        {
           title: "Balance",
           icon: "mdi-human",
           query: "balance",
@@ -61,6 +68,11 @@ export default {
       ],
       levels: [
         {
+          title: "All",
+          value: "ALL",
+          query: "all",
+        },
+        {
           title: "Beginner",
           value: "BEGINNER",
           query: "beginner",
@@ -83,22 +95,32 @@ export default {
       ],
       filters: [
         {
+          title: "All",
+          label: "All",
+          value: "ALL",
+          query: "all",
+        },
+        {
           title: "Beginner",
+          label: "Beginner",
           value: "BEGINNER",
           query: "beginner",
         },
         {
           title: "Intermediate",
+          label: "Intermediate",
           value: "INTERMEDIATE",
           query: "intermediate",
         },
         {
           title: "Advanced",
+          label: "Advanced",
           value: "ADVANCED",
           query: "advanced",
         },
         {
           title: "Favorite",
+          label: "My Favorites",
           value: "FAVORITE",
           query: "favorites",
         },
@@ -181,8 +203,11 @@ export default {
     },
   },
   computed: {
+    filteredCategories() {
+      return this.categories.filter((category) => category.value != "ALL");
+    },
     filteredLevels() {
-      return this.levels.filter((level) => level.value != "NOT_APPLICABLE");
+      return this.levels.filter((level) => level.value != "ALL");
     },
   },
 };

@@ -22,7 +22,7 @@
           ></v-text-field>
           <v-select
             v-model="article.category"
-            :items="categories"
+            :items="filteredCategories"
             item-text="title"
             item-value="value"
             label="Category"
@@ -32,7 +32,7 @@
           <v-select
             v-model="article.level"
             label="Level"
-            :items="levels"
+            :items="filteredLevels"
             item-text="title"
             item-value="value"
             :rules="[(v) => !!v || 'Level is required']"

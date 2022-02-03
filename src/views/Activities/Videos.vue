@@ -21,9 +21,12 @@
       </div>
     </div>
     <div v-else class="d-flex flex-column justify-center align-center py-10">
-      <div>
+      <div v-if="selectedFilter != 0">
         <v-icon class="mr-2">mdi-video-vintage</v-icon> No
         {{ filters[selectedFilter].title }} Videos...
+      </div>
+      <div v-else>
+        <v-icon class="mr-2">mdi-video-vintage</v-icon> No Videos...
       </div>
       <v-btn
         v-if="showAddBtn"
@@ -56,7 +59,7 @@
             ></v-text-field>
             <v-select
               v-model="newVideo.category"
-              :items="categories"
+              :items="filteredCategories"
               item-text="title"
               item-value="value"
               label="Category"
@@ -65,7 +68,7 @@
             ></v-select>
             <v-select
               v-model="newVideo.level"
-              :items="levels"
+              :items="filteredLevels"
               item-text="title"
               item-value="value"
               label="Level"
@@ -150,8 +153,13 @@ export default {
     },
     openDialog() {
       this.resetForm();
-      this.newVideo.category = this.categories[this.selectedCategory].value;
-      this.newVideo.level = this.levels[this.selectedFilter].value;
+      this.selectedCategory == 0
+        ? (this.newVideo.category = "BALANCE")
+        : (this.newVideo.category =
+            this.categories[this.selectedCategory].value);
+      this.selectedFilter == 0
+        ? (this.newVideo.level = "BEGINNER")
+        : (this.newVideo.level = this.levels[this.selectedFilter].value);
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
@@ -180,6 +188,7 @@ export default {
       this.page = page;
       this.start = (page - 1) * 12;
       this.fetchYTVideos(this.start);
+      window.scrollTo({top: 0, behavior: 'smooth'});
     },
   },
   computed: {
@@ -195,7 +204,8 @@ export default {
       return this.categories[this.selectedCategory].title;
     },
     showAddBtn() {
-      return this.isEditor && this.isLevel;
+      // Check if on Editors list and whether last filter (Favorites) is selected
+      return this.isEditor && this.selectedFilter != this.filters.length - 1;
     },
     isLevel() {
       let filter = this.filters[this.selectedFilter].value;
@@ -210,7 +220,18 @@ export default {
   async mounted() {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
-    if (this.isLevel) {
+
+    if (category == "ALL" && filter == "ALL") {
+      this.fetchVideos();
+    } else if (category != "ALL" && filter == "ALL") {
+      this.fetchVideos({
+        filter: { category: { eq: category } },
+      });
+    } else if (category == "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { level: { eq: filter } },
+      });
+    } else if (category != "ALL" && this.isLevel) {
       this.fetchVideos({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
@@ -235,7 +256,17 @@ export default {
           },
         });
 
-        if (this.isLevel) {
+        if (category == "ALL" && filter == "ALL") {
+          this.fetchVideos();
+        } else if (category != "ALL" && filter == "ALL") {
+          this.fetchVideos({
+            filter: { category: { eq: category } },
+          });
+        } else if (category == "ALL" && this.isLevel) {
+          this.fetchVideos({
+            filter: { level: { eq: filter } },
+          });
+        } else if (category != "ALL" && this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });
@@ -259,7 +290,17 @@ export default {
           },
         });
 
-        if (this.isLevel) {
+        if (category == "ALL" && filter == "ALL") {
+          this.fetchVideos();
+        } else if (category != "ALL" && filter == "ALL") {
+          this.fetchVideos({
+            filter: { category: { eq: category } },
+          });
+        } else if (category == "ALL" && this.isLevel) {
+          this.fetchVideos({
+            filter: { level: { eq: filter } },
+          });
+        } else if (category != "ALL" && this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });

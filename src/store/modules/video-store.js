@@ -228,9 +228,33 @@ export default {
       }
     },
     async fetchFavoriteVideos({ commit, dispatch }, category) {
+      let res = {};
+
       try {
-        const res = await API.graphql(
-          graphqlOperation(` 
+        if (category == "ALL") {
+          res = await API.graphql(
+            graphqlOperation(` 
+            query FavoriteVideos {
+              listFavoriteVideos {
+                items {
+                  id
+                  videoId
+                  video {
+                    category
+                    createdAt
+                    id
+                    level
+                    resourceId
+                    updatedAt
+                  }
+                }
+              }
+            }
+          `)
+          );
+        } else {
+          res = await API.graphql(
+            graphqlOperation(` 
             query FavoriteVideos {
               listFavoriteVideos(filter: {category: {eq: ${category}}}) {
                 items {
@@ -248,10 +272,11 @@ export default {
               }
             }
           `)
-        );
-        const awsVideos = res.data.listFavoriteVideos.items.map(
-          (item) => item.video
-        );
+          );
+        }
+        const awsVideos = res.data.listFavoriteVideos.items
+          .filter((item) => !!item.video)
+          .map((item) => item.video);
         commit("SET_AWS_VIDEOS", awsVideos);
         dispatch("fetchYTVideos", 0);
       } catch (error) {
