@@ -3,6 +3,13 @@ export default {
     return {
       categories: [
         {
+          title: "",
+          icon: "",
+          query: "all",
+          value: "ALL",
+          image: "",
+        },
+        {
           title: "Balance",
           icon: "mdi-human",
           query: "balance",
@@ -82,6 +89,11 @@ export default {
         },
       ],
       filters: [
+        {
+          title: "All",
+          value: "ALL",
+          query: "all",
+        },
         {
           title: "Beginner",
           value: "BEGINNER",
@@ -181,6 +193,9 @@ export default {
     },
   },
   computed: {
+    filteredCategories() {
+      return this.categories.filter((category) => category.value != "ALL");
+    },
     filteredLevels() {
       return this.levels.filter((level) => level.value != "NOT_APPLICABLE");
     },

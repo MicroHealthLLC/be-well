@@ -210,7 +210,18 @@ export default {
   async mounted() {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
-    if (this.isLevel) {
+
+    if (category == "ALL" && filter == "ALL") {
+      this.fetchVideos();
+    } else if (category != "ALL" && filter == "ALL") {
+      this.fetchVideos({
+        filter: { category: { eq: category } },
+      });
+    } else if (category == "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { level: { eq: filter } },
+      });
+    } else if (category != "ALL" && this.isLevel) {
       this.fetchVideos({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
@@ -235,7 +246,17 @@ export default {
           },
         });
 
-        if (this.isLevel) {
+        if (category == "ALL" && filter == "ALL") {
+          this.fetchVideos();
+        } else if (category != "ALL" && filter == "ALL") {
+          this.fetchVideos({
+            filter: { category: { eq: category } },
+          });
+        } else if (category == "ALL" && this.isLevel) {
+          this.fetchVideos({
+            filter: { level: { eq: filter } },
+          });
+        } else if (category != "ALL" && this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });
@@ -259,7 +280,17 @@ export default {
           },
         });
 
-        if (this.isLevel) {
+        if (category == "ALL" && filter == "ALL") {
+          this.fetchVideos();
+        } else if (category != "ALL" && filter == "ALL") {
+          this.fetchVideos({
+            filter: { category: { eq: category } },
+          });
+        } else if (category == "ALL" && this.isLevel) {
+          this.fetchVideos({
+            filter: { level: { eq: filter } },
+          });
+        } else if (category != "ALL" && this.isLevel) {
           this.fetchVideos({
             filter: { category: { eq: category }, level: { eq: filter } },
           });
