@@ -162,9 +162,38 @@ export default {
       }
     },
     async fetchFavoriteArticles({ commit }, category) {
+      let res = {};
+
       try {
-        const res = await API.graphql(
-          graphqlOperation(` 
+        if (category == "ALL") {
+          res = await API.graphql(
+            graphqlOperation(` 
+            query FavoriteArticles {
+              listFavoriteArticles {
+                items {
+                  id
+                  articleId
+                  article {
+                    author
+                    body
+                    category
+                    createdAt
+                    id
+                    image
+                    imageCredit
+                    lastEditedBy
+                    level
+                    title
+                    updatedAt
+                  }
+                }
+              }
+            }
+          `)
+          );
+        } else {
+          res = await API.graphql(
+            graphqlOperation(` 
             query FavoriteArticles {
               listFavoriteArticles(filter: {category: {eq: ${category}}}) {
                 items {
@@ -187,11 +216,14 @@ export default {
               }
             }
           `)
-        );
+          );
+        }
         commit("SET_FAVORITE_ARTICLES", res.data.listFavoriteArticles.items);
         commit(
           "SET_ARTICLES",
-          res.data.listFavoriteArticles.items.map((article) => article.article)
+          res.data.listFavoriteArticles.items
+            .filter((article) => !!article.article)
+            .map((article) => article.article)
         );
       } catch (error) {
         console.log(error);

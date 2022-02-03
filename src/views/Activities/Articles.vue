@@ -14,10 +14,13 @@
       />
     </div>
     <div v-else class="d-flex flex-column justify-center align-center py-10">
-      <div>
+      <div v-if="selectedFilter != 0">
         <v-icon class="mr-2">mdi-file-document-outline</v-icon> No
         {{ filters[selectedFilter].title }}
         Articles...
+      </div>
+      <div v-else>
+        <v-icon class="mr-2">mdi-file-document-outline</v-icon> No Articles...
       </div>
       <v-btn
         v-if="isEditor"
@@ -70,7 +73,17 @@ export default {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
 
-    if (this.isLevel) {
+    if (category == "ALL" && filter == "ALL") {
+      this.fetchArticles();
+    } else if (category != "ALL" && filter == "ALL") {
+      this.fetchArticles({
+        filter: { category: { eq: category } },
+      });
+    } else if (category == "ALL" && this.isLevel) {
+      this.fetchArticles({
+        filter: { level: { eq: filter } },
+      });
+    } else if (category != "ALL" && this.isLevel) {
       this.fetchArticles({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
@@ -94,7 +107,17 @@ export default {
         });
       }
       // Fetch Articles by selected filter
-      if (this.isLevel) {
+      if (category == "ALL" && filter == "ALL") {
+        this.fetchArticles();
+      } else if (category != "ALL" && filter == "ALL") {
+        this.fetchArticles({
+          filter: { category: { eq: category } },
+        });
+      } else if (category == "ALL" && this.isLevel) {
+        this.fetchArticles({
+          filter: { level: { eq: filter } },
+        });
+      } else if (category != "ALL" && this.isLevel) {
         this.fetchArticles({
           filter: { category: { eq: category }, level: { eq: filter } },
         });
@@ -117,7 +140,17 @@ export default {
         });
       }
       // Fetch Articles by selected filter
-      if (this.isLevel) {
+      if (category == "ALL" && filter == "ALL") {
+        this.fetchArticles();
+      } else if (category != "ALL" && filter == "ALL") {
+        this.fetchArticles({
+          filter: { category: { eq: category } },
+        });
+      } else if (category == "ALL" && this.isLevel) {
+        this.fetchArticles({
+          filter: { level: { eq: filter } },
+        });
+      } else if (category != "ALL" && this.isLevel) {
         this.fetchArticles({
           filter: { category: { eq: category }, level: { eq: filter } },
         });
