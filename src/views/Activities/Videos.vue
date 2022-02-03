@@ -188,6 +188,7 @@ export default {
       this.page = page;
       this.start = (page - 1) * 12;
       this.fetchYTVideos(this.start);
+      window.scrollTo({top: 0, behavior: 'smooth'});
     },
   },
   computed: {

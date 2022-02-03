@@ -8,10 +8,17 @@
 
     <div v-if="articles.length > 0" class="grid-container mb-6">
       <article-card
-        v-for="(article, index) in articles"
+        v-for="(article, index) in pageArticles"
         :key="index"
         :article="article"
       />
+      <div class="grid-full-width">
+        <v-pagination
+          v-model="page"
+          @input="fetchSelectedPage"
+          :length="totalPages"
+        ></v-pagination>
+      </div>
     </div>
     <div v-else class="d-flex flex-column justify-center align-center py-10">
       <div v-if="selectedFilter != 0">
@@ -54,6 +61,13 @@ export default {
   props: ["selectedCategory", "selectedFilter"],
   mixins: [utilitiesMixin],
   components: { ArticleCard },
+  data() {
+    return {
+      page: 1,
+      start: 0,
+      pageArticles: [],
+    };
+  },
   computed: {
     ...mapGetters(["articles", "isEditor"]),
     categoryTitle() {
@@ -65,33 +79,45 @@ export default {
         filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
       );
     },
+    totalPages() {
+      return Math.ceil(this.articles.length / 12);
+    },
   },
   methods: {
     ...mapActions(["fetchArticles", "fetchFavoriteArticles"]),
+    fetchSelectedPage(page) {
+      this.page = page;
+      this.start = (page - 1) * 12;
+      this.pageArticles = this.articles.slice(this.start, this.start + 12);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
-  mounted() {
+  async mounted() {
     let category = this.categories[this.selectedCategory].value;
     let filter = this.filters[this.selectedFilter].value;
 
     if (category == "ALL" && filter == "ALL") {
-      this.fetchArticles();
+      await this.fetchArticles();
     } else if (category != "ALL" && filter == "ALL") {
-      this.fetchArticles({
+      await this.fetchArticles({
         filter: { category: { eq: category } },
       });
     } else if (category == "ALL" && this.isLevel) {
-      this.fetchArticles({
+      await this.fetchArticles({
         filter: { level: { eq: filter } },
       });
     } else if (category != "ALL" && this.isLevel) {
-      this.fetchArticles({
+      await this.fetchArticles({
         filter: { category: { eq: category }, level: { eq: filter } },
       });
     } else {
-      this.fetchFavoriteArticles(category);
+      await this.fetchFavoriteArticles(category);
     }
   },
   watch: {
+    articles() {
+      this.pageArticles = this.articles.slice(this.start, this.start + 12);
+    },
     selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
@@ -167,6 +193,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+}
+.grid-full-width {
+  grid-column: 1/-1;
 }
 .floating-btn {
   bottom: 0;
