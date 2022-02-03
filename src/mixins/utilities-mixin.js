@@ -96,26 +96,31 @@ export default {
       filters: [
         {
           title: "All",
+          label: "All",
           value: "ALL",
           query: "all",
         },
         {
           title: "Beginner",
+          label: "Beginner",
           value: "BEGINNER",
           query: "beginner",
         },
         {
           title: "Intermediate",
+          label: "Intermediate",
           value: "INTERMEDIATE",
           query: "intermediate",
         },
         {
           title: "Advanced",
+          label: "Advanced",
           value: "ADVANCED",
           query: "advanced",
         },
         {
           title: "Favorite",
+          label: "My Favorites",
           value: "FAVORITE",
           query: "favorites",
         },
@@ -202,7 +207,7 @@ export default {
       return this.categories.filter((category) => category.value != "ALL");
     },
     filteredLevels() {
-      return this.levels.filter((level) => level.value != "NOT_APPLICABLE");
+      return this.levels.filter((level) => level.value != "ALL");
     },
   },
 };

@@ -90,7 +90,7 @@
           <v-form ref="form" v-model="valid">
             <v-select
               v-model="reminder.category"
-              :items="categories"
+              :items="filteredCategories"
               item-text="title"
               item-value="value"
               label="Category"
@@ -99,7 +99,7 @@
             ></v-select>
             <v-select
               v-model="reminder.level"
-              :items="levels"
+              :items="filteredLevels"
               item-text="title"
               item-value="value"
               label="Level"
@@ -116,7 +116,7 @@
             <v-select
               v-model="reminder.contentType"
               label="Content Type"
-              :items="['Articles','Videos']"
+              :items="['Articles', 'Videos']"
               :rules="[(v) => !!v || 'Content Type is required']"
               required
             ></v-select>
@@ -183,20 +183,6 @@ export default {
         contentType: "",
         time: null,
       },
-      // levels: [
-      //   {
-      //     name: "Beginner",
-      //     value: "BEGINNER",
-      //   },
-      //   {
-      //     name: "Intermediate",
-      //     value: "INTERMEDIATE",
-      //   },
-      //   {
-      //     name: "Advanced",
-      //     value: "ADVANCED",
-      //   },
-      // ],
       headers: [
         {
           text: "Category",

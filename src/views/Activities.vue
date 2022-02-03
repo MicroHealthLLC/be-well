@@ -55,17 +55,14 @@
         mandatory
       >
         <v-chip
-          v-for="(level, index) in filteredLevels"
+          v-for="(level, index) in filters"
           :key="index"
           class="mt-0"
           color="primary"
           small
           filter
           outlined
-          >{{ level.title }}</v-chip
-        >
-        <v-chip class="mt-0" color="primary" small filter outlined
-          >My Favorites</v-chip
+          >{{ level.label }}</v-chip
         >
       </v-chip-group>
       <!-- Activities Content -->

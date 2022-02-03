@@ -57,7 +57,9 @@
                 }}</v-icon
                 >{{ categoryString(goal.category) }}</v-chip
               >
-              <v-chip title="Due Date" color="#2f53b6" outlined small>{{ goal.dueDate }}</v-chip>
+              <v-chip title="Due Date" color="#2f53b6" outlined small>{{
+                goal.dueDate
+              }}</v-chip>
               <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
             </div>
           </div>
@@ -163,7 +165,7 @@
             ></v-text-field>
             <v-select
               v-model="goal.category"
-              :items="categories"
+              :items="filteredCategories"
               item-text="title"
               item-value="value"
               label="Category"
