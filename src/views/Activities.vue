@@ -54,7 +54,6 @@
         class="levels"
         mandatory
       >
-        <v-chip class="mt-0" color="primary" small filter outlined>All</v-chip>
         <v-chip
           v-for="(level, index) in filteredLevels"
           :key="index"

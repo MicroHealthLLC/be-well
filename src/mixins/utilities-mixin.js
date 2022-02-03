@@ -68,6 +68,11 @@ export default {
       ],
       levels: [
         {
+          title: "All",
+          value: "ALL",
+          query: "all",
+        },
+        {
           title: "Beginner",
           value: "BEGINNER",
           query: "beginner",
