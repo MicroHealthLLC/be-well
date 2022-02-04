@@ -17,6 +17,7 @@
           v-model="page"
           @input="fetchSelectedPage"
           :length="totalPages"
+          color="#2f53b6"
         ></v-pagination>
       </div>
     </div>
