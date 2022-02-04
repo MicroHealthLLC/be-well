@@ -35,37 +35,37 @@
         class="mt-2 mt-sm-4 categories"
         mandatory
       >
-        <v-chip class="mb-0" color="primary" filter outlined>All</v-chip>
+        <v-chip class="mb-0" active-class="selected-category-chip" filter
+          >All</v-chip
+        >
         <v-chip
           v-for="(category, index) in filteredCategories"
           :key="index"
           class="mb-0"
-          color="primary"
-          outlined
+          active-class="selected-category-chip"
           filter
           >{{ category.title
           }}<v-icon right small>{{ category.icon }}</v-icon></v-chip
         >
       </v-chip-group>
-      <!-- Level Selector -->
+      <!-- Filter Selector -->
       <v-chip-group
         v-if="$route.name == 'Videos' || $route.name == 'Articles'"
         v-model="selectedFilter"
-        class="levels"
+        class="filters"
         mandatory
       >
         <v-chip
-          v-for="(level, index) in filters"
+          v-for="(filter, index) in filters"
           :key="index"
           class="mt-0"
-          color="primary"
+          :active-class="chipColor"
           small
           filter
-          outlined
-          >{{ level.label }}</v-chip
+          >{{ filter.label }}</v-chip
         >
       </v-chip-group>
-      <!-- Activities Content -->
+      <!-- Activities Content (Goals, Reminders, Videos, Articles, Podcasts) -->
       <router-view
         v-if="mounted"
         :selectedCategory="selectedCategory"
@@ -95,6 +95,15 @@ export default {
         this.$route.name == "Articles" ||
         this.$route.name == "Videos"
       );
+    },
+    chipColor() {
+      return this.selectedFilter == 1
+        ? "beginner-filter-chip"
+        : this.selectedFilter == 2
+        ? "intermediate-filter-chip"
+        : this.selectedFilter == 3
+        ? "advanced-filter-chip"
+        : "default-filter-chip";
     },
   },
   mounted() {
@@ -130,8 +139,28 @@ export default {
   color: #5f772e;
 }
 .categories,
-.levels {
+.filters {
   white-space: nowrap;
   overflow-x: auto;
+}
+.selected-category-chip {
+  background-color: #2f53b6;
+  color: white;
+}
+.default-filter-chip {
+  background-color: #2f53b6;
+  color: white;
+}
+.beginner-filter-chip {
+  background-color: var(--mh-green);
+  color: white;
+}
+.intermediate-filter-chip {
+  background-color: var(--mh-orange);
+  color: white;
+}
+.advanced-filter-chip {
+  background-color: #ff5252;
+  color: white;
 }
 </style>
