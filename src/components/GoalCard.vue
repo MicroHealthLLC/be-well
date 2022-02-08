@@ -98,7 +98,14 @@ export default {
         id: goal.id,
         progress: 0,
         isComplete: false,
+        checklist: this.resetChecklist(goal),
       });
+    },
+    resetChecklist(goal) {
+      return goal.checklist.map((item) => ({
+        isComplete: false,
+        title: item.title,
+      }));
     },
   },
 };

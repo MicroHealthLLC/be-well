@@ -57,6 +57,10 @@ export const onCreateGoal = /* GraphQL */ `
       dueDate
       isComplete
       completedCount
+      checklist {
+        title
+        isComplete
+      }
       createdAt
       updatedAt
       owner
@@ -74,6 +78,10 @@ export const onUpdateGoal = /* GraphQL */ `
       dueDate
       isComplete
       completedCount
+      checklist {
+        title
+        isComplete
+      }
       createdAt
       updatedAt
       owner
@@ -91,6 +99,10 @@ export const onDeleteGoal = /* GraphQL */ `
       dueDate
       isComplete
       completedCount
+      checklist {
+        title
+        isComplete
+      }
       createdAt
       updatedAt
       owner

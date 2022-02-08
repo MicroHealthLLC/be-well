@@ -49,6 +49,10 @@ export const getGoal = /* GraphQL */ `
       dueDate
       isComplete
       completedCount
+      checklist {
+        title
+        isComplete
+      }
       createdAt
       updatedAt
       owner
@@ -71,6 +75,10 @@ export const listGoals = /* GraphQL */ `
         dueDate
         isComplete
         completedCount
+        checklist {
+          title
+          isComplete
+        }
         createdAt
         updatedAt
         owner
@@ -193,6 +201,19 @@ export const listFavoriteArticles = /* GraphQL */ `
         articleId
         category
         level
+        article {
+          id
+          author
+          lastEditedBy
+          title
+          body
+          category
+          level
+          createdAt
+          image
+          imageCredit
+          updatedAt
+        }
         createdAt
         updatedAt
         owner
@@ -234,6 +255,14 @@ export const listFavoriteVideos = /* GraphQL */ `
         videoId
         category
         level
+        video {
+          id
+          resourceId
+          level
+          category
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
         owner
