@@ -32,12 +32,11 @@
     </div>
     <v-divider class="mb-4"></v-divider>
     <!-- Goals Table -->
-
     <v-expansion-panels>
       <v-expansion-panel v-for="(goal, index) in incompleteGoals" :key="index">
-        <v-expansion-panel-header>
+        <v-expansion-panel-header class="grid">
           <div class="text-subtitle-2 clickable">
-            <div @click="openGoalForm(goal)">
+            <div>
               <v-icon class="mr-2" color="#2f53b6">mdi-flag</v-icon
               >{{ goal.title }}
             </div>
@@ -53,6 +52,7 @@
               }}</v-chip>
             </div>
           </div>
+          <!-- Progress Bar -->
           <div
             class="
               d-flex
@@ -83,11 +83,24 @@
             v-model="item.isComplete"
             @change="update(goal)"
             :key="index"
-            class="my-0"
-            :label="item.title"
+            class="mt-1"
             hide-details
             color="var(--mh-orange)"
-          ></v-checkbox>
+          >
+            <template v-slot:label
+              ><div class="text-body-2">{{ item.title }}</div></template
+            >
+          </v-checkbox>
+          <div class="d-block d-sm-flex justify-sm-end mt-5">
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -111,7 +124,7 @@
     </div>
 
     <!-- Dialog Form -->
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" width="750">
       <v-card>
         <v-card-title
           ><span v-if="goal.id">Edit Goal</span><span v-else>Add Goal</span>
@@ -156,7 +169,7 @@
               v-model="goal.checklist[index].title"
               v-for="(step, index) in goal.checklist"
               :key="index"
-              :label="`Step ${index}`"
+              :label="`Step ${index + 1}`"
             ></v-text-field>
             <v-menu
               v-model="menu"
@@ -256,37 +269,6 @@ export default {
       }
       this.closeGoalForm();
     },
-    async updateGoalProgress(goal) {
-      let updatedProgress = goal.progress + 1;
-      let isComplete = updatedProgress == goal.stepCount;
-      let completedCount = isComplete ? 1 : 0;
-
-      try {
-        await this.updateGoalById({
-          id: goal.id,
-          progress: updatedProgress,
-          isComplete: isComplete,
-          completedCount: goal.completedCount + completedCount,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async decreaseGoalProgress(goal) {
-      let updatedProgress = goal.progress - 1;
-      if (updatedProgress < 0) {
-        return;
-      }
-
-      try {
-        await this.updateGoalById({
-          id: goal.id,
-          progress: updatedProgress,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
     async deleteGoal(id) {
       try {
         await this.removeGoal(id);
@@ -318,14 +300,11 @@ export default {
       this.dialog = false;
     },
     updateSteps(e) {
-      console.log("Steps updated");
-      console.log(e);
       this.goal.checklist = this.createChecklist(e);
     },
     createChecklist(length) {
       let list = [];
       for (let i = 0; i < length; i++) {
-        console.log(i);
         list.push({ isComplete: false, title: "" });
       }
       return list;
@@ -360,11 +339,19 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2fr auto;
 }
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+  .grid div:first-child {
+    grid-column: 1 / 1;
+    grid-row-start: 2;
+  }
+  .grid div:nth-child(2) {
+    grid-row-start: 3;
+    grid-column: 1 / 1;
   }
 }
 .goal-progress-text {
