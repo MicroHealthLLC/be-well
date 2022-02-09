@@ -49,6 +49,10 @@ export const getGoal = /* GraphQL */ `
       dueDate
       isComplete
       completedCount
+      checklist {
+        title
+        isComplete
+      }
       createdAt
       updatedAt
       owner
@@ -71,6 +75,10 @@ export const listGoals = /* GraphQL */ `
         dueDate
         isComplete
         completedCount
+        checklist {
+          title
+          isComplete
+        }
         createdAt
         updatedAt
         owner

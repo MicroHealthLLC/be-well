@@ -32,21 +32,19 @@
     </div>
     <v-divider class="mb-4"></v-divider>
     <!-- Goals Table -->
-    <v-card class="pa-4 mb-4" elevation="5">
-      <div
-        v-if="incompleteGoals.length == 0"
-        class="d-flex text-center flex-column"
-      >
+    <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
+      <div class="d-flex text-center flex-column">
         <div class="mt-4">
           <v-icon color="grey" x-large>mdi-flag</v-icon>
           <p class="placeholder-text">You currently have no Goals set</p>
         </div>
       </div>
-
-      <div v-else v-for="(goal, index) in incompleteGoals" :key="index">
-        <div class="grid my-4">
+    </v-card>
+    <v-expansion-panels v-else>
+      <v-expansion-panel v-for="(goal, index) in incompleteGoals" :key="index">
+        <v-expansion-panel-header class="grid">
           <div class="text-subtitle-2 clickable">
-            <div @click="openGoalForm(goal)">
+            <div>
               <v-icon class="mr-2" color="#2f53b6">mdi-flag</v-icon
               >{{ goal.title }}
             </div>
@@ -60,10 +58,9 @@
               <v-chip title="Due Date" color="#2f53b6" outlined small>{{
                 goal.dueDate
               }}</v-chip>
-              <div v-if="goal.progress == 100" class="d-inline text-h5">🎉</div>
             </div>
           </div>
-          <!-- Progressbar -->
+          <!-- Progress Bar -->
           <div
             class="
               d-flex
@@ -86,46 +83,35 @@
                 >/{{ goal.stepCount }}
               </div>
             </div>
-            <v-btn-toggle
-              class="mx-auto mx-sm-0 mt-3 mt-sm-0"
-              dense
-              rounded
-              dark
-              background-color="white"
-            >
-              <v-btn
-                @click="updateGoalProgress(goal)"
-                color="#2f53b6"
-                :small="$vuetify.breakpoint.xsOnly"
-                ><v-icon :small="$vuetify.breakpoint.xsOnly"
-                  >mdi-plus-circle</v-icon
-                ></v-btn
-              >
-              <v-btn
-                @click="decreaseGoalProgress(goal)"
-                color="#2f53b6"
-                :small="$vuetify.breakpoint.xsOnly"
-                ><v-icon>mdi-minus</v-icon></v-btn
-              >
-            </v-btn-toggle>
           </div>
-        </div>
-        <v-divider v-if="index != incompleteGoals.length - 1"></v-divider>
-      </div>
-      <!-- Reminders Link -->
-      <div v-if="incompleteGoals.length > 0" class="d-flex justify-end mt-10">
-        <v-btn
-          to="/activities"
-          class="mt-4 mt-sm-0"
-          text
-          exact-path
-          color="info"
-          :small="$vuetify.breakpoint.xsOnly"
-          >Schedule Activity Reminders
-          <v-icon class="ml-2" small>mdi-arrow-right</v-icon></v-btn
-        >
-      </div>
-    </v-card>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-checkbox
+            v-for="(item, index) in goal.checklist"
+            v-model="item.isComplete"
+            @change="update(goal)"
+            :key="index"
+            class="mt-1"
+            hide-details
+            color="var(--mh-orange)"
+          >
+            <template v-slot:label
+              ><div class="text-body-2">{{ item.title }}</div></template
+            >
+          </v-checkbox>
+          <div class="d-block d-sm-flex justify-sm-end mt-5">
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <!-- Completed Goals -->
     <div v-if="completedGoals.length > 0" class="mt-10">
@@ -146,7 +132,7 @@
     </div>
 
     <!-- Dialog Form -->
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" width="750">
       <v-card>
         <v-card-title
           ><span v-if="goal.id">Edit Goal</span><span v-else>Add Goal</span>
@@ -175,6 +161,7 @@
             <v-text-field
               :disabled="goal.id != null || goal.id != undefined"
               v-model.number="goal.stepCount"
+              @change="updateSteps"
               label="Number of Goal Steps"
               type="number"
               min="1"
@@ -184,6 +171,14 @@
                 (v) => v > 0 || 'Must be greater than 0',
                 (v) => v < 11 || 'Max Step Count is 10',
               ]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="goal.checklist[index].title"
+              v-for="(step, index) in goal.checklist"
+              :key="index"
+              :label="`Step ${index + 1} Description`"
+              :rules="[(v) => !!v || 'Step Description is required']"
               required
             ></v-text-field>
             <v-menu
@@ -256,6 +251,7 @@ export default {
         stepCount: 1,
         isComplete: false,
         completedCount: 0,
+        checklist: [{ title: "", isComplete: false }],
       },
     };
   },
@@ -273,6 +269,7 @@ export default {
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
+            checklist: this.goal.checklist,
           });
         } else {
           await this.addGoal(this.goal);
@@ -281,37 +278,6 @@ export default {
         console.log(error);
       }
       this.closeGoalForm();
-    },
-    async updateGoalProgress(goal) {
-      let updatedProgress = goal.progress + 1;
-      let isComplete = updatedProgress == goal.stepCount;
-      let completedCount = isComplete ? 1 : 0;
-
-      try {
-        await this.updateGoalById({
-          id: goal.id,
-          progress: updatedProgress,
-          isComplete: isComplete,
-          completedCount: goal.completedCount + completedCount,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async decreaseGoalProgress(goal) {
-      let updatedProgress = goal.progress - 1;
-      if (updatedProgress < 0) {
-        return;
-      }
-
-      try {
-        await this.updateGoalById({
-          id: goal.id,
-          progress: updatedProgress,
-        });
-      } catch (error) {
-        console.log(error);
-      }
     },
     async deleteGoal(id) {
       try {
@@ -323,6 +289,9 @@ export default {
     },
     openNewGoalForm() {
       this.dialog = true;
+      if (this.$refs.goalform) {
+        this.$refs.goalform.resetValidation();
+      }
       this.goal = {
         title: "",
         category: "",
@@ -330,6 +299,7 @@ export default {
         progress: 0,
         stepCount: 1,
         completedCount: 0,
+        checklist: [{ title: "", isComplete: false }],
       };
     },
     openGoalForm(goal) {
@@ -338,6 +308,45 @@ export default {
     },
     closeGoalForm() {
       this.dialog = false;
+    },
+    updateSteps(length) {
+      let checklistLength = this.goal.checklist.length;
+
+      if (length < 1 || length > 10) {
+        return;
+      } else if (checklistLength < length) {
+        let difference = length - checklistLength;
+        this.goal.checklist = [
+          ...this.goal.checklist,
+          ...this.createChecklist(difference),
+        ];
+      } else {
+        this.goal.checklist = this.goal.checklist.slice(0, length);
+      }
+    },
+    createChecklist(length) {
+      let list = [];
+      for (let i = 0; i < length; i++) {
+        list.push({ isComplete: false, title: "" });
+      }
+      return list;
+    },
+    async update(goal) {
+      let updatedProgress = goal.checklist.reduce(
+        (accumulator, item) =>
+          item.isComplete ? accumulator + 1 : accumulator,
+        0
+      );
+      let isComplete = updatedProgress == goal.stepCount;
+      let completedCount = isComplete ? 1 : 0;
+
+      await this.updateGoalById({
+        id: goal.id,
+        progress: updatedProgress,
+        isComplete: isComplete,
+        completedCount: goal.completedCount + completedCount,
+        checklist: goal.checklist,
+      });
     },
   },
   computed: {
@@ -352,11 +361,19 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2fr auto;
 }
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+  .grid div:first-child {
+    grid-column: 1 / 1;
+    grid-row-start: 2;
+  }
+  .grid div:nth-child(2) {
+    grid-row-start: 3;
+    grid-column: 1 / 1;
   }
 }
 .goal-progress-text {

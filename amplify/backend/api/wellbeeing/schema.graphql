@@ -16,6 +16,12 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   dueDate: AWSDate!
   isComplete: Boolean
   completedCount: Int
+  checklist: [ChecklistItem]
+}
+
+type ChecklistItem {
+  title: String
+  isComplete: Boolean
 }
 
 type Article
