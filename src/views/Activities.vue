@@ -145,22 +145,22 @@ export default {
 }
 .selected-category-chip {
   background-color: #2f53b6;
-  color: white;
+  color: white !important;
 }
 .default-filter-chip {
   background-color: #2f53b6;
-  color: white;
+  color: white !important;
 }
 .beginner-filter-chip {
   background-color: var(--mh-green);
-  color: white;
+  color: white !important;
 }
 .intermediate-filter-chip {
   background-color: var(--mh-orange);
-  color: white;
+  color: white !important;
 }
 .advanced-filter-chip {
   background-color: #ff5252;
-  color: white;
+  color: white !important;
 }
 </style>
