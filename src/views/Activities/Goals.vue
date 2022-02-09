@@ -32,7 +32,15 @@
     </div>
     <v-divider class="mb-4"></v-divider>
     <!-- Goals Table -->
-    <v-expansion-panels>
+    <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
+      <div class="d-flex text-center flex-column">
+        <div class="mt-4">
+          <v-icon color="grey" x-large>mdi-flag</v-icon>
+          <p class="placeholder-text">You currently have no Goals set</p>
+        </div>
+      </div>
+    </v-card>
+    <v-expansion-panels v-else>
       <v-expansion-panel v-for="(goal, index) in incompleteGoals" :key="index">
         <v-expansion-panel-header class="grid">
           <div class="text-subtitle-2 clickable">
