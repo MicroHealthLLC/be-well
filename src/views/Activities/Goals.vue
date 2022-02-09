@@ -177,7 +177,9 @@
               v-model="goal.checklist[index].title"
               v-for="(step, index) in goal.checklist"
               :key="index"
-              :label="`Step ${index + 1}`"
+              :label="`Step ${index + 1} Description`"
+              :rules="[(v) => !!v || 'Step Description is required']"
+              required
             ></v-text-field>
             <v-menu
               v-model="menu"
@@ -307,8 +309,20 @@ export default {
     closeGoalForm() {
       this.dialog = false;
     },
-    updateSteps(e) {
-      this.goal.checklist = this.createChecklist(e);
+    updateSteps(length) {
+      let checklistLength = this.goal.checklist.length;
+
+      if (length < 1 || length > 10) {
+        return;
+      } else if (checklistLength < length) {
+        let difference = length - checklistLength;
+        this.goal.checklist = [
+          ...this.goal.checklist,
+          ...this.createChecklist(difference),
+        ];
+      } else {
+        this.goal.checklist = this.goal.checklist.slice(0, length);
+      }
     },
     createChecklist(length) {
       let list = [];
