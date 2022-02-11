@@ -15,6 +15,7 @@
           outlined
           clearable
           prepend-inner-icon="mdi-magnify"
+          class="searchbar"
         ></v-text-field>
         <v-select
           v-model="facilityType"
@@ -28,6 +29,7 @@
           clearable
           hint="Optional"
           persistent-hint
+          class="facility-type"
         ></v-select>
         <v-select
           v-model="state"
@@ -39,8 +41,9 @@
           hint="Optional"
           persistent-hint
           clearable
+          class="state"
         ></v-select>
-        <v-btn @click="search" class="mt-1 ml-2" color="var(--mh-blue)" dark
+        <v-btn @click="search" class="mt-1 submit" color="#2f53b6" dark
           >Search</v-btn
         >
       </div>
@@ -54,7 +57,9 @@
       </div>
       <v-card v-for="(result, index) in pageResults" :key="index" class="my-3">
         <h4 class="pt-5 ml-6">{{ titleCase(result["Facility Name"]) }}</h4>
-        <v-card-text class="d-flex justify-space-between pt-0">
+        <v-card-text
+          class="d-flex flex-column flex-md-row justify-md-space-between pt-0"
+        >
           <div>
             <div class="d-flex align-center">
               <v-rating
@@ -90,20 +95,19 @@
             </div>
           </div>
           <!-- Embedded Google Map -->
-          <div>
+          <div class="mt-5 mt-md-0">
             <iframe
+              @load="mapLoaded"
               :src="`https://maps.google.com/maps?&amp;q=${result['Address']}&amp;output=embed`"
               style="border: 0"
               allowfullscreen=""
               loading="lazy"
+              width="100%"
             ></iframe>
           </div>
         </v-card-text>
       </v-card>
-      <div
-        v-if="filteredList.length > 0 && hasSearched"
-        class="grid-full-width"
-      >
+      <div v-if="filteredList.length > 0" class="grid-full-width">
         <v-pagination
           v-model="page"
           @input="fetchSelectedPage"
@@ -276,6 +280,9 @@ export default {
       }
       return str.join(" ");
     },
+    mapLoaded() {
+      console.log("Map Loaded!");
+    },
   },
   watch: {
     filteredList() {
@@ -295,6 +302,30 @@ export default {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr auto;
   column-gap: 0.5rem;
+}
+@media (max-width: 600px) {
+  .search-grid {
+    grid-template-columns: unset;
+    grid-template-areas:
+      "searchbar searchbar"
+      "facility-type state"
+      "submit submit";
+  }
+  .searchbar {
+    grid-area: searchbar;
+  }
+  .facility-type {
+    grid-area: facility-type;
+  }
+  .state {
+    grid-area: state;
+  }
+  .submit {
+    grid-area: submit;
+  }
+}
+.grid-full-width {
+  grid-column: 1/-1;
 }
 .image {
   max-height: 200px;
