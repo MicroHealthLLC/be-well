@@ -1,11 +1,14 @@
 <template>
   <v-row>
     <v-col>
+      <!-- Healthcare Provider Search Bar -->
       <div class="text-h6 text-sm-h5 mt-2">Find a Healthcare Provider</div>
       <v-divider class="mb-4"></v-divider>
       <div class="search-grid align-start">
         <v-text-field
           v-model="query"
+          @keydown.enter="search"
+          @click:clear="hasSearched = false"
           placeholder="Search by County or Zip Code"
           filled
           dense
@@ -37,23 +40,36 @@
           persistent-hint
           clearable
         ></v-select>
-
         <v-btn @click="search" class="mt-1 ml-2" color="var(--mh-blue)" dark
           >Search</v-btn
         >
       </div>
 
       <!-- Search Results -->
-      <v-card v-for="(result, index) in filteredList" :key="index" class="my-3">
+      <div
+        v-if="filteredList.length == 0 && hasSearched"
+        class="text-center pt-5"
+      >
+        No results found
+      </div>
+      <v-card v-for="(result, index) in pageResults" :key="index" class="my-3">
         <h4 class="pt-5 ml-6">{{ titleCase(result["Facility Name"]) }}</h4>
         <v-card-text class="d-flex justify-space-between pt-0">
           <div>
-            <v-rating
-              color="var(--mh-orange)"
-              background-color="var(--mh-orange)"
-              :value="result['Hospital overall rating']"
-              readonly
-            ></v-rating>
+            <div class="d-flex align-center">
+              <v-rating
+                color="var(--mh-orange)"
+                background-color="var(--mh-orange)"
+                :value="rating(result['Hospital overall rating'])"
+                readonly
+              ></v-rating>
+              <div
+                v-if="rating(result['Hospital overall rating']) == 0"
+                class="text-caption font-italic ml-3"
+              >
+                (No Rating Data)
+              </div>
+            </div>
             <div class="d-flex mt-3 mb-3">
               <v-chip class="mr-2" color="var(--mh-green)" small>{{
                 result["Hospital Type"]
@@ -62,7 +78,6 @@
                 >{{ titleCase(result["County Name"]) }} County</v-chip
               >
             </div>
-
             <div>{{ titleCase(result["Address"]) }}</div>
             <div>
               {{ titleCase(result["City"]) }}, {{ result["State"] }}
@@ -74,7 +89,7 @@
               }}</a>
             </div>
           </div>
-
+          <!-- Embedded Google Map -->
           <div>
             <iframe
               :src="`https://maps.google.com/maps?&amp;q=${result['Address']}&amp;output=embed`"
@@ -85,7 +100,19 @@
           </div>
         </v-card-text>
       </v-card>
+      <div
+        v-if="filteredList.length > 0 && hasSearched"
+        class="grid-full-width"
+      >
+        <v-pagination
+          v-model="page"
+          @input="fetchSelectedPage"
+          :length="totalPages"
+          color="#2f53b6"
+        ></v-pagination>
+      </div>
 
+      <!-- Resources -->
       <div class="text-h6 text-sm-h5 mt-6">Resources</div>
       <v-divider class="mb-4"></v-divider>
 
@@ -101,9 +128,6 @@
           </template>
         </v-data-table>
       </v-card>
-
-      <!-- <span class="text-h6 text-sm-h5">Calculators</span>
-      <v-divider class="mb-4"></v-divider> -->
 
       <!-- Latest Articles -->
       <span class="text-h6 text-sm-h5">Latest Articles</span>
@@ -138,7 +162,11 @@ export default {
       facilityType: null,
       state: null,
       list: hospitalList,
+      hasSearched: false,
       filteredList: [],
+      page: 1,
+      start: 0,
+      pageResults: [],
       facilityTypes: [
         {
           text: "Acute Care - Department of Defense",
@@ -199,26 +227,47 @@ export default {
       ],
     };
   },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.filteredList.length / 10);
+    },
+  },
   methods: {
     search() {
-      this.filteredList = this.list
-        .filter(
-          (hospital) =>
-            hospital["County Name"]
-              .toLowerCase()
-              .includes(this.query.trim().toLowerCase()) ||
-            hospital["ZIP Code"] == this.query.trim()
-        )
-        .filter((hospital) =>
-          this.facilityType
-            ? hospital["Hospital Type"]
+      if (this.query) {
+        this.hasSearched = true;
+        this.filteredList = this.list
+          .filter(
+            (hospital) =>
+              hospital["County Name"]
                 .toLowerCase()
-                .includes(this.facilityType)
-            : true
-        )
-        .filter((hospital) =>
-          this.state ? hospital["State"] == this.state : true
-        );
+                .includes(this.query.trim().toLowerCase()) ||
+              hospital["ZIP Code"] == this.query.trim()
+          )
+          .filter((hospital) =>
+            this.facilityType
+              ? hospital["Hospital Type"]
+                  .toLowerCase()
+                  .includes(this.facilityType)
+              : true
+          )
+          .filter((hospital) =>
+            this.state ? hospital["State"] == this.state : true
+          );
+      }
+    },
+    fetchSelectedPage(page) {
+      this.page = page;
+      this.start = (page - 1) * 10;
+      this.pageResults = this.filteredList.slice(this.start, this.start + 10);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    rating(score) {
+      if (isNaN(score)) {
+        return 0;
+      } else {
+        return score;
+      }
     },
     titleCase(str) {
       str = str.toLowerCase().split(" ");
@@ -228,7 +277,11 @@ export default {
       return str.join(" ");
     },
   },
-  mounted() {},
+  watch: {
+    filteredList() {
+      this.pageResults = this.filteredList.slice(this.start, this.start + 10);
+    },
+  },
 };
 </script>
 
