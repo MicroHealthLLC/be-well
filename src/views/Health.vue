@@ -5,18 +5,23 @@
       <div class="text-h6 text-sm-h5 mt-2">Find a Healthcare Provider</div>
       <v-divider class="mb-4"></v-divider>
       <div class="search-grid align-start">
-        <v-text-field
+        <v-combobox
           v-model="query"
-          @keydown.enter="search"
-          @click:clear="hasSearched = false"
-          placeholder="Search by County or Zip Code"
+          @keypress="showMenu = true"
+          @keyup.enter="enterSearch"
+          @change="showMenu = false"
+          :menu-props="{ value: showMenu }"
+          :items="[...cities, ...counties]"
+          placeholder="Search by City, County or Zip Code"
           filled
           dense
           outlined
           clearable
+          hide-no-data
           prepend-inner-icon="mdi-magnify"
+          append-icon=""
           class="searchbar"
-        ></v-text-field>
+        ></v-combobox>
         <v-select
           v-model="facilityType"
           :items="facilityTypes"
@@ -152,6 +157,7 @@ export default {
       page: 1,
       start: 0,
       pageResults: [],
+      showMenu: false,
       facilityTypes: [
         {
           text: "Acute Care - Department of Defense",
@@ -196,15 +202,39 @@ export default {
     totalPages() {
       return Math.ceil(this.filteredList.length / 10);
     },
+    counties() {
+      return [
+        ...new Set(
+          this.list.map((item) => this.titleCase(item["County Name"])).sort()
+        ),
+      ];
+    },
+    cities() {
+      return [
+        ...new Set(
+          this.list.map((item) => this.titleCase(item["City"])).sort()
+        ),
+      ];
+    },
   },
   methods: {
     search() {
-      if (this.query) {
-        this.hasSearched = true;
+      console.log("Is searching...");
+      if (
+        this.query &&
+        (this.counties.includes(this.titleCase(this.query)) ||
+          this.cities.includes(this.titleCase(this.query)) ||
+          !isNaN(this.query))
+      ) {
+        this.page = 1;
+        this.start = 0;
         this.filteredList = this.list
           .filter(
             (hospital) =>
               hospital["County Name"]
+                .toLowerCase()
+                .includes(this.query.trim().toLowerCase()) ||
+              hospital["City"]
                 .toLowerCase()
                 .includes(this.query.trim().toLowerCase()) ||
               hospital["ZIP Code"] == this.query.trim()
@@ -219,7 +249,16 @@ export default {
           .filter((hospital) =>
             this.state ? hospital["State"] == this.state : true
           );
+      } else {
+        this.filteredList = [];
       }
+      // Close combobox menu
+      this.isOpen = false;
+      this.hasSearched = true;
+    },
+    enterSearch() {
+      this.showMenu = false;
+      this.search();
     },
     fetchSelectedPage(page) {
       this.page = page;
@@ -249,6 +288,11 @@ export default {
     filteredList() {
       this.pageResults = this.filteredList.slice(this.start, this.start + 10);
     },
+  },
+  mounted() {
+    console.log([
+      ...new Set(this.list.map((item) => item["County Name"].toLowerCase())),
+    ]);
   },
 };
 </script>
