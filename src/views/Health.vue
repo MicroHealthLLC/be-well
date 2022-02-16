@@ -67,12 +67,35 @@
         >
           <div>
             <div class="d-flex align-center">
-              <v-rating
+              <v-tooltip
+                content-class="rating-tooltip pa-3"
+                max-width="300"
                 color="var(--mh-orange)"
-                background-color="var(--mh-orange)"
-                :value="rating(result['Hospital overall rating'])"
-                readonly
-              ></v-rating>
+                nudge-bottom="50"
+                right
+              >
+                <template v-slot:activator="{ on }">
+                  <div v-on="on">
+                    <v-rating
+                      class="clickable"
+                      color="var(--mh-orange)"
+                      background-color="var(--mh-orange)"
+                      :value="rating(result['Hospital overall rating'])"
+                      readonly
+                    ></v-rating>
+                  </div>
+                </template>
+                <div class="d-flex align-start">
+                  <v-icon color="white" left>mdi-information-outline</v-icon>
+                  <div>
+                    The overall star rating is based on how well a hospital
+                    performs across different areas of quality, such as treating
+                    heart attacks and pneumonia, readmission rates, and safety
+                    of care.
+                  </div>
+                </div>
+              </v-tooltip>
+
               <div
                 v-if="rating(result['Hospital overall rating']) == 0"
                 class="text-caption font-italic ml-3"
@@ -338,5 +361,8 @@ export default {
 }
 a {
   text-decoration: none;
+}
+.rating-tooltip {
+  opacity: 1 !important;
 }
 </style>
