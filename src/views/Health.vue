@@ -6,12 +6,12 @@
       <v-divider class="mb-4"></v-divider>
       <div class="search-grid align-start">
         <v-combobox
+          ref="searchbar"
           v-model="query"
-          @keypress="showMenu = true"
           @keyup.enter="enterSearch"
-          @change="showMenu = false"
-          :menu-props="{ value: showMenu }"
+          @keydown.enter="closeMenu"
           :items="[...cities, ...counties]"
+          :menu-props="{ closeOnClick: true }"
           placeholder="Search by City, County or Zip Code"
           filled
           dense
@@ -157,7 +157,6 @@ export default {
       page: 1,
       start: 0,
       pageResults: [],
-      showMenu: false,
       facilityTypes: [
         {
           text: "Acute Care - Department of Defense",
@@ -219,7 +218,6 @@ export default {
   },
   methods: {
     search() {
-      console.log("Is searching...");
       if (
         this.query &&
         (this.counties.includes(this.titleCase(this.query)) ||
@@ -252,12 +250,11 @@ export default {
       } else {
         this.filteredList = [];
       }
-      // Close combobox menu
-      this.isOpen = false;
+      // Triggers placeholder for no results
       this.hasSearched = true;
     },
     enterSearch() {
-      this.showMenu = false;
+      this.$refs.searchbar.isMenuActive = false;
       this.search();
     },
     fetchSelectedPage(page) {
@@ -283,16 +280,16 @@ export default {
     mapLoaded() {
       console.log("Map Loaded!");
     },
+    closeMenu() {
+      this.$nextTick(() => {
+        this.$refs.searchbar.isMenuActive = false;
+      });
+    },
   },
   watch: {
     filteredList() {
       this.pageResults = this.filteredList.slice(this.start, this.start + 10);
     },
-  },
-  mounted() {
-    console.log([
-      ...new Set(this.list.map((item) => item["County Name"].toLowerCase())),
-    ]);
   },
 };
 </script>
