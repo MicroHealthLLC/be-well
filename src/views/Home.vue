@@ -6,16 +6,18 @@
           @click="openPage(card.route)"
           v-for="(card, index) in navCards"
           :key="index"
-          class="text-center"
+          class="nav-card text-center"
         >
           <v-img
             :src="card.img"
             class="mx-auto"
             :class="{ 'mobile-svg-size': isXs }"
           />
-          <v-card-title class="d-flex justify-center">{{
-            card.title
-          }}</v-card-title>
+          <v-card-title class="d-flex justify-center mb-2"
+            ><div class="card-title" :class="`card-title-${index}`">
+              {{ card.title }}
+            </div></v-card-title
+          >
           <v-card-subtitle>{{ card.body }}</v-card-subtitle>
         </v-card>
       </div>
@@ -88,5 +90,25 @@ export default {
 .mobile-svg-size {
   width: 200px;
   height: 200px;
+}
+.card-title {
+  line-height: 1;
+  border-bottom: 5px solid #fff;
+  -webkit-transition: border 500ms ease-out;
+  -moz-transition: border 500ms ease-out;
+  -o-transition: border 500ms ease-out;
+  transition: border 500ms ease-out;
+}
+.nav-card:hover .card-title-0 {
+  border-bottom: 5px solid var(--mh-orange);
+}
+.nav-card:hover .card-title-1 {
+  border-bottom: 5px solid var(--mh-green);
+}
+.nav-card:hover .card-title-2 {
+  border-bottom: 5px solid var(--mh-blue);
+}
+.nav-card:hover .card-title-3 {
+  border-bottom: 5px solid var(--mh-orange);
 }
 </style>
