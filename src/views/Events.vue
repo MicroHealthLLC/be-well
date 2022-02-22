@@ -20,6 +20,17 @@
         <v-card-text>{{ event.description }}</v-card-text>
       </v-card>
     </v-col>
+    <!-- Editor Button -->
+    <v-btn
+      v-if="isEditor"
+      to="/events/new"
+      class="floating-btn"
+      color="var(--mh-blue)"
+      fab
+      large
+      dark
+      ><v-icon large>mdi-plus</v-icon></v-btn
+    >
   </v-row>
 </template>
 
@@ -31,7 +42,7 @@ export default {
     ...mapActions(["fetchEvents"]),
   },
   computed: {
-    ...mapGetters(["events"]),
+    ...mapGetters(["events", "isEditor"]),
   },
   mounted() {
     this.fetchEvents();
@@ -39,4 +50,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.floating-btn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 7vw;
+  margin-bottom: 7vh;
+}
+</style>
