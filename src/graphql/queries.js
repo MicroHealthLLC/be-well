@@ -271,6 +271,142 @@ export const listFavoriteVideos = /* GraphQL */ `
     }
   }
 `;
+export const getEvent = /* GraphQL */ `
+  query GetEvent($id: ID!) {
+    getEvent(id: $id) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+        points
+      }
+      photos {
+        items {
+          id
+          s3key
+          description
+          submittedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEvents = /* GraphQL */ `
+  query ListEvents(
+    $filter: ModelEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+          points
+        }
+        photos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventPhoto = /* GraphQL */ `
+  query GetEventPhoto($id: ID!) {
+    getEventPhoto(id: $id) {
+      id
+      s3key
+      event {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+          points
+        }
+        photos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      submittedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEventPhotos = /* GraphQL */ `
+  query ListEventPhotos(
+    $filter: ModelEventPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        s3key
+        event {
+          id
+          hostName
+          hostEmail
+          title
+          description
+          type
+          date
+          startTime
+          endTime
+          createdAt
+          updatedAt
+        }
+        description
+        submittedBy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category

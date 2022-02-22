@@ -337,3 +337,213 @@ export const onDeleteFavoriteVideo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEvent = /* GraphQL */ `
+  subscription OnCreateEvent {
+    onCreateEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+        points
+      }
+      photos {
+        items {
+          id
+          s3key
+          description
+          submittedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEvent = /* GraphQL */ `
+  subscription OnUpdateEvent {
+    onUpdateEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+        points
+      }
+      photos {
+        items {
+          id
+          s3key
+          description
+          submittedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEvent = /* GraphQL */ `
+  subscription OnDeleteEvent {
+    onDeleteEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+        points
+      }
+      photos {
+        items {
+          id
+          s3key
+          description
+          submittedBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateEventPhoto = /* GraphQL */ `
+  subscription OnCreateEventPhoto {
+    onCreateEventPhoto {
+      id
+      s3key
+      event {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+          points
+        }
+        photos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      submittedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEventPhoto = /* GraphQL */ `
+  subscription OnUpdateEventPhoto {
+    onUpdateEventPhoto {
+      id
+      s3key
+      event {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+          points
+        }
+        photos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      submittedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEventPhoto = /* GraphQL */ `
+  subscription OnDeleteEventPhoto {
+    onDeleteEventPhoto {
+      id
+      s3key
+      event {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+          points
+        }
+        photos {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      submittedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;

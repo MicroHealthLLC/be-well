@@ -85,6 +85,44 @@ type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
   video: Video @connection(fields: ["videoId"])
 }
 
+type Event
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  hostName: String!
+  hostEmail: AWSEmail!
+  title: String!
+  description: String!
+  type: String!
+  date: AWSDate!
+  startTime: String!
+  endTime: String!
+  participants: [Participant]
+  photos: [EventPhoto] @connection(name: "EventPhotos", sortField: "createdAt")
+}
+
+type Participant {
+  id: String
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  points: Int
+}
+
+type EventPhoto @model {
+  id: ID!
+  s3key: String
+  event: Event @connection(name: "EventPhotos", sortField: "createdAt")
+  description: String
+  submittedBy: String
+  createdAt: AWSDateTime!
+}
+
 enum Category {
   # Deprecated
   MEDITATION

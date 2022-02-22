@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import articleStore from "./modules/article-store";
 import authStore from "./modules/auth";
+import eventStore from "./modules/event-store";
 import goalStore from "./modules/goal-store";
 import reminderStore from "./modules/reminder-store";
 import videoStore from "./modules/video-store";
@@ -30,5 +31,12 @@ export default new Vuex.Store({
     saving: (state) => state.saving,
     loading: (state) => state.loading,
   },
-  modules: { articleStore, authStore, goalStore, reminderStore, videoStore },
+  modules: {
+    articleStore,
+    authStore,
+    eventStore,
+    goalStore,
+    reminderStore,
+    videoStore,
+  },
 });
