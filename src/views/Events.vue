@@ -17,6 +17,7 @@
             :src="event.image"
             lazy-src="/img/placeholder.png"
             aspect-ratio="1.5"
+            :class="{ rounded: $vuetify.breakpoint.xsOnly }"
           ></v-img>
         </div>
 
@@ -106,5 +107,11 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
+}
+.rounded {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: revert !important;
+  border-bottom-right-radius: revert !important;
 }
 </style>

@@ -178,12 +178,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addEvent"]),
+    ...mapActions(["addEvent", "updateEvent"]),
     async addNewEvent() {
       this.addEvent(this.event);
     },
     async update() {
-      //
+      this.updateEvent(this.event);
     },
     uploadImage(e) {
       if (e) {

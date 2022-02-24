@@ -1,6 +1,6 @@
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getEvent, listEvents } from "@/graphql/queries";
-import { createEvent, deleteEvent } from "@/graphql/mutations";
+import { createEvent, deleteEvent, updateEvent } from "@/graphql/mutations";
 
 export default {
   state: {
@@ -39,10 +39,48 @@ export default {
         console.log(error);
       }
     },
+    async updateEvent({ commit }, event) {
+      // Remove unnecessary object properties
+      // Todo: Update to use object destructuring
+      delete event.imageURL;
+      delete event.createdAt;
+      delete event.updatedAt;
+      delete event.photos;
+
+      try {
+        if (event.image.name) {
+          const name = `events/${event.image.name}`;
+          const image = await Storage.put(name, event.image);
+          event.image = image.key;
+        }
+        const res = await API.graphql(
+          graphqlOperation(updateEvent, { input: event })
+        );
+        if (res.data.updateEvent.image) {
+          const image = await Storage.get(res.data.updateEvent.image);
+          commit("SET_EVENT", {
+            ...res.data.updateEvent,
+            imageURL: image,
+          });
+        } else {
+          commit("SET_EVENT", {
+            ...res.data.updateEvent,
+            imageURL: null,
+          });
+        }
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Event Successfully Updated!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async fetchEvents({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listEvents));
-
+        // Grab all photos from Storage
         const events = await Promise.all(
           res.data.listEvents.items.map(async (event) => {
             const image = await Storage.get(event.image);
