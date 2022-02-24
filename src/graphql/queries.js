@@ -301,6 +301,8 @@ export const getEvent = /* GraphQL */ `
         }
         nextToken
       }
+      link
+      image
       createdAt
       updatedAt
     }
@@ -333,6 +335,8 @@ export const listEvents = /* GraphQL */ `
         photos {
           nextToken
         }
+        link
+        image
         createdAt
         updatedAt
       }
@@ -365,6 +369,8 @@ export const getEventPhoto = /* GraphQL */ `
         photos {
           nextToken
         }
+        link
+        image
         createdAt
         updatedAt
       }
@@ -395,6 +401,8 @@ export const listEventPhotos = /* GraphQL */ `
           date
           startTime
           endTime
+          link
+          image
           createdAt
           updatedAt
         }

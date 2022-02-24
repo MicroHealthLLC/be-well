@@ -13,7 +13,11 @@
           class="my-auto pa-sm-2"
           :class="{ 'card-image': $vuetify.breakpoint.smAndUp }"
         >
-          <v-img :src="cardImage(index)" aspect-ratio="1.5"></v-img>
+          <v-img
+            :src="event.image"
+            lazy-src="/img/placeholder.png"
+            aspect-ratio="1.5"
+          ></v-img>
         </div>
 
         <div
@@ -41,6 +45,8 @@
           <v-card-actions class="mt-auto pl-4 pb-4">
             <v-btn outlined small>View Details</v-btn>
             <v-btn outlined small>Join Event</v-btn>
+            <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
+            <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn>
           </v-card-actions>
         </div>
       </v-card>
@@ -64,16 +70,12 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Events",
   methods: {
-    ...mapActions(["fetchEvents"]),
-    cardImage(index) {
-      return index == 0
-        ? "/img/nutrition.jpg"
-        : index == 1
-        ? "/img/posture.jpg"
-        : "/img/endurance.jpg";
-    },
+    ...mapActions(["deleteEvent", "fetchEvents"]),
     cardTypeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
+    },
+    removeEvent(id) {
+      this.deleteEvent(id);
     },
   },
   computed: {

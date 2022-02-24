@@ -14,8 +14,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import EventForm from "../components/EventForm.vue";
+
 export default {
   name: "NewEvent",
   components: {
@@ -30,24 +31,28 @@ export default {
     ...mapGetters(["event"]),
   },
   methods: {
-    // ...mapMutations(["SET_EVENT"]),
+    ...mapMutations(["SET_EVENT"]),
   },
   mounted() {
-    // this.SET_EVENT({
-    //   title: "",
-    //   author: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
-    //   lastEditedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
-    //   category: "ENDURANCE",
-    //   level: "BEGINNER",
-    //   body: "",
-    // });
+    this.SET_EVENT({
+      title: "",
+      hostName: "",
+      hostEmail: "",
+      description: "",
+      type: "Live Virtual",
+      date: "",
+      startTime: null,
+      endTime: null,
+      image: null,
+      link: "",
+    });
   },
   watch: {
-    // event() {
-    //   if (this.event.id) {
-    //     this.$router.push(`/events/edit/${this.event.id}`);
-    //   }
-    // },
+    event() {
+      if (this.event.id) {
+        this.$router.push(`/events/edit/${this.event.id}`);
+      }
+    },
   },
 };
 </script>

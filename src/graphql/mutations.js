@@ -424,6 +424,8 @@ export const createEvent = /* GraphQL */ `
         }
         nextToken
       }
+      link
+      image
       createdAt
       updatedAt
     }
@@ -462,6 +464,8 @@ export const updateEvent = /* GraphQL */ `
         }
         nextToken
       }
+      link
+      image
       createdAt
       updatedAt
     }
@@ -500,6 +504,8 @@ export const deleteEvent = /* GraphQL */ `
         }
         nextToken
       }
+      link
+      image
       createdAt
       updatedAt
     }
@@ -533,6 +539,8 @@ export const createEventPhoto = /* GraphQL */ `
         photos {
           nextToken
         }
+        link
+        image
         createdAt
         updatedAt
       }
@@ -571,6 +579,8 @@ export const updateEventPhoto = /* GraphQL */ `
         photos {
           nextToken
         }
+        link
+        image
         createdAt
         updatedAt
       }
@@ -609,6 +619,8 @@ export const deleteEventPhoto = /* GraphQL */ `
         photos {
           nextToken
         }
+        link
+        image
         createdAt
         updatedAt
       }

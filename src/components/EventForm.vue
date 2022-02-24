@@ -21,7 +21,7 @@
             label="Category"
             :items="['Live Virtual', 'Live In-Person']"
           ></v-select>
-          <!-- Start Date Picker -->
+          <!-- Date Picker -->
           <v-menu
             v-model="dateMenu"
             :close-on-content-click="false"
@@ -33,12 +33,12 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="event.date"
-                label="Start Date"
+                label="Date"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
                 v-on="on"
-                :rules="[(v) => !!v || 'Start Date is required']"
+                :rules="[(v) => !!v || 'Date is required']"
                 required
               ></v-text-field>
             </template>
@@ -107,6 +107,31 @@
               @click:minute="$refs.endtimemenu.save(event.endTime)"
             ></v-time-picker>
           </v-menu>
+          <!-- Photo Input -->
+          <v-file-input
+            v-if="newImage"
+            v-model="event.image"
+            @change="uploadImage"
+            @click:clear="removeImage"
+            label="Header Photo"
+            accept="image/*"
+            prepend-icon="mdi-camera"
+          ></v-file-input>
+          <v-text-field
+            v-else
+            @click:clear="removeImage"
+            v-model="event.image"
+            label="Header Photo"
+            prepend-icon="mdi-camera"
+            clearable
+          ></v-text-field>
+          <v-text-field v-model="event.link" label="Event Link"></v-text-field>
+          <!-- Header Image -->
+          <v-img
+            v-if="imageURL"
+            :src="imageURL"
+            class="header-image mb-5"
+          ></v-img>
           <v-textarea
             v-model="event.description"
             class="description"
@@ -149,6 +174,7 @@ export default {
       dateMenu: false,
       startTimeMenu: false,
       endTimeMenu: false,
+      imageURL: null,
     };
   },
   methods: {
@@ -156,11 +182,35 @@ export default {
     async addNewEvent() {
       this.addEvent(this.event);
     },
+    async update() {
+      //
+    },
+    uploadImage(e) {
+      if (e) {
+        const file = e;
+        this.imageURL = URL.createObjectURL(file);
+      }
+    },
+    removeImage() {
+      this.imageURL = null;
+    },
   },
   computed: {
     ...mapGetters(["event"]),
     isEditing() {
       return this.event.id;
+    },
+    newImage() {
+      let imageType = typeof this.event.image;
+
+      return !this.event.image || !this.event.id || imageType != "string";
+    },
+  },
+  watch: {
+    event() {
+      if (this.event.image) {
+        this.imageURL = this.event.imageURL;
+      }
     },
   },
 };
