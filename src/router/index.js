@@ -153,12 +153,17 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/events/:eventId",
+    name: "Event",
+    component: () =>
+      import(/* webpackChunkName: "event" */ "../views/Event.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/events/edit/:eventId",
     name: "EditEvent",
     component: () =>
-      import(
-        /* webpackChunkName: "editEvent" */ "../views/EditEvent.vue"
-      ),
+      import(/* webpackChunkName: "editEvent" */ "../views/EditEvent.vue"),
     meta: { requiresAuth: true },
   },
   {

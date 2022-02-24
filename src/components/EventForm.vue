@@ -125,7 +125,11 @@
             prepend-icon="mdi-camera"
             clearable
           ></v-text-field>
-          <v-text-field v-model="event.link" label="Event Link"></v-text-field>
+          <v-text-field
+            v-model="event.link"
+            label="Event Link"
+            prepend-icon="mdi-link"
+          ></v-text-field>
           <!-- Header Image -->
           <v-img
             v-if="imageURL"

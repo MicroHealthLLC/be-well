@@ -8,6 +8,7 @@
         v-for="(event, index) in events"
         :key="index"
         class="d-sm-flex flex-sm-row-reverse justify-sm-space-between mb-2"
+        elevation="5"
       >
         <div
           class="my-auto pa-sm-2"
@@ -44,7 +45,9 @@
             }}</span></v-card-text
           >
           <v-card-actions class="mt-auto pl-4 pb-4">
-            <v-btn outlined small>View Details</v-btn>
+            <v-btn outlined small :to="`/events/${event.id}`"
+              >View Details</v-btn
+            >
             <v-btn outlined small>Join Event</v-btn>
             <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
             <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn>
