@@ -77,6 +77,25 @@ export default {
         console.log(error);
       }
     },
+    async addParticipant({ commit }, { eventId, participant, participants }) {
+      participants.push(participant);
+
+      try {
+        const res = await API.graphql(
+          graphqlOperation(updateEvent, {
+            input: { id: eventId, participants: participants },
+          })
+        );
+        commit("ADD_PARTICIPANT", res.data.updateEvent.participants);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Successfully Added as Participant",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async fetchEvents({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listEvents));
@@ -132,6 +151,8 @@ export default {
   mutations: {
     SET_EVENT: (state, event) => (state.event = event),
     SET_EVENTS: (state, events) => (state.events = events),
+    ADD_PARTICIPANT: (state, participants) =>
+      (state.event.participants = participants),
   },
   getters: {
     event: (state) => state.event,

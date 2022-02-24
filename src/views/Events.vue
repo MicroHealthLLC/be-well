@@ -48,7 +48,7 @@
             <v-btn outlined small :to="`/events/${event.id}`"
               >View Details</v-btn
             >
-            <v-btn outlined small>Join Event</v-btn>
+            <v-btn outlined small @click="join(event)">Join Event</v-btn>
             <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
             <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn>
           </v-card-actions>
@@ -74,16 +74,34 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Events",
   methods: {
-    ...mapActions(["deleteEvent", "fetchEvents"]),
+    ...mapActions(["addParticipant", "deleteEvent", "fetchEvents"]),
     cardTypeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
     },
     removeEvent(id) {
       this.deleteEvent(id);
     },
+    join(event) {
+      const eventId = event.id;
+      const participants = event.participants ? event.participants : [];
+      const participant = {
+        id: this.user.attributes.sub,
+        firstName: this.user.attributes.given_name,
+        lastName: this.user.attributes.family_name,
+        email: this.user.attributes.email,
+        points: 0,
+      };
+      const payload = {
+        eventId: eventId,
+        participants: participants,
+        participant: participant,
+      };
+
+      this.addParticipant(payload);
+    },
   },
   computed: {
-    ...mapGetters(["events", "isEditor"]),
+    ...mapGetters(["events", "isEditor", "user"]),
   },
   mounted() {
     this.fetchEvents();

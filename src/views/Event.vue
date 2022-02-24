@@ -55,24 +55,67 @@
                   ></v-progress-circular>
                 </v-row> </template
             ></v-img>
+            <v-divider class="mx-0 mt-5 pa-0" color="#9ec64c"></v-divider>
           </div>
-          <v-card-text class="px-0">
-            <p>
-              <strong>Date:</strong> {{ new Date(event.date).toDateString() }}
-            </p>
-            <p>
-              <strong>Time:</strong> {{ event.startTime }} - {{ event.endTime }}
-            </p>
-            <p><strong>Hosted By:</strong> {{ event.hostName }}</p>
-            <p>
-              <strong>Host Email:</strong> 
+          <v-card-text class="grid px-0">
+            <div class="pb-2">
+              <strong class="pr-2"
+                ><v-icon small left>mdi-calendar</v-icon>Date:</strong
+              >
+              {{ new Date(event.date).toDateString() }}
+            </div>
+            <div class="pb-2">
+              <strong class="pr-2"
+                ><v-icon small left>mdi-clock-outline</v-icon>Time:</strong
+              >{{ event.startTime }} - {{ event.endTime }}
+            </div>
+            <div class="pb-2 text-truncate">
+              <strong class="pr-2 break-all"
+                ><v-icon small left>mdi-account</v-icon>Hosted By:</strong
+              >{{ event.hostName }}
+            </div>
+            <div class="pb-2 text-truncate">
+              <strong class="pr-2 break-all"
+                ><v-icon small left>mdi-email-outline</v-icon>Host
+                Email:</strong
+              >
               <a :href="`mailto: ${event.hostEmail}`">{{ event.hostEmail }}</a>
-            </p>
-            <p>
-              <strong>Link:</strong> <a :href="event.link">{{ event.link }}</a>
-            </p>
-            <p><strong>Description:</strong> {{ event.description }}</p>
+            </div>
+            <div class="pb-2 text-truncate">
+              <strong class="pr-2"
+                ><v-icon small left>mdi-link</v-icon>Link:</strong
+              >
+              <a :href="event.link">{{ event.link }}</a>
+            </div>
+            <div class="pb-2 text-truncate">
+              <strong class="pr-2"
+                ><v-icon small left>{{ typeIcon(event.type) }}</v-icon>
+                Type:</strong
+              >{{ event.type }}
+            </div>
+            <div class="description pb-2">
+              <strong class="pr-2">Description:</strong> {{ event.description }}
+            </div>
+            <div class="d-flex">
+              <strong class="pr-2">Participants:</strong>
+              <div v-if="event.participants">
+                <v-chip
+                  v-for="(participant, index) in event.participants"
+                  :key="index"
+                  class="mr-1 mb-1"
+                  color="var(--mh-green)"
+                  small
+                  >{{ participant.firstName }} {{ participant.lastName }}
+                </v-chip>
+              </div>
+              <div v-else class="font-italic">No one has signed up yet</div>
+            </div>
           </v-card-text>
+          <v-card-actions class="d-flex justify-end px-0">
+            <v-btn class="px-5" color="var(--mh-blue)" dark
+              >Join Event<v-icon right>mdi-plus</v-icon></v-btn
+            ></v-card-actions
+          >
         </v-card>
       </div></v-col
     ></v-row
@@ -99,7 +142,27 @@ export default {
 </script>
 
 <style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.5rem;
+}
+@media (max-width: 600px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.description {
+  grid-column: 1 / span 2;
+}
 .break-word {
   word-break: break-word;
+}
+.break-all {
+  word-break: break-all;
+}
+a {
+  text-decoration: none;
 }
 </style>

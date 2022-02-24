@@ -90,7 +90,7 @@ type Event
   @auth(
     rules: [
       { allow: groups, groups: ["Editors"] }
-      { allow: private, operations: [read] }
+      { allow: private, operations: [read, update] }
     ]
   ) {
   id: ID!
