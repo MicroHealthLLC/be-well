@@ -45,7 +45,6 @@ export default {
       delete event.imageURL;
       delete event.createdAt;
       delete event.updatedAt;
-      delete event.photos;
 
       try {
         if (event.image && event.image.name) {

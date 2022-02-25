@@ -288,18 +288,6 @@ export const getEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
@@ -330,84 +318,9 @@ export const listEvents = /* GraphQL */ `
           firstName
           lastName
           email
-          points
-        }
-        photos {
-          nextToken
         }
         link
         image
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getEventPhoto = /* GraphQL */ `
-  query GetEventPhoto($id: ID!) {
-    getEventPhoto(id: $id) {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listEventPhotos = /* GraphQL */ `
-  query ListEventPhotos(
-    $filter: ModelEventPhotoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listEventPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        s3key
-        event {
-          id
-          hostName
-          hostEmail
-          title
-          description
-          type
-          date
-          startTime
-          endTime
-          link
-          image
-          createdAt
-          updatedAt
-        }
-        description
-        submittedBy
         createdAt
         updatedAt
       }

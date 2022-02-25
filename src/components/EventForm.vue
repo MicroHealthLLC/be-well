@@ -239,6 +239,9 @@ export default {
       this.addEvent(this.event);
     },
     async update() {
+      if (!this.$refs.eventform.validate()) {
+        return;
+      }
       this.updateEvent(this.event);
     },
     async removeEvent() {

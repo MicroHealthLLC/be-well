@@ -354,18 +354,6 @@ export const onCreateEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
@@ -391,18 +379,6 @@ export const onUpdateEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
@@ -428,132 +404,9 @@ export const onDeleteEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateEventPhoto = /* GraphQL */ `
-  subscription OnCreateEventPhoto {
-    onCreateEventPhoto {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateEventPhoto = /* GraphQL */ `
-  subscription OnUpdateEventPhoto {
-    onUpdateEventPhoto {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteEventPhoto = /* GraphQL */ `
-  subscription OnDeleteEventPhoto {
-    onDeleteEventPhoto {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
       createdAt
       updatedAt
     }

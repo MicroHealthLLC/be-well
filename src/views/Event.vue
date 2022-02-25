@@ -159,7 +159,6 @@ export default {
         firstName: this.user.attributes.given_name,
         lastName: this.user.attributes.family_name,
         email: this.user.attributes.email,
-        points: 0,
       };
       const payload = {
         eventId: eventId,

@@ -103,7 +103,6 @@ type Event
   startTime: String!
   endTime: String!
   participants: [Participant]
-  photos: [EventPhoto] @connection(name: "EventPhotos", sortField: "createdAt")
   link: String
   image: String
 }
@@ -113,16 +112,6 @@ type Participant {
   firstName: String
   lastName: String
   email: AWSEmail
-  points: Int
-}
-
-type EventPhoto @model {
-  id: ID!
-  s3key: String
-  event: Event @connection(name: "EventPhotos", sortField: "createdAt")
-  description: String
-  submittedBy: String
-  createdAt: AWSDateTime!
 }
 
 enum Category {

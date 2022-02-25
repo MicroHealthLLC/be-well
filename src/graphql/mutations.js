@@ -411,18 +411,6 @@ export const createEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
@@ -451,18 +439,6 @@ export const updateEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
@@ -491,141 +467,9 @@ export const deleteEvent = /* GraphQL */ `
         firstName
         lastName
         email
-        points
-      }
-      photos {
-        items {
-          id
-          s3key
-          description
-          submittedBy
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       link
       image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createEventPhoto = /* GraphQL */ `
-  mutation CreateEventPhoto(
-    $input: CreateEventPhotoInput!
-    $condition: ModelEventPhotoConditionInput
-  ) {
-    createEventPhoto(input: $input, condition: $condition) {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateEventPhoto = /* GraphQL */ `
-  mutation UpdateEventPhoto(
-    $input: UpdateEventPhotoInput!
-    $condition: ModelEventPhotoConditionInput
-  ) {
-    updateEventPhoto(input: $input, condition: $condition) {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteEventPhoto = /* GraphQL */ `
-  mutation DeleteEventPhoto(
-    $input: DeleteEventPhotoInput!
-    $condition: ModelEventPhotoConditionInput
-  ) {
-    deleteEventPhoto(input: $input, condition: $condition) {
-      id
-      s3key
-      event {
-        id
-        hostName
-        hostEmail
-        title
-        description
-        type
-        date
-        startTime
-        endTime
-        participants {
-          id
-          firstName
-          lastName
-          email
-          points
-        }
-        photos {
-          nextToken
-        }
-        link
-        image
-        createdAt
-        updatedAt
-      }
-      description
-      submittedBy
       createdAt
       updatedAt
     }
