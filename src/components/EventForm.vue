@@ -162,6 +162,7 @@
             label="Description"
             filled
             outlined
+            auto-grow
             :rules="[(v) => !!v || 'Description is required']"
             required
           ></v-textarea>
@@ -188,6 +189,29 @@
         >Update Event</v-btn
       >
     </v-card-actions>
+    <!-- Delete Dialog -->
+    <v-dialog v-model="deleteDialog">
+      <v-card>
+        <v-card-title>Delete Event?</v-card-title>
+        <v-card-text
+          >Are you sure you want to delete <strong>{{ event.title }}</strong
+          >?</v-card-text
+        >
+        <v-card-actions class="justify-end">
+          <v-btn @click="deleteDialog = false" color="secondary" small outlined
+            >Cancel</v-btn
+          >
+          <v-btn
+            @click="removeEvent"
+            class="px-5"
+            color="var(--mh-blue)"
+            small
+            dark
+            >Delete</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -203,10 +227,11 @@ export default {
       endTimeMenu: false,
       imageURL: null,
       formValid: true,
+      deleteDialog: false,
     };
   },
   methods: {
-    ...mapActions(["addEvent", "updateEvent"]),
+    ...mapActions(["addEvent", "deleteEvent", "updateEvent"]),
     async addNewEvent() {
       if (!this.$refs.eventform.validate()) {
         return;
@@ -215,6 +240,11 @@ export default {
     },
     async update() {
       this.updateEvent(this.event);
+    },
+    async removeEvent() {
+      await this.deleteEvent(this.event.id);
+      this.deleteDialog = false;
+      this.$router.push("/events");
     },
     uploadImage(e) {
       if (e) {

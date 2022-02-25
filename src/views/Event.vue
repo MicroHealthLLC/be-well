@@ -93,7 +93,7 @@
                 Type:</strong
               >{{ event.type }}
             </div>
-            <div class="description pb-2">
+            <div class="description text-pre-wrap pb-2">
               <strong class="pr-2">Description:</strong> {{ event.description }}
             </div>
             <div class="d-flex">
@@ -216,6 +216,9 @@ export default {
 }
 .break-all {
   word-break: break-all;
+}
+.text-pre-wrap {
+  white-space: pre-wrap;
 }
 a {
   text-decoration: none;
