@@ -337,3 +337,78 @@ export const onDeleteFavoriteVideo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEvent = /* GraphQL */ `
+  subscription OnCreateEvent {
+    onCreateEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEvent = /* GraphQL */ `
+  subscription OnUpdateEvent {
+    onUpdateEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEvent = /* GraphQL */ `
+  subscription OnDeleteEvent {
+    onDeleteEvent {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;

@@ -391,3 +391,87 @@ export const deleteFavoriteVideo = /* GraphQL */ `
     }
   }
 `;
+export const createEvent = /* GraphQL */ `
+  mutation CreateEvent(
+    $input: CreateEventInput!
+    $condition: ModelEventConditionInput
+  ) {
+    createEvent(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateEvent = /* GraphQL */ `
+  mutation UpdateEvent(
+    $input: UpdateEventInput!
+    $condition: ModelEventConditionInput
+  ) {
+    updateEvent(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteEvent = /* GraphQL */ `
+  mutation DeleteEvent(
+    $input: DeleteEventInput!
+    $condition: ModelEventConditionInput
+  ) {
+    deleteEvent(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;

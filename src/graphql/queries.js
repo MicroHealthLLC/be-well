@@ -271,6 +271,63 @@ export const listFavoriteVideos = /* GraphQL */ `
     }
   }
 `;
+export const getEvent = /* GraphQL */ `
+  query GetEvent($id: ID!) {
+    getEvent(id: $id) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      type
+      date
+      startTime
+      endTime
+      participants {
+        id
+        firstName
+        lastName
+        email
+      }
+      link
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEvents = /* GraphQL */ `
+  query ListEvents(
+    $filter: ModelEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        type
+        date
+        startTime
+        endTime
+        participants {
+          id
+          firstName
+          lastName
+          email
+        }
+        link
+        image
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category

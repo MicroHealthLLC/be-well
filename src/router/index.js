@@ -139,6 +139,34 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/events",
+    name: "Events",
+    component: () =>
+      import(/* webpackChunkName: "events" */ "../views/Events.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/events/new",
+    name: "NewEvent",
+    component: () =>
+      import(/* webpackChunkName: "newEvent" */ "../views/NewEvent.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/events/:eventId",
+    name: "Event",
+    component: () =>
+      import(/* webpackChunkName: "event" */ "../views/Event.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/events/edit/:eventId",
+    name: "EditEvent",
+    component: () =>
+      import(/* webpackChunkName: "editEvent" */ "../views/EditEvent.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/profile",
     name: "Profile",
     component: () =>
