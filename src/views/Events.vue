@@ -4,72 +4,89 @@
       <div class="text-h6 text-sm-h5 mt-2">Live Events</div>
       <v-divider class="mb-4"></v-divider>
       <!-- Events List -->
-      <v-card
-        v-for="(event, index) in events"
-        :key="index"
-        class="d-sm-flex mb-2"
-        :class="{ 'flex-sm-row-reverse': event.image }"
-        elevation="5"
-      >
-        <div
-          v-if="event.image"
-          class="my-auto pa-sm-2"
-          :class="{ 'card-image': $vuetify.breakpoint.smAndUp }"
+      <div v-if="events.length > 0">
+        <v-card
+          v-for="(event, index) in events"
+          :key="index"
+          class="d-sm-flex mb-2"
+          :class="{ 'flex-sm-row-reverse': event.image }"
+          elevation="5"
         >
-          <v-img
-            :src="event.image"
-            lazy-src="/img/placeholder.png"
-            aspect-ratio="1.5"
-            :class="{ rounded: $vuetify.breakpoint.xsOnly }"
-          ></v-img>
-        </div>
-
-        <div
-          class="d-flex flex-column"
-          :class="{ 'card-info': $vuetify.breakpoint.smAndUp }"
-        >
-          <v-card-title>{{ event.title }}</v-card-title>
-          <v-card-subtitle class="d-flex flex-column">
-            <div class="text-caption mb-2">Hosted by: {{ event.hostName }}</div>
-            <div class="mb-2">
-              <v-chip class="mr-2" color="primary" small outlined
-                ><v-icon small left>{{ cardTypeIcon(event.type) }}</v-icon
-                >{{ event.type }}</v-chip
-              >
-              <v-chip color="primary" small outlined>{{
-                new Date(event.date).toDateString()
-              }}</v-chip>
-            </div></v-card-subtitle
+          <div
+            v-if="event.image"
+            class="my-auto pa-sm-2"
+            :class="{ 'card-image': $vuetify.breakpoint.smAndUp }"
           >
-          <v-card-text
-            ><div class="clamp-text">{{ event.description }}</div>
-            <div
-              v-if="participating(event)"
-              class="text-caption success--text font-weight-bold mt-5"
+            <v-img
+              :src="event.image"
+              lazy-src="/img/placeholder.png"
+              aspect-ratio="1.5"
+              :class="{ rounded: $vuetify.breakpoint.xsOnly }"
+            ></v-img>
+          </div>
+
+          <div
+            class="d-flex flex-column"
+            :class="{ 'card-info': $vuetify.breakpoint.smAndUp }"
+          >
+            <v-card-title>{{ event.title }}</v-card-title>
+            <v-card-subtitle class="d-flex flex-column">
+              <div class="text-caption mb-2">
+                Hosted by: {{ event.hostName }}
+              </div>
+              <div class="mb-2">
+                <v-chip class="mr-2" color="primary" small outlined
+                  ><v-icon small left>{{ cardTypeIcon(event.type) }}</v-icon
+                  >{{ event.type }}</v-chip
+                >
+                <v-chip color="primary" small outlined>{{
+                  new Date(event.date).toDateString()
+                }}</v-chip>
+              </div></v-card-subtitle
             >
-              <v-icon color="success" x-small>mdi-check</v-icon> You are
-              attending this event
-            </div>
-          </v-card-text>
-          <v-card-actions class="mt-auto pl-4 pb-4">
-            <v-btn outlined small :to="`/events/${event.id}`"
-              >View Details</v-btn
-            >
-            <v-btn
-              v-if="!participating(event)"
-              outlined
-              small
-              @click="attend(event)"
-              >RSVP to Event</v-btn
-            >
-            <v-btn v-else @click="cancelAttend(event)" outlined small
-              >Cancel RSVP</v-btn
-            >
-            <!-- <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
+            <v-card-text
+              ><div class="clamp-text">{{ event.description }}</div>
+              <div
+                v-if="participating(event)"
+                class="text-caption success--text font-weight-bold mt-5"
+              >
+                <v-icon color="success" x-small>mdi-check</v-icon> You are
+                attending this event
+              </div>
+            </v-card-text>
+            <v-card-actions class="mt-auto pl-4 pb-4">
+              <v-btn outlined small :to="`/events/${event.id}`"
+                >View Details</v-btn
+              >
+              <v-btn
+                v-if="!participating(event)"
+                outlined
+                small
+                @click="attend(event)"
+                >RSVP to Event</v-btn
+              >
+              <v-btn v-else @click="cancelAttend(event)" outlined small
+                >Cancel RSVP</v-btn
+              >
+              <!-- <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
             <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn> -->
-          </v-card-actions>
+            </v-card-actions>
+          </div>
+        </v-card>
+      </div>
+      <div v-else class="d-flex flex-column justify-center align-center py-10">
+        <div>
+          <v-icon class="mr-2">mdi-calendar-outline</v-icon> No Live Events...
         </div>
-      </v-card>
+        <v-btn
+          v-if="isEditor"
+          to="/events/new"
+          class="mt-5"
+          color="primary"
+          text
+          >Add a New Live Event</v-btn
+        >
+      </div>
     </v-col>
     <!-- Editor Button -->
     <v-btn
