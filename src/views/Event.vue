@@ -38,8 +38,8 @@
               }}</v-chip>
             </div>
           </v-card-subtitle>
+          <v-divider class="mx-0 mb-5 pa-0" color="#9ec64c"></v-divider>
           <div v-if="event.imageURL" class="px-0 mb-5">
-            <v-divider class="mx-0 mb-5 pa-0" color="#9ec64c"></v-divider>
             <v-img
               lazy-src="/img/placeholder.png"
               :src="event.imageURL"

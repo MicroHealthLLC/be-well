@@ -1,25 +1,33 @@
 <template>
   <v-card class="pa-sm-10">
     <v-card-text>
-      <v-form>
+      <v-form ref="eventform" v-model="formValid">
         <div class="grid">
           <v-text-field
             v-model="event.title"
             class="title"
             label="Title"
+            :rules="[(v) => !!v || 'Title is required']"
+            required
           ></v-text-field>
           <v-text-field
             v-model="event.hostName"
             label="Host Name"
+            :rules="[(v) => !!v || 'Host Name is required']"
+            required
           ></v-text-field>
           <v-text-field
             v-model="event.hostEmail"
             label="Host Email"
+            :rules="[(v) => !!v || 'Host Email is required']"
+            required
           ></v-text-field>
           <v-select
             v-model="event.type"
-            label="Category"
+            label="Type"
             :items="['Live Virtual', 'Live In-Person']"
+            :rules="[(v) => !!v || 'Type is required']"
+            required
           ></v-select>
           <!-- Date Picker -->
           <v-menu
@@ -67,6 +75,8 @@
                 readonly
                 v-bind="attrs"
                 v-on="on"
+                :rules="[(v) => !!v || 'Start Time is required']"
+                required
               ></v-text-field>
             </template>
             <v-time-picker
@@ -97,6 +107,8 @@
                 readonly
                 v-bind="attrs"
                 v-on="on"
+                :rules="[(v) => !!v || 'End Time is required']"
+                required
               ></v-text-field>
             </template>
             <v-time-picker
@@ -129,6 +141,8 @@
             v-model="event.link"
             label="Event Link"
             prepend-icon="mdi-link"
+            :rules="[(v) => !!v || 'Link is required']"
+            required
           ></v-text-field>
           <!-- Header Image -->
           <v-img
@@ -141,6 +155,9 @@
             class="description"
             label="Description"
             filled
+            outlined
+            :rules="[(v) => !!v || 'Description is required']"
+            required
           ></v-textarea>
         </div>
       </v-form>
@@ -179,11 +196,15 @@ export default {
       startTimeMenu: false,
       endTimeMenu: false,
       imageURL: null,
+      formValid: true,
     };
   },
   methods: {
     ...mapActions(["addEvent", "updateEvent"]),
     async addNewEvent() {
+      if (!this.$refs.eventform.validate()) {
+        return;
+      }
       this.addEvent(this.event);
     },
     async update() {
@@ -216,6 +237,9 @@ export default {
         this.imageURL = this.event.imageURL;
       }
     },
+  },
+  mounted() {
+    this.$refs.eventform.resetValidation();
   },
 };
 </script>

@@ -7,10 +7,12 @@
       <v-card
         v-for="(event, index) in events"
         :key="index"
-        class="d-sm-flex flex-sm-row-reverse justify-sm-space-between mb-2"
+        class="d-sm-flex mb-2"
+        :class="{ 'flex-sm-row-reverse': event.image }"
         elevation="5"
       >
         <div
+          v-if="event.image"
           class="my-auto pa-sm-2"
           :class="{ 'card-image': $vuetify.breakpoint.smAndUp }"
         >

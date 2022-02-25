@@ -48,7 +48,7 @@ export default {
       delete event.photos;
 
       try {
-        if (event.image.name) {
+        if (event.image && event.image.name) {
           const name = `events/${event.image.name}`;
           const image = await Storage.put(name, event.image);
           event.image = image.key;
@@ -118,8 +118,10 @@ export default {
         // Grab all photos from Storage
         const events = await Promise.all(
           res.data.listEvents.items.map(async (event) => {
-            const image = await Storage.get(event.image);
-            event.image = image;
+            if (event.image) {
+              const image = await Storage.get(event.image);
+              event.image = image;
+            }
             return event;
           })
         );
