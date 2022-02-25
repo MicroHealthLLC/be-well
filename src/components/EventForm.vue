@@ -19,8 +19,14 @@
           <v-text-field
             v-model="event.hostEmail"
             label="Host Email"
-            :rules="[(v) => !!v || 'Host Email is required']"
+            :rules="[
+              (v) => !!v || 'Email is required',
+              (v) =>
+                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                'Not a valid email address',
+            ]"
             required
+            validate-on-blur
           ></v-text-field>
           <v-select
             v-model="event.type"
