@@ -96,6 +96,22 @@ export default {
         console.log(error);
       }
     },
+    async removeParticipant({ commit }, { eventId, participants }) {
+      try {
+        await API.graphql(
+          graphqlOperation(updateEvent, {
+            input: { id: eventId, participants: participants },
+          })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Successfully Cancelled Event RSVP",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async fetchEvents({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listEvents));

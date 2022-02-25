@@ -40,17 +40,31 @@
             </div></v-card-subtitle
           >
           <v-card-text
-            ><span class="clamp-text">{{
-              event.description
-            }}</span></v-card-text
-          >
+            ><div class="clamp-text">{{ event.description }}</div>
+            <div
+              v-if="participating(event)"
+              class="text-caption success--text font-weight-bold mt-5"
+            >
+              <v-icon color="success" x-small>mdi-check</v-icon> You are
+              attending this event
+            </div>
+          </v-card-text>
           <v-card-actions class="mt-auto pl-4 pb-4">
             <v-btn outlined small :to="`/events/${event.id}`"
               >View Details</v-btn
             >
-            <v-btn outlined small @click="join(event)">Join Event</v-btn>
-            <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
-            <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn>
+            <v-btn
+              v-if="!participating(event)"
+              outlined
+              small
+              @click="attend(event)"
+              >RSVP to Event</v-btn
+            >
+            <v-btn v-else @click="cancelAttend(event)" outlined small
+              >Cancel RSVP</v-btn
+            >
+            <!-- <v-btn outlined small :to="`/events/edit/${event.id}`">Edit</v-btn>
+            <v-btn @click="removeEvent(event.id)" outlined small>Delete</v-btn> -->
           </v-card-actions>
         </div>
       </v-card>
@@ -74,14 +88,19 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Events",
   methods: {
-    ...mapActions(["addParticipant", "deleteEvent", "fetchEvents"]),
+    ...mapActions([
+      "addParticipant",
+      "deleteEvent",
+      "fetchEvents",
+      "removeParticipant",
+    ]),
     cardTypeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
     },
     removeEvent(id) {
       this.deleteEvent(id);
     },
-    join(event) {
+    attend(event) {
       const eventId = event.id;
       const participants = event.participants ? event.participants : [];
       const participant = {
@@ -98,6 +117,24 @@ export default {
       };
 
       this.addParticipant(payload);
+    },
+    cancelAttend(event) {
+      let eventId = event.id;
+      let participants = event.participants;
+      let index = participants.findIndex(
+        (participant) => participant.id == this.user.attributes.sub
+      );
+      participants.splice(index, 1);
+      this.removeParticipant({ eventId: eventId, participants: participants });
+    },
+    participating({ participants }) {
+      let index = participants
+        ? participants.findIndex(
+            (participant) => participant.id == this.user.attributes.sub
+          )
+        : -1;
+
+      return index >= 0 ? true : false;
     },
   },
   computed: {

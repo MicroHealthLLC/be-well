@@ -98,7 +98,7 @@
             </div>
             <div class="d-flex">
               <strong class="pr-2">Participants:</strong>
-              <div v-if="event.participants">
+              <div class="participants" v-if="hasParticipants">
                 <v-chip
                   v-for="(participant, index) in event.participants"
                   :key="index"
@@ -110,10 +110,24 @@
               </div>
               <div v-else class="font-italic">No one has signed up yet</div>
             </div>
+            <div
+              v-if="participating(event)"
+              class="rsvp text-caption success--text font-weight-bold mt-5"
+            >
+              <v-icon color="success" x-small>mdi-check</v-icon> You are
+              attending this event
+            </div>
           </v-card-text>
           <v-card-actions class="d-flex justify-end px-0">
-            <v-btn class="px-5" color="var(--mh-blue)" dark
-              >Join Event<v-icon right>mdi-plus</v-icon></v-btn
+            <v-btn
+              v-if="!participating(event)"
+              @click="attend(event)"
+              class="px-5"
+              color="var(--mh-blue)"
+              dark
+              >RSVP to Event<v-icon right>mdi-plus</v-icon></v-btn
+            ><v-btn v-else @click="cancelAttend(event)" outlined
+              >Cancel RSVP</v-btn
             ></v-card-actions
           >
         </v-card>
@@ -127,12 +141,51 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Event",
   computed: {
-    ...mapGetters(["event", "isEditor"]),
+    ...mapGetters(["event", "isEditor", "user"]),
+    hasParticipants() {
+      return this.event.participants && this.event.participants.length > 0;
+    },
   },
   methods: {
-    ...mapActions(["fetchEvent"]),
+    ...mapActions(["addParticipant", "fetchEvent", "removeParticipant"]),
     typeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
+    },
+    attend(event) {
+      const eventId = event.id;
+      const participants = event.participants ? event.participants : [];
+      const participant = {
+        id: this.user.attributes.sub,
+        firstName: this.user.attributes.given_name,
+        lastName: this.user.attributes.family_name,
+        email: this.user.attributes.email,
+        points: 0,
+      };
+      const payload = {
+        eventId: eventId,
+        participants: participants,
+        participant: participant,
+      };
+
+      this.addParticipant(payload);
+    },
+    cancelAttend(event) {
+      let eventId = event.id;
+      let participants = event.participants;
+      let index = participants.findIndex(
+        (participant) => participant.id == this.user.attributes.sub
+      );
+      participants.splice(index, 1);
+      this.removeParticipant({ eventId: eventId, participants: participants });
+    },
+    participating({ participants }) {
+      let index = participants
+        ? participants.findIndex(
+            (participant) => participant.id == this.user.attributes.sub
+          )
+        : -1;
+
+      return index >= 0 ? true : false;
     },
   },
   mounted() {
@@ -153,7 +206,9 @@ export default {
     flex-direction: column;
   }
 }
-.description {
+.description,
+.participants,
+.rsvp {
   grid-column: 1 / span 2;
 }
 .break-word {
