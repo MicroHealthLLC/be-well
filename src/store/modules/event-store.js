@@ -85,7 +85,7 @@ export default {
             input: { id: eventId, participants: participants },
           })
         );
-        commit("ADD_PARTICIPANT", res.data.updateEvent.participants);
+        commit("SET_PARTICIPANTS", res.data.updateEvent);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Successfully Added as Participant",
@@ -97,15 +97,16 @@ export default {
     },
     async removeParticipant({ commit }, { eventId, participants }) {
       try {
-        await API.graphql(
+        const res = await API.graphql(
           graphqlOperation(updateEvent, {
             input: { id: eventId, participants: participants },
           })
         );
+        commit("SET_PARTICIPANTS", res.data.updateEvent);
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Successfully Cancelled Event RSVP",
-          color: "var(--mh-green)",
+          message: "You have Successfully Cancelled Event RSVP",
+          color: "var(--mh-orange)",
         });
       } catch (error) {
         console.log(error);
@@ -168,8 +169,17 @@ export default {
   mutations: {
     SET_EVENT: (state, event) => (state.event = event),
     SET_EVENTS: (state, events) => (state.events = events),
-    ADD_PARTICIPANT: (state, participants) =>
-      (state.event.participants = participants),
+    SET_PARTICIPANTS: (state, updatedEvent) => {
+      // Update event for Event Details page
+      state.event.participants = updatedEvent.participants;
+      // Update array of events for Events page
+      if (state.events.length > 0) {
+        let index = state.events.findIndex(
+          (event) => event.id == updatedEvent.id
+        );
+        state.events[index].participants = updatedEvent.participants;
+      }
+    },
   },
   getters: {
     event: (state) => state.event,
