@@ -3,54 +3,66 @@
     <v-col>
       <!-- Healthcare Provider Search Bar -->
       <div class="text-h6 text-sm-h5 mt-2">Find a Healthcare Provider</div>
-      <v-divider class="mb-4"></v-divider>
-      <div class="search-grid align-start">
-        <v-combobox
-          ref="searchbar"
-          v-model="query"
-          @keyup.enter="enterSearch"
-          @keydown.enter="closeMenu"
-          :items="[...cities, ...counties]"
-          :menu-props="{ closeOnClick: true }"
-          placeholder="Search by City, County or Zip Code"
-          filled
-          dense
-          outlined
-          clearable
-          hide-no-data
-          prepend-inner-icon="mdi-magnify"
-          append-icon=""
-          class="searchbar"
-        ></v-combobox>
-        <v-select
-          v-model="facilityType"
-          :items="facilityTypes"
-          item-text="text"
-          item-value="value"
-          placeholder="Facility Type"
-          filled
-          dense
-          outlined
-          clearable
-          hint="Optional"
-          persistent-hint
-          class="facility-type"
-        ></v-select>
-        <v-select
-          v-model="state"
-          :items="stateAbbreviations"
-          placeholder="State"
-          filled
-          dense
-          outlined
-          hint="Optional"
-          persistent-hint
-          clearable
-          class="state"
-        ></v-select>
-        <v-btn @click="search" class="mt-1 submit" color="#2f53b6" dark
-          >Search</v-btn
-        >
+      <v-divider class="mb-sm-4"></v-divider>
+      <div class="search-grid align-center">
+        <div class="px-15 px-sm-0">
+          <v-img src="/svg/doctors-bro.svg" />
+        </div>
+        <div>
+          <v-combobox
+            ref="searchbar"
+            v-model="query"
+            @keyup.enter="enterSearch"
+            @keydown.enter="closeMenu"
+            :items="[...cities, ...counties]"
+            :menu-props="{ closeOnClick: true }"
+            placeholder="Search by City, County or Zip Code"
+            filled
+            dense
+            outlined
+            clearable
+            hide-no-data
+            prepend-inner-icon="mdi-magnify"
+            append-icon=""
+            class="searchbar"
+          ></v-combobox>
+          <v-select
+            v-model="facilityType"
+            :items="facilityTypes"
+            item-text="text"
+            item-value="value"
+            placeholder="Facility Type"
+            filled
+            dense
+            outlined
+            clearable
+            hint="Optional"
+            persistent-hint
+            class="facility-type"
+          ></v-select>
+          <v-select
+            v-model="state"
+            :items="stateAbbreviations"
+            placeholder="State"
+            filled
+            dense
+            outlined
+            hint="Optional"
+            persistent-hint
+            clearable
+            class="state"
+          ></v-select>
+          <div class="d-flex justify-end">
+            <v-btn
+              @click="search"
+              class="mt-1 px-sm-10 submit"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.sm || $vuetify.breakpoint.xs"
+              dark
+              >Search</v-btn
+            >
+          </div>
+        </div>
       </div>
 
       <!-- Search Results -->
@@ -318,23 +330,15 @@ export default {
 </script>
 
 <style scoped>
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-}
 .search-grid {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr auto;
-  column-gap: 0.5rem;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 3rem;
 }
 @media (max-width: 600px) {
   .search-grid {
     grid-template-columns: unset;
-    grid-template-areas:
-      "searchbar searchbar"
-      "facility-type state"
-      "submit submit";
+    grid-template-columns: 1fr;
   }
   .searchbar {
     grid-area: searchbar;
