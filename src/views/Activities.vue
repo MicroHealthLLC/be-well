@@ -20,13 +20,6 @@
         <v-btn class="px-5" active-class="btn-route" to="/activities/articles"
           >Articles</v-btn
         >
-        <v-btn
-          class="px-5"
-          active-class="btn-route"
-          to="/activities/podcasts"
-          disabled
-          >Podcasts</v-btn
-        >
       </v-btn-toggle>
       <!-- Category Selector -->
       <v-chip-group
