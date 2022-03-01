@@ -13,6 +13,7 @@ export default {
       date: "",
       startTime: null,
       endTime: null,
+      timeZone: "EST",
       image: null,
       link: "",
     },

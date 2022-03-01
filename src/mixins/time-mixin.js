@@ -8,9 +8,9 @@ export default {
     };
   },
   methods: {
-    timeDistance(date, startTime) {
+    timeDistance(date, startTime, timeZone) {
       if (date && startTime) {
-        let dateTime = new Date(`${date}, ${startTime} PST`);
+        let dateTime = new Date(`${date}, ${startTime} ${timeZone}`);
         let dateNow = new Date();
 
         if (isAfter(dateTime, dateNow)) {

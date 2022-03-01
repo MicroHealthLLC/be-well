@@ -349,6 +349,7 @@ export const onCreateEvent = /* GraphQL */ `
       date
       startTime
       endTime
+      timeZone
       participants {
         id
         firstName
@@ -374,6 +375,7 @@ export const onUpdateEvent = /* GraphQL */ `
       date
       startTime
       endTime
+      timeZone
       participants {
         id
         firstName
@@ -399,6 +401,7 @@ export const onDeleteEvent = /* GraphQL */ `
       date
       startTime
       endTime
+      timeZone
       participants {
         id
         firstName

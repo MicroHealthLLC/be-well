@@ -30,7 +30,7 @@
             >{{ event.type }}</v-chip
           >
           <v-chip color="primary" small outlined>{{
-            timeDistance(event.date, event.startTime)
+            timeDistance(event.date, event.startTime, event.timeZone)
           }}</v-chip>
         </div></v-card-subtitle
       >

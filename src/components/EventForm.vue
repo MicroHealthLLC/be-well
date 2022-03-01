@@ -78,6 +78,7 @@
                 v-model="event.startTime"
                 label="Start Time"
                 prepend-icon="mdi-clock-time-four-outline"
+                :suffix="selectedTimeZone"
                 readonly
                 v-bind="attrs"
                 v-on="on"
@@ -91,7 +92,22 @@
               format="24hr"
               full-width
               @click:minute="$refs.starttimemenu.save(event.startTime)"
-            ></v-time-picker>
+            >
+              <template v-slot:default>
+                <div class="mx-auto">
+                  <v-btn-toggle
+                    v-model="timeZone"
+                    @change="updateTimeZone"
+                    mandatory
+                  >
+                    <v-btn small>PST</v-btn>
+                    <v-btn small>MST</v-btn>
+                    <v-btn small>CST</v-btn>
+                    <v-btn small>EST</v-btn>
+                  </v-btn-toggle>
+                </div>
+              </template>
+            </v-time-picker>
           </v-menu>
           <!-- End Time Picker -->
           <v-menu
@@ -110,6 +126,7 @@
                 v-model="event.endTime"
                 label="End Time"
                 prepend-icon="mdi-clock-time-four-outline"
+                :suffix="selectedTimeZone"
                 readonly
                 v-bind="attrs"
                 v-on="on"
@@ -123,7 +140,21 @@
               format="24hr"
               full-width
               @click:minute="$refs.endtimemenu.save(event.endTime)"
-            ></v-time-picker>
+              ><template v-slot:default>
+                <div class="mx-auto">
+                  <v-btn-toggle
+                    v-model="timeZone"
+                    @change="updateTimeZone"
+                    mandatory
+                  >
+                    <v-btn small>PST</v-btn>
+                    <v-btn small>MST</v-btn>
+                    <v-btn small>CST</v-btn>
+                    <v-btn small>EST</v-btn>
+                  </v-btn-toggle>
+                </div>
+              </template></v-time-picker
+            >
           </v-menu>
           <!-- Photo Input -->
           <v-file-input
@@ -228,6 +259,8 @@ export default {
       imageURL: null,
       formValid: true,
       deleteDialog: false,
+      timeZone: 3,
+      timeZones: ["PST", "MST", "CST", "EST"],
     };
   },
   methods: {
@@ -258,6 +291,9 @@ export default {
     removeImage() {
       this.imageURL = null;
     },
+    updateTimeZone() {
+      this.event.timeZone = this.selectedTimeZone;
+    },
   },
   computed: {
     ...mapGetters(["event"]),
@@ -269,12 +305,18 @@ export default {
 
       return !this.event.image || !this.event.id || imageType != "string";
     },
+    selectedTimeZone() {
+      return this.timeZones[this.timeZone];
+    },
   },
   watch: {
     event() {
       if (this.event.image) {
         this.imageURL = this.event.imageURL;
       }
+      this.timeZone = this.timeZones.findIndex(
+        (zone) => zone == this.event.timeZone
+      );
     },
   },
   mounted() {
