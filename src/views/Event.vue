@@ -34,7 +34,7 @@
                 ><v-icon small left>{{ typeIcon(event.type) }}</v-icon
                 >{{ event.type }}</v-chip
               ><v-chip color="primary" outlined small>{{
-                new Date(event.date).toDateString()
+                timeDistance(event.date, event.startTime)
               }}</v-chip>
             </div>
           </v-card-subtitle>
@@ -62,7 +62,7 @@
               <strong class="pr-2"
                 ><v-icon small left>mdi-calendar</v-icon>Date:</strong
               >
-              {{ new Date(event.date).toDateString() }}
+              {{ longDate(event.date) }}
             </div>
             <div class="pb-2">
               <strong class="pr-2"
@@ -138,8 +138,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import timeMixin from "../mixins/time-mixin";
+
 export default {
   name: "Event",
+  mixins: [timeMixin],
   computed: {
     ...mapGetters(["event", "isEditor", "user"]),
     hasParticipants() {

@@ -30,7 +30,7 @@
             >{{ event.type }}</v-chip
           >
           <v-chip color="primary" small outlined>{{
-            new Date(event.date).toDateString()
+            timeDistance(event.date, event.startTime)
           }}</v-chip>
         </div></v-card-subtitle
       >
@@ -63,9 +63,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import timeMixin from "../mixins/time-mixin";
 
 export default {
   name: "EventCard",
+  mixins: [timeMixin],
   props: {
     event: {
       type: Object,
