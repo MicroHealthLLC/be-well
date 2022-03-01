@@ -63,11 +63,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import timeMixin from "../mixins/time-mixin";
+import dateMixin from "../mixins/date-mixin";
 
 export default {
   name: "EventCard",
-  mixins: [timeMixin],
+  mixins: [dateMixin],
   props: {
     event: {
       type: Object,
