@@ -56,7 +56,7 @@
                 >{{ categoryString(goal.category) }}</v-chip
               >
               <v-chip title="Due Date" color="#2f53b6" outlined small>{{
-                goal.dueDate
+                shortISODate(goal.dueDate)
               }}</v-chip>
             </div>
           </div>
@@ -228,12 +228,13 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 import GoalCard from "../../components/GoalCard.vue";
 
 export default {
   name: "Goals",
-  mixins: [utilitiesMixin],
+  mixins: [dateMixin, utilitiesMixin],
   components: {
     GoalCard,
   },

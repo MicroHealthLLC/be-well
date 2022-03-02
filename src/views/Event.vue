@@ -62,7 +62,7 @@
               <strong class="pr-2"
                 ><v-icon small left>mdi-calendar</v-icon>Date:</strong
               >
-              {{ longDate(event.date) }}
+              {{ longISODate(event.date) }}
             </div>
             <div class="pb-2">
               <strong class="pr-2"
