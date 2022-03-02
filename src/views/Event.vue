@@ -85,7 +85,7 @@
               <strong class="pr-2"
                 ><v-icon small left>mdi-link</v-icon>Link:</strong
               >
-              <a :href="event.link">{{ event.link }}</a>
+              <a :href="event.link" target="_blank">{{ event.link }}</a>
             </div>
             <div class="pb-2 text-truncate">
               <strong class="pr-2"
