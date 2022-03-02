@@ -13,6 +13,7 @@ export default {
       date: "",
       startTime: null,
       endTime: null,
+      timeZone: "EST",
       image: null,
       link: "",
     },
@@ -168,7 +169,12 @@ export default {
   },
   mutations: {
     SET_EVENT: (state, event) => (state.event = event),
-    SET_EVENTS: (state, events) => (state.events = events),
+    SET_EVENTS: (state, events) => {
+      // Sort Events ASC so soonest Event appears first
+      state.events = events.sort(
+        (event1, event2) => new Date(event1.date) - new Date(event2.date)
+      );
+    },
     SET_PARTICIPANTS: (state, updatedEvent) => {
       // Update event for Event Details page
       state.event.participants = updatedEvent.participants;

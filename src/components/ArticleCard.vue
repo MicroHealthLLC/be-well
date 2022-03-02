@@ -11,7 +11,7 @@
           {{ categoryString(article.category) }}</v-chip
         >
         <v-chip color="primary" small outlined>{{
-          formatDate(article.createdAt)
+          shortDate(article.createdAt)
         }}</v-chip>
       </div></v-card-subtitle
     >
@@ -32,19 +32,15 @@
 </template>
 
 <script>
+import dateMixin from "../mixins/date-mixin";
 import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
   name: "ArticleCard",
-  mixins: [utilitiesMixin],
+  mixins: [dateMixin, utilitiesMixin],
   props: {
     article: {
       type: Object,
-    },
-  },
-  methods: {
-    formatDate(date) {
-      return new Date(date).toDateString();
     },
   },
   computed: {

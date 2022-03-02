@@ -38,7 +38,7 @@
               {{ categoryString(article.category) }}</v-chip
             >
             <v-chip color="primary" small outlined>{{
-              formatDate(article.createdAt)
+              fullDate(article.createdAt)
             }}</v-chip>
           </div>
           <div>
@@ -88,12 +88,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ArticleLoader from "../../components/ArticleLoader.vue";
+import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   components: { ArticleLoader },
   name: "Article",
-  mixins: [utilitiesMixin],
+  mixins: [dateMixin, utilitiesMixin],
   computed: {
     ...mapGetters(["article", "favoriteArticles", "isEditor", "loading"]),
     levelColor() {
@@ -116,9 +117,6 @@ export default {
       "fetchAllFavoriteArticles",
       "fetchArticle",
     ]),
-    formatDate(date) {
-      return new Date(date).toDateString();
-    },
     addFavorite() {
       let favoriteArticle = {
         articleId: this.article.id,

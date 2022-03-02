@@ -283,6 +283,7 @@ export const getEvent = /* GraphQL */ `
       date
       startTime
       endTime
+      timeZone
       participants {
         id
         firstName
@@ -313,6 +314,7 @@ export const listEvents = /* GraphQL */ `
         date
         startTime
         endTime
+        timeZone
         participants {
           id
           firstName
