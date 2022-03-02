@@ -96,9 +96,9 @@
             <div class="description text-pre-wrap pb-2">
               <strong class="pr-2">Description:</strong> {{ event.description }}
             </div>
-            <div class="d-flex">
+            <div class="d-flex participants">
               <strong class="pr-2">Participants:</strong>
-              <div class="participants" v-if="hasParticipants">
+              <div v-if="hasParticipants">
                 <v-chip
                   v-for="(participant, index) in event.participants"
                   :key="index"
