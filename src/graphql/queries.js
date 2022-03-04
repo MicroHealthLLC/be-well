@@ -425,7 +425,7 @@ export const listCompetitors = /* GraphQL */ `
 `;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
-    $category: Category
+    $category: Category!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelArticleFilterInput
@@ -459,7 +459,7 @@ export const articlesByCategory = /* GraphQL */ `
 `;
 export const videosByCategory = /* GraphQL */ `
   query VideosByCategory(
-    $category: Category
+    $category: Category!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelVideoFilterInput
