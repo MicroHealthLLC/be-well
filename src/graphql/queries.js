@@ -330,6 +330,99 @@ export const listEvents = /* GraphQL */ `
     }
   }
 `;
+export const getCompetition = /* GraphQL */ `
+  query GetCompetition($id: ID!) {
+    getCompetition(id: $id) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCompetitions = /* GraphQL */ `
+  query ListCompetitions(
+    $filter: ModelCompetitionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        rules
+        startDate
+        endDate
+        competitors {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCompetitor = /* GraphQL */ `
+  query GetCompetitor($id: ID!) {
+    getCompetitor(id: $id) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCompetitors = /* GraphQL */ `
+  query ListCompetitors(
+    $filter: ModelCompetitorFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitors(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        competitionId
+        userId
+        firstName
+        lastName
+        score
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category
