@@ -131,8 +131,7 @@ type Competition
   rules: String
   startDate: AWSDateTime!
   endDate: AWSDateTime!
-  competitors: [Competitor]
-    @connection(keyName: "byCompetition", fields: ["id"])
+  competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
 }
 
 type Competitor
@@ -143,14 +142,13 @@ type Competitor
       { allow: owner, operations: [create, delete] }
       { allow: private, operations: [read] }
     ]
-  )
-  @key(name: "byCompetition", fields: ["competitionId"]) {
+  ) {
   id: ID!
-  competitionId: ID!
+  competitionId: ID! @index(name: "byCompetition", sortKeyFields: ["lastName"])
   userId: ID!
   firstName: String!
   lastName: String!
-  score: Int
+  score: Int @default(value: "0")
 }
 
 enum Category {
