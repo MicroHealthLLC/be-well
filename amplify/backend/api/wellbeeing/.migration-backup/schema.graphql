@@ -26,6 +26,11 @@ type ChecklistItem {
 
 type Article
   @model
+  @key(
+    name: "articlesByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "articlesByCategory"
+  )
   @auth(
     rules: [
       { allow: groups, groups: ["Editors"] }
@@ -38,11 +43,6 @@ type Article
   title: String!
   body: String!
   category: Category!
-    @index(
-      name: "articlesByCategory"
-      queryField: "articlesByCategory"
-      sortKeyFields: ["createdAt"]
-    )
   level: Level!
   createdAt: AWSDateTime!
   image: String
@@ -51,6 +51,11 @@ type Article
 
 type Video
   @model
+  @key(
+    name: "videosByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "videosByCategory"
+  )
   @auth(
     rules: [
       { allow: groups, groups: ["Editors"] }
@@ -61,11 +66,6 @@ type Video
   resourceId: String!
   level: Level!
   category: Category!
-    @index(
-      name: "videosByCategory"
-      queryField: "videosByCategory"
-      sortKeyFields: ["createdAt"]
-    )
   createdAt: AWSDateTime!
 }
 
@@ -74,7 +74,7 @@ type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
   articleId: ID!
   category: Category!
   level: Level!
-  article: Article @hasOne(fields: ["articleId"])
+  article: Article @connection(fields: ["articleId"])
 }
 
 type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
@@ -82,7 +82,7 @@ type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
   videoId: ID!
   category: Category!
   level: Level!
-  video: Video @hasOne(fields: ["videoId"])
+  video: Video @connection(fields: ["videoId"])
 }
 
 type Event
@@ -116,12 +116,14 @@ type Participant {
 }
 
 enum Category {
+  # Deprecated
   MEDITATION
   MUSCLE
   POSTURE
   STRESS_RELIEF
   STRETCHING
   YOGA
+  # New
   BALANCE
   ENDURANCE
   ERGONOMICS

@@ -2,7 +2,7 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateReminder = /* GraphQL */ `
-  subscription OnCreateReminder($owner: String!) {
+  subscription OnCreateReminder($owner: String) {
     onCreateReminder(owner: $owner) {
       id
       category
@@ -17,7 +17,7 @@ export const onCreateReminder = /* GraphQL */ `
   }
 `;
 export const onUpdateReminder = /* GraphQL */ `
-  subscription OnUpdateReminder($owner: String!) {
+  subscription OnUpdateReminder($owner: String) {
     onUpdateReminder(owner: $owner) {
       id
       category
@@ -32,7 +32,7 @@ export const onUpdateReminder = /* GraphQL */ `
   }
 `;
 export const onDeleteReminder = /* GraphQL */ `
-  subscription OnDeleteReminder($owner: String!) {
+  subscription OnDeleteReminder($owner: String) {
     onDeleteReminder(owner: $owner) {
       id
       category
@@ -47,7 +47,7 @@ export const onDeleteReminder = /* GraphQL */ `
   }
 `;
 export const onCreateGoal = /* GraphQL */ `
-  subscription OnCreateGoal($owner: String!) {
+  subscription OnCreateGoal($owner: String) {
     onCreateGoal(owner: $owner) {
       id
       title
@@ -68,7 +68,7 @@ export const onCreateGoal = /* GraphQL */ `
   }
 `;
 export const onUpdateGoal = /* GraphQL */ `
-  subscription OnUpdateGoal($owner: String!) {
+  subscription OnUpdateGoal($owner: String) {
     onUpdateGoal(owner: $owner) {
       id
       title
@@ -89,7 +89,7 @@ export const onUpdateGoal = /* GraphQL */ `
   }
 `;
 export const onDeleteGoal = /* GraphQL */ `
-  subscription OnDeleteGoal($owner: String!) {
+  subscription OnDeleteGoal($owner: String) {
     onDeleteGoal(owner: $owner) {
       id
       title
@@ -197,7 +197,7 @@ export const onDeleteVideo = /* GraphQL */ `
   }
 `;
 export const onCreateFavoriteArticle = /* GraphQL */ `
-  subscription OnCreateFavoriteArticle($owner: String!) {
+  subscription OnCreateFavoriteArticle($owner: String) {
     onCreateFavoriteArticle(owner: $owner) {
       id
       articleId
@@ -223,7 +223,7 @@ export const onCreateFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onUpdateFavoriteArticle = /* GraphQL */ `
-  subscription OnUpdateFavoriteArticle($owner: String!) {
+  subscription OnUpdateFavoriteArticle($owner: String) {
     onUpdateFavoriteArticle(owner: $owner) {
       id
       articleId
@@ -249,7 +249,7 @@ export const onUpdateFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onDeleteFavoriteArticle = /* GraphQL */ `
-  subscription OnDeleteFavoriteArticle($owner: String!) {
+  subscription OnDeleteFavoriteArticle($owner: String) {
     onDeleteFavoriteArticle(owner: $owner) {
       id
       articleId
@@ -275,7 +275,7 @@ export const onDeleteFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onCreateFavoriteVideo = /* GraphQL */ `
-  subscription OnCreateFavoriteVideo($owner: String!) {
+  subscription OnCreateFavoriteVideo($owner: String) {
     onCreateFavoriteVideo(owner: $owner) {
       id
       videoId
@@ -296,7 +296,7 @@ export const onCreateFavoriteVideo = /* GraphQL */ `
   }
 `;
 export const onUpdateFavoriteVideo = /* GraphQL */ `
-  subscription OnUpdateFavoriteVideo($owner: String!) {
+  subscription OnUpdateFavoriteVideo($owner: String) {
     onUpdateFavoriteVideo(owner: $owner) {
       id
       videoId
@@ -317,7 +317,7 @@ export const onUpdateFavoriteVideo = /* GraphQL */ `
   }
 `;
 export const onDeleteFavoriteVideo = /* GraphQL */ `
-  subscription OnDeleteFavoriteVideo($owner: String!) {
+  subscription OnDeleteFavoriteVideo($owner: String) {
     onDeleteFavoriteVideo(owner: $owner) {
       id
       videoId
