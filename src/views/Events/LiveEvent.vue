@@ -8,7 +8,7 @@
           >
           <v-btn
             v-if="isEditor"
-            :to="`/events/edit/${this.event.id}`"
+            :to="`/events/live-events/edit/${this.event.id}`"
             class="ml-2"
             outlined
             small
@@ -138,10 +138,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import dateMixin from "../mixins/date-mixin";
+import dateMixin from "../../mixins/date-mixin";
 
 export default {
-  name: "Event",
+  name: "LiveEvent",
   mixins: [dateMixin],
   computed: {
     ...mapGetters(["event", "isEditor", "user"]),

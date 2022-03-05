@@ -140,32 +140,44 @@ const routes = [
   },
   {
     path: "/events",
+    redirect: "/events/live-events",
     name: "Events",
     component: () =>
       import(/* webpackChunkName: "events" */ "../views/Events.vue"),
     meta: { requiresAuth: true },
+    props: true,
+    children: [
+      {
+        path: "live-events",
+        name: "LiveEvents",
+        component: () =>
+          import(/* webpackChunkName: "live-events" */ "../views/Events/LiveEvents.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "live-events/new",
+        name: "NewEvent",
+        component: () =>
+          import(/* webpackChunkName: "newLiveEvent" */ "../views/Events/NewLiveEvent.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "live-events/:eventId",
+        name: "Event",
+        component: () =>
+          import(/* webpackChunkName: "liveEvent" */ "../views/Events/LiveEvent.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "live-events/edit/:eventId",
+        name: "EditEvent",
+        component: () =>
+          import(/* webpackChunkName: "editLiveEvent" */ "../views/Events/EditLiveEvent.vue"),
+        meta: { requiresAuth: true },
+      },
+    ],
   },
-  {
-    path: "/events/new",
-    name: "NewEvent",
-    component: () =>
-      import(/* webpackChunkName: "newEvent" */ "../views/NewEvent.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/events/:eventId",
-    name: "Event",
-    component: () =>
-      import(/* webpackChunkName: "event" */ "../views/Event.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/events/edit/:eventId",
-    name: "EditEvent",
-    component: () =>
-      import(/* webpackChunkName: "editEvent" */ "../views/EditEvent.vue"),
-    meta: { requiresAuth: true },
-  },
+
   {
     path: "/profile",
     name: "Profile",

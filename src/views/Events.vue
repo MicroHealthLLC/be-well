@@ -1,69 +1,50 @@
 <template>
   <v-row>
     <v-col>
-      <div class="text-h6 text-sm-h5 mt-2">Live Events</div>
-      <v-divider class="mb-4"></v-divider>
-      <!-- Events List -->
-      <div v-if="events.length > 0">
-        <EventCard
-          v-for="(event, index) in events"
-          :key="index"
-          :event="event"
-        />
-      </div>
-      <div v-else class="d-flex flex-column justify-center align-center py-10">
-        <div>
-          <v-icon class="mr-2">mdi-calendar-outline</v-icon> No Live Events...
-        </div>
-        <v-btn
-          v-if="isEditor"
-          to="/events/new"
-          class="mt-5"
-          color="primary"
-          text
-          >Add a New Live Event</v-btn
+      <!-- Navbar -->
+      <v-btn-toggle
+        v-if="navVisible"
+        class="nav-btns"
+        color="var(--mh-green)"
+        dense
+      >
+        <v-btn class="px-5" active-class="btn-route" to="/events/live-events"
+          >Live Events</v-btn
         >
-      </div>
+        <v-btn class="px-5" active-class="btn-route" to="/events/competitions"
+          >Competitions</v-btn
+        >
+      </v-btn-toggle>
+      <router-view></router-view>
     </v-col>
-    <!-- Editor Button -->
-    <v-btn
-      v-if="isEditor"
-      to="/events/new"
-      class="floating-btn"
-      color="var(--mh-blue)"
-      fab
-      large
-      dark
-      ><v-icon large>mdi-plus</v-icon></v-btn
-    >
   </v-row>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import EventCard from "../components/EventCard.vue";
-
 export default {
   name: "Events",
-  components: { EventCard },
-  methods: {
-    ...mapActions(["fetchEvents"]),
-  },
   computed: {
-    ...mapGetters(["events", "isEditor", "user"]),
-  },
-  mounted() {
-    this.fetchEvents();
+    navVisible() {
+      return (
+        this.$route.name == "LiveEvents" || this.$route.name == "Competitions"
+      );
+    },
   },
 };
 </script>
 
 <style scoped>
-.floating-btn {
-  bottom: 0;
-  right: 0;
-  position: fixed;
-  margin-right: 7vw;
-  margin-bottom: 7vh;
+.nav-btns {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.nav-btns >>> .v-btn__content {
+  text-transform: capitalize;
+}
+.nav-btns::-webkit-scrollbar {
+  display: none;
+}
+.v-btn--active >>> .v-btn__content {
+  color: #5f772e;
 }
 </style>

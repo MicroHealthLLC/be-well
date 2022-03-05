@@ -280,7 +280,7 @@ export default {
     async removeEvent() {
       await this.deleteEvent(this.event.id);
       this.deleteDialog = false;
-      this.$router.push("/events");
+      this.$router.push("/events/live-events");
     },
     uploadImage(e) {
       if (e) {

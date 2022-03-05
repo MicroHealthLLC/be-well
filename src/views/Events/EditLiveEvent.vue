@@ -21,9 +21,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import EventForm from "./../components/EventForm.vue";
+import EventForm from "../../components/EventForm.vue";
 export default {
-  name: "EditEvent",
+  name: "EditLiveEvent",
   components: {
     EventForm,
   },

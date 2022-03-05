@@ -45,7 +45,7 @@
         </div>
       </v-card-text>
       <v-card-actions class="mt-auto pl-4 pb-4">
-        <v-btn outlined small :to="`/events/${event.id}`">View Details</v-btn>
+        <v-btn outlined small :to="`/events/live-events/${event.id}`">View Details</v-btn>
         <v-btn
           v-if="!participating(event)"
           outlined

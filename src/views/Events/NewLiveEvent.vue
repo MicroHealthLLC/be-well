@@ -15,10 +15,10 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import EventForm from "../components/EventForm.vue";
+import EventForm from "../../components/EventForm.vue";
 
 export default {
-  name: "NewEvent",
+  name: "NewLiveEvent",
   components: {
     EventForm,
   },
@@ -51,7 +51,7 @@ export default {
   watch: {
     event() {
       if (this.event.id) {
-        this.$router.push(`/events/edit/${this.event.id}`);
+        this.$router.push(`/events/live-events/edit/${this.event.id}`);
       }
     },
   },
