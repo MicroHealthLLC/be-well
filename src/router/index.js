@@ -151,28 +151,45 @@ const routes = [
         path: "live-events",
         name: "LiveEvents",
         component: () =>
-          import(/* webpackChunkName: "live-events" */ "../views/Events/LiveEvents.vue"),
+          import(
+            /* webpackChunkName: "live-events" */ "../views/Events/LiveEvents.vue"
+          ),
         meta: { requiresAuth: true },
       },
       {
         path: "live-events/new",
         name: "NewEvent",
         component: () =>
-          import(/* webpackChunkName: "newLiveEvent" */ "../views/Events/NewLiveEvent.vue"),
+          import(
+            /* webpackChunkName: "newLiveEvent" */ "../views/Events/NewLiveEvent.vue"
+          ),
         meta: { requiresAuth: true },
       },
       {
         path: "live-events/:eventId",
         name: "Event",
         component: () =>
-          import(/* webpackChunkName: "liveEvent" */ "../views/Events/LiveEvent.vue"),
+          import(
+            /* webpackChunkName: "liveEvent" */ "../views/Events/LiveEvent.vue"
+          ),
         meta: { requiresAuth: true },
       },
       {
         path: "live-events/edit/:eventId",
         name: "EditEvent",
         component: () =>
-          import(/* webpackChunkName: "editLiveEvent" */ "../views/Events/EditLiveEvent.vue"),
+          import(
+            /* webpackChunkName: "editLiveEvent" */ "../views/Events/EditLiveEvent.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "competitions",
+        name: "Competitions",
+        component: () =>
+          import(
+            /* webpackChunkName: "competitions" */ "../views/Events/Competitions.vue"
+          ),
         meta: { requiresAuth: true },
       },
     ],
