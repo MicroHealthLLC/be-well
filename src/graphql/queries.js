@@ -341,6 +341,9 @@ export const getCompetition = /* GraphQL */ `
       rules
       startDate
       endDate
+      startTime
+      endTime
+      timeZone
       competitors {
         items {
           id
@@ -355,6 +358,7 @@ export const getCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -376,9 +380,13 @@ export const listCompetitions = /* GraphQL */ `
         rules
         startDate
         endDate
+        startTime
+        endTime
+        timeZone
         competitors {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }

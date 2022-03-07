@@ -8,6 +8,17 @@
       :key="index"
       :competition="competition"
     />
+    <!-- Editor Button -->
+    <v-btn
+      v-if="isEditor"
+      to="/events/competitions/new"
+      class="floating-btn"
+      color="var(--mh-blue)"
+      fab
+      large
+      dark
+      ><v-icon large>mdi-plus</v-icon></v-btn
+    >
   </div>
 </template>
 
@@ -21,7 +32,7 @@ export default {
     CompetitionCard,
   },
   computed: {
-    ...mapGetters(["competitions"]),
+    ...mapGetters(["competitions", "isEditor"]),
   },
   methods: {
     ...mapActions(["fetchCompetitions"]),
@@ -32,4 +43,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.floating-btn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  margin-right: 7vw;
+  margin-bottom: 7vh;
+}
+</style>

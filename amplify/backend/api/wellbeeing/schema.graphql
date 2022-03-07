@@ -129,9 +129,13 @@ type Competition
   title: String!
   description: String!
   rules: String
-  startDate: AWSDateTime!
-  endDate: AWSDateTime!
+  startDate: AWSDate!
+  endDate: AWSDate!
+  startTime: String!
+  endTime: String!
+  timeZone: TimeZone
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
+  image: String
 }
 
 type Competitor

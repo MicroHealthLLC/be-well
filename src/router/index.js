@@ -192,6 +192,15 @@ const routes = [
           ),
         meta: { requiresAuth: true },
       },
+      {
+        path: "competitions/new",
+        name: "NewCompetition",
+        component: () =>
+          import(
+            /* webpackChunkName: "newCompetitions" */ "../views/Events/NewCompetition.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 

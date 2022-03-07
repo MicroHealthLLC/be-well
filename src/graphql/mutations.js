@@ -492,6 +492,9 @@ export const createCompetition = /* GraphQL */ `
       rules
       startDate
       endDate
+      startTime
+      endTime
+      timeZone
       competitors {
         items {
           id
@@ -506,6 +509,7 @@ export const createCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -525,6 +529,9 @@ export const updateCompetition = /* GraphQL */ `
       rules
       startDate
       endDate
+      startTime
+      endTime
+      timeZone
       competitors {
         items {
           id
@@ -539,6 +546,7 @@ export const updateCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -558,6 +566,9 @@ export const deleteCompetition = /* GraphQL */ `
       rules
       startDate
       endDate
+      startTime
+      endTime
+      timeZone
       competitors {
         items {
           id
@@ -572,6 +583,7 @@ export const deleteCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
