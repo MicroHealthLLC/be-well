@@ -335,6 +335,19 @@ export default {
       this.competition.timeZone = this.selectedTimeZone;
     },
   },
+  watch: {
+    competition() {
+      if (this.competition.image) {
+        this.imageURL = this.competition.imageURL;
+      }
+      this.timeZone = this.timeZones.findIndex(
+        (zone) => zone == this.competition.timeZone
+      );
+    },
+  },
+  mounted() {
+    this.$refs.competitionform.resetValidation();
+  },
 };
 </script>
 

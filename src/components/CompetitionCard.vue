@@ -43,7 +43,7 @@
         <v-btn
           outlined
           small
-          :to="`/events/live-competitions/${competition.id}`"
+          :to="`/events/competitions/${competition.id}`"
           >View Details</v-btn
         >
       </v-card-actions>

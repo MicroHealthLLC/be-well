@@ -201,6 +201,24 @@ const routes = [
           ),
         meta: { requiresAuth: true },
       },
+      {
+        path: "competitions/:competitionId",
+        name: "Competition",
+        component: () =>
+          import(
+            /* webpackChunkName: "competition" */ "../views/Events/Competition.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "competitions/edit/:competitionId",
+        name: "EditCompetition",
+        component: () =>
+          import(
+            /* webpackChunkName: "editCompetition" */ "../views/Events/EditCompetition.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 
