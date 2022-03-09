@@ -1,6 +1,6 @@
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getCompetition, listCompetitions } from "@/graphql/queries";
-import { createCompetition, deleteCompetition, updateCompetition, } from "@/graphql/mutations"; // prettier-ignore
+import { createCompetition, createCompetitor, deleteCompetition, deleteCompetitor, updateCompetition, } from "@/graphql/mutations"; // prettier-ignore
 
 export default {
   state: {
@@ -16,6 +16,9 @@ export default {
       description: "",
       rules: "",
       timeZone: "EST",
+      competitors: {
+        items: [],
+      },
     },
     competitions: [],
   },
@@ -135,11 +138,50 @@ export default {
         console.log(error);
       }
     },
+    // Competitor Requests
+    async addCompetitor({ commit }, competitor) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(createCompetitor, { input: competitor })
+        );
+        commit("ADD_COMPETITOR", res.data.createCompetitor);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Successfully Joined Competition!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteCompetitor({ commit }, id) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(deleteCompetitor, { input: { id: id } })
+        );
+
+        commit("REMOVE_COMPETITOR", res.data.deleteCompetitor.id);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Successfully Withdrawn from Competition",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     SET_COMPETITION: (state, competition) => (state.competition = competition),
     SET_COMPETITIONS: (state, competitions) =>
       (state.competitions = competitions),
+    ADD_COMPETITOR: (state, competitor) =>
+      state.competition.competitors.items.push(competitor),
+    REMOVE_COMPETITOR: (state, id) => {
+      const competitors = state.competition.competitors.items;
+      const index = competitors.findIndex((competitor) => (competitor.id = id));
+      competitors.splice(index, 1);
+    },
   },
   getters: {
     competition: (state) => state.competition,

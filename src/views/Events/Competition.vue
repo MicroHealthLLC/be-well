@@ -102,14 +102,19 @@
               <div>{{ competition.rules }}</div>
             </div>
           </div>
-          <!-- Leaderboard -->
+          <!-- Leaderboard Table -->
           <div class="leaderboard">
             <v-data-table
               class="leaderboard-table"
               :headers="headers"
-              :items="competitors"
+              :items="competition.competitors.items"
+              sort-by="score"
+              sort-desc
               no-data-text="No one has signed up yet"
             >
+              <template #item.fullName="{ item }"
+                >{{ item.firstName }} {{ item.lastName }}</template
+              >
               <template v-slot:top
                 ><div class="text-h6 pl-4 pt-4">
                   <v-icon left>mdi-trophy</v-icon>Leaderboard
@@ -119,10 +124,18 @@
           </div>
         </v-card-text>
         <v-card-actions class="d-flex justify-end px-0">
-          <v-btn class="px-5" color="var(--mh-blue)" dark
+          <v-btn
+            v-if="!competing(competition)"
+            @click="joinCompetition"
+            class="px-5"
+            color="var(--mh-blue)"
+            dark
             >Join Competition<v-icon right>mdi-plus</v-icon></v-btn
-          ></v-card-actions
-        >
+          >
+          <v-btn v-else @click="leaveCompetition" outlined
+            >Withdraw from Competition</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </div>
   </div>
@@ -140,44 +153,48 @@ export default {
       headers: [
         {
           text: "Name",
-          value: "name",
+          value: "fullName",
         },
         {
           text: "Score",
           value: "score",
         },
       ],
-      competitors: [
-        {
-          name: "Christopher Calderon",
-          score: "150",
-        },
-        {
-          name: "Ahu Olcer",
-          score: "95",
-        },
-        {
-          name: "Efe Effrat",
-          score: "50",
-        },
-        {
-          name: "Cheuk Kwan Yiu",
-          score: "200",
-        },
-        {
-          name: "Joanna Tran",
-          score: "25",
-        },
-      ],
     };
   },
   computed: {
     ...mapGetters(["competition", "isEditor", "user"]),
+    competitorId() {
+      return this.competition.competitors.items.find(
+        (competitor) => competitor.userId == this.user.attributes.sub
+      ).id;
+    },
   },
   methods: {
-    ...mapActions(["addParticipant", "fetchCompetition", "removeParticipant"]),
+    ...mapActions(["addCompetitor", "fetchCompetition", "deleteCompetitor"]),
+    joinCompetition() {
+      let competitor = {
+        userId: this.user.attributes.sub,
+        competitionId: this.competition.id,
+        firstName: this.user.attributes.given_name,
+        lastName: this.user.attributes.family_name,
+      };
+      this.addCompetitor(competitor);
+    },
+    leaveCompetition() {
+      this.deleteCompetitor(this.competitorId);
+    },
     typeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
+    },
+    competing({ competitors }) {
+      let index = competitors.items
+        ? competitors.items.findIndex(
+            (competitor) => competitor.userId == this.user.attributes.sub
+          )
+        : -1;
+
+      return index >= 0 ? true : false;
     },
   },
   mounted() {
