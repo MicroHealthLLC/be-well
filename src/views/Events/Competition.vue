@@ -33,8 +33,7 @@
           ><div class="mb-2">Hosted by: {{ competition.hostName }}</div>
           <div>
             <v-chip class="mr-1" color="primary" outlined small
-              ><v-icon small left>{{ typeIcon(competition.type) }}</v-icon
-              >{{ competition.type }}</v-chip
+              ><v-icon small left>mdi-run</v-icon>Step Count</v-chip
             ><v-chip color="primary" outlined small>{{
               timeDistance(
                 competition.startDate,
@@ -66,48 +65,93 @@
         <v-card-text class="grid px-0">
           <!-- Competition Details -->
           <div>
-            <div class="pb-2">
-              <strong class="pr-2"
-                ><v-icon small left>mdi-calendar</v-icon>Begins:</strong
+            <v-tabs
+              v-model="tab"
+              background-color="transparent"
+              height="35"
+              dense
+            >
+              <v-tabs-slider color="var(--mh-green)">></v-tabs-slider>
+              <v-tab>Details</v-tab>
+              <v-tab>Submissions</v-tab>
+              <v-spacer></v-spacer>
+              <v-btn
+                v-if="tab == 1"
+                class="mt-auto"
+                @click="submissionDialog = true"
+                small
+                outlined
+                >Add Photo<v-icon small right>mdi-plus</v-icon></v-btn
               >
-              {{ longISODate(competition.startDate) }} at
-              {{ competition.startTime }} {{ competition.timeZone }}
-            </div>
-            <div class="pb-2">
-              <strong class="pr-2"
-                ><v-icon small left>mdi-calendar</v-icon>Ends:</strong
-              >{{ longISODate(competition.endDate) }} at
-              {{ competition.endTime }} {{ competition.timeZone }}
-            </div>
-            <div class="pb-2 text-truncate">
-              <strong class="pr-2 break-all"
-                ><v-icon small left>mdi-account</v-icon>Hosted By:</strong
-              >{{ competition.hostName }}
-            </div>
-            <div class="pb-2 text-truncate">
-              <strong class="pr-2 break-all"
-                ><v-icon small left>mdi-email-outline</v-icon>Host
-                Email:</strong
-              >
-              <a :href="`mailto: ${competition.hostEmail}`">{{
-                competition.hostEmail
-              }}</a>
-            </div>
-            <div class="d-flex flex-column description text-pre-wrap pb-2 mt-5">
-              <div><strong class="pr-2">Description:</strong></div>
-              <div>{{ competition.description }}</div>
-            </div>
-            <div class="d-flex flex-column rules text-pre-wrap pb-2 mt-2">
-              <div><strong class="pr-2">Rules:</strong></div>
-              <div>{{ competition.rules }}</div>
-            </div>
+              <v-tabs-items v-model="tab" class="pt-5">
+                <v-tab-item>
+                  <div class="pb-2">
+                    <strong class="pr-2"
+                      ><v-icon small left>mdi-calendar</v-icon>Begins:</strong
+                    >
+                    {{ longISODate(competition.startDate) }} at
+                    {{ competition.startTime }} {{ competition.timeZone }}
+                  </div>
+                  <div class="pb-2">
+                    <strong class="pr-2"
+                      ><v-icon small left>mdi-calendar</v-icon>Ends:</strong
+                    >{{ longISODate(competition.endDate) }} at
+                    {{ competition.endTime }} {{ competition.timeZone }}
+                  </div>
+                  <div class="pb-2 text-truncate">
+                    <strong class="pr-2 break-all"
+                      ><v-icon small left>mdi-account</v-icon>Hosted By:</strong
+                    >{{ competition.hostName }}
+                  </div>
+                  <div class="pb-2 text-truncate">
+                    <strong class="pr-2 break-all"
+                      ><v-icon small left>mdi-email-outline</v-icon>Host
+                      Email:</strong
+                    >
+                    <a :href="`mailto: ${competition.hostEmail}`">{{
+                      competition.hostEmail
+                    }}</a>
+                  </div>
+                  <div
+                    class="
+                      d-flex
+                      flex-column
+                      description
+                      text-pre-wrap
+                      pb-2
+                      mt-5
+                    "
+                  >
+                    <div><strong class="pr-2">Description:</strong></div>
+                    <div>{{ competition.description }}</div>
+                  </div>
+                  <div class="d-flex flex-column rules text-pre-wrap pb-2 mt-2">
+                    <div><strong class="pr-2">Rules:</strong></div>
+                    <div>{{ competition.rules }}</div>
+                  </div>
+                </v-tab-item>
+                <!-- Submission Photos -->
+                <v-tab-item class="photo-grid">
+                  <div
+                    v-for="(submission, index) in competition.submissions.items"
+                    :key="index"
+                    @click="openPhoto(submission, $event)"
+                    class="clickable"
+                  >
+                    <amplify-s3-image
+                      :img-key="submission.image"
+                    ></amplify-s3-image>
+                  </div>
+                </v-tab-item>
+              </v-tabs-items>
+            </v-tabs>
           </div>
           <!-- Leaderboard Table -->
           <div class="leaderboard">
             <v-data-table
               class="leaderboard-table"
               :headers="headers"
-              :items="competition.competitors.items"
+              :items="additionalCompetitors"
               sort-by="score"
               sort-desc
               no-data-text="No one has signed up yet"
@@ -138,6 +182,74 @@
         </v-card-actions>
       </v-card>
     </div>
+    <!-- Submission Dialog -->
+    <v-dialog v-model="submissionDialog" width="800">
+      <v-card>
+        <v-card-title
+          ><div>Submit Photo</div>
+          <v-spacer></v-spacer>
+          <v-btn @click="closeSubmissionForm" fab depressed x-small outlined
+            ><v-icon>mdi-close</v-icon></v-btn
+          ></v-card-title
+        >
+        <v-card-text>
+          <v-form ref="submissionform">
+            <v-file-input
+              v-model="photoSubmission.photo"
+              @change="uploadImage"
+              @click:clear="removeImage"
+              label="Photo"
+              accept="image/*"
+              prepend-icon="mdi-camera"
+              required
+              :rules="[(v) => !!v || 'A photo is required']"
+            ></v-file-input>
+            <v-textarea
+              v-model="photoSubmission.description"
+              label="Description"
+              class="mt-2"
+              filled
+              outlined
+              counter="300"
+              rows="4"
+              auto-grow
+              required
+              :rules="[
+                (v) => !!v || 'Description is required',
+                (v) => v.length <= 300 || 'Max 300 characters',
+              ]"
+            ></v-textarea>
+          </v-form>
+          <v-img v-if="imageURL" :src="imageURL"></v-img>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn
+            @click="submitPhoto"
+            class="px-5"
+            :disabled="!imageURL"
+            color="var(--mh-blue)"
+            depressed
+            :dark="!!imageURL"
+            >Submit</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- Photo Dialog -->
+    <v-dialog v-model="photoDialog" width="800">
+      <v-card>
+        <div class="pa-2">
+          <v-img :src="dialogPhoto.src"></v-img>
+        </div>
+
+        <v-card-text class="d-flex flex-column mt-2 text-caption">
+          <div>
+            <strong>Submitted By: </strong>{{ dialogPhoto.submittedBy }}
+          </div>
+          <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -150,6 +262,19 @@ export default {
   mixins: [dateMixin],
   data() {
     return {
+      submissionDialog: false,
+      photoDialog: false,
+      imageURL: null,
+      dialogPhoto: {
+        src: "",
+        description: "",
+        submittedBy: "",
+      },
+      tab: null,
+      photoSubmission: {
+        photo: null,
+        description: "",
+      },
       headers: [
         {
           text: "Name",
@@ -169,9 +294,29 @@ export default {
         (competitor) => competitor.userId == this.user.attributes.sub
       ).id;
     },
+    additionalCompetitors() {
+      return [
+        ...this.competition.competitors.items,
+        {
+          firstName: "John",
+          lastName: "Doe",
+          score: 150,
+        },
+        {
+          firstName: "Jane",
+          lastName: "Doe",
+          score: 250,
+        },
+      ];
+    },
   },
   methods: {
-    ...mapActions(["addCompetitor", "fetchCompetition", "deleteCompetitor"]),
+    ...mapActions([
+      "addCompetitor",
+      "addSubmission",
+      "fetchCompetition",
+      "deleteCompetitor",
+    ]),
     joinCompetition() {
       let competitor = {
         userId: this.user.attributes.sub,
@@ -196,6 +341,38 @@ export default {
 
       return index >= 0 ? true : false;
     },
+    uploadImage(e) {
+      if (e) {
+        const file = e;
+        this.imageURL = URL.createObjectURL(file);
+      }
+    },
+    removeImage() {
+      this.imageURL = null;
+    },
+    submitPhoto() {
+      if (!this.$refs.submissionform.validate()) {
+        return;
+      }
+      let submission = {
+        competitionId: this.competition.id,
+        userId: this.user.attributes.sub,
+        image: this.photoSubmission.photo,
+        description: this.photoSubmission.description,
+        submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
+      };
+      this.addSubmission(submission);
+    },
+    openPhoto({ description, submittedBy }, e) {
+      let photoURL = e.path[0].src;
+      this.dialogPhoto.description = description;
+      this.dialogPhoto.src = photoURL;
+      this.dialogPhoto.submittedBy = submittedBy;
+      this.photoDialog = true;
+    },
+    closeSubmissionForm() {
+      this.submissionDialog = false;
+    },
   },
   mounted() {
     this.fetchCompetition(this.$route.params.competitionId);
@@ -206,7 +383,7 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.95fr 1.05fr;
   column-gap: 2rem;
 }
 @media (max-width: 600px) {
@@ -239,5 +416,26 @@ a {
 .leaderboard-table >>> tr:hover {
   background-color: var(--mh-orange) !important;
   filter: brightness(105%);
+}
+.v-tabs-items {
+  background-color: transparent;
+}
+.v-tab {
+  text-transform: capitalize;
+}
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-rows: repeat(3, 5vw); */
+  grid-gap: 1rem;
+}
+.photo-grid div {
+  background-color: lightgray;
+}
+amplify-s3-image {
+  --width: 100%;
+  --height: 100%;
+  object-fit: cover;
+  background-color: lightgray;
 }
 </style>

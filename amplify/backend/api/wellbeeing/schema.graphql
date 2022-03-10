@@ -135,6 +135,8 @@ type Competition
   endTime: String!
   timeZone: TimeZone
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
+  submissions: [CompetitionSubmission]
+    @hasMany(indexName: "bySubmission", fields: ["id"])
   image: String
 }
 
@@ -153,6 +155,24 @@ type Competitor
   firstName: String!
   lastName: String!
   score: Int @default(value: "0")
+}
+
+type CompetitionSubmission
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: owner, operations: [create, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "bySubmission", sortKeyFields: ["createdAt"])
+  userId: ID!
+  image: String
+  description: String
+  submittedBy: String
+  createdAt: AWSDateTime!
 }
 
 enum Category {

@@ -443,6 +443,20 @@ export const onCreateCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      submissions {
+        items {
+          id
+          competitionId
+          userId
+          image
+          description
+          submittedBy
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       image
       createdAt
       updatedAt
@@ -477,6 +491,20 @@ export const onUpdateCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      submissions {
+        items {
+          id
+          competitionId
+          userId
+          image
+          description
+          submittedBy
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       image
       createdAt
       updatedAt
@@ -505,6 +533,20 @@ export const onDeleteCompetition = /* GraphQL */ `
           firstName
           lastName
           score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          userId
+          image
+          description
+          submittedBy
           createdAt
           updatedAt
           owner
@@ -556,6 +598,51 @@ export const onDeleteCompetitor = /* GraphQL */ `
       firstName
       lastName
       score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateCompetitionSubmission = /* GraphQL */ `
+  subscription OnCreateCompetitionSubmission {
+    onCreateCompetitionSubmission {
+      id
+      competitionId
+      userId
+      image
+      description
+      submittedBy
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCompetitionSubmission = /* GraphQL */ `
+  subscription OnUpdateCompetitionSubmission {
+    onUpdateCompetitionSubmission {
+      id
+      competitionId
+      userId
+      image
+      description
+      submittedBy
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCompetitionSubmission = /* GraphQL */ `
+  subscription OnDeleteCompetitionSubmission {
+    onDeleteCompetitionSubmission {
+      id
+      competitionId
+      userId
+      image
+      description
+      submittedBy
       createdAt
       updatedAt
       owner

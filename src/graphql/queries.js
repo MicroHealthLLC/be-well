@@ -358,6 +358,20 @@ export const getCompetition = /* GraphQL */ `
         }
         nextToken
       }
+      submissions {
+        items {
+          id
+          competitionId
+          userId
+          image
+          description
+          submittedBy
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       image
       createdAt
       updatedAt
@@ -384,6 +398,9 @@ export const listCompetitions = /* GraphQL */ `
         endTime
         timeZone
         competitors {
+          nextToken
+        }
+        submissions {
           nextToken
         }
         image
@@ -423,6 +440,47 @@ export const listCompetitors = /* GraphQL */ `
         firstName
         lastName
         score
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCompetitionSubmission = /* GraphQL */ `
+  query GetCompetitionSubmission($id: ID!) {
+    getCompetitionSubmission(id: $id) {
+      id
+      competitionId
+      userId
+      image
+      description
+      submittedBy
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCompetitionSubmissions = /* GraphQL */ `
+  query ListCompetitionSubmissions(
+    $filter: ModelCompetitionSubmissionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitionSubmissions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        competitionId
+        userId
+        image
+        description
+        submittedBy
         createdAt
         updatedAt
         owner

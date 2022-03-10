@@ -1,6 +1,6 @@
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getCompetition, listCompetitions } from "@/graphql/queries";
-import { createCompetition, createCompetitor, deleteCompetition, deleteCompetitor, updateCompetition, } from "@/graphql/mutations"; // prettier-ignore
+import { createCompetition, createCompetitionSubmission, createCompetitor, deleteCompetition, deleteCompetitor, updateCompetition, } from "@/graphql/mutations"; // prettier-ignore
 
 export default {
   state: {
@@ -19,6 +19,7 @@ export default {
       competitors: {
         items: [],
       },
+      submissions: [],
     },
     competitions: [],
   },
@@ -166,6 +167,27 @@ export default {
           message: "Successfully Withdrawn from Competition",
           color: "var(--mh-orange)",
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // Submission Requests
+    async addSubmission({ commit }, submission) {
+      try {
+        if (submission.image) {
+          const name = `competitions/submissions/${submission.image.name}`;
+          const image = await Storage.put(name, submission.image);
+          submission.image = image.key;
+        }
+        const res = await API.graphql(
+          graphqlOperation(createCompetitionSubmission, { input: submission })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Competition Submission Successful!",
+          color: "var(--mh-green)",
+        });
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
