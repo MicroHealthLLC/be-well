@@ -171,8 +171,9 @@ export default {
         console.log(error);
       }
     },
-    // Submission Requests
+    // Photo Submission Requests
     async addSubmission({ commit }, submission) {
+      commit("TOGGLE_SAVING", true);
       try {
         if (submission.image) {
           const name = `competitions/submissions/${submission.image.name}`;
@@ -182,6 +183,7 @@ export default {
         const res = await API.graphql(
           graphqlOperation(createCompetitionSubmission, { input: submission })
         );
+        commit("ADD_SUBMISSION_PHOTO", res.data.createCompetitionSubmission);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successful!",
@@ -191,6 +193,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
   },
   mutations: {
@@ -204,6 +207,8 @@ export default {
       const index = competitors.findIndex((competitor) => (competitor.id = id));
       competitors.splice(index, 1);
     },
+    ADD_SUBMISSION_PHOTO: (state, submission) =>
+      state.competition.submissions.items.unshift(submission),
   },
   getters: {
     competition: (state) => state.competition,

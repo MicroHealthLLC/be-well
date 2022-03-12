@@ -44,7 +44,7 @@
           </div>
         </v-card-subtitle>
         <v-divider class="mx-0 mb-5 pa-0" color="#9ec64c"></v-divider>
-        <div v-if="competition.imageURL" class="px-0 mb-5">
+        <div v-if="competition.imageURL" class="px-0">
           <v-img
             lazy-src="/img/placeholder.png"
             :src="competition.imageURL"
@@ -133,10 +133,10 @@
                 <!-- Submission Photos -->
                 <v-tab-item class="photo-grid">
                   <div
-                    v-for="(submission, index) in competition.submissions.items"
-                    :key="index"
+                    v-for="submission in competition.submissions.items"
+                    :key="submission.id"
                     @click="openPhoto(submission, $event)"
-                    class="clickable"
+                    class="d-flex mx-auto align-center clickable"
                   >
                     <amplify-s3-image
                       :img-key="submission.image"
@@ -226,28 +226,34 @@
           <v-btn
             @click="submitPhoto"
             class="px-5"
-            :disabled="!imageURL"
+            :disabled="!imageURL || saving"
             color="var(--mh-blue)"
             depressed
             :dark="!!imageURL"
+            :loading="saving"
             >Submit</v-btn
           >
         </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- Photo Dialog -->
-    <v-dialog v-model="photoDialog" width="800">
-      <v-card>
-        <div class="pa-2">
-          <v-img :src="dialogPhoto.src"></v-img>
-        </div>
+    <v-dialog v-model="photoDialog" class="overflow-auto">
+      <v-card max-width="700">
+        <v-card-title
+          ><v-img :src="dialogPhoto.src" max-height="500" contain
+        /></v-card-title>
 
-        <v-card-text class="d-flex flex-column mt-2 text-caption">
+        <v-card-text class="text-caption">
           <div>
             <strong>Submitted By: </strong>{{ dialogPhoto.submittedBy }}
           </div>
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
+        <v-card-actions>
+          <v-btn color="var(--mh-blue)" dark small depressed
+            >Approve Submission</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -288,7 +294,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["competition", "isEditor", "user"]),
+    ...mapGetters(["competition", "isEditor", "saving", "user"]),
     competitorId() {
       return this.competition.competitors.items.find(
         (competitor) => competitor.userId == this.user.attributes.sub
@@ -425,17 +431,19 @@ a {
 }
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  /* grid-template-rows: repeat(3, 5vw); */
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-auto-rows: 175px;
   grid-gap: 1rem;
 }
 .photo-grid div {
-  background-color: lightgray;
+  background-color: lightgrey;
+  /* border: 1px solid gray; */
+  border-radius: 5px;
+  overflow: hidden;
 }
 amplify-s3-image {
-  --width: 100%;
-  --height: 100%;
-  object-fit: cover;
-  background-color: lightgray;
+  --width: 125%;
+  position: relative;
+  transform: translateX(-10%);
 }
 </style>
