@@ -131,7 +131,10 @@
                   </div>
                 </v-tab-item>
                 <!-- Submission Photos -->
-                <v-tab-item class="photo-grid mb-5">
+                <v-tab-item
+                  v-if="competition.submissions.items.length > 0"
+                  class="photo-grid mb-5"
+                >
                   <div
                     v-for="submission in competition.submissions.items"
                     :key="submission.id"
@@ -143,6 +146,11 @@
                     ></amplify-s3-image>
                   </div>
                 </v-tab-item>
+                <v-tab-item v-else
+                  ><div class="d-flex justify-center align-center pa-10">
+                    No One has submitted anything yet...
+                  </div></v-tab-item
+                >
               </v-tabs-items>
             </v-tabs>
           </div>

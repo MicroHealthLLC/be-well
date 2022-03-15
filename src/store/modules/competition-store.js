@@ -17,10 +17,8 @@ export default {
       description: "",
       rules: "",
       timeZone: "EST",
-      competitors: {
-        items: [],
-      },
-      submissions: [],
+      competitors: { items: [] },
+      submissions: { items: [] },
     },
     competitions: [],
   },
