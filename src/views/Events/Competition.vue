@@ -227,10 +227,10 @@
           <v-btn
             @click="submitPhoto"
             class="px-5"
-            :disabled="!imageURL || saving"
+            :disabled="saving"
             color="var(--mh-blue)"
             depressed
-            :dark="!!imageURL || saving"
+            :dark="!saving"
             :loading="saving"
             >Submit</v-btn
           >
@@ -273,7 +273,7 @@
             small
             depressed
             outlined
-            color="secondary"
+            :loading="saving"
             ><v-icon small left>mdi-delete</v-icon>Delete</v-btn
           >
         </v-card-actions>
@@ -422,6 +422,7 @@ export default {
     },
     removeSubmission() {
       this.deleteSubmission(this.selectedSubmission.id);
+      this.photoDialog = false;
     },
   },
   mounted() {

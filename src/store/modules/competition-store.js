@@ -196,10 +196,12 @@ export default {
       commit("TOGGLE_SAVING", false);
     },
     async deleteSubmission({ commit }, id) {
+      commit("TOGGLE_SAVING", true);
       try {
         API.graphql(
           graphqlOperation(deleteCompetitionSubmission, { input: { id: id } })
         );
+        commit("REMOVE_SUBMISSION_PHOTO", id);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successfully Removed",
@@ -208,6 +210,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async approveSubmission({ commit, getters }, submission) {
       try {
@@ -263,6 +266,12 @@ export default {
     },
     ADD_SUBMISSION_PHOTO: (state, submission) =>
       state.competition.submissions.items.unshift(submission),
+    REMOVE_SUBMISSION_PHOTO: (state, id) => {
+      const index = state.competition.submissions.items.findIndex(
+        (submission) => submission.id == id
+      );
+      state.competition.submissions.items.splice(index, 1);
+    },
     UPDATE_SUBMISSION: (state, updatedSubmission) => {
       const submissions = state.competition.submissions.items;
       const index = submissions.findIndex(
