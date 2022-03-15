@@ -447,11 +447,13 @@ export const onCreateCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -495,11 +497,13 @@ export const onUpdateCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -543,11 +547,13 @@ export const onDeleteCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -609,11 +615,13 @@ export const onCreateCompetitionSubmission = /* GraphQL */ `
     onCreateCompetitionSubmission {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }
@@ -624,11 +632,13 @@ export const onUpdateCompetitionSubmission = /* GraphQL */ `
     onUpdateCompetitionSubmission {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }
@@ -639,11 +649,13 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
     onDeleteCompetitionSubmission {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }

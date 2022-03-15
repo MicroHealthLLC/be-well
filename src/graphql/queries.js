@@ -362,11 +362,13 @@ export const getCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -453,11 +455,13 @@ export const getCompetitionSubmission = /* GraphQL */ `
     getCompetitionSubmission(id: $id) {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }
@@ -477,11 +481,13 @@ export const listCompetitionSubmissions = /* GraphQL */ `
       items {
         id
         competitionId
+        competitorId
         userId
         image
         description
         submittedBy
         createdAt
+        isApproved
         updatedAt
         owner
       }

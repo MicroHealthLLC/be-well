@@ -168,11 +168,13 @@ type CompetitionSubmission
   ) {
   id: ID!
   competitionId: ID! @index(name: "bySubmission", sortKeyFields: ["createdAt"])
+  competitorId: ID!
   userId: ID!
   image: String
   description: String
   submittedBy: String
   createdAt: AWSDateTime!
+  isApproved: Boolean @default(value: "false")
 }
 
 enum Category {

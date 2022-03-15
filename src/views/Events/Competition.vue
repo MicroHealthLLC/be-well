@@ -78,13 +78,13 @@
               <v-btn
                 v-if="tab == 1"
                 class="mt-auto"
-                @click="submissionDialog = true"
+                @click="openSubmissionForm"
                 small
                 outlined
                 >Add Photo<v-icon small right>mdi-plus</v-icon></v-btn
               >
               <v-tabs-items v-model="tab" class="pt-5">
-                <v-tab-item>
+                <v-tab-item class="mb-5">
                   <div class="pb-2">
                     <strong class="pr-2"
                       ><v-icon small left>mdi-calendar</v-icon>Begins:</strong
@@ -131,7 +131,7 @@
                   </div>
                 </v-tab-item>
                 <!-- Submission Photos -->
-                <v-tab-item class="photo-grid">
+                <v-tab-item class="photo-grid mb-5">
                   <div
                     v-for="submission in competition.submissions.items"
                     :key="submission.id"
@@ -149,9 +149,10 @@
           <!-- Leaderboard Table -->
           <div class="leaderboard">
             <v-data-table
+              ref="leaderboard"
               class="leaderboard-table"
               :headers="headers"
-              :items="additionalCompetitors"
+              :items="competitors"
               sort-by="score"
               sort-desc
               no-data-text="No one has signed up yet"
@@ -167,7 +168,7 @@
             </v-data-table>
           </div>
         </v-card-text>
-        <v-card-actions class="d-flex justify-end px-0">
+        <v-card-actions class="px-0">
           <v-btn
             v-if="!competing(competition)"
             @click="joinCompetition"
@@ -229,7 +230,7 @@
             :disabled="!imageURL || saving"
             color="var(--mh-blue)"
             depressed
-            :dark="!!imageURL"
+            :dark="!!imageURL || saving"
             :loading="saving"
             >Submit</v-btn
           >
@@ -239,6 +240,11 @@
     <!-- Photo Dialog -->
     <v-dialog v-model="photoDialog" class="overflow-auto">
       <v-card max-width="700">
+        <div class="d-flex justify-end pr-5 pt-2">
+          <v-btn @click="photoDialog = false" fab depressed x-small outlined
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </div>
         <v-card-title
           ><v-img :src="dialogPhoto.src" max-height="500" contain
         /></v-card-title>
@@ -249,9 +255,26 @@
           </div>
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
-        <v-card-actions>
-          <v-btn color="var(--mh-blue)" dark small depressed
+        <v-card-actions class="pb-5">
+          <v-btn
+            v-if="!selectedSubmission.isApproved"
+            @click="approve"
+            color="var(--mh-blue)"
+            dark
+            small
+            depressed
             >Approve Submission</v-btn
+          >
+          <v-btn v-else color="var(--mh-blue)" dark small depressed
+            >Deny Submission</v-btn
+          >
+          <v-btn
+            @click="removeSubmission"
+            small
+            depressed
+            outlined
+            color="secondary"
+            ><v-icon small left>mdi-delete</v-icon>Delete</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -281,6 +304,7 @@ export default {
         photo: null,
         description: "",
       },
+      selectedSubmission: {},
       headers: [
         {
           text: "Name",
@@ -294,7 +318,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["competition", "isEditor", "saving", "user"]),
+    ...mapGetters(["competition", "competitors", "isEditor", "saving", "user"]),
     competitorId() {
       return this.competition.competitors.items.find(
         (competitor) => competitor.userId == this.user.attributes.sub
@@ -320,6 +344,8 @@ export default {
     ...mapActions([
       "addCompetitor",
       "addSubmission",
+      "approveSubmission",
+      "deleteSubmission",
       "fetchCompetition",
       "deleteCompetitor",
     ]),
@@ -356,28 +382,46 @@ export default {
     removeImage() {
       this.imageURL = null;
     },
-    submitPhoto() {
+    async submitPhoto() {
       if (!this.$refs.submissionform.validate()) {
         return;
       }
       let submission = {
+        competitorId: this.competitorId,
         competitionId: this.competition.id,
         userId: this.user.attributes.sub,
         image: this.photoSubmission.photo,
         description: this.photoSubmission.description,
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
       };
-      this.addSubmission(submission);
+      await this.addSubmission(submission);
+      this.closeSubmissionForm();
     },
-    openPhoto({ description, submittedBy }, e) {
+    openPhoto(submission, e) {
       let photoURL = e.path[0].src;
-      this.dialogPhoto.description = description;
+      this.dialogPhoto.description = submission.description;
       this.dialogPhoto.src = photoURL;
-      this.dialogPhoto.submittedBy = submittedBy;
+      this.dialogPhoto.submittedBy = submission.submittedBy;
       this.photoDialog = true;
+      this.selectedSubmission = submission;
+    },
+    openSubmissionForm() {
+      this.photoSubmission = { photo: null, description: "" };
+      this.imageURL = null;
+      this.submissionDialog = true;
+      if (this.$refs.submissionform) {
+        this.$refs.submissionform.resetValidation();
+      }
     },
     closeSubmissionForm() {
       this.submissionDialog = false;
+    },
+    async approve() {
+      await this.approveSubmission(this.selectedSubmission);
+      this.selectedSubmission.isApproved = true;
+    },
+    removeSubmission() {
+      this.deleteSubmission(this.selectedSubmission.id);
     },
   },
   mounted() {
@@ -431,7 +475,7 @@ a {
 }
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
   grid-auto-rows: 175px;
   grid-gap: 1rem;
 }

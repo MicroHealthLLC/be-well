@@ -513,11 +513,13 @@ export const createCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -564,11 +566,13 @@ export const updateCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -615,11 +619,13 @@ export const deleteCompetition = /* GraphQL */ `
         items {
           id
           competitionId
+          competitorId
           userId
           image
           description
           submittedBy
           createdAt
+          isApproved
           updatedAt
           owner
         }
@@ -693,11 +699,13 @@ export const createCompetitionSubmission = /* GraphQL */ `
     createCompetitionSubmission(input: $input, condition: $condition) {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }
@@ -711,11 +719,13 @@ export const updateCompetitionSubmission = /* GraphQL */ `
     updateCompetitionSubmission(input: $input, condition: $condition) {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }
@@ -729,11 +739,13 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
     deleteCompetitionSubmission(input: $input, condition: $condition) {
       id
       competitionId
+      competitorId
       userId
       image
       description
       submittedBy
       createdAt
+      isApproved
       updatedAt
       owner
     }

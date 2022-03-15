@@ -1,6 +1,7 @@
+import Vue from "vue";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getCompetition, listCompetitions } from "@/graphql/queries";
-import { createCompetition, createCompetitionSubmission, createCompetitor, deleteCompetition, deleteCompetitor, updateCompetition, } from "@/graphql/mutations"; // prettier-ignore
+import { createCompetition, createCompetitionSubmission, createCompetitor, deleteCompetition, deleteCompetitor, deleteCompetitionSubmission, updateCompetition, updateCompetitor, updateCompetitionSubmission } from "@/graphql/mutations"; // prettier-ignore
 
 export default {
   state: {
@@ -189,11 +190,55 @@ export default {
           message: "Competition Submission Successful!",
           color: "var(--mh-green)",
         });
-        console.log(res);
       } catch (error) {
         console.log(error);
       }
       commit("TOGGLE_SAVING", false);
+    },
+    async deleteSubmission({ commit }, id) {
+      try {
+        API.graphql(
+          graphqlOperation(deleteCompetitionSubmission, { input: { id: id } })
+        );
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Competition Submission Successfully Removed",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async approveSubmission({ commit, getters }, submission) {
+      try {
+        // Send request to mark submission as true
+        const res = await API.graphql(
+          graphqlOperation(updateCompetitionSubmission, {
+            input: { id: submission.id, isApproved: true },
+          })
+        );
+        // Update Competitor score
+        let newScore =
+          getters.competitors.find(
+            (competitor) => competitor.id == submission.competitorId
+          ).score + 10;
+        // Send request to increase competitor score
+        const res2 = await API.graphql(
+          graphqlOperation(updateCompetitor, {
+            input: { id: submission.competitorId, score: newScore },
+          })
+        );
+
+        commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
+        commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Competition Submission Approved!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   mutations: {
@@ -204,14 +249,31 @@ export default {
       state.competition.competitors.items.push(competitor),
     REMOVE_COMPETITOR: (state, id) => {
       const competitors = state.competition.competitors.items;
-      const index = competitors.findIndex((competitor) => (competitor.id = id));
+      const index = competitors.findIndex((competitor) => competitor.id == id);
       competitors.splice(index, 1);
+    },
+    UPDATE_COMPETITOR: (state, updatedCompetitor) => {
+      const competitors = state.competition.competitors.items;
+      const index = competitors.findIndex(
+        (competitor) => competitor.id == updatedCompetitor.id
+      );
+      // Using Vue.set in order to update leader-board since competitor properties
+      // are not explicitly defined in default state (and therefore not reactive)
+      Vue.set(competitors, index, updatedCompetitor);
     },
     ADD_SUBMISSION_PHOTO: (state, submission) =>
       state.competition.submissions.items.unshift(submission),
+    UPDATE_SUBMISSION: (state, updatedSubmission) => {
+      const submissions = state.competition.submissions.items;
+      const index = submissions.findIndex(
+        (submission) => submission.id == updatedSubmission.id
+      );
+      Vue.set(submissions, index, updatedSubmission);
+    },
   },
   getters: {
     competition: (state) => state.competition,
     competitions: (state) => state.competitions,
+    competitors: (state) => state.competition.competitors.items,
   },
 };
