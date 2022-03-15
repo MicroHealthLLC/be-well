@@ -76,7 +76,7 @@
               <v-tab>Submissions</v-tab>
               <v-spacer></v-spacer>
               <v-btn
-                v-if="tab == 1"
+                v-if="tab == 1 && isCompeting(competition)"
                 class="mt-auto"
                 @click="openSubmissionForm"
                 small
@@ -144,6 +144,9 @@
                     <amplify-s3-image
                       :img-key="submission.image"
                     ></amplify-s3-image>
+                    <div v-if="submission.isApproved" class="label" title="Approved Submission">
+                      <v-icon color="success">mdi-check-circle-outline</v-icon>
+                    </div>
                   </div>
                 </v-tab-item>
                 <v-tab-item v-else
@@ -178,7 +181,7 @@
         </v-card-text>
         <v-card-actions class="px-0">
           <v-btn
-            v-if="!competing(competition)"
+            v-if="!isCompeting(competition)"
             @click="joinCompetition"
             class="px-5"
             color="var(--mh-blue)"
@@ -264,20 +267,24 @@
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
+          <div v-if="isEditor">
+            <v-btn
+              v-if="!selectedSubmission.isApproved"
+              @click="approve"
+              color="var(--mh-blue)"
+              dark
+              small
+              depressed
+              >Approve Submission</v-btn
+            >
+            <v-btn v-else color="var(--mh-blue)" dark small depressed
+              >Deny Submission</v-btn
+            >
+          </div>
           <v-btn
-            v-if="!selectedSubmission.isApproved"
-            @click="approve"
-            color="var(--mh-blue)"
-            dark
-            small
-            depressed
-            >Approve Submission</v-btn
-          >
-          <v-btn v-else color="var(--mh-blue)" dark small depressed
-            >Deny Submission</v-btn
-          >
-          <v-btn
+            v-if="canRemoveSubmission"
             @click="removeSubmission"
+            class="ml-2"
             small
             depressed
             outlined
@@ -347,6 +354,12 @@ export default {
         },
       ];
     },
+    canRemoveSubmission() {
+      return (
+        this.selectedSubmission.userId == this.user.attributes.sub ||
+        this.isEditor
+      );
+    },
   },
   methods: {
     ...mapActions([
@@ -372,7 +385,7 @@ export default {
     typeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
     },
-    competing({ competitors }) {
+    isCompeting({ competitors }) {
       let index = competitors.items
         ? competitors.items.findIndex(
             (competitor) => competitor.userId == this.user.attributes.sub
@@ -493,6 +506,15 @@ a {
   /* border: 1px solid gray; */
   border-radius: 5px;
   overflow: hidden;
+  position: relative;
+}
+
+.photo-grid div.label {
+  border: 1px solid #4caf50;
+  background-color: white;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 amplify-s3-image {
   --width: 125%;
