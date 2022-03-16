@@ -144,7 +144,11 @@
                     <amplify-s3-image
                       :img-key="submission.image"
                     ></amplify-s3-image>
-                    <div v-if="submission.isApproved" class="label" title="Approved Submission">
+                    <div
+                      v-if="submission.isApproved"
+                      class="label"
+                      title="Approved Submission"
+                    >
                       <v-icon color="success">mdi-check-circle-outline</v-icon>
                     </div>
                   </div>
@@ -277,7 +281,13 @@
               depressed
               >Approve Submission</v-btn
             >
-            <v-btn v-else color="var(--mh-blue)" dark small depressed
+            <v-btn
+              v-else
+              @click="deny"
+              color="var(--mh-blue)"
+              dark
+              small
+              depressed
               >Deny Submission</v-btn
             >
           </div>
@@ -367,6 +377,7 @@ export default {
       "addSubmission",
       "approveSubmission",
       "deleteSubmission",
+      "denySubmission",
       "fetchCompetition",
       "deleteCompetitor",
     ]),
@@ -440,6 +451,10 @@ export default {
     async approve() {
       await this.approveSubmission(this.selectedSubmission);
       this.selectedSubmission.isApproved = true;
+    },
+    async deny() {
+      await this.denySubmission(this.selectedSubmission);
+      this.selectedSubmission.isApproved = false;
     },
     removeSubmission() {
       this.deleteSubmission(this.selectedSubmission.id);

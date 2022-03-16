@@ -241,6 +241,37 @@ export default {
         console.log(error);
       }
     },
+    async denySubmission({ commit, getters }, submission) {
+      try {
+        // Send request to mark submission as true
+        const res = await API.graphql(
+          graphqlOperation(updateCompetitionSubmission, {
+            input: { id: submission.id, isApproved: false },
+          })
+        );
+        // Update Competitor score
+        let newScore =
+          getters.competitors.find(
+            (competitor) => competitor.id == submission.competitorId
+          ).score - 10;
+        // Send request to increase competitor score
+        const res2 = await API.graphql(
+          graphqlOperation(updateCompetitor, {
+            input: { id: submission.competitorId, score: newScore },
+          })
+        );
+
+        commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
+        commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Competition Submission Approved!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mutations: {
     SET_COMPETITION: (state, competition) => (state.competition = competition),
