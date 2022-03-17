@@ -2,7 +2,7 @@
   <v-card class="pa-sm-10">
     <v-card-text>
       <v-form ref="competitionform" v-model="formValid">
-        <div class="grid">
+        <div class="form-fields">
           <v-text-field
             v-model="competition.title"
             class="title"
@@ -352,14 +352,21 @@ export default {
 </script>
 
 <style scoped>
-.grid {
+.form-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1rem;
 }
 .title,
+.header-image,
 .description,
 .rules {
   grid-column: 1 / span 2;
+}
+@media (max-width: 600px) {
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
