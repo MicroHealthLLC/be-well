@@ -74,15 +74,7 @@
               <v-tabs-slider color="var(--mh-green)">></v-tabs-slider>
               <v-tab>Details</v-tab>
               <v-tab>Submissions</v-tab>
-              <v-spacer></v-spacer>
-              <v-btn
-                v-if="tab == 1 && isCompeting(competition)"
-                class="mt-auto"
-                @click="openSubmissionForm"
-                small
-                outlined
-                >Add Photo<v-icon small right>mdi-plus</v-icon></v-btn
-              >
+
               <v-tabs-items v-model="tab" class="pt-5">
                 <v-tab-item class="mb-5">
                   <div class="pb-2">
@@ -133,23 +125,37 @@
                 <!-- Submission Photos -->
                 <v-tab-item
                   v-if="competition.submissions.items.length > 0"
-                  class="photo-grid mb-5"
+                  class="mb-5"
                 >
-                  <div
-                    v-for="submission in competition.submissions.items"
-                    :key="submission.id"
-                    @click="openPhoto(submission, $event)"
-                    class="d-flex mx-auto align-center clickable"
-                  >
-                    <amplify-s3-image
-                      :img-key="submission.image"
-                    ></amplify-s3-image>
-                    <div
-                      v-if="submission.isApproved"
-                      class="label"
-                      title="Approved Submission"
+                  <div class="d-flex justify-end mb-3">
+                    <v-btn
+                      v-if="tab == 1 && isCompeting(competition)"
+                      @click="openSubmissionForm"
+                      small
+                      outlined
+                      >Add Photo<v-icon small right>mdi-plus</v-icon></v-btn
                     >
-                      <v-icon color="success">mdi-check-circle-outline</v-icon>
+                  </div>
+
+                  <div class="photo-grid">
+                    <div
+                      v-for="submission in competition.submissions.items"
+                      :key="submission.id"
+                      @click="openPhoto(submission, $event)"
+                      class="d-flex mx-auto align-center clickable"
+                    >
+                      <amplify-s3-image
+                        :img-key="submission.image"
+                      ></amplify-s3-image>
+                      <div
+                        v-if="submission.isApproved"
+                        class="label"
+                        title="Approved Submission"
+                      >
+                        <v-icon color="success"
+                          >mdi-check-circle-outline</v-icon
+                        >
+                      </div>
                     </div>
                   </div>
                 </v-tab-item>
@@ -199,7 +205,7 @@
       </v-card>
     </div>
     <!-- Submission Dialog -->
-    <v-dialog v-model="submissionDialog" width="800">
+    <v-dialog v-model="submissionDialog" width="700">
       <v-card>
         <v-card-title
           ><div>Submit Photo</div>
@@ -473,12 +479,6 @@ export default {
   grid-template-columns: 1.95fr 1.05fr;
   column-gap: 2rem;
 }
-@media (max-width: 600px) {
-  .grid {
-    display: flex;
-    flex-direction: column;
-  }
-}
 .description,
 .rsvp {
   /* grid-column: 1 / span 2; */
@@ -523,7 +523,6 @@ a {
   overflow: hidden;
   position: relative;
 }
-
 .photo-grid div.label {
   border: 1px solid #4caf50;
   background-color: white;
@@ -535,5 +534,15 @@ amplify-s3-image {
   --width: 125%;
   position: relative;
   transform: translateX(-10%);
+}
+@media (max-width: 600px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: 250px;
+}
 }
 </style>
