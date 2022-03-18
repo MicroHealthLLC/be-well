@@ -51,6 +51,7 @@ export default {
       delete competition.createdAt;
       delete competition.updatedAt;
       delete competition.competitors;
+      delete competition.submissions;
 
       try {
         if (competition.image && competition.image.name) {
