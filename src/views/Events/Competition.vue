@@ -207,7 +207,7 @@
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
       <v-card>
-        <v-card-title
+        <v-card-title class="pa-2"
           ><div>Submit Photo</div>
           <v-spacer></v-spacer>
           <v-btn @click="closeSubmissionForm" fab depressed x-small outlined
@@ -266,7 +266,7 @@
             ><v-icon>mdi-close</v-icon></v-btn
           >
         </div>
-        <v-card-title
+        <v-card-title class="px-0"
           ><v-img :src="dialogPhoto.src" max-height="500" contain
         /></v-card-title>
 
@@ -542,7 +542,7 @@ amplify-s3-image {
   }
   .photo-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-auto-rows: 250px;
-}
+    grid-auto-rows: 250px;
+  }
 }
 </style>
