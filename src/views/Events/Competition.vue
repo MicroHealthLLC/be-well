@@ -144,24 +144,20 @@
                     <div
                       v-for="submission in competition.submissions.items"
                       :key="submission.id"
-                      class="
-                        d-flex
-                        mx-auto
-                        align-center
-                        justify-center
-                        clickable
-                      "
+                      class="d-flex mx-auto align-center justify-center"
                     >
                       <video
                         v-if="submission.type == 'VIDEO'"
                         @click="openVideo(submission, $event)"
                         :src="submission.url"
                         height="100%"
+                        class="clickable"
                       ></video>
                       <amplify-s3-image
                         @click="openPhoto(submission, $event)"
                         v-else
                         :img-key="submission.s3Key"
+                        class="clickable"
                       ></amplify-s3-image>
                       <div
                         v-if="submission.isApproved"
@@ -234,6 +230,7 @@
               label="Photo or Video"
               accept="image/*,video/*"
               prepend-icon="mdi-camera"
+              truncate-length="50"
               required
               :rules="mediaRules"
             ></v-file-input>
@@ -253,13 +250,16 @@
               ]"
             ></v-textarea>
           </v-form>
-          <div v-if="mediaURL">
+          <div v-if="mediaURL" class="submission-container">
             <v-img
               v-if="newSubmission.media.type.includes('image')"
+              class="submission"
               :src="mediaURL"
+              contain
             ></v-img>
             <video
               v-else
+              class="submission"
               @loadeddata="setVideoDuration"
               id="submission-video-player"
               :src="mediaURL"
@@ -675,5 +675,12 @@ amplify-s3-image {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.submission-container {
+  max-height: 500px;
+  background-color: black;
+}
+.submission {
+  max-height: inherit;
 }
 </style>
