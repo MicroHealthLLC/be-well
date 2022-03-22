@@ -123,29 +123,45 @@
                   </div>
                 </v-tab-item>
                 <!-- Submission Photos -->
-                <v-tab-item
-                  v-if="competition.submissions.items.length > 0"
-                  class="mb-5"
-                >
+                <v-tab-item class="mb-5">
                   <div class="d-flex justify-end mb-3">
                     <v-btn
                       v-if="tab == 1 && isCompeting(competition)"
                       @click="openSubmissionForm"
                       small
                       outlined
-                      >Add Photo<v-icon small right>mdi-plus</v-icon></v-btn
+                      >Add<v-icon small right>mdi-plus</v-icon></v-btn
                     >
                   </div>
+                  <div
+                    v-if="competition.submissions.items.length <= 0"
+                    class="d-flex justify-center align-center pa-10"
+                  >
+                    No One has submitted anything yet...
+                  </div>
 
-                  <div class="photo-grid">
+                  <div v-else class="photo-grid">
                     <div
                       v-for="submission in competition.submissions.items"
                       :key="submission.id"
-                      @click="openPhoto(submission, $event)"
-                      class="d-flex mx-auto align-center clickable"
+                      class="
+                        d-flex
+                        mx-auto
+                        align-center
+                        justify-center
+                        clickable
+                      "
                     >
+                      <video
+                        v-if="submission.type == 'VIDEO'"
+                        @click="openVideo(submission, $event)"
+                        :src="submission.url"
+                        height="100%"
+                      ></video>
                       <amplify-s3-image
-                        :img-key="submission.image"
+                        @click="openPhoto(submission, $event)"
+                        v-else
+                        :img-key="submission.s3Key"
                       ></amplify-s3-image>
                       <div
                         v-if="submission.isApproved"
@@ -159,11 +175,6 @@
                     </div>
                   </div>
                 </v-tab-item>
-                <v-tab-item v-else
-                  ><div class="d-flex justify-center align-center pa-10">
-                    No One has submitted anything yet...
-                  </div></v-tab-item
-                >
               </v-tabs-items>
             </v-tabs>
           </div>
@@ -207,8 +218,8 @@
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
       <v-card>
-        <v-card-title class="pa-2"
-          ><div>Submit Photo</div>
+        <v-card-title
+          ><div>Add Submission</div>
           <v-spacer></v-spacer>
           <v-btn @click="closeSubmissionForm" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -217,17 +228,17 @@
         <v-card-text>
           <v-form ref="submissionform">
             <v-file-input
-              v-model="photoSubmission.photo"
-              @change="uploadImage"
-              @click:clear="removeImage"
-              label="Photo"
-              accept="image/*"
+              v-model="newSubmission.media"
+              @change="uploadMedia"
+              @click:clear="removeMedia"
+              label="Photo or Video"
+              accept="image/*,video/*"
               prepend-icon="mdi-camera"
               required
-              :rules="[(v) => !!v || 'A photo is required']"
+              :rules="[(v) => !!v || 'A photo or video is required']"
             ></v-file-input>
             <v-textarea
-              v-model="photoSubmission.description"
+              v-model="newSubmission.description"
               label="Description"
               class="mt-2"
               filled
@@ -242,11 +253,23 @@
               ]"
             ></v-textarea>
           </v-form>
-          <v-img v-if="imageURL" :src="imageURL"></v-img>
+          <div v-if="mediaURL">
+            <v-img
+              v-if="newSubmission.media.type.includes('image')"
+              :src="mediaURL"
+            ></v-img>
+            <video
+              v-else
+              id="submission-video-player"
+              :src="mediaURL"
+              controls
+              width="100%"
+            ></video>
+          </div>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
           <v-btn
-            @click="submitPhoto"
+            @click="submitMedia"
             class="px-5"
             :disabled="saving"
             color="var(--mh-blue)"
@@ -310,6 +333,63 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Video Dialog -->
+    <v-dialog v-model="videoDialog" class="overflow-auto">
+      <v-card width="700">
+        <div class="d-flex justify-end pr-5 pt-2">
+          <v-btn @click="videoDialog = false" fab depressed x-small outlined
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </div>
+        <div class="dialog-video-container my-3">
+          <video
+            class="dialog-video"
+            :src="dialogVideo.src"
+            frameborder="5px"
+            controls
+          ></video>
+        </div>
+
+        <v-card-text class="text-caption">
+          <div>
+            <strong>Submitted By: </strong>{{ dialogVideo.submittedBy }}
+          </div>
+          <div><strong>Description: </strong>{{ dialogVideo.description }}</div>
+        </v-card-text>
+        <v-card-actions class="pb-5">
+          <div v-if="isEditor">
+            <v-btn
+              v-if="!selectedSubmission.isApproved"
+              @click="approve"
+              color="var(--mh-blue)"
+              dark
+              small
+              depressed
+              >Approve Submission</v-btn
+            >
+            <v-btn
+              v-else
+              @click="deny"
+              color="var(--mh-blue)"
+              dark
+              small
+              depressed
+              >Deny Submission</v-btn
+            >
+          </div>
+          <v-btn
+            v-if="canRemoveSubmission"
+            @click="removeSubmission"
+            class="ml-2"
+            small
+            depressed
+            outlined
+            :loading="saving"
+            ><v-icon small left>mdi-delete</v-icon>Delete</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -324,15 +404,21 @@ export default {
     return {
       submissionDialog: false,
       photoDialog: false,
-      imageURL: null,
+      videoDialog: false,
+      mediaURL: null,
       dialogPhoto: {
         src: "",
         description: "",
         submittedBy: "",
       },
+      dialogVideo: {
+        src: "",
+        description: "",
+        submittedBy: "",
+      },
       tab: null,
-      photoSubmission: {
-        photo: null,
+      newSubmission: {
+        media: null,
         description: "",
       },
       selectedSubmission: {},
@@ -411,26 +497,35 @@ export default {
 
       return index >= 0 ? true : false;
     },
-    uploadImage(e) {
+    uploadMedia(e) {
       if (e) {
         const file = e;
-        this.imageURL = URL.createObjectURL(file);
+        this.mediaURL = URL.createObjectURL(file);
       }
     },
-    removeImage() {
-      this.imageURL = null;
+    removeMedia() {
+      this.mediaURL = null;
     },
-    async submitPhoto() {
+    async submitMedia() {
+      let videoPlayer = document.getElementById("submission-video-player");
+      console.log(videoPlayer?.duration);
+      console.log(this.$refs.submissionform);
       if (!this.$refs.submissionform.validate()) {
         return;
       }
+
+      let mediaType = this.newSubmission.media.type.includes("image")
+        ? "PHOTO"
+        : "VIDEO";
+
       let submission = {
         competitorId: this.competitorId,
         competitionId: this.competition.id,
         userId: this.user.attributes.sub,
-        image: this.photoSubmission.photo,
-        description: this.photoSubmission.description,
+        media: this.newSubmission.media,
+        description: this.newSubmission.description,
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
+        type: mediaType,
       };
       await this.addSubmission(submission);
       this.closeSubmissionForm();
@@ -443,9 +538,18 @@ export default {
       this.photoDialog = true;
       this.selectedSubmission = submission;
     },
+    openVideo(submission, e) {
+      let video = e.target;
+      video.onplay = () => video.pause();
+      this.dialogVideo.description = submission.description;
+      this.dialogVideo.src = video.currentSrc;
+      this.dialogVideo.submittedBy = submission.submittedBy;
+      this.videoDialog = true;
+      this.selectedSubmission = submission;
+    },
     openSubmissionForm() {
-      this.photoSubmission = { photo: null, description: "" };
-      this.imageURL = null;
+      this.newSubmission = { photo: null, description: "" };
+      this.mediaURL = null;
       this.submissionDialog = true;
       if (this.$refs.submissionform) {
         this.$refs.submissionform.resetValidation();
@@ -465,6 +569,7 @@ export default {
     removeSubmission() {
       this.deleteSubmission(this.selectedSubmission.id);
       this.photoDialog = false;
+      this.videoDialog = false;
     },
   },
   mounted() {
@@ -516,17 +621,18 @@ a {
   grid-auto-rows: 175px;
   grid-gap: 1rem;
 }
-.photo-grid div {
-  background-color: lightgrey;
-  /* border: 1px solid gray; */
+.photo-grid > div {
+  background-color: black;
   border-radius: 5px;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
-.photo-grid div.label {
+.label {
   border: 1px solid #4caf50;
   background-color: white;
   position: absolute;
+  border-radius: 5px;
   top: 5px;
   right: 5px;
 }
@@ -544,5 +650,19 @@ amplify-s3-image {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: 250px;
   }
+}
+.dialog-video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  background-color: black;
+}
+.dialog-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

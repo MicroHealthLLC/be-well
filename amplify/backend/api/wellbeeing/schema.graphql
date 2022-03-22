@@ -170,11 +170,12 @@ type CompetitionSubmission
   competitionId: ID! @index(name: "bySubmission", sortKeyFields: ["createdAt"])
   competitorId: ID!
   userId: ID!
-  image: String
+  s3Key: String
   description: String
   submittedBy: String
   createdAt: AWSDateTime!
   isApproved: Boolean @default(value: "false")
+  type: SubmissionType
 }
 
 enum Category {
@@ -206,4 +207,9 @@ enum TimeZone {
   MST
   CST
   EST
+}
+
+enum SubmissionType {
+  PHOTO
+  VIDEO
 }

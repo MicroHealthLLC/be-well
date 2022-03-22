@@ -108,6 +108,15 @@ export default {
           graphqlOperation(getCompetition, { id: id })
         );
 
+        await Promise.all(
+          res.data.getCompetition.submissions.items.map(async (submission) => {
+            if (submission.s3Key) {
+              const url = await Storage.get(submission.s3Key);
+              submission.url = url;
+            }
+          })
+        );
+
         if (res.data.getCompetition.image) {
           const image = await Storage.get(res.data.getCompetition.image);
           commit("SET_COMPETITION", {
@@ -175,11 +184,15 @@ export default {
     async addSubmission({ commit }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
-        if (submission.image) {
-          const name = `competitions/submissions/${submission.image.name}`;
-          const image = await Storage.put(name, submission.image);
-          submission.image = image.key;
+        if (submission.media) {
+          console.log(submission.media);
+          const name = `competitions/submissions/${submission.media.name}`;
+          const media = await Storage.put(name, submission.media);
+          submission.s3Key = media.key;
         }
+
+        delete submission.media;
+
         const res = await API.graphql(
           graphqlOperation(createCompetitionSubmission, { input: submission })
         );

@@ -364,11 +364,12 @@ export const getCompetition = /* GraphQL */ `
           competitionId
           competitorId
           userId
-          image
+          s3Key
           description
           submittedBy
           createdAt
           isApproved
+          type
           updatedAt
           owner
         }
@@ -457,11 +458,12 @@ export const getCompetitionSubmission = /* GraphQL */ `
       competitionId
       competitorId
       userId
-      image
+      s3Key
       description
       submittedBy
       createdAt
       isApproved
+      type
       updatedAt
       owner
     }
@@ -483,11 +485,12 @@ export const listCompetitionSubmissions = /* GraphQL */ `
         competitionId
         competitorId
         userId
-        image
+        s3Key
         description
         submittedBy
         createdAt
         isApproved
+        type
         updatedAt
         owner
       }
