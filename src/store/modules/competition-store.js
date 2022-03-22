@@ -185,7 +185,6 @@ export default {
       commit("TOGGLE_SAVING", true);
       try {
         if (submission.media) {
-          console.log(submission.media);
           const name = `competitions/submissions/${submission.media.name}`;
           const media = await Storage.put(name, submission.media);
           submission.s3Key = media.key;
@@ -196,7 +195,14 @@ export default {
         const res = await API.graphql(
           graphqlOperation(createCompetitionSubmission, { input: submission })
         );
-        commit("ADD_SUBMISSION_PHOTO", res.data.createCompetitionSubmission);
+
+        const newSubmission = res.data.createCompetitionSubmission;
+        if (newSubmission.type == "VIDEO") {
+          const url = await Storage.get(submission.s3Key);
+          newSubmission.url = url;
+        }
+
+        commit("ADD_SUBMISSION_PHOTO", newSubmission);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successful!",
