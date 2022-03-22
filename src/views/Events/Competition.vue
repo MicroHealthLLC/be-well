@@ -235,7 +235,7 @@
               accept="image/*,video/*"
               prepend-icon="mdi-camera"
               required
-              :rules="[(v) => !!v || 'A photo or video is required']"
+              :rules="mediaRules"
             ></v-file-input>
             <v-textarea
               v-model="newSubmission.description"
@@ -260,6 +260,7 @@
             ></v-img>
             <video
               v-else
+              @loadeddata="setVideoDuration"
               id="submission-video-player"
               :src="mediaURL"
               controls
@@ -405,6 +406,7 @@ export default {
       submissionDialog: false,
       photoDialog: false,
       videoDialog: false,
+      videoDuration: null,
       mediaURL: null,
       dialogPhoto: {
         src: "",
@@ -431,6 +433,13 @@ export default {
           text: "Score",
           value: "score",
         },
+      ],
+      mediaRules: [
+        (v) => !!v || "A photo or video is required",
+        () =>
+          this.newSubmission.media?.type.includes("image") ||
+          this.videoDuration < 60 ||
+          "Video duration must be less than 60 seconds",
       ],
     };
   },
@@ -507,9 +516,6 @@ export default {
       this.mediaURL = null;
     },
     async submitMedia() {
-      let videoPlayer = document.getElementById("submission-video-player");
-      console.log(videoPlayer?.duration);
-      console.log(this.$refs.submissionform);
       if (!this.$refs.submissionform.validate()) {
         return;
       }
@@ -557,6 +563,7 @@ export default {
     },
     closeSubmissionForm() {
       this.submissionDialog = false;
+      this.videoDuration = null;
     },
     async approve() {
       await this.approveSubmission(this.selectedSubmission);
@@ -570,6 +577,10 @@ export default {
       this.deleteSubmission(this.selectedSubmission.id);
       this.photoDialog = false;
       this.videoDialog = false;
+    },
+    setVideoDuration() {
+      let videoPlayer = document.getElementById("submission-video-player");
+      this.videoDuration = videoPlayer.duration;
     },
   },
   mounted() {
