@@ -213,7 +213,7 @@
     </div>
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
-      <v-card>
+      <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Add Submission</div>
           <v-spacer></v-spacer>
@@ -222,7 +222,7 @@
           ></v-card-title
         >
         <v-card-text>
-          <v-form ref="submissionform">
+          <v-form ref="submissionform" :disabled="saving">
             <v-file-input
               v-model="newSubmission.media"
               @change="uploadMedia"
