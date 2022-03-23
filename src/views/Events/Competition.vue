@@ -33,7 +33,7 @@
           ><div class="mb-2">Hosted by: {{ competition.hostName }}</div>
           <div>
             <v-chip class="mr-1" color="primary" outlined small
-              ><v-icon small left>mdi-run</v-icon>Step Count</v-chip
+              ><v-icon small left>mdi-office-building</v-icon>Company Clash</v-chip
             ><v-chip color="primary" outlined small>{{
               timeDistance(
                 competition.startDate,

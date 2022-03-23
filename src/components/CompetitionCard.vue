@@ -28,8 +28,8 @@
         </div>
         <div class="mb-2">
           <v-chip class="mr-2" color="primary" small outlined
-            ><v-icon small left>mdi-run</v-icon
-            >Step Count</v-chip
+            ><v-icon small left>mdi-office-building</v-icon
+            >Company Clash</v-chip
           >
           <v-chip color="primary" small outlined>{{
             fullDate(competition.startDate)
