@@ -86,7 +86,7 @@ export default {
     async fetchCompetitions({ commit }) {
       try {
         const res = await API.graphql(graphqlOperation(listCompetitions));
-        // Grab all photos from Storage
+        // Grab all header photos from Storage
         const competitions = await Promise.all(
           res.data.listCompetitions.items.map(async (competition) => {
             if (competition.image) {
@@ -180,7 +180,7 @@ export default {
         console.log(error);
       }
     },
-    // Photo Submission Requests
+    // Media (photo or video) Submission Requests
     async addSubmission({ commit }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
@@ -202,7 +202,7 @@ export default {
           newSubmission.url = url;
         }
 
-        commit("ADD_SUBMISSION_PHOTO", newSubmission);
+        commit("ADD_SUBMISSION", newSubmission);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successful!",
@@ -219,7 +219,7 @@ export default {
         API.graphql(
           graphqlOperation(deleteCompetitionSubmission, { input: { id: id } })
         );
-        commit("REMOVE_SUBMISSION_PHOTO", id);
+        commit("REMOVE_SUBMISSION", id);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successfully Removed",
@@ -239,10 +239,11 @@ export default {
           })
         );
         // Update Competitor score
+        let points = submission.type == "VIDEO" ? 5 : 3;
         let newScore =
           getters.competitors.find(
             (competitor) => competitor.id == submission.competitorId
-          ).score + 10;
+          ).score + points;
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
@@ -270,10 +271,11 @@ export default {
           })
         );
         // Update Competitor score
+        let points = submission.type == "VIDEO" ? 5 : 3;
         let newScore =
           getters.competitors.find(
             (competitor) => competitor.id == submission.competitorId
-          ).score - 10;
+          ).score - points;
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
@@ -313,9 +315,9 @@ export default {
       // are not explicitly defined in default state (and therefore not reactive)
       Vue.set(competitors, index, updatedCompetitor);
     },
-    ADD_SUBMISSION_PHOTO: (state, submission) =>
+    ADD_SUBMISSION: (state, submission) =>
       state.competition.submissions.items.unshift(submission),
-    REMOVE_SUBMISSION_PHOTO: (state, id) => {
+    REMOVE_SUBMISSION: (state, id) => {
       const index = state.competition.submissions.items.findIndex(
         (submission) => submission.id == id
       );
