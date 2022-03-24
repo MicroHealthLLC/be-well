@@ -161,7 +161,11 @@ type CompetitionSubmission
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [create, read, update, delete]
+      }
       { allow: owner, operations: [create, delete] }
       { allow: private, operations: [read] }
     ]

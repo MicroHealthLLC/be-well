@@ -260,6 +260,11 @@ export default {
         });
       } catch (error) {
         console.log(error);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: error.errors[0].message,
+          color: "var(--mh-orange)",
+        });
       }
     },
     async denySubmission({ commit, getters }, submission) {
@@ -287,11 +292,16 @@ export default {
         commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Competition Submission Approved!",
-          color: "var(--mh-green)",
+          message: "Competition Submission Denied!",
+          color: "var(--mh-orange)",
         });
       } catch (error) {
         console.log(error);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: error.errors[0].message,
+          color: "var(--mh-orange)",
+        });
       }
     },
   },
