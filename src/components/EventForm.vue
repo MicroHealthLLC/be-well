@@ -335,4 +335,10 @@ export default {
 .description {
   grid-column: 1 / span 2;
 }
+@media (max-width: 600px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+}
 </style>
