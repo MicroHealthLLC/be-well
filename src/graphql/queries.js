@@ -330,6 +330,174 @@ export const listEvents = /* GraphQL */ `
     }
   }
 `;
+export const getCompetition = /* GraphQL */ `
+  query GetCompetition($id: ID!) {
+    getCompetition(id: $id) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCompetitions = /* GraphQL */ `
+  query ListCompetitions(
+    $filter: ModelCompetitionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        hostName
+        hostEmail
+        title
+        description
+        rules
+        startDate
+        endDate
+        startTime
+        endTime
+        timeZone
+        competitors {
+          nextToken
+        }
+        submissions {
+          nextToken
+        }
+        image
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCompetitor = /* GraphQL */ `
+  query GetCompetitor($id: ID!) {
+    getCompetitor(id: $id) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCompetitors = /* GraphQL */ `
+  query ListCompetitors(
+    $filter: ModelCompetitorFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitors(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        competitionId
+        userId
+        firstName
+        lastName
+        score
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCompetitionSubmission = /* GraphQL */ `
+  query GetCompetitionSubmission($id: ID!) {
+    getCompetitionSubmission(id: $id) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCompetitionSubmissions = /* GraphQL */ `
+  query ListCompetitionSubmissions(
+    $filter: ModelCompetitionSubmissionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitionSubmissions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        competitionId
+        competitorId
+        userId
+        s3Key
+        description
+        submittedBy
+        createdAt
+        isApproved
+        type
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category!

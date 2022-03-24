@@ -115,6 +115,73 @@ type Participant {
   email: AWSEmail
 }
 
+type Competition
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  hostName: String!
+  hostEmail: AWSEmail!
+  title: String!
+  description: String!
+  rules: String
+  startDate: AWSDate!
+  endDate: AWSDate!
+  startTime: String!
+  endTime: String!
+  timeZone: TimeZone
+  competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
+  submissions: [CompetitionSubmission]
+    @hasMany(indexName: "bySubmission", fields: ["id"])
+  image: String
+}
+
+type Competitor
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: owner, operations: [create, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "byCompetition", sortKeyFields: ["lastName"])
+  userId: ID!
+  firstName: String!
+  lastName: String!
+  score: Int @default(value: "0")
+}
+
+type CompetitionSubmission
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [create, read, update, delete]
+      }
+      { allow: owner, operations: [create, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "bySubmission", sortKeyFields: ["createdAt"])
+  competitorId: ID!
+  userId: ID!
+  s3Key: String
+  description: String
+  submittedBy: String
+  createdAt: AWSDateTime!
+  isApproved: Boolean @default(value: "false")
+  type: SubmissionType
+}
+
 enum Category {
   MEDITATION
   MUSCLE
@@ -144,4 +211,9 @@ enum TimeZone {
   MST
   CST
   EST
+}
+
+enum SubmissionType {
+  PHOTO
+  VIDEO
 }

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import articleStore from "./modules/article-store";
 import authStore from "./modules/auth";
+import competitionStore from "./modules/competition-store";
 import eventStore from "./modules/event-store";
 import goalStore from "./modules/goal-store";
 import reminderStore from "./modules/reminder-store";
@@ -34,6 +35,7 @@ export default new Vuex.Store({
   modules: {
     articleStore,
     authStore,
+    competitionStore,
     eventStore,
     goalStore,
     reminderStore,

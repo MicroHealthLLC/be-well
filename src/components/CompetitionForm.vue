@@ -1,23 +1,23 @@
 <template>
   <v-card class="pa-sm-10">
     <v-card-text>
-      <v-form ref="eventform" v-model="formValid">
-        <div class="grid">
+      <v-form ref="competitionform" v-model="formValid">
+        <div class="form-fields">
           <v-text-field
-            v-model="event.title"
+            v-model="competition.title"
             class="title"
             label="Title"
             :rules="[(v) => !!v || 'Title is required']"
             required
           ></v-text-field>
           <v-text-field
-            v-model="event.hostName"
+            v-model="competition.hostName"
             label="Host Name"
             :rules="[(v) => !!v || 'Host Name is required']"
             required
           ></v-text-field>
           <v-text-field
-            v-model="event.hostEmail"
+            v-model="competition.hostEmail"
             label="Host Email"
             :rules="[
               (v) => !!v || 'Email is required',
@@ -28,16 +28,9 @@
             required
             validate-on-blur
           ></v-text-field>
-          <v-select
-            v-model="event.type"
-            label="Type"
-            :items="['Live Virtual', 'Live In-Person']"
-            :rules="[(v) => !!v || 'Type is required']"
-            required
-          ></v-select>
-          <!-- Date Picker -->
+          <!-- Start Date Picker -->
           <v-menu
-            v-model="dateMenu"
+            v-model="startDateMenu"
             :close-on-content-click="false"
             :nudge-right="40"
             transition="scale-transition"
@@ -46,18 +39,44 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="event.date"
-                label="Date"
+                v-model="competition.startDate"
+                label="Start Date"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
                 v-on="on"
-                :rules="[(v) => !!v || 'Date is required']"
+                :rules="[(v) => !!v || 'Start Date is required']"
                 required
               ></v-text-field>
             </template>
             <v-date-picker
-              v-model="event.date"
+              v-model="competition.startDate"
+              @input="menu = false"
+            ></v-date-picker>
+          </v-menu>
+          <!-- End Date Picker -->
+          <v-menu
+            v-model="endDateMenu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="competition.endDate"
+                label="End Date"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                :rules="[(v) => !!v || 'End Date is required']"
+                required
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="competition.endDate"
               @input="menu = false"
             ></v-date-picker>
           </v-menu>
@@ -67,7 +86,7 @@
             v-model="startTimeMenu"
             :close-on-content-click="false"
             :nudge-right="40"
-            :return-value.sync="event.startTime"
+            :return-value.sync="competition.startTime"
             transition="scale-transition"
             offset-y
             max-width="290px"
@@ -75,7 +94,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="event.startTime"
+                v-model="competition.startTime"
                 label="Start Time"
                 prepend-icon="mdi-clock-time-four-outline"
                 :suffix="selectedTimeZone"
@@ -88,10 +107,10 @@
             </template>
             <v-time-picker
               v-if="startTimeMenu"
-              v-model="event.startTime"
+              v-model="competition.startTime"
               format="24hr"
               full-width
-              @click:minute="$refs.starttimemenu.save(event.startTime)"
+              @click:minute="$refs.starttimemenu.save(competition.startTime)"
             >
               <template v-slot:default>
                 <div class="mx-auto">
@@ -115,7 +134,7 @@
             v-model="endTimeMenu"
             :close-on-content-click="false"
             :nudge-right="40"
-            :return-value.sync="event.endTime"
+            :return-value.sync="competition.endTime"
             transition="scale-transition"
             offset-y
             max-width="290px"
@@ -123,7 +142,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="event.endTime"
+                v-model="competition.endTime"
                 label="End Time"
                 prepend-icon="mdi-clock-time-four-outline"
                 :suffix="selectedTimeZone"
@@ -136,10 +155,10 @@
             </template>
             <v-time-picker
               v-if="endTimeMenu"
-              v-model="event.endTime"
+              v-model="competition.endTime"
               format="24hr"
               full-width
-              @click:minute="$refs.endtimemenu.save(event.endTime)"
+              @click:minute="$refs.endtimemenu.save(competition.endTime)"
               ><template v-slot:default>
                 <div class="mx-auto">
                   <v-btn-toggle
@@ -159,7 +178,7 @@
           <!-- Photo Input -->
           <v-file-input
             v-if="newImage"
-            v-model="event.image"
+            v-model="competition.image"
             @change="uploadImage"
             @click:clear="removeImage"
             label="Header Photo"
@@ -169,17 +188,10 @@
           <v-text-field
             v-else
             @click:clear="removeImage"
-            v-model="event.image"
+            v-model="competition.image"
             label="Header Photo"
             prepend-icon="mdi-camera"
             clearable
-          ></v-text-field>
-          <v-text-field
-            v-model="event.link"
-            label="Event Link"
-            prepend-icon="mdi-link"
-            :rules="[(v) => !!v || 'Link is required']"
-            required
           ></v-text-field>
           <!-- Header Image -->
           <v-img
@@ -188,13 +200,23 @@
             class="header-image mb-5"
           ></v-img>
           <v-textarea
-            v-model="event.description"
+            v-model="competition.description"
             class="description"
             label="Description"
             filled
             outlined
             auto-grow
             :rules="[(v) => !!v || 'Description is required']"
+            required
+          ></v-textarea>
+          <v-textarea
+            v-model="competition.rules"
+            class="rules"
+            label="Rules"
+            filled
+            outlined
+            auto-grow
+            :rules="[(v) => !!v || 'Rules is required']"
             required
           ></v-textarea>
         </div>
@@ -210,22 +232,23 @@
       >
       <v-btn
         v-if="!isEditing"
-        @click="addNewEvent"
+        @click="addNewCompetition"
         class="px-5"
         color="#2f53b6"
         dark
-        >Add Event</v-btn
+        >Add Competition</v-btn
       >
       <v-btn v-else @click="update" class="px-5" color="#2f53b6" dark
-        >Update Event</v-btn
+        >Update Competition</v-btn
       >
     </v-card-actions>
     <!-- Delete Dialog -->
     <v-dialog v-model="deleteDialog">
       <v-card>
-        <v-card-title>Delete Event?</v-card-title>
+        <v-card-title>Delete Competition?</v-card-title>
         <v-card-text
-          >Are you sure you want to delete <strong>{{ event.title }}</strong
+          >Are you sure you want to delete
+          <strong>{{ competition.title }}</strong
           >?</v-card-text
         >
         <v-card-actions class="justify-end">
@@ -233,7 +256,7 @@
             >Cancel</v-btn
           >
           <v-btn
-            @click="removeEvent"
+            @click="removeCompetition"
             class="px-5"
             color="var(--mh-blue)"
             small
@@ -250,37 +273,54 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "EventForm",
+  name: "CompetitionForm",
   data() {
     return {
-      dateMenu: false,
+      formValid: true,
+      startDateMenu: false,
+      endDateMenu: false,
       startTimeMenu: false,
       endTimeMenu: false,
-      imageURL: null,
-      formValid: true,
-      deleteDialog: false,
       timeZone: 3,
       timeZones: ["PST", "MST", "CST", "EST"],
+      imageURL: null,
+      deleteDialog: false,
     };
   },
+  computed: {
+    ...mapGetters(["competition"]),
+    isEditing() {
+      return this.competition.id;
+    },
+    newImage() {
+      let imageType = typeof this.competition.image;
+
+      return (
+        !this.competition.image || !this.competition.id || imageType != "string"
+      );
+    },
+    selectedTimeZone() {
+      return this.timeZones[this.timeZone];
+    },
+  },
   methods: {
-    ...mapActions(["addEvent", "deleteEvent", "updateEvent"]),
-    async addNewEvent() {
-      if (!this.$refs.eventform.validate()) {
+    ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
+    async addNewCompetition() {
+      if (!this.$refs.competitionform.validate()) {
         return;
       }
-      this.addEvent(this.event);
+      this.addCompetition(this.competition);
     },
     async update() {
-      if (!this.$refs.eventform.validate()) {
+      if (!this.$refs.competitionform.validate()) {
         return;
       }
-      this.updateEvent(this.event);
+      this.updateCompetition(this.competition);
     },
-    async removeEvent() {
-      await this.deleteEvent(this.event.id);
+    async removeCompetition() {
+      await this.deleteCompetition(this.competition.id);
       this.deleteDialog = false;
-      this.$router.push("/events/live-events");
+      this.$router.push("/events/competitions");
     },
     uploadImage(e) {
       if (e) {
@@ -292,47 +332,41 @@ export default {
       this.imageURL = null;
     },
     updateTimeZone() {
-      this.event.timeZone = this.selectedTimeZone;
-    },
-  },
-  computed: {
-    ...mapGetters(["event"]),
-    isEditing() {
-      return this.event.id;
-    },
-    newImage() {
-      let imageType = typeof this.event.image;
-
-      return !this.event.image || !this.event.id || imageType != "string";
-    },
-    selectedTimeZone() {
-      return this.timeZones[this.timeZone];
+      this.competition.timeZone = this.selectedTimeZone;
     },
   },
   watch: {
-    event() {
-      if (this.event.image) {
-        this.imageURL = this.event.imageURL;
+    competition() {
+      if (this.competition.image) {
+        this.imageURL = this.competition.imageURL;
       }
       this.timeZone = this.timeZones.findIndex(
-        (zone) => zone == this.event.timeZone
+        (zone) => zone == this.competition.timeZone
       );
     },
   },
   mounted() {
-    this.$refs.eventform.resetValidation();
+    this.$refs.competitionform.resetValidation();
   },
 };
 </script>
 
 <style scoped>
-.grid {
+.form-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1rem;
 }
 .title,
-.description {
+.header-image,
+.description,
+.rules {
   grid-column: 1 / span 2;
+}
+@media (max-width: 600px) {
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

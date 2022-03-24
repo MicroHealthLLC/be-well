@@ -415,3 +415,255 @@ export const onDeleteEvent = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCompetition = /* GraphQL */ `
+  subscription OnCreateCompetition {
+    onCreateCompetition {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCompetition = /* GraphQL */ `
+  subscription OnUpdateCompetition {
+    onUpdateCompetition {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCompetition = /* GraphQL */ `
+  subscription OnDeleteCompetition {
+    onDeleteCompetition {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCompetitor = /* GraphQL */ `
+  subscription OnCreateCompetitor {
+    onCreateCompetitor {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCompetitor = /* GraphQL */ `
+  subscription OnUpdateCompetitor {
+    onUpdateCompetitor {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCompetitor = /* GraphQL */ `
+  subscription OnDeleteCompetitor {
+    onDeleteCompetitor {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateCompetitionSubmission = /* GraphQL */ `
+  subscription OnCreateCompetitionSubmission {
+    onCreateCompetitionSubmission {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCompetitionSubmission = /* GraphQL */ `
+  subscription OnUpdateCompetitionSubmission {
+    onUpdateCompetitionSubmission {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCompetitionSubmission = /* GraphQL */ `
+  subscription OnDeleteCompetitionSubmission {
+    onDeleteCompetitionSubmission {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;

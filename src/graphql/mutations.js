@@ -478,3 +478,282 @@ export const deleteEvent = /* GraphQL */ `
     }
   }
 `;
+export const createCompetition = /* GraphQL */ `
+  mutation CreateCompetition(
+    $input: CreateCompetitionInput!
+    $condition: ModelCompetitionConditionInput
+  ) {
+    createCompetition(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCompetition = /* GraphQL */ `
+  mutation UpdateCompetition(
+    $input: UpdateCompetitionInput!
+    $condition: ModelCompetitionConditionInput
+  ) {
+    updateCompetition(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCompetition = /* GraphQL */ `
+  mutation DeleteCompetition(
+    $input: DeleteCompetitionInput!
+    $condition: ModelCompetitionConditionInput
+  ) {
+    deleteCompetition(input: $input, condition: $condition) {
+      id
+      hostName
+      hostEmail
+      title
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCompetitor = /* GraphQL */ `
+  mutation CreateCompetitor(
+    $input: CreateCompetitorInput!
+    $condition: ModelCompetitorConditionInput
+  ) {
+    createCompetitor(input: $input, condition: $condition) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateCompetitor = /* GraphQL */ `
+  mutation UpdateCompetitor(
+    $input: UpdateCompetitorInput!
+    $condition: ModelCompetitorConditionInput
+  ) {
+    updateCompetitor(input: $input, condition: $condition) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteCompetitor = /* GraphQL */ `
+  mutation DeleteCompetitor(
+    $input: DeleteCompetitorInput!
+    $condition: ModelCompetitorConditionInput
+  ) {
+    deleteCompetitor(input: $input, condition: $condition) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createCompetitionSubmission = /* GraphQL */ `
+  mutation CreateCompetitionSubmission(
+    $input: CreateCompetitionSubmissionInput!
+    $condition: ModelCompetitionSubmissionConditionInput
+  ) {
+    createCompetitionSubmission(input: $input, condition: $condition) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateCompetitionSubmission = /* GraphQL */ `
+  mutation UpdateCompetitionSubmission(
+    $input: UpdateCompetitionSubmissionInput!
+    $condition: ModelCompetitionSubmissionConditionInput
+  ) {
+    updateCompetitionSubmission(input: $input, condition: $condition) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteCompetitionSubmission = /* GraphQL */ `
+  mutation DeleteCompetitionSubmission(
+    $input: DeleteCompetitionSubmissionInput!
+    $condition: ModelCompetitionSubmissionConditionInput
+  ) {
+    deleteCompetitionSubmission(input: $input, condition: $condition) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
