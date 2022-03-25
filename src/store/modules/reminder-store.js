@@ -11,6 +11,7 @@ export default {
   },
   actions: {
     async addReminder({ commit, dispatch }, reminder) {
+      commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(
           graphqlOperation(createReminder, { input: reminder })
@@ -24,10 +25,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async updateReminderById({ commit, dispatch }, reminder) {
+      commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(graphqlOperation(updateReminder, { input: reminder }));
+        await API.graphql(
+          graphqlOperation(updateReminder, { input: reminder })
+        );
         dispatch("fetchReminders");
         commit("SET_SNACKBAR", {
           show: true,
@@ -37,6 +42,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async removeReminder({ commit, dispatch }, id) {
       try {

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-sm-10">
+  <v-card class="pa-sm-10" :disabled="saving" :loading="saving">
     <v-card-text>
       <v-form ref="articleform" v-model="formValid">
         <div class="grid">
@@ -134,7 +134,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["article", "articles", "user"]),
+    ...mapGetters(["article", "articles", "saving", "user"]),
     isEditing() {
       return this.article.id;
     },
@@ -232,5 +232,11 @@ export default {
 .body,
 .header-image {
   grid-column: 1 / span 2;
+}
+@media (max-width: 600px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

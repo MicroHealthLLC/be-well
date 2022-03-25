@@ -81,7 +81,7 @@
     </v-card>
     <!-- Form Dialog -->
     <v-dialog v-model="dialog" max-width="600px">
-      <v-card>
+      <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><span v-if="reminder.id">Edit Activity Reminder</span
           ><span v-else>Add New Activity Reminder</span>
@@ -285,7 +285,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["reminders", "remindersOn"]),
+    ...mapGetters(["reminders", "remindersOn", "saving"]),
     remind: {
       get() {
         return this.remindersOn;

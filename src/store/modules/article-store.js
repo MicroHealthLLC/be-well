@@ -20,6 +20,7 @@ export default {
   },
   actions: {
     async addArticle({ commit }, article) {
+      commit("TOGGLE_SAVING", true);
       try {
         if (article.image) {
           const image = await Storage.put(article.image.name, article.image);
@@ -37,8 +38,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async updateArticle({ commit }, article) {
+      commit("TOGGLE_SAVING", true);
       try {
         if (article.image) {
           const image = await Storage.put(article.image.name, article.image);
@@ -67,6 +70,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async fetchArticle({ commit }, id) {
       commit("TOGGLE_LOADING", true);

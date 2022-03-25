@@ -41,7 +41,7 @@
 
     <!-- Add Video Dialog -->
     <v-dialog v-model="dialog" max-width="600">
-      <v-card>
+      <v-card :disabled="saving" :loading="saving">
         <v-card-title>Add Video</v-card-title>
         <v-card-text>
           <v-form ref="videoform" v-model="valid">
@@ -136,14 +136,14 @@ export default {
       "fetchFavoriteVideos",
       "fetchAllFavoriteVideos",
     ]),
-    addNewVideo() {
+    async addNewVideo() {
       if (!this.$refs.videoform.validate()) {
         return;
       }
       // Extract YouTube id from user provided URL
       this.newVideo.resourceId = this.extractResourceId(this.urlInput);
       // Boolean is passed for current category to determine if user is on same page
-      this.addVideo({
+      await this.addVideo({
         video: this.newVideo,
         currentCategory:
           this.newVideo.category ==
@@ -189,7 +189,7 @@ export default {
       this.page = page;
       this.start = (page - 1) * 12;
       this.fetchYTVideos(this.start);
-      window.scrollTo({top: 0, behavior: 'smooth'});
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
   computed: {
@@ -199,6 +199,7 @@ export default {
       "beginnerVideos",
       "intermediateVideos",
       "isEditor",
+      "saving",
       "videos",
     ]),
     categoryTitle() {

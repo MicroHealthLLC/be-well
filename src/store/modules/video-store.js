@@ -13,6 +13,7 @@ export default {
   },
   actions: {
     async addVideo({ commit }, { video, currentCategory }) {
+      commit("TOGGLE_SAVING", true);
       try {
         const res = await API.graphql(
           graphqlOperation(createVideo, { input: video })
@@ -53,6 +54,7 @@ export default {
           color: "var(--mh-orange)",
         });
       }
+      commit("TOGGLE_SAVING", false);
     },
     async fetchVideos({ commit, dispatch }, filters) {
       try {

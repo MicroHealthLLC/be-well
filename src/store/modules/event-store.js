@@ -21,6 +21,7 @@ export default {
   },
   actions: {
     async addEvent({ commit }, event) {
+      commit("TOGGLE_SAVING", true);
       try {
         if (event.image) {
           const name = `events/${event.image.name}`;
@@ -39,8 +40,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async updateEvent({ commit }, event) {
+      commit("TOGGLE_SAVING", true);
       // Remove unnecessary object properties
       // Todo: Update to use object destructuring
       delete event.imageURL;
@@ -76,6 +79,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async addParticipant({ commit }, { eventId, participant, participants }) {
       participants.push(participant);

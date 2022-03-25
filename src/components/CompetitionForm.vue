@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-sm-10">
+  <v-card :disabled="saving" :loading="saving" class="pa-sm-10">
     <v-card-text>
       <v-form ref="competitionform" v-model="formValid">
         <div class="form-fields">
@@ -288,7 +288,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["competition"]),
+    ...mapGetters(["competition", "saving"]),
     isEditing() {
       return this.competition.id;
     },

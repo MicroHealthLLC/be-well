@@ -133,7 +133,7 @@
 
     <!-- Dialog Form -->
     <v-dialog v-model="dialog" width="750">
-      <v-card>
+      <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><span v-if="goal.id">Edit Goal</span><span v-else>Add Goal</span>
           <v-spacer></v-spacer>
@@ -351,7 +351,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["completedGoals", "incompleteGoals"]),
+    ...mapGetters(["completedGoals", "incompleteGoals", "saving"]),
   },
   async mounted() {
     this.fetchGoals();

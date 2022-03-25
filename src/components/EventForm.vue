@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-sm-10">
+  <v-card :loading="saving" :disabled="saving" class="pa-sm-10">
     <v-card-text>
       <v-form ref="eventform" v-model="formValid">
         <div class="grid">
@@ -296,7 +296,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["event"]),
+    ...mapGetters(["event", "saving"]),
     isEditing() {
       return this.event.id;
     },

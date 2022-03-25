@@ -24,6 +24,7 @@ export default {
   },
   actions: {
     async addCompetition({ commit }, competition) {
+      commit("TOGGLE_SAVING", true);
       try {
         if (competition.image) {
           const name = `competitions/${competition.image.name}`;
@@ -42,11 +43,12 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async updateCompetition({ commit }, competition) {
+      commit("TOGGLE_SAVING", true);
       // Remove unnecessary object properties
       // Todo: Update to use object destructuring
-      console.log(competition);
       delete competition.imageURL;
       delete competition.createdAt;
       delete competition.updatedAt;
@@ -82,6 +84,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async fetchCompetitions({ commit }) {
       try {

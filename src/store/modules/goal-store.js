@@ -12,6 +12,7 @@ export default {
   },
   actions: {
     async addGoal({ commit, dispatch }, goal) {
+      commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(createGoal, { input: goal }));
         dispatch("fetchGoals");
@@ -23,8 +24,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async updateGoalById({ commit, dispatch }, goal) {
+      commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(graphqlOperation(updateGoal, { input: goal }));
         dispatch("fetchGoals");
@@ -36,6 +39,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      commit("TOGGLE_SAVING", false);
     },
     async removeGoal({ commit, dispatch }, id) {
       try {
