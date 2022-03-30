@@ -88,15 +88,19 @@ export default {
       }
     },
     async fetchCurrentUser({ commit }) {
-      const userInfo = await Auth.currentUserInfo();
-      const userCredentials = await Auth.currentAuthenticatedUser();
-      const groups =
-        userCredentials.signInUserSession.accessToken.payload[
-          "cognito:groups"
-        ] || [];
-      const isEditor = groups.includes("Editors");
+      try {
+        const userInfo = await Auth.currentUserInfo();
+        const userCredentials = await Auth.currentAuthenticatedUser();
+        const groups =
+          userCredentials.signInUserSession.accessToken.payload[
+            "cognito:groups"
+          ] || [];
+        const isEditor = groups.includes("Editors");
 
-      commit("SET_USER", { ...userInfo, isEditor: isEditor });
+        commit("SET_USER", { ...userInfo, isEditor: isEditor });
+      } catch (error) {
+        console.log(error);
+      }
     },
     async updateUser({ commit, dispatch }, userDetails) {
       try {
@@ -138,6 +142,6 @@ export default {
   },
   getters: {
     user: (state) => state.user,
-    isEditor: (state) => state.user.isEditor || false,
+    isEditor: (state) => state.user?.isEditor || false,
   },
 };

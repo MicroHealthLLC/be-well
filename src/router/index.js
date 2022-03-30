@@ -2,6 +2,7 @@ import Auth from "@aws-amplify/auth";
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -66,7 +67,7 @@ const routes = [
           import(
             /* webpackChunkName: "EditArticle" */ "../views/Activities/EditArticle.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "articles",
@@ -84,7 +85,7 @@ const routes = [
           import(
             /* webpackChunkName: "newArticle" */ "../views/Activities/NewArticle.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "podcasts",
@@ -163,7 +164,7 @@ const routes = [
           import(
             /* webpackChunkName: "newLiveEvent" */ "../views/Events/NewLiveEvent.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "live-events/:eventId",
@@ -181,7 +182,7 @@ const routes = [
           import(
             /* webpackChunkName: "editLiveEvent" */ "../views/Events/EditLiveEvent.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "competitions",
@@ -199,7 +200,7 @@ const routes = [
           import(
             /* webpackChunkName: "newCompetitions" */ "../views/Events/NewCompetition.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "competitions/:competitionId",
@@ -217,7 +218,7 @@ const routes = [
           import(
             /* webpackChunkName: "editCompetition" */ "../views/Events/EditCompetition.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
     ],
   },
@@ -232,7 +233,17 @@ const routes = [
     path: "/page-not-found",
     name: "PageNotFound",
     component: () =>
-      import(/* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue"),
+      import(
+        /* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue"
+      ),
+  },
+  {
+    path: "/not-authorized",
+    name: "NotAuthorized",
+    component: () =>
+      import(
+        /* webpackChunkName: "notAuthorized" */ "../views/NotAuthorized.vue"
+      ),
   },
   {
     path: "*",
@@ -251,9 +262,30 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const isAuthenticated = await Auth.currentUserInfo();
+  const requiresEditor = to.matched.some(
+    (record) => record.meta.requiresEditor
+  );
+  let isEditor = false;
+  let currentUserInfo = null;
 
-  if (requiresAuth && !isAuthenticated) {
+  if (store.getters.isEditor) {
+    isEditor = store.getters.isEditor;
+    currentUserInfo = store.getters.user;
+  } else {
+    currentUserInfo = await Auth.currentUserInfo();
+    if (currentUserInfo) {
+      const userCredentials = await Auth.currentAuthenticatedUser();
+      const groups =
+        userCredentials.signInUserSession.accessToken.payload[
+          "cognito:groups"
+        ] || [];
+      isEditor = groups.includes("Editors");
+    }
+  }
+
+  if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
+    next("/not-authorized");
+  } else if (requiresAuth && !currentUserInfo) {
     next("/login");
   } else {
     next();
