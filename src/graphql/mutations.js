@@ -757,3 +757,42 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
     }
   }
 `;
+export const createUserAgreement = /* GraphQL */ `
+  mutation CreateUserAgreement(
+    $input: CreateUserAgreementInput!
+    $condition: ModelUserAgreementConditionInput
+  ) {
+    createUserAgreement(input: $input, condition: $condition) {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUserAgreement = /* GraphQL */ `
+  mutation UpdateUserAgreement(
+    $input: UpdateUserAgreementInput!
+    $condition: ModelUserAgreementConditionInput
+  ) {
+    updateUserAgreement(input: $input, condition: $condition) {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserAgreement = /* GraphQL */ `
+  mutation DeleteUserAgreement(
+    $input: DeleteUserAgreementInput!
+    $condition: ModelUserAgreementConditionInput
+  ) {
+    deleteUserAgreement(input: $input, condition: $condition) {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;

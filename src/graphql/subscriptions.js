@@ -667,3 +667,33 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUserAgreement = /* GraphQL */ `
+  subscription OnCreateUserAgreement {
+    onCreateUserAgreement {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserAgreement = /* GraphQL */ `
+  subscription OnUpdateUserAgreement {
+    onUpdateUserAgreement {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserAgreement = /* GraphQL */ `
+  subscription OnDeleteUserAgreement {
+    onDeleteUserAgreement {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;

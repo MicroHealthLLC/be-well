@@ -498,6 +498,33 @@ export const listCompetitionSubmissions = /* GraphQL */ `
     }
   }
 `;
+export const getUserAgreement = /* GraphQL */ `
+  query GetUserAgreement($id: ID!) {
+    getUserAgreement(id: $id) {
+      id
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserAgreements = /* GraphQL */ `
+  query ListUserAgreements(
+    $filter: ModelUserAgreementFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserAgreements(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        text
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const articlesByCategory = /* GraphQL */ `
   query ArticlesByCategory(
     $category: Category!

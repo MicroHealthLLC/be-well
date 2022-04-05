@@ -230,6 +230,15 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/user-agreement",
+    name: "UserAgreement",
+    component: () =>
+      import(
+        /* webpackChunkName: "userAgreement" */ "../views/UserAgreement.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/page-not-found",
     name: "PageNotFound",
     component: () =>

@@ -182,6 +182,13 @@ type CompetitionSubmission
   type: SubmissionType
 }
 
+type UserAgreement
+  @model
+  @auth(rules: [{ allow: groups, groups: ["Editors"] }]) {
+  id: ID!
+  text: String!
+}
+
 enum Category {
   MEDITATION
   MUSCLE
