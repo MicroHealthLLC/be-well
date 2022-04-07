@@ -270,11 +270,11 @@ export default {
       };
     },
     levelColor(level) {
-      return level == "BEGINNER"
+      return level == "L1" || level == "L2"
         ? "var(--mh-green)"
-        : level == "INTERMEDIATE"
+        : level == "L3" || level == "L4"
         ? "var(--mh-orange)"
-        : level == "ADVANCED"
+        : level == "L5"
         ? "error"
         : "primary";
     },
