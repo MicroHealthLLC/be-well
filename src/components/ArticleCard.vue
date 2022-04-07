@@ -46,9 +46,11 @@ export default {
   computed: {
     leftBorder() {
       return {
-        "beginner-card": this.article.level == "BEGINNER",
-        "intermediate-card": this.article.level == "INTERMEDIATE",
-        "advanced-card": this.article.level == "ADVANCED",
+        "beginner-card":
+          this.article.level == "L1" || this.article.level == "L2",
+        "intermediate-card":
+          this.article.level == "L3" || this.article.level == "L4",
+        "advanced-card": this.article.level == "L5",
         "default-card": this.article.level == "NOT_APPLICABLE",
       };
     },

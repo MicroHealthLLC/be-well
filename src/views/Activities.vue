@@ -90,11 +90,11 @@ export default {
       );
     },
     chipColor() {
-      return this.selectedFilter == 1
+      return this.selectedFilter == 1 || this.selectedFilter == 2
         ? "beginner-filter-chip"
-        : this.selectedFilter == 2
+        : this.selectedFilter == 3 || this.selectedFilter == 4
         ? "intermediate-filter-chip"
-        : this.selectedFilter == 3
+        : this.selectedFilter == 5
         ? "advanced-filter-chip"
         : "default-filter-chip";
     },
