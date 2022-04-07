@@ -75,10 +75,6 @@ export const listGoals = /* GraphQL */ `
         dueDate
         isComplete
         completedCount
-        checklist {
-          title
-          isComplete
-        }
         createdAt
         updatedAt
         owner
@@ -201,19 +197,6 @@ export const listFavoriteArticles = /* GraphQL */ `
         articleId
         category
         level
-        article {
-          id
-          author
-          lastEditedBy
-          title
-          body
-          category
-          level
-          createdAt
-          image
-          imageCredit
-          updatedAt
-        }
         createdAt
         updatedAt
         owner
@@ -255,14 +238,6 @@ export const listFavoriteVideos = /* GraphQL */ `
         videoId
         category
         level
-        video {
-          id
-          resourceId
-          level
-          category
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
         owner
@@ -315,12 +290,6 @@ export const listEvents = /* GraphQL */ `
         startTime
         endTime
         timeZone
-        participants {
-          id
-          firstName
-          lastName
-          email
-        }
         link
         image
         createdAt
@@ -345,34 +314,9 @@ export const getCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
@@ -400,12 +344,6 @@ export const listCompetitions = /* GraphQL */ `
         startTime
         endTime
         timeZone
-        competitors {
-          nextToken
-        }
-        submissions {
-          nextToken
-        }
         image
         createdAt
         updatedAt

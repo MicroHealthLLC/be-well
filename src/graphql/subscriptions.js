@@ -430,34 +430,9 @@ export const onCreateCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
@@ -481,34 +456,9 @@ export const onUpdateCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
@@ -532,34 +482,9 @@ export const onDeleteCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image

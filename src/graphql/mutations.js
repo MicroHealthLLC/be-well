@@ -496,34 +496,9 @@ export const createCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
@@ -550,34 +525,9 @@ export const updateCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
@@ -604,34 +554,9 @@ export const deleteCompetition = /* GraphQL */ `
       endTime
       timeZone
       competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
         nextToken
       }
       image
