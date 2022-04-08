@@ -77,7 +77,11 @@ export default {
     isLevel() {
       let filter = this.filters[this.selectedFilter].value;
       return (
-        filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
+        filter == "L1" ||
+        filter == "L2" ||
+        filter == "L3" ||
+        filter == "L4" ||
+        filter == "L5"
       );
     },
     totalPages() {
