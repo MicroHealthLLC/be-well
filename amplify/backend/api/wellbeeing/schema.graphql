@@ -2,9 +2,15 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
   level: Level!
+    @index(
+      name: "remindersByLevel"
+      queryField: "remindersByLevel"
+      sortKeyFields: ["createdAt"]
+    )
   frequency: String!
   contentType: String!
   time: String!
+  createdAt: AWSDateTime!
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
@@ -44,6 +50,11 @@ type Article
       sortKeyFields: ["createdAt"]
     )
   level: Level!
+    @index(
+      name: "articlesByLevel"
+      queryField: "articlesByLevel"
+      sortKeyFields: ["createdAt"]
+    )
   createdAt: AWSDateTime!
   image: String
   imageCredit: String
@@ -60,6 +71,11 @@ type Video
   id: ID!
   resourceId: String!
   level: Level!
+    @index(
+      name: "videosByLevel"
+      queryField: "videosByLevel"
+      sortKeyFields: ["createdAt"]
+    )
   category: Category!
     @index(
       name: "videosByCategory"
@@ -200,9 +216,11 @@ enum Category {
 }
 
 enum Level {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
+  L1
+  L2
+  L3
+  L4
+  L5
   NOT_APPLICABLE
 }
 

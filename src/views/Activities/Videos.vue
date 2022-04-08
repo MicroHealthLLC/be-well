@@ -159,7 +159,7 @@ export default {
         : (this.newVideo.category =
             this.categories[this.selectedCategory].value);
       this.selectedFilter == 0
-        ? (this.newVideo.level = "BEGINNER")
+        ? (this.newVideo.level = "L1")
         : (this.newVideo.level = this.levels[this.selectedFilter].value);
       this.dialog = true;
       if (this.$refs.videoform) {
@@ -193,15 +193,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      "awsVideos",
-      "advancedVideos",
-      "beginnerVideos",
-      "intermediateVideos",
-      "isEditor",
-      "saving",
-      "videos",
-    ]),
+    ...mapGetters(["awsVideos", "isEditor", "saving", "videos"]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
@@ -212,7 +204,11 @@ export default {
     isLevel() {
       let filter = this.filters[this.selectedFilter].value;
       return (
-        filter == "BEGINNER" || filter == "INTERMEDIATE" || filter == "ADVANCED"
+        filter == "L1" ||
+        filter == "L2" ||
+        filter == "L3" ||
+        filter == "L4" ||
+        filter == "L5"
       );
     },
     totalPages() {

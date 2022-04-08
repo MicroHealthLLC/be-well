@@ -24,7 +24,7 @@
 
     <v-card v-else class="px-0" flat color="#f0f3f7">
       <v-chip :color="levelColor" class="category-chip" x-small label>{{
-        article.level
+        levelTitle(article.level).toUpperCase()
       }}</v-chip>
       <v-card-title class="px-0 text-h4 break-word">{{
         article.title
@@ -98,9 +98,9 @@ export default {
   computed: {
     ...mapGetters(["article", "favoriteArticles", "isEditor", "loading"]),
     levelColor() {
-      return this.article.level == "BEGINNER"
+      return this.article.level == "L1" || this.article.level == "L2"
         ? "var(--mh-green)"
-        : this.article.level == "INTERMEDIATE"
+        : this.article.level == "L3" || this.article.level == "L4"
         ? "var(--mh-orange)"
         : "error";
     },

@@ -314,12 +314,6 @@ export default {
   getters: {
     awsVideos: (state) => state.awsVideos,
     videos: (state) => state.videos,
-    beginnerVideos: (state) =>
-      state.videos.filter((video) => video.level == "BEGINNER"),
-    intermediateVideos: (state) =>
-      state.videos.filter((video) => video.level == "INTERMEDIATE"),
-    advancedVideos: (state) =>
-      state.videos.filter((video) => video.level == "ADVANCED"),
     favoriteVideos: (state) => state.favoriteVideos,
   },
 };
