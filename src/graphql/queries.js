@@ -1,6 +1,75 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getProfile = /* GraphQL */ `
+  query GetProfile($id: ID!) {
+    getProfile(id: $id) {
+      id
+      currentUserAgreementId
+      currentUserAgreementDate
+      currentUserAgreement {
+        id
+        text
+        createdAt
+        updatedAt
+      }
+      acceptedAgreements
+      favorite1 {
+        category
+        level
+      }
+      favorite2 {
+        category
+        level
+      }
+      favorite3 {
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listProfiles = /* GraphQL */ `
+  query ListProfiles(
+    $filter: ModelProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        currentUserAgreementId
+        currentUserAgreementDate
+        currentUserAgreement {
+          id
+          text
+          createdAt
+          updatedAt
+        }
+        acceptedAgreements
+        favorite1 {
+          category
+          level
+        }
+        favorite2 {
+          category
+          level
+        }
+        favorite3 {
+          category
+          level
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getReminder = /* GraphQL */ `
   query GetReminder($id: ID!) {
     getReminder(id: $id) {

@@ -1,3 +1,19 @@
+type Profile @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  currentUserAgreementId: ID
+  currentUserAgreementDate: String
+  currentUserAgreement: UserAgreement @hasOne(fields: ["currentUserAgreementId"])
+  acceptedAgreements: [String]
+  favorite1: Favorite
+  favorite2: Favorite
+  favorite3: Favorite
+}
+
+type Favorite{
+  category: Category
+  level: Level
+}
+
 type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
@@ -200,7 +216,7 @@ type CompetitionSubmission
 
 type UserAgreement
   @model
-  @auth(rules: [{ allow: groups, groups: ["Editors"] }]) {
+  @auth(rules: [{ allow: groups, groups: ["Editors"] } { allow: private, operations: [read] }]) {
   id: ID!
   text: String!
 }

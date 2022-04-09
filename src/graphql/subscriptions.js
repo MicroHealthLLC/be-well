@@ -1,6 +1,99 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateProfile = /* GraphQL */ `
+  subscription OnCreateProfile($owner: String) {
+    onCreateProfile(owner: $owner) {
+      id
+      currentUserAgreementId
+      currentUserAgreementDate
+      currentUserAgreement {
+        id
+        text
+        createdAt
+        updatedAt
+      }
+      acceptedAgreements
+      favorite1 {
+        category
+        level
+      }
+      favorite2 {
+        category
+        level
+      }
+      favorite3 {
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateProfile = /* GraphQL */ `
+  subscription OnUpdateProfile($owner: String) {
+    onUpdateProfile(owner: $owner) {
+      id
+      currentUserAgreementId
+      currentUserAgreementDate
+      currentUserAgreement {
+        id
+        text
+        createdAt
+        updatedAt
+      }
+      acceptedAgreements
+      favorite1 {
+        category
+        level
+      }
+      favorite2 {
+        category
+        level
+      }
+      favorite3 {
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteProfile = /* GraphQL */ `
+  subscription OnDeleteProfile($owner: String) {
+    onDeleteProfile(owner: $owner) {
+      id
+      currentUserAgreementId
+      currentUserAgreementDate
+      currentUserAgreement {
+        id
+        text
+        createdAt
+        updatedAt
+      }
+      acceptedAgreements
+      favorite1 {
+        category
+        level
+      }
+      favorite2 {
+        category
+        level
+      }
+      favorite3 {
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateReminder = /* GraphQL */ `
   subscription OnCreateReminder($owner: String) {
     onCreateReminder(owner: $owner) {
