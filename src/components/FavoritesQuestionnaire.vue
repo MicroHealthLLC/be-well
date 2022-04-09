@@ -123,10 +123,10 @@ export default {
       favoredCategory2Level: 0,
       favoredCategory3Level: 0,
       tickLabels: [
-        "Novice",
-        "Beginner",
-        "Intermediate 1",
-        "Intermediate 2",
+        "Beginner-1",
+        "Beginner-2",
+        "Intermediate-1",
+        "Intermediate-2",
         "Advanced",
       ],
     };
