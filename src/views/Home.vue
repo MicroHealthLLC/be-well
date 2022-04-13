@@ -22,13 +22,16 @@
         </v-card>
       </div>
     </v-col>
-    <v-dialog v-model="showQuestionnaire"><FavoritesQuestionnaire /></v-dialog>
+    <v-dialog v-model="showQuestionnaire" persistent
+      ><FavoritesQuestionnaire
+    /></v-dialog>
   </v-row>
 </template>
 
 <script>
 import utilitiesMixin from "../mixins/utilities-mixin";
 import FavoritesQuestionnaire from "../components/FavoritesQuestionnaire.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -38,7 +41,6 @@ export default {
   },
   data() {
     return {
-      showQuestionnaire: true,
       navCards: [
         {
           title: "Set Some Goals",
@@ -73,12 +75,10 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["showQuestionnaire"]),
     isXs() {
       return this.$vuetify.breakpoint.xsOnly;
     },
-  },
-  async mounted() {
-    //
   },
 };
 </script>

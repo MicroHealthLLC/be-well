@@ -32,7 +32,7 @@ export default {
   name: "App",
   mixins: [utilitiesMixin],
   methods: {
-    ...mapActions(["fetchCurrentUser", "fetchReminders"]),
+    ...mapActions(["fetchCurrentUser", "fetchProfile", "fetchReminders"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
     checkReminders() {
       // Get current time for check
@@ -75,6 +75,7 @@ export default {
     await this.fetchCurrentUser();
     if (this.user) {
       this.fetchReminders();
+      this.fetchProfile(this.user.attributes.sub);
     }
     this.TOGGLE_REMINDERS_ON(true);
   },

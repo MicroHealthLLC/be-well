@@ -1,7 +1,6 @@
 <template>
   <v-carousel
     v-model="carousel"
-    :prev-icon="!(carousel === 0)"
     :show-arrows="categoriesSelected"
     hide-delimiters
   >
@@ -11,7 +10,9 @@
         height="100%"
         width="750"
       >
-        <h4>What categories are most interesting to you?</h4>
+        <h4 class="align-self-start">
+          What 3 categories are most interesting to you?
+        </h4>
 
         <v-chip-group
           v-model="favoredCategories"
@@ -96,20 +97,34 @@
             :tick-labels="tickLabels"
           ></v-slider>
         </div>
+        <v-btn
+          color="var(--mh-blue)"
+          :loading="saving"
+          :disabled="saving"
+          :dark="!saving"
+          @click="test"
+          >Submit</v-btn
+        >
       </v-sheet>
     </v-carousel-item>
-    <v-carousel-item>
-      <v-sheet
-        class="d-flex flex-column justify-space-between px-15 py-5"
-        height="100%"
-        width="750"
-        ><v-btn @click="test">Submit</v-btn></v-sheet
-      ></v-carousel-item
-    >
+    <!-- Override Default Previous and Next -->
+    <template v-slot:prev="{ on }">
+      <v-btn v-if="carousel > 0" v-on="on" color="info" fab small
+        ><v-icon>mdi-chevron-left</v-icon></v-btn
+      >
+      <div v-else></div>
+    </template>
+    <template v-slot:next="{ on }">
+      <v-btn v-if="carousel == 0" v-on="on" color="info" fab small
+        ><v-icon>mdi-chevron-right</v-icon></v-btn
+      >
+      <div v-else></div>
+    </template>
   </v-carousel>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
@@ -132,18 +147,40 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["saving", "user"]),
     categoriesSelected() {
       return this.favoredCategories.length === 3;
     },
+    firstPage() {
+      return this.carousel == 0;
+    },
   },
   methods: {
-    test() {
-      let favorites = {
-        favorite1Category:
-          this.filteredCategories[this.favoredCategories[0]].value,
+    ...mapActions(["addProfile"]),
+    ...mapMutations(["TOGGLE_QUESTIONNAIRE"]),
+    async test() {
+      let profile = {
+        id: this.user.attributes.sub,
+        favorite1: {
+          category: this.filteredCategories[this.favoredCategories[0]].value,
+          level: this.filteredLevels[this.favoredCategory1Level].value,
+        },
+        favorite2: {
+          category: this.filteredCategories[this.favoredCategories[1]].value,
+          level: this.filteredLevels[this.favoredCategory2Level].value,
+        },
+        favorite3: {
+          category: this.filteredCategories[this.favoredCategories[2]].value,
+          level: this.filteredLevels[this.favoredCategory3Level].value,
+        },
       };
 
-      console.log(favorites);
+      try {
+        await this.addProfile(profile);
+        this.TOGGLE_QUESTIONNAIRE(false);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
