@@ -11,7 +11,7 @@
           {{ categoryString(article.category) }}</v-chip
         >
         <v-chip color="primary" small outlined>{{
-          formatDate(article.createdAt)
+          shortDate(article.createdAt)
         }}</v-chip>
       </div></v-card-subtitle
     >
@@ -32,53 +32,25 @@
 </template>
 
 <script>
+import dateMixin from "../mixins/date-mixin";
+import utilitiesMixin from "../mixins/utilities-mixin";
+
 export default {
+  name: "ArticleCard",
+  mixins: [dateMixin, utilitiesMixin],
   props: {
     article: {
       type: Object,
     },
   },
-  data() {
-    return {
-      categoryIcons: {
-        ENDURANCE: "mdi-run",
-        ERGONOMICS: "mdi-seat-recline-extra",
-        MEDITATION: "mdi-meditation",
-        MUSCLE: "mdi-weight-lifter",
-        POSTURE: "mdi-human-male",
-        STRESS_RELIEF: "mdi-head-heart",
-        STRETCHING: "mdi-human",
-        YOGA: "mdi-yoga",
-      },
-      categories: {
-        ENDURANCE: "Endurance",
-        ERGONOMICS: "Ergonomics",
-        MEDITATION: "Meditation",
-        MUSCLE: "Muscle Tone/Movement",
-        POSTURE: "Posture",
-        STRESS_RELIEF: "Stress Relief",
-        STRETCHING: "Stretching",
-        YOGA: "Yoga",
-      },
-    };
-  },
-  methods: {
-    formatDate(date) {
-      return new Date(date).toDateString();
-    },
-    categoryIcon(category) {
-      return this.categoryIcons[category] || "";
-    },
-    categoryString(category) {
-      return this.categories[category] || "";
-    },
-  },
   computed: {
     leftBorder() {
       return {
-        "beginner-card": this.article.level == "BEGINNER",
-        "intermediate-card": this.article.level == "INTERMEDIATE",
-        "advanced-card": this.article.level == "ADVANCED",
+        "beginner-card":
+          this.article.level == "L1" || this.article.level == "L2",
+        "intermediate-card":
+          this.article.level == "L3" || this.article.level == "L4",
+        "advanced-card": this.article.level == "L5",
         "default-card": this.article.level == "NOT_APPLICABLE",
       };
     },

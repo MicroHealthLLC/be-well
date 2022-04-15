@@ -1,0 +1,149 @@
+type Reminder @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  category: Category!
+  level: Level!
+  frequency: String!
+  contentType: String!
+  time: String!
+}
+
+type Goal @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  category: Category!
+  progress: Int!
+  stepCount: Int
+  dueDate: AWSDate!
+  isComplete: Boolean
+  completedCount: Int
+  checklist: [ChecklistItem]
+}
+
+type ChecklistItem {
+  title: String
+  isComplete: Boolean
+}
+
+type Article
+  @model
+  @key(
+    name: "articlesByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "articlesByCategory"
+  )
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  author: String!
+  lastEditedBy: String!
+  title: String!
+  body: String!
+  category: Category!
+  level: Level!
+  createdAt: AWSDateTime!
+  image: String
+  imageCredit: String
+}
+
+type Video
+  @model
+  @key(
+    name: "videosByCategory"
+    fields: ["category", "createdAt"]
+    queryField: "videosByCategory"
+  )
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  resourceId: String!
+  level: Level!
+  category: Category!
+  createdAt: AWSDateTime!
+}
+
+type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  articleId: ID!
+  category: Category!
+  level: Level!
+  article: Article @connection(fields: ["articleId"])
+}
+
+type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  videoId: ID!
+  category: Category!
+  level: Level!
+  video: Video @connection(fields: ["videoId"])
+}
+
+type Event
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  hostName: String!
+  hostEmail: AWSEmail!
+  title: String!
+  description: String!
+  type: String!
+  date: AWSDate!
+  startTime: String!
+  endTime: String!
+  timeZone: TimeZone
+  participants: [Participant]
+  link: String
+  image: String
+}
+
+type Participant {
+  id: String
+  firstName: String
+  lastName: String
+  email: AWSEmail
+}
+
+enum Category {
+  # Deprecated
+  MEDITATION
+  MUSCLE
+  POSTURE
+  STRESS_RELIEF
+  STRETCHING
+  YOGA
+  # New
+  BALANCE
+  ENDURANCE
+  ERGONOMICS
+  FLEXIBILITY_MOBILITY
+  MIND
+  NUTRITION
+  RECOVERY
+  STRENGTH
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  NOT_APPLICABLE
+}
+
+enum TimeZone {
+  PST
+  MST
+  CST
+  EST
+}

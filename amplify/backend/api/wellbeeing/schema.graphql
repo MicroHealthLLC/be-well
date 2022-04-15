@@ -2,9 +2,15 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
   level: Level!
+    @index(
+      name: "remindersByLevel"
+      queryField: "remindersByLevel"
+      sortKeyFields: ["createdAt"]
+    )
   frequency: String!
   contentType: String!
   time: String!
+  createdAt: AWSDateTime!
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
@@ -12,16 +18,20 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   title: String!
   category: Category!
   progress: Int!
+  stepCount: Int
   dueDate: AWSDate!
+  isComplete: Boolean
+  completedCount: Int
+  checklist: [ChecklistItem]
+}
+
+type ChecklistItem {
+  title: String
+  isComplete: Boolean
 }
 
 type Article
   @model
-  @key(
-    name: "articlesByCategory"
-    fields: ["category", "createdAt"]
-    queryField: "articlesByCategory"
-  )
   @auth(
     rules: [
       { allow: groups, groups: ["Editors"] }
@@ -34,26 +44,194 @@ type Article
   title: String!
   body: String!
   category: Category!
+    @index(
+      name: "articlesByCategory"
+      queryField: "articlesByCategory"
+      sortKeyFields: ["createdAt"]
+    )
   level: Level!
+    @index(
+      name: "articlesByLevel"
+      queryField: "articlesByLevel"
+      sortKeyFields: ["createdAt"]
+    )
   createdAt: AWSDateTime!
   image: String
   imageCredit: String
 }
 
+type Video
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  resourceId: String!
+  level: Level!
+    @index(
+      name: "videosByLevel"
+      queryField: "videosByLevel"
+      sortKeyFields: ["createdAt"]
+    )
+  category: Category!
+    @index(
+      name: "videosByCategory"
+      queryField: "videosByCategory"
+      sortKeyFields: ["createdAt"]
+    )
+  createdAt: AWSDateTime!
+}
+
+type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  articleId: ID!
+  category: Category!
+  level: Level!
+  article: Article @hasOne(fields: ["articleId"])
+}
+
+type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  videoId: ID!
+  category: Category!
+  level: Level!
+  video: Video @hasOne(fields: ["videoId"])
+}
+
+type Event
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  hostName: String!
+  hostEmail: AWSEmail!
+  title: String!
+  description: String!
+  type: String!
+  date: AWSDate!
+  startTime: String!
+  endTime: String!
+  timeZone: TimeZone
+  participants: [Participant]
+  link: String
+  image: String
+}
+
+type Participant {
+  id: String
+  firstName: String
+  lastName: String
+  email: AWSEmail
+}
+
+type Competition
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  hostName: String!
+  hostEmail: AWSEmail!
+  title: String!
+  description: String!
+  rules: String
+  startDate: AWSDate!
+  endDate: AWSDate!
+  startTime: String!
+  endTime: String!
+  timeZone: TimeZone
+  competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
+  submissions: [CompetitionSubmission]
+    @hasMany(indexName: "bySubmission", fields: ["id"])
+  image: String
+}
+
+type Competitor
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Editors"] }
+      { allow: owner, operations: [create, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "byCompetition", sortKeyFields: ["lastName"])
+  userId: ID!
+  firstName: String!
+  lastName: String!
+  score: Int @default(value: "0")
+}
+
+type CompetitionSubmission
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [create, read, update, delete]
+      }
+      { allow: owner, operations: [create, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "bySubmission", sortKeyFields: ["createdAt"])
+  competitorId: ID!
+  userId: ID!
+  s3Key: String
+  description: String
+  submittedBy: String
+  createdAt: AWSDateTime!
+  isApproved: Boolean @default(value: "false")
+  type: SubmissionType
+}
+
 enum Category {
-  ENDURANCE
-  ERGONOMICS
   MEDITATION
   MUSCLE
   POSTURE
   STRESS_RELIEF
   STRETCHING
   YOGA
+  BALANCE
+  ENDURANCE
+  ERGONOMICS
+  FLEXIBILITY_MOBILITY
+  MIND
+  NUTRITION
+  RECOVERY
+  STRENGTH
 }
 
 enum Level {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
+  L1
+  L2
+  L3
+  L4
+  L5
   NOT_APPLICABLE
+}
+
+enum TimeZone {
+  PST
+  MST
+  CST
+  EST
+}
+
+enum SubmissionType {
+  PHOTO
+  VIDEO
 }

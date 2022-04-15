@@ -2,6 +2,7 @@ import Auth from "@aws-amplify/auth";
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -43,7 +44,7 @@ const routes = [
   },
   {
     path: "/activities",
-    redirect: "/activities/reminders",
+    redirect: "/activities/goals",
     name: "Activities",
     component: () =>
       import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),
@@ -66,7 +67,7 @@ const routes = [
           import(
             /* webpackChunkName: "EditArticle" */ "../views/Activities/EditArticle.vue"
           ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "articles",
@@ -84,16 +85,7 @@ const routes = [
           import(
             /* webpackChunkName: "newArticle" */ "../views/Activities/NewArticle.vue"
           ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: "blogs",
-        name: "Blogs",
-        component: () =>
-          import(
-            /* webpackChunkName: "blogs" */ "../views/Activities/Blogs.vue"
-          ),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresEditor: true },
       },
       {
         path: "podcasts",
@@ -101,6 +93,15 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "podcasts" */ "../views/Activities/Podcasts.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "goals",
+        name: "Goals",
+        component: () =>
+          import(
+            /* webpackChunkName: "goals" */ "../views/Activities/Goals.vue"
           ),
         meta: { requiresAuth: true },
       },
@@ -139,11 +140,114 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/events",
+    redirect: "/events/live-events",
+    name: "Events",
+    component: () =>
+      import(/* webpackChunkName: "events" */ "../views/Events.vue"),
+    meta: { requiresAuth: true },
+    props: true,
+    children: [
+      {
+        path: "live-events",
+        name: "LiveEvents",
+        component: () =>
+          import(
+            /* webpackChunkName: "live-events" */ "../views/Events/LiveEvents.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "live-events/new",
+        name: "NewEvent",
+        component: () =>
+          import(
+            /* webpackChunkName: "newLiveEvent" */ "../views/Events/NewLiveEvent.vue"
+          ),
+        meta: { requiresAuth: true, requiresEditor: true },
+      },
+      {
+        path: "live-events/:eventId",
+        name: "Event",
+        component: () =>
+          import(
+            /* webpackChunkName: "liveEvent" */ "../views/Events/LiveEvent.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "live-events/edit/:eventId",
+        name: "EditEvent",
+        component: () =>
+          import(
+            /* webpackChunkName: "editLiveEvent" */ "../views/Events/EditLiveEvent.vue"
+          ),
+        meta: { requiresAuth: true, requiresEditor: true },
+      },
+      {
+        path: "competitions",
+        name: "Competitions",
+        component: () =>
+          import(
+            /* webpackChunkName: "competitions" */ "../views/Events/Competitions.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "competitions/new",
+        name: "NewCompetition",
+        component: () =>
+          import(
+            /* webpackChunkName: "newCompetitions" */ "../views/Events/NewCompetition.vue"
+          ),
+        meta: { requiresAuth: true, requiresEditor: true },
+      },
+      {
+        path: "competitions/:competitionId",
+        name: "Competition",
+        component: () =>
+          import(
+            /* webpackChunkName: "competition" */ "../views/Events/Competition.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "competitions/edit/:competitionId",
+        name: "EditCompetition",
+        component: () =>
+          import(
+            /* webpackChunkName: "editCompetition" */ "../views/Events/EditCompetition.vue"
+          ),
+        meta: { requiresAuth: true, requiresEditor: true },
+      },
+    ],
+  },
+  {
     path: "/profile",
     name: "Profile",
     component: () =>
       import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/page-not-found",
+    name: "PageNotFound",
+    component: () =>
+      import(
+        /* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue"
+      ),
+  },
+  {
+    path: "/not-authorized",
+    name: "NotAuthorized",
+    component: () =>
+      import(
+        /* webpackChunkName: "notAuthorized" */ "../views/NotAuthorized.vue"
+      ),
+  },
+  {
+    path: "*",
+    redirect: "/page-not-found",
   },
 ];
 
@@ -158,9 +262,30 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const isAuthenticated = await Auth.currentUserInfo();
+  const requiresEditor = to.matched.some(
+    (record) => record.meta.requiresEditor
+  );
+  let isEditor = false;
+  let currentUserInfo = null;
 
-  if (requiresAuth && !isAuthenticated) {
+  if (store.getters.isEditor) {
+    isEditor = store.getters.isEditor;
+    currentUserInfo = store.getters.user;
+  } else {
+    currentUserInfo = await Auth.currentUserInfo();
+    if (currentUserInfo) {
+      const userCredentials = await Auth.currentAuthenticatedUser();
+      const groups =
+        userCredentials.signInUserSession.accessToken.payload[
+          "cognito:groups"
+        ] || [];
+      isEditor = groups.includes("Editors");
+    }
+  }
+
+  if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
+    next("/not-authorized");
+  } else if (requiresAuth && !currentUserInfo) {
     next("/login");
   } else {
     next();
