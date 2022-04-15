@@ -25,7 +25,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
-import utilitiesMixin from './mixins/utilities-mixin';
+import utilitiesMixin from "./mixins/utilities-mixin";
 
 export default {
   components: { Navbar, WelcomeBanner },
@@ -71,9 +71,11 @@ export default {
       );
     },
   },
-  mounted() {
-    this.fetchCurrentUser();
-    this.fetchReminders();
+  async mounted() {
+    await this.fetchCurrentUser();
+    if (this.user) {
+      this.fetchReminders();
+    }
     this.TOGGLE_REMINDERS_ON(true);
   },
   watch: {

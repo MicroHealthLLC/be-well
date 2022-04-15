@@ -3,6 +3,20 @@ export default {
     return {
       categories: [
         {
+          title: "",
+          icon: "",
+          query: "all",
+          value: "ALL",
+          image: "",
+        },
+        {
+          title: "Balance",
+          icon: "mdi-human",
+          query: "balance",
+          value: "BALANCE",
+          image: "/img/balance.jpg",
+        },
+        {
           title: "Endurance",
           icon: "mdi-run",
           query: "endurance",
@@ -17,64 +31,120 @@ export default {
           image: "/img/ergonomics.jpg",
         },
         {
-          title: "Meditation",
-          icon: "mdi-meditation",
-          query: "meditation",
-          value: "MEDITATION",
-          image: "/img/meditate.jpg",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          icon: "mdi-weight-lifter",
-          query: "muscle-tone-movement",
-          value: "MUSCLE",
-          image: "/img/weight-training.jpg",
-        },
-        {
-          title: "Posture",
-          icon: "mdi-human-male",
-          query: "posture",
-          value: "POSTURE",
-          image: "/img/posture.jpg",
-        },
-        {
-          title: "Stress Relief",
-          icon: "mdi-head-heart",
-          query: "stress-relief",
-          value: "STRESS_RELIEF",
-          image: "/img/stress-relief.jpg",
-        },
-        {
-          title: "Stretching",
-          icon: "mdi-human",
-          query: "stretching",
-          value: "STRETCHING",
-          image: "/img/stretching.jpg",
-        },
-        {
-          title: "Yoga",
+          title: "Flexibility & Mobility",
           icon: "mdi-yoga",
-          query: "yoga",
-          value: "YOGA",
-          image: "/img/yoga.jpg",
+          query: "flexibility-mobility",
+          value: "FLEXIBILITY_MOBILITY",
+          image: "/img/flexibility_mobility.jpg",
+        },
+        {
+          title: "Mind",
+          icon: "mdi-head-heart",
+          query: "mind",
+          value: "MIND",
+          image: "/img/mind.jpg",
+        },
+        {
+          title: "Nutrition",
+          icon: "mdi-food-apple",
+          query: "nutrition",
+          value: "NUTRITION",
+          image: "/img/nutrition.jpg",
+        },
+        {
+          title: "Recovery",
+          icon: "mdi-heart-plus",
+          query: "recovery",
+          value: "RECOVERY",
+          image: "/img/recovery.jpg",
+        },
+        {
+          title: "Strength",
+          icon: "mdi-weight-lifter",
+          query: "strength",
+          value: "STRENGTH",
+          image: "/img/strength.jpg",
         },
       ],
       levels: [
         {
-          title: "Beginner",
-          value: "BEGINNER",
+          title: "All",
+          value: "ALL",
+          query: "all",
         },
         {
-          title: "Intermediate",
-          value: "INTERMEDIATE",
+          title: "Beginner-1",
+          value: "L1",
+          query: "beginner-1",
+        },
+        {
+          title: "Beginner-2",
+          value: "L2",
+          query: "beginner-2",
+        },
+        {
+          title: "Intermediate-1",
+          value: "L3",
+          query: "intermediate-1",
+        },
+        {
+          title: "Intermediate-2",
+          value: "L4",
+          query: "intermediate-2",
         },
         {
           title: "Advanced",
-          value: "ADVANCED",
+          value: "L5",
+          query: "advanced",
         },
         {
           title: "N/A",
           value: "NOT_APPLICABLE",
+          query: "not-applicable",
+        },
+      ],
+      filters: [
+        {
+          title: "All",
+          label: "All",
+          value: "ALL",
+          query: "all",
+        },
+        {
+          title: "Beginner-1",
+          label: "Beginner-1",
+          value: "L1",
+          query: "beginner-1",
+        },
+        {
+          title: "Beginner-2",
+          label: "Beginner-2",
+          value: "L2",
+          query: "beginner-2",
+        },
+        {
+          title: "Intermediate-1",
+          label: "Intermediate-1",
+          value: "L3",
+          query: "intermediate-1",
+        },
+        {
+          title: "Intermediate-2",
+          label: "Intermediate-2",
+          value: "L4",
+          query: "intermediate-2",
+        },
+        {
+          title: "Advanced",
+          label: "Advanced",
+          value: "L5",
+          query: "advanced",
+        },
+        {
+          title: "Favorite",
+          label: "My Favorites",
+          value: "FAVORITE",
+          query: "favorites",
         },
       ],
     };
@@ -152,6 +222,14 @@ export default {
       return (
         this.categories.find((category) => category.value == value).image || ""
       );
+    },
+  },
+  computed: {
+    filteredCategories() {
+      return this.categories.filter((category) => category.value != "ALL");
+    },
+    filteredLevels() {
+      return this.levels.filter((level) => level.value != "ALL");
     },
   },
 };

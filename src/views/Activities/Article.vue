@@ -24,21 +24,35 @@
 
     <v-card v-else class="px-0" flat color="#f0f3f7">
       <v-chip :color="levelColor" class="category-chip" x-small label>{{
-        article.level
+        levelTitle(article.level).toUpperCase()
       }}</v-chip>
       <v-card-title class="px-0 text-h4 break-word">{{
         article.title
       }}</v-card-title>
-      <v-card-subtitle class="d-flex flex-column px-0"
+      <v-card-subtitle class="d-flex flex-column px-0 pb-0"
         ><div>By {{ article.author }}</div>
-        <div class="mt-2">
-          <v-chip class="mr-2" color="primary" small outlined
-            ><v-icon left small>{{ categoryIcon(article.category) }}</v-icon>
-            {{ categoryString(article.category) }}</v-chip
-          >
-          <v-chip color="primary" small outlined>{{
-            formatDate(article.createdAt)
-          }}</v-chip>
+        <div class="d-flex justify-space-between mt-2">
+          <div>
+            <v-chip class="mr-2" color="primary" small outlined
+              ><v-icon left small>{{ categoryIcon(article.category) }}</v-icon>
+              {{ categoryString(article.category) }}</v-chip
+            >
+            <v-chip color="primary" small outlined>{{
+              fullDate(article.createdAt)
+            }}</v-chip>
+          </div>
+          <div>
+            <v-btn
+              v-if="favoriteReference"
+              @click="removeFavorite"
+              color="var(--mh-orange)"
+              icon
+              ><v-icon>mdi-star</v-icon></v-btn
+            >
+            <v-btn v-else @click="addFavorite" icon
+              ><v-icon>mdi-star-outline</v-icon></v-btn
+            >
+          </div>
         </div></v-card-subtitle
       >
       <div v-if="article.imageURL" class="px-0 mb-5">
@@ -47,6 +61,7 @@
           lazy-src="/img/placeholder.png"
           :src="article.imageURL"
           class="header-image mx-0 fill-width"
+          max-height="600"
           ><template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular
@@ -73,30 +88,51 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import ArticleLoader from "../../components/ArticleLoader.vue";
+import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 
 export default {
   components: { ArticleLoader },
   name: "Article",
-  mixins: [utilitiesMixin],
+  mixins: [dateMixin, utilitiesMixin],
   computed: {
-    ...mapGetters(["article", "isEditor", "loading"]),
+    ...mapGetters(["article", "favoriteArticles", "isEditor", "loading"]),
     levelColor() {
-      return this.article.level == "BEGINNER"
+      return this.article.level == "L1" || this.article.level == "L2"
         ? "var(--mh-green)"
-        : this.article.level == "INTERMEDIATE"
+        : this.article.level == "L3" || this.article.level == "L4"
         ? "var(--mh-orange)"
         : "error";
     },
+    favoriteReference() {
+      return this.favoriteArticles.find(
+        (article) => article.articleId == this.article.id
+      );
+    },
   },
   methods: {
-    ...mapActions(["fetchArticle"]),
-    formatDate(date) {
-      return new Date(date).toDateString();
+    ...mapActions([
+      "addFavoriteArticle",
+      "deleteFavoriteArticle",
+      "fetchAllFavoriteArticles",
+      "fetchArticle",
+    ]),
+    addFavorite() {
+      let favoriteArticle = {
+        articleId: this.article.id,
+        category: this.article.category,
+        level: this.article.level,
+      };
+
+      this.addFavoriteArticle(favoriteArticle);
+    },
+    removeFavorite() {
+      this.deleteFavoriteArticle(this.favoriteReference.id);
     },
   },
   mounted() {
     this.fetchArticle(this.$route.params.articleId);
+    this.fetchAllFavoriteArticles(this.article.category);
   },
 };
 </script>

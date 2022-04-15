@@ -81,7 +81,7 @@
     </v-card>
     <!-- Form Dialog -->
     <v-dialog v-model="dialog" max-width="600px">
-      <v-card>
+      <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><span v-if="reminder.id">Edit Activity Reminder</span
           ><span v-else>Add New Activity Reminder</span>
@@ -90,7 +90,7 @@
           <v-form ref="form" v-model="valid">
             <v-select
               v-model="reminder.category"
-              :items="categories"
+              :items="filteredCategories"
               item-text="title"
               item-value="value"
               label="Category"
@@ -99,7 +99,7 @@
             ></v-select>
             <v-select
               v-model="reminder.level"
-              :items="levels"
+              :items="filteredLevels"
               item-text="title"
               item-value="value"
               label="Level"
@@ -116,7 +116,7 @@
             <v-select
               v-model="reminder.contentType"
               label="Content Type"
-              :items="['Articles', 'Blogs', 'Podcasts', 'Videos']"
+              :items="['Articles', 'Videos']"
               :rules="[(v) => !!v || 'Content Type is required']"
               required
             ></v-select>
@@ -183,20 +183,6 @@ export default {
         contentType: "",
         time: null,
       },
-      // levels: [
-      //   {
-      //     name: "Beginner",
-      //     value: "BEGINNER",
-      //   },
-      //   {
-      //     name: "Intermediate",
-      //     value: "INTERMEDIATE",
-      //   },
-      //   {
-      //     name: "Advanced",
-      //     value: "ADVANCED",
-      //   },
-      // ],
       headers: [
         {
           text: "Category",
@@ -284,11 +270,11 @@ export default {
       };
     },
     levelColor(level) {
-      return level == "BEGINNER"
+      return level == "L1" || level == "L2"
         ? "var(--mh-green)"
-        : level == "INTERMEDIATE"
+        : level == "L3" || level == "L4"
         ? "var(--mh-orange)"
-        : level == "ADVANCED"
+        : level == "L5"
         ? "error"
         : "primary";
     },
@@ -299,7 +285,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["reminders", "remindersOn"]),
+    ...mapGetters(["reminders", "remindersOn", "saving"]),
     remind: {
       get() {
         return this.remindersOn;

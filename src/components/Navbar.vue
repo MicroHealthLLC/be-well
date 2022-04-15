@@ -15,7 +15,7 @@
 
       <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
       <div v-if="$vuetify.breakpoint.xsOnly" class="hidden-block"></div>
-      
+
       <!-- Main Navigation Items -->
       <v-tabs
         v-if="!$vuetify.breakpoint.xsOnly"
@@ -33,8 +33,8 @@
         <v-tab to="/health"
           ><v-icon class="mr-1">mdi-heart-pulse</v-icon>Health</v-tab
         >
-        <v-tab to="/nutrition"
-          ><v-icon class="mr-1">mdi-food-apple</v-icon>Nutrition</v-tab
+        <v-tab to="/events"
+          ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
         >
       </v-tabs>
       <!-- User Dropdown Menu -->
@@ -91,12 +91,12 @@
               <v-list-item-title>Health</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/nutrition" link>
+          <v-list-item to="/events" link>
             <v-list-item-icon>
-              <v-icon>mdi-food-apple</v-icon>
+              <v-icon>mdi-calendar</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Nutrition</v-list-item-title>
+              <v-list-item-title>Events</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
