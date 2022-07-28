@@ -8,18 +8,18 @@
         color="var(--mh-green)"
         dense
       >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/goals"
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/goals"
           >Goals</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/reminders"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/reminders"
           >Reminders</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/videos"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/videos"
           >Videos</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/articles"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/articles"
           >Articles</v-btn
-        >
+        > -->
       </v-btn-toggle>
       <!-- Category Selector -->
       <v-chip-group
