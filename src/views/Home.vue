@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="tt">
     <v-col>
       <div class="grid-container">
         <v-card
@@ -35,27 +35,27 @@ export default {
     return {
       navCards: [
         {
-          title: "Set Some Goals",
+          title: "Set Goals",
           body: "Create and track goals to help you on your wellness journey",
-          img: "/svg/personal-goals-bro.svg",
+          img:   "/svg/goals.jpg",
           route: "/activities/goals",
         },
         {
-          title: "Schedule an Activity Reminder",
+          title: "Schedule Activity Reminders",
           body: "Choose a category, time, and content-type, and enjoy daily wellness reminders",
-          img: "/svg/time-management-bro.svg",
+          img: "/svg/reminder_blue.jpg",
           route: "/activities/reminders",
         },
         {
           title: "Browse Fitness Videos",
           body: "Take a wellness break and follow along with a quick fitness video",
-          img: "/svg/training-at-home-bro.svg",
+          img: "/svg/running.jpg",
           route: "/activities/videos",
         },
         {
           title: "Browse Wellness Articles",
           body: "Read articles filled with useful wellness tips and information",
-          img: "/svg/online-article-bro.svg",
+          img: "/svg/tablet_browse.jpg",
           route: "/activities/articles",
         },
       ],
@@ -78,6 +78,9 @@ export default {
 </script>
 
 <style scoped>
+.tt{
+  background-color: rgba(255, 255, 255, 0.5);
+}
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

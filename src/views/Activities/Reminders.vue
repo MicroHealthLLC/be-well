@@ -11,7 +11,7 @@
       "
     >
       <div class="d-flex justify-space-between align-center">
-        <span class="text-h6 text-sm-h5">My Activity Reminders</span>
+        <span class="text-h6 text-sm-h5"><b class="goalHeaders">MY ACTIVITY REMINDERS</b></span>
         <v-switch
           v-model="remind"
           @change="requestPermission"
@@ -302,6 +302,9 @@ export default {
 </script>
 
 <style scoped>
+.goalHeaders{
+ color: var(--mh-blue);
+}
 ::v-deep .text-start:first-child {
   font-weight: 600;
 }

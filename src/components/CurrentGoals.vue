@@ -2,32 +2,48 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
-        <v-badge
-          class="completed-count"
-          :content="goal.completedCount"
-          color="#2f53b6"
-        ></v-badge>
+       
         <div
-          class="
+          class=" 
             d-flex
             align-center
-            justify-center
-            card-title
-            py-1
-            px-5
-            clamp-two-lines
-            font-weight-bold
-          "
+            justify-center     
+            font-weight-bold"
         >
-          <div><h2 class="goalTitle">{{ goal.title }}</h2></div>
+            <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div >{{ categoryString(goal.category) }}</div>
+           <template v-slot:activator="{ on }">
+            <div v-on="on" class="icon"
+              > <v-icon class="mr-1" color="white">{{
+                categoryIcon(goal.category)
+              }}</v-icon
+              ></div
+            >
+           </template>
+          
+              </v-tooltip>
+     
+           <div class="jw"> <h2 class="goalTitle">{{ goal.title }}</h2></div> 
+                <!-- Progress Bar -->
+    
+            <div class="d-flex align-center goal-progressbar px-2">
+              <v-progress-linear
+                :value="(goal.progress / goal.stepCount) * 100"
+                color="white"
+                height="5"
+                rounded
+              ></v-progress-linear>
+              <!-- <div class="text-sm-h5 font-weight-bold ml-5 mx-sm-5">
+                <span class="goal-progress-text">{{ goal.progress }}</span
+                >/{{ goal.stepCount }}
+              </div> -->
+            </div> 
+          
         </div>
-        <div class="pa-4 card-body">
-          <transition name="fade"
-            ><v-icon v-if="!isFlipped" class="checkmark" x-large
-              >mdi-flag-checkered</v-icon
-            ></transition
-          >
-        </div>
+        
       </div>
       <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
         <div @click="isFlipped = !isFlipped" class="clickable">
@@ -49,22 +65,59 @@
             >{{ goal.completedCount }}
           </p>
         </div>
+
+     <v-expansion-panels>
+      <v-expansion-panel>
+      <v-expansion-panel-header class="grid">
+        Activities
+        </v-expansion-panel-header>
+         <v-expansion-panel-content>
+         <v-checkbox
+            v-for="(item, index) in goal.checklist"
+            v-model="item.isComplete"
+            @change="update(goal)"
+            :key="index"
+            class="mt-1"
+            hide-details
+            color="var(--mh-orange)"
+          >
+            <template v-slot:label
+              ><div class="text-body-2">{{ item.title }}</div></template
+            >
+          </v-checkbox>
+          <div class="d-block d-sm-flex justify-sm-end mt-5">
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
+          </div>
+         </v-expansion-panel-content>        
+       </v-expansion-panel>
+     </v-expansion-panels>
+
+         
+
+
         <v-tooltip
           :disabled="incompleteGoals.length < 5"
           max-width="200"
           bottom
         >
-          <template v-slot:activator="{ on }">
+          <!-- <template v-slot:activator="{ on }">
             <div v-on="on" class="d-flex justify-center">
               <v-btn
                 @click="repeatGoal(goal)"
                 :disabled="incompleteGoals.length > 4"
                 outlined
-                
+                dark
                 >Repeat Goal</v-btn
               >
             </div>
-          </template>
+          </template> -->
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
@@ -74,7 +127,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import utilitiesMixin from "./../mixins/utilities-mixin";
+import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
   mixins: [utilitiesMixin],
@@ -93,6 +146,23 @@ export default {
   },
   methods: {
     ...mapActions(["updateGoalById"]),
+   async update(goal) {
+      let updatedProgress = goal.checklist.reduce(
+        (accumulator, item) =>
+          item.isComplete ? accumulator + 1 : accumulator,
+        0
+      );
+      let isComplete = updatedProgress == goal.stepCount;
+      let completedCount = isComplete ? 1 : 0;
+
+      await this.updateGoalById({
+        id: goal.id,
+        progress: updatedProgress,
+        isComplete: isComplete,
+        completedCount: goal.completedCount + completedCount,
+        checklist: goal.checklist,
+      });
+    },
     repeatGoal(goal) {
       this.updateGoalById({
         id: goal.id,
@@ -112,35 +182,52 @@ export default {
 </script>
 
 <style scoped>
+.icon {
+  position: absolute;
+  bottom:10%;
+  right: 4%;
+  color:white !important;
+}
+.goal-progressbar {
+  width: 100%;
+  position:absolute;
+  bottom:4%;
+
+}
 .checkmark {
   font-size: 64px !important;
-  color: var(--mh-green)
 }
 .card-title {
+  color: var(--mh-blue);
   font-size: 12px;
-  color: var(--mh-green);
   min-height: 50px;
+  
 }
 .goalTitle{
- font-weight: 400;
+ font-weight: 500;
+ color: rgba(255, 255, 255);
+ /* text-align: center;
+ vertical-align: middle; */
 }
 .card-body {
   background-color: white;
 }
-.clamp-two-lines {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+.jw{
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+} 
 .completed-count {
   position: absolute;
   right: 7px;
   top: 7px;
 }
 .flip-card {
-
+  /* background-color: transparent; */
   height: 150px;
+  
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }
 
@@ -164,6 +251,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+ background-color: rgba(29,	51,	111,0.75);
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
@@ -174,12 +262,11 @@ export default {
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
   text-align: center;
-  background-color: white;
 }
 
 /* Style the back side */
 .flip-card-back {
-  color: var(--mh-green);
+  color: var(--mh-blue);
   background-color: white;
   transform: rotateY(180deg);
 }

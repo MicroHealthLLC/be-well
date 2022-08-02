@@ -8,17 +8,17 @@
             ></v-img> -->
         <v-col cols="12" sm="6" order="2" order-sm="1">
           <div class="cta">
-            <p class="text-h4 text-sm-h4 font-weight-bold">
-              Well-Beeing is here to help change your life for the better!
-            </p>
+            <span class="header">
+              <b>Bee a better version of You.  <span class="brand">Well<span class="mhG">Beeing</span></span>'s got your back!</b>
+            </span>
             <!-- <p class="text-subtitle-2 text-center">
               Whether reminding you to get moving, check your health, or take a
               mindful moment, Well-Beeing promotes a healthy lifestyle.
             </p> -->
-            <div class="d-flex justify-center mb-5">
-              <div class="mh-message text-caption text-sm-body-1">
-                START A BETTER YOU TODAY!
-              </div>
+            <div class="d-flex mt-1 mb-5">
+              <button class="mh-message text-caption btn btn-lg" @click="goToGoals">
+                <h3>START THE BETTER <span class="mhB">YOU</span> TODAY!</h3>
+              </button>
             </div>
           </div> </v-col
         >
@@ -36,7 +36,15 @@
 <script>
 export default {
   name: "WelcomeBanner",
+
+  methods: {
+    goToGoals() {
+      console.log("this works")
+      this.$router.push("/activities/goals");
+    },
+  },
 };
+
 </script>
 
 <style scoped>
@@ -48,33 +56,37 @@ export default {
   background-size: cover;
   min-height: 100%;
   min-width: 1024px;
-	
-  /* Set up proportionate scaling */
   width: 100%;
   height: auto;
-  /* background: rgb(158, 198, 76); */
-  /* background: linear-gradient(
-    341deg,
-    rgba(158, 198, 76, 1) 0%,
-    rgba(29, 51, 111, 1) 100%
-  ); */
 }
 .mh-message {
   background-color: var(--mh-orange);
   text-align: left;
   padding: 5px 10px;
-  border: 1px solid rgb(95, 95, 95);
-  border-radius: 15px;
-}
-
+  border-radius: .25rem;
+ }
+ .mhG{
+  color: var(--mh-green);
+ }
+ .mhB{
+  color: var(--mh-blue);
+ }
 .cta{
-  width: 33%;
+  width: 30%;
   position: absolute;
-  bottom: 5%;
-  left: 5%;
+  bottom: 3%;
+  left: 3%;
+  -webkit-text-stroke-width: .35px;
+  -webkit-text-stroke-color: black;
 }
 .text-h4{
 	-webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
 }
+.header{
+  font-size: 3rem;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: normal !important;
+}
+
 </style>
