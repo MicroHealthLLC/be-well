@@ -2,11 +2,11 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
-        <v-badge
+        <!-- <v-badge
           class="completed-count"
           :content="goal.completedCount"
           color="#2f53b6"
-        ></v-badge>
+        ></v-badge> -->
         <div
           class="
             d-flex
@@ -19,7 +19,7 @@
             font-weight-bold
           "
         >
-          <div><h2 class="goalTitle">{{ goal.title }}</h2></div>
+          <div class="goalTitle">{{ goal.title }}</div>
         </div>
         <div class="pa-4 card-body">
           <transition name="fade"
@@ -123,6 +123,7 @@ export default {
 }
 .goalTitle{
  font-weight: 400;
+ font-size: 1.25rem;
 }
 .card-body {
   background-color: white;

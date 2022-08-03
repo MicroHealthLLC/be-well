@@ -1,5 +1,5 @@
 <template>
-  <div class="flip-card">
+  <div class="flip-card" :load="log(reminders)">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
        
@@ -8,8 +8,46 @@
             d-flex
             align-center
             justify-center     
-            font-weight-bold"
-        >
+            "
+         >
+        
+            <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div>Due Date</div>
+              <template v-slot:activator="{ on }">               
+                <div v-on="on" class="dueDate">
+                  <v-icon color="white" small left>mdi-calendar</v-icon>{{new Date(goal.dueDate).toLocaleDateString()}}
+                </div>
+              </template>          
+            </v-tooltip>
+          
+              <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div>Activities</div>
+              <template v-slot:activator="{ on }">               
+                <div v-on="on" class="activitiesIcon activitiesCount">
+                 <v-icon class="mr-1" color="white" left>mdi-yoga</v-icon> 
+                 <v-badge
+                  v-if="reminders.filter(t => t.category == goal.category).length > 0"
+                  class="completed-count"
+                  :content="reminders.filter(t => t.category == goal.category).length"
+                  color="success"
+                 ></v-badge>
+               <v-badge
+                  v-else
+                  class="completed-count"
+                  :content="'0'"
+                  color="error"
+              ></v-badge>
+                </div>
+              </template>          
+            </v-tooltip>            
+            
+
             <v-tooltip
               max-width="200"
               bottom
@@ -26,9 +64,14 @@
           
               </v-tooltip>
      
-           <div class="jw"> <h2 class="goalTitle">{{ goal.title }}</h2></div> 
+           <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }} <span class="lowerCase">{{ goal.category }}</span></h3></div> 
                 <!-- Progress Bar -->
-    
+           <span
+           v-if="reminders.filter(t => t.category == goal.category).length < 1"
+            @click="goToActivities"       
+            class="newGoalBtn px-2 py-1"
+            ><small><em>Let's schedule an activity!</em></small></span
+            >
             <div class="d-flex align-center goal-progressbar px-2">
               <v-progress-linear
                 :value="(goal.progress / goal.stepCount) * 100"
@@ -45,9 +88,45 @@
         </div>
         
       </div>
-      <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
-        <div @click="isFlipped = !isFlipped" class="clickable">
-          <p class="d-flex justify-space-between text-caption ma-0">
+      <div class="justify-space-between flip-card-back">
+        <div class="clickable py-4 px-4" @click="isFlipped = !isFlipped">
+      <span class="">
+        Activities
+       
+         <!-- <v-checkbox
+            v-for="(item, index) in reminders.filter(t => t.category == goal.category)"
+            v-model="item.isComplete"
+            @change="update(goal)"
+            :key="index"
+            class="mt-1"
+            hide-details
+            color="var(--mh-orange)"
+          > -->
+          <v-checkbox
+            v-for="(item, index) in reminders.filter(t => t.category == goal.category)"
+            @change="update(goal)"
+            :key="index"
+            class="mt-1"
+            hide-details
+            color="var(--mh-orange)"
+          >
+            <template v-slot:label
+              ><div class="text-body-2">{{ item.contentType }}</div></template
+            >
+          </v-checkbox>
+          <div class="d-block d-sm-flex justify-sm-end mt-5">
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
+          </div>
+    
+     
+          <!-- <p class="d-flex justify-space-between text-caption ma-0">
             <span class="font-weight-bold">Category: </span
             ><v-chip x-small color="white"
               ><v-icon class="mr-1" x-small>{{
@@ -63,41 +142,12 @@
           <p class="d-flex justify-space-between text-caption">
             <span class="font-weight-bold">Completed Count: </span
             >{{ goal.completedCount }}
-          </p>
+          </p> -->
+</span>
+
         </div>
 
-     <v-expansion-panels>
-      <v-expansion-panel>
-      <v-expansion-panel-header class="grid">
-        Activities
-        </v-expansion-panel-header>
-         <v-expansion-panel-content>
-         <v-checkbox
-            v-for="(item, index) in goal.checklist"
-            v-model="item.isComplete"
-            @change="update(goal)"
-            :key="index"
-            class="mt-1"
-            hide-details
-            color="var(--mh-orange)"
-          >
-            <template v-slot:label
-              ><div class="text-body-2">{{ item.title }}</div></template
-            >
-          </v-checkbox>
-          <div class="d-block d-sm-flex justify-sm-end mt-5">
-            <v-btn
-              @click="openGoalForm(goal)"
-              color="#2f53b6"
-              :block="$vuetify.breakpoint.xsOnly"
-              small
-              outlined
-              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
-            >
-          </div>
-         </v-expansion-panel-content>        
-       </v-expansion-panel>
-     </v-expansion-panels>
+  
 
          
 
@@ -142,10 +192,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["incompleteGoals"]),
+    ...mapGetters(["incompleteGoals", "reminders"]),
   },
   methods: {
     ...mapActions(["updateGoalById"]),
+    log(e){
+      console.log(e)
+    },
+   goToActivities() {
+      console.log("this works")
+      this.$router.push("/activities/reminders");
+    },
    async update(goal) {
       let updatedProgress = goal.checklist.reduce(
         (accumulator, item) =>
@@ -182,10 +239,43 @@ export default {
 </script>
 
 <style scoped>
-.icon {
+.turnOver{
+  position:absolute;
+  right:4%;
+  bottom:5%
+}
+.lowerCase{
+  text-transform: lowercase;
+}
+.dueDate {
   position: absolute;
   bottom:10%;
-  right: 4%;
+  left: 4%;
+  color:white !important;
+}
+.activitiesIcon {
+  position: absolute;
+  bottom:10%;
+  right: 15%;
+  color:white !important;
+}
+.activitiesCount {transition: all .2s ease-in-out;}
+.activitiesCount:hover { transform: scale(1.2); }
+.newGoalBtn{
+  color: white !important; 
+  top: 55%;
+  border: .8px solid white;
+  border-radius: .25rem;
+  background-color: rgba(29,	51,	111,0.30) !important;
+  margin: 5px auto 5px auto;
+  position:absolute;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%); 
+}
+.icon {
+  position: absolute;
+  bottom:11%;
+  right:4%;
   color:white !important;
 }
 .goal-progressbar {
@@ -222,7 +312,7 @@ export default {
 .completed-count {
   position: absolute;
   right: 7px;
-  top: 7px;
+  top: 7px;  
 }
 .flip-card {
   /* background-color: transparent; */
@@ -251,8 +341,9 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
- background-color: rgba(29,	51,	111,0.75);
-  -webkit-backface-visibility: hidden; /* Safari */
+  overflow-y: auto;
+  background-color: rgba(29,	51,	111,0.75);
+ -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),

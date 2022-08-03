@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div class="bg-img" :load="log(reminders)">
+  <div class="bg-overlay">
     <div
       class="
         d-sm-flex
@@ -10,8 +11,8 @@
         mt-sm-4
       "
     >
-      <div class="d-flex justify-space-between align-center">
-        <span class="text-h6 text-sm-h5"><b class="goalHeaders">MY ACTIVITY REMINDERS</b></span>
+    <div class="d-flex justify-space-between align-center">
+        <span class="text-h6 text-sm-h5"><b class="goalHeaders">MY ACTIVITIES</b></span>
         <v-switch
           v-model="remind"
           @change="requestPermission"
@@ -20,65 +21,55 @@
           hide-details
         ></v-switch>
       </div>
-      <v-btn
-        @click="openNewReminderForm"
-        class="my-5 my-sm-0"
-        color="#2f53b6"
-        dark
-        :block="$vuetify.breakpoint.xsOnly"
-        >Add New</v-btn
-      >
     </div>
     <v-divider class="mb-4"></v-divider>
+       <v-row>
+         <v-col        
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+        >
+        <div class="newGoalCard">
+        <div class="newGoalCardInner"
+        >
+        <div class="newGoalDiv">
+        <v-btn
+        @click="openNewReminderForm" 
+        class="newGoalBtn"
+        outlined
+        elevation="2"
+        :disabled="!(reminders.length < 8)"      
+        :block="$vuetify.breakpoint.xsOnly"        
+      
+        ><v-icon class="checkmark"
+              >mdi-yoga</v-icon>CREATE AN ACTIVITY...</v-btn
+            >
+        </div>
+       
+        </div>
+        </div>
+         </v-col>
+        <v-col
+          v-for="(reminder, index) in reminders"
+          :key="index"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          class="goalCol"
+        >
+        <ReminderCard :reminder="reminder">
+        </ReminderCard>
+
+        </v-col>
+        </v-row>     
+    
+    <v-divider class="mb-4"></v-divider>
     <!-- Activity Reminders Table -->
-    <v-card class="pa-sm-2">
-      <v-data-table :headers="headers" :items="reminders">
-        <template v-slot:item.category="{ item }">
-          <span
-            ><v-icon class="mr-4">{{ categoryIcon(item.category) }}</v-icon>
-            {{ categoryString(item.category) }}</span
-          >
-        </template>
-        <template v-slot:item.level="{ item }">
-          <v-chip small :color="levelColor(item.level)" dark>{{
-            levelTitle(item.level)
-          }}</v-chip>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn
-            @click="notify(item)"
-            class="mr-3"
-            color="var(--mh-blue)"
-            outlined
-            x-small
-            title="Test Notification: Prototype Only"
-            >Test</v-btn
-          >
-          <v-btn
-            @click="openReminderForm(item)"
-            class="mr-3"
-            color="var(--mh-blue)"
-            outlined
-            x-small
-            >Edit</v-btn
-          >
-          <v-btn
-            @click="deleteReminder({ id: item.id })"
-            color="var(--mh-orange)"
-            outlined
-            x-small
-            depressed
-            >Delete</v-btn
-          >
-        </template>
-        <template v-slot:no-data>
-          <div class="mt-4">
-            <v-icon color="grey" x-large>mdi-alarm</v-icon>
-            <p>No Activity Reminders</p>
-          </div>
-        </template>
-      </v-data-table>
-    </v-card>
+    <!-- <v-card class="pa-sm-2">
+   
+    </v-card> -->
     <!-- Form Dialog -->
     <v-dialog v-model="dialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
@@ -162,14 +153,19 @@
       </v-card>
     </v-dialog>
   </div>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../../mixins/utilities-mixin.js";
+import ReminderCard from "../../components/ReminderCard.vue";
 
 export default {
   name: "Activities",
+   components: {
+    ReminderCard
+  },
   mixins: [utilitiesMixin],
   data() {
     return {
@@ -183,33 +179,7 @@ export default {
         contentType: "",
         time: null,
       },
-      headers: [
-        {
-          text: "Category",
-          value: "category",
-        },
-        {
-          text: "Level",
-          value: "level",
-        },
-        {
-          text: "Frequency",
-          value: "frequency",
-        },
-        {
-          text: "Time",
-          value: "time",
-        },
-        {
-          text: "Content Type",
-          value: "contentType",
-        },
-        {
-          text: "Actions",
-          value: "actions",
-          sortable: false,
-        },
-      ],
+  
     };
   },
   methods: {
@@ -220,16 +190,17 @@ export default {
       "updateReminderById",
     ]),
     ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
-    openNewReminderForm() {
-      this.resetForm();
-      this.dialog = true;
-      if (this.$refs.form) {
-        this.$refs.form.resetValidation();
-      }
+   log(e){
+      console.log(e)
     },
-    openReminderForm(item) {
-      this.reminder = item;
-      this.dialog = true;
+    resetForm() {
+      this.reminder = {
+        category: "",
+        level: "",
+        frequency: "",
+        contentType: "",
+        time: null,
+      };
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -257,30 +228,16 @@ export default {
         console.log(error);
       }
     },
-    async deleteReminder(id) {
-      await this.removeReminder(id);
-    },
-    resetForm() {
-      this.reminder = {
-        category: "",
-        level: "",
-        frequency: "",
-        contentType: "",
-        time: null,
-      };
-    },
-    levelColor(level) {
-      return level == "L1" || level == "L2"
-        ? "var(--mh-green)"
-        : level == "L3" || level == "L4"
-        ? "var(--mh-orange)"
-        : level == "L5"
-        ? "error"
-        : "primary";
-    },
     requestPermission() {
       if (Notification.permission !== "granted") {
         Notification.requestPermission();
+      }
+    },  
+    openNewReminderForm() {
+      this.resetForm();
+      this.dialog = true;
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
       }
     },
   },
@@ -302,6 +259,83 @@ export default {
 </script>
 
 <style scoped>
+.text-right{
+  justify-content: right;
+}
+.newGoalDiv{
+  height:100%;  
+}
+.newGoalBtn{
+  color: white !important; 
+  top: 50%;
+  margin:0 auto;
+  display:block;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+ 
+}
+.newGoalCard {
+  height: 150px;
+ /* background-color: rgba(29,	51,	111,0.85); */
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+.newGoalCardInner{ 
+  width: 100%;
+  height: 100%;
+  background-color: rgba(29,	51,	111,0.50);
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  border-radius: 4px;
+  box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
+    0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+
+.flip-card {
+  background-color: transparent;
+  height: 150px;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  border-radius: 4px;
+  box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
+    0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  text-align: center;
+  background-color: var(--mh-green);
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: var(--mh-blue);
+  color: white;
+  transform: rotateY(180deg);
+}
 .goalHeaders{
  color: var(--mh-blue);
 }
@@ -313,5 +347,31 @@ export default {
 }
 ::v-deep tr.v-data-table__empty-wrapper {
   margin: auto;
+}
+.bg-img{
+  /* padding: 20px; */
+  background: url(../../assets/running_morning.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 80vh;
+  min-width: 1024px;
+  width: 100%;
+  height: 100%;
+  border-radius: .25rem;
+}  
+.bg-overlay{
+  background-color: rgba(255, 255, 255,0.6) !important;
+  min-height: 80vh;
+  min-width: 1024px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  border-radius: .25rem;
+}
+.goalCol {
+  overflow-y: hidden !important; /* Hide vertical scrollbar */
+  overflow-x: hidden !important; 
 }
 </style>

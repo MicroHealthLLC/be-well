@@ -54,7 +54,7 @@
         class="newGoalBtn"
         outlined
         elevation="2"
-        :disabled="!(incompleteGoals.length < 5)"      
+        :disabled="!(incompleteGoals.length < 8)"      
         :block="$vuetify.breakpoint.xsOnly"        
       
         ><v-icon class="checkmark"
@@ -229,12 +229,12 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="goalform" v-model="valid">
-            <v-text-field
+            <!-- <v-text-field
               v-model="goal.title"
               label="My Goal is..."
               :rules="[(v) => !!v || 'Goal title is required']"
               required
-            ></v-text-field>
+            ></v-text-field> -->
             <v-select
               v-model="goal.category"
               :items="filteredCategories"
@@ -278,12 +278,12 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="goal.dueDate"
-                  label="Due Date"
+                  label="I want to accomplish this goal by..."
                   prepend-icon="mdi-calendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                  :rules="[(v) => !!v || 'Due Date is required']"
+                  :rules="[(v) => !!v || 'Date required']"
                   required
                 ></v-text-field>
               </template>
@@ -334,6 +334,7 @@ export default {
       isFlipped: false,
       valid: true,
       menu: false,
+      category:'',
       goal: {
         id: 0,
         title: "",
@@ -384,13 +385,14 @@ export default {
       if (this.$refs.goalform) {
         this.$refs.goalform.resetValidation();
       }
-      this.goal = {
-        title: "",
+      this.category = this.goal.category
+      this.goal = {       
         category: "",
         dueDate: "",
         progress: 0,
         stepCount: 1,
         completedCount: 0,
+        title: "I want to improve my",
         checklist: [{ title: "", isComplete: false }],
       };
     },
@@ -452,8 +454,8 @@ export default {
 
 <style scoped>
 
-.goalCol { transition: all .2s ease-in-out; }
-.goalCol:hover { transform: scale(1.05); }
+/* .goalCol { transition: all .2s ease-in-out; }
+.goalCol:hover { transform: scale(1.02); } */
 .text-right{
   justify-content: right;
 }
@@ -477,7 +479,7 @@ export default {
 .newGoalCardInner{ 
   width: 100%;
   height: 100%;
-  background-color: rgba(29,	51,	111,0.80);
+  background-color: rgba(29,	51,	111,0.40);
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
@@ -581,7 +583,7 @@ export default {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  min-height: 100%;
+  min-height: 80vh;
   min-width: 1024px;
   width: 100%;
   height: 100%;
@@ -589,7 +591,7 @@ export default {
 }  
 .bg-overlay{
   background-color: rgba(255, 255, 255,0.6) !important;
-  min-height: 100%;
+  min-height: 80vh;
   min-width: 1024px;
   width: 100%;
   height: 100%;
