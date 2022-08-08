@@ -8,26 +8,26 @@
             ></v-img> -->
         <v-col cols="12" sm="6" order="2" order-sm="1">
           <div class="cta">
+             <!-- <div class="d-flex mt-1 mb-5  ctaBtn">
+              <div class="mh-message py-3 px-4" @click="goToGoals">
+                <h2 class="font-weight-light">LET'S GET STARTED!</h2>
+              </div>
+            </div> -->
             <span class="header">
-              <b>Bee a better version of You.  <span class="brand">Well<span class="mhG">Beeing</span></span>'s got your back!</b>
+              <b>Bee a better version of <span class="mhG">You</span>.  <span class="brand">Well<span class="mhG">Beeing</span></span>'s got your back!</b>
             </span>
-            <!-- <p class="text-subtitle-2 text-center">
-              Whether reminding you to get moving, check your health, or take a
-              mindful moment, Well-Beeing promotes a healthy lifestyle.
-            </p> -->
-            <div class="d-flex mt-1 mb-5">
-              <button class="mh-message text-caption btn btn-lg" @click="goToGoals">
-                <h3>START THE BETTER <span class="mhB">YOU</span> TODAY!</h3>
-              </button>
-            </div>
+         
           </div> </v-col
         >
-        
-        <!-- <v-col cols="12" sm="6" order="1" order-sm="2">
-          <div class="d-flex justify-center">
-            
-          </div>
-        </v-col> -->
+          <v-col cols="12" sm="6" order="2" order-sm="1">
+          <div class="ctaRight">
+             <div class="mb-5">
+              <div class="mh-message ctaBtn py-3 d-block" @click="goToGoals">
+                <h2>LET'S GET STARTED!</h2>
+              </div>
+            </div>
+          </div> </v-col
+            >
       </v-row>
     </v-container>
   </v-sheet>
@@ -60,11 +60,15 @@ export default {
   height: auto;
 }
 .mh-message {
-  background-color: var(--mh-orange);
   text-align: left;
   padding: 5px 10px;
-  border-radius: .25rem;
- }
+  border-radius: .35rem;
+  background-color: rgba(221,	144,	54, 0.15);
+  border: solid .5px rgba(221,	144,	54, 0.35);
+}
+.mh-message:hover {
+  background-color: rgba(221,	144,	54, 0.35);
+}
  .mhG{
   color: var(--mh-green);
  }
@@ -72,12 +76,18 @@ export default {
   color: var(--mh-blue);
  }
 .cta{
-  width: 30%;
+  width: 40%;
   position: absolute;
   bottom: 3%;
   left: 3%;
   -webkit-text-stroke-width: .35px;
   -webkit-text-stroke-color: black;
+}
+.ctaRight{
+  position: absolute;
+  bottom: 2.5%;
+  right: 3%;
+
 }
 .text-h4{
 	-webkit-text-stroke-width: 1px;
@@ -89,4 +99,10 @@ export default {
   line-height: normal !important;
 }
 
+.ctaBtn{
+  font-size: 1.55rem;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+  cursor: pointer;
+}
 </style>

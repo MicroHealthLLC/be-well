@@ -73,27 +73,27 @@ export default {
           query: "all",
         },
         {
-          title: "Beginner-1",
+          title: "Novice",
           value: "L1",
           query: "beginner-1",
         },
         {
-          title: "Beginner-2",
+          title: "Beginner",
           value: "L2",
           query: "beginner-2",
         },
         {
-          title: "Intermediate-1",
+          title: "Competent",
           value: "L3",
           query: "intermediate-1",
         },
         {
-          title: "Intermediate-2",
+          title: "Proficient",
           value: "L4",
           query: "intermediate-2",
         },
         {
-          title: "Advanced",
+          title: "Expert",
           value: "L5",
           query: "advanced",
         },
@@ -111,36 +111,44 @@ export default {
           query: "all",
         },
         {
-          title: "Beginner-1",
-          label: "Beginner-1",
+          title: "Novice",
+          label: "Novice",
           value: "L1",
           query: "beginner-1",
         },
         {
-          title: "Beginner-2",
-          label: "Beginner-2",
+          title: "Beginner",
+          label: "Beginner",
           value: "L2",
           query: "beginner-2",
         },
         {
-          title: "Intermediate-1",
-          label: "Intermediate-1",
+          title: "Competent",
+          label: "Competent",
           value: "L3",
           query: "intermediate-1",
         },
         {
-          title: "Intermediate-2",
-          label: "Intermediate-2",
+          title: "Proficient",
+          label: "Proficient",
           value: "L4",
           query: "intermediate-2",
         },
         {
-          title: "Advanced",
-          label: "Advanced",
+          title: "Expert",
+          label: "Expert",
           value: "L5",
           query: "advanced",
         },
-        {
+        // {
+        //   title: "Favorite",
+        //   label: "My Favorites",
+        //   value: "FAVORITE",
+        //   query: "favorites",
+        // },
+      ],
+      favFilters: [
+       {
           title: "Favorite",
           label: "My Favorites",
           value: "FAVORITE",
@@ -151,7 +159,9 @@ export default {
   },
   methods: {
     async notify(activity) {
+      console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
+      console.log(reg)
       // Let's check if the browser supports notifications
       if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");

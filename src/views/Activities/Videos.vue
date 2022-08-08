@@ -1,7 +1,7 @@
 <template>
   <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <!-- Beginner Videos -->
-    <span class="text-h6 text-sm-h5">Beginner {{ categoryTitle }} Videos</span>
+    <span class="text-h6 text-sm-h5"><b class="goalHeaders">Beginner {{ categoryTitle }} Videos</b></span>
     <v-divider class="mb-4"></v-divider>
 
     <div class="grid-container mb-6">
@@ -14,7 +14,7 @@
 
     <!-- Intermediate Videos -->
     <span class="text-h6 text-sm-h5"
-      >Intermediate {{ categoryTitle }} Videos</span
+      ><b class="goalHeaders">Intermediate {{ categoryTitle }} Videos</b></span
     >
     <v-divider class="mb-4"></v-divider>
 
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Advanced Videos -->
-    <span class="text-h6 text-sm-h5">Advanced {{ categoryTitle }} Videos</span>
+    <span class="text-h6 text-sm-h5"><b class="goalHeaders">Advanced {{ categoryTitle }} Videos</b></span>
     <v-divider class="mb-4"></v-divider>
 
     <div class="grid-container mb-6">
@@ -162,5 +162,8 @@ export default {
 .image {
   max-height: 200px;
   object-fit: cover;
+}
+.goalHeaders{
+ color: var(--mh-blue);
 }
 </style>

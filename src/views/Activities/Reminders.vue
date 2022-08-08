@@ -1,5 +1,5 @@
 <template>
-<div class="bg-img" :load="log(reminders)">
+<div class="bg-img" :load="log(userCategories)">
   <div class="bg-overlay">
     <div
       class="
@@ -62,7 +62,41 @@
         <ReminderCard :reminder="reminder">
         </ReminderCard>
 
+<!-- ACTIVITY CARDS FOR GOALS THAT HAVE NO REMINDERS SET -->
         </v-col>
+          <!-- <v-col
+          v-for="(goal, index) in incompleteGoals"
+          :key="index"        
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+        > 
+       
+
+         <div class="newGoalCard">
+        <div class="newGoalCardInner"
+        >
+        <div class="newGoalDiv">  -->
+        <!-- <v-btn
+        @click="openNewReminderForm" 
+        class="newGoalBtn"
+        outlined
+        elevation="2"
+        :disabled="!(reminders.length < 8)"      
+        :block="$vuetify.breakpoint.xsOnly"        
+      
+        > -->
+        <!-- {{goal.category}}  -->
+<!--         
+        <v-icon class="checkmark"
+              >mdi-yoga</v-icon>CREATE AN ACTIVITY...</v-btn
+            >
+        </div> -->
+        <!-- </div>
+        </div>
+        </div> 
+         </v-col>  -->
         </v-row>     
     
     <v-divider class="mb-4"></v-divider>
@@ -74,18 +108,18 @@
     <v-dialog v-model="dialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
-          ><span v-if="reminder.id">Edit Activity Reminder</span
-          ><span v-else>Add New Activity Reminder</span>
+          ><span v-if="reminder.id">Edit Activity</span
+          ><span v-else>Add New Activity</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-select
               v-model="reminder.category"
-              :items="filteredCategories"
+              :items="filteredCategories.filter(t => userCategories.includes(t.value))"
               item-text="title"
               item-value="value"
-              label="Category"
-              :rules="[(v) => !!v || 'Category is required']"
+              label="My Focus Area"
+              :rules="[(v) => !!v || 'Focus Area required']"
               required
             ></v-select>
             <v-select
@@ -96,7 +130,7 @@
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
               required
-            ></v-select>
+            ></v-select> 
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -124,7 +158,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="reminder.time"
-                  label="Scheduled Time"
+                  label="Schedule A Reminder"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   v-bind="attrs"
@@ -135,7 +169,8 @@
               </template>
               <v-time-picker
                 v-model="reminder.time"
-                format="24hr"
+                ampm-in-title
+                format="ampm"
                 @click:minute="$refs.menu.save(reminder.time)"
                 header-color="var(--mh-blue)"
               ></v-time-picker>
@@ -144,7 +179,7 @@
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
-            >Submit</v-btn
+            >Save</v-btn
           >
           <v-btn @click="dialog = false" color="secondary" outlined
             >Cancel</v-btn
@@ -219,6 +254,7 @@ export default {
           });
         } else {
           // Call Vuex action to add reminder
+           console.log(this.reminder.level);
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
@@ -242,7 +278,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["reminders", "remindersOn", "saving"]),
+    ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),    
+    userCategories(){
+      return this.incompleteGoals.map(t => t.category)
+    },
     remind: {
       get() {
         return this.remindersOn;

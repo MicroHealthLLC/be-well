@@ -12,13 +12,22 @@
            </h2> 
          </div>
       </div>
-        <div class="row mt-0">
+        <div class="row mt-0 mb-2 px-3">
+    
         <div class="col">
-            <span>
+      <v-progress-linear
+        height="10"
+        value="50"
+        rounded
+        striped
+        color="lime"
+      ></v-progress-linear>
+        
+            <!-- <span>
              <v-chip small :color="levelColor(reminder.level)" dark>{{
             levelTitle(reminder.level)
             }}</v-chip>
-            </span>
+            </span> -->
          </div>
       </div>
 
@@ -110,14 +119,28 @@
        </div>
 
         <div class="clickable py-4 px-4" >
-        <div class="row">
+         <div class="row">           
+           <div class="col">
+            <h5 class="orangeLabel d-flex">
+                ACTIVITY PROGRESS 
+            </h5>   
+             4 of 8 complete              
+           </div>
+         </div>
+         <span class="levelBadge">
+             <v-chip small :color="levelColor(reminder.level)" dark>{{
+            levelTitle(reminder.level)
+            }}</v-chip>
+         </span> 
+        
+       
+        
+        <div class="row activityActions">
         <div class="col">
-            <small class="orangeLabel">
-                REMINDER ACTIONS
-            </small>
-        </div>
-        </div>
-           <span class="">
+            <h5 class="orangeLabel font-weight-bold">
+                ACTIVITY ACTIONS
+            </h5>
+             <span class="d-block">
             <v-btn
             @click="notify(reminder)"
             class="mr-3"
@@ -130,27 +153,32 @@
           <v-btn
             @click="openReminderForm(reminder)"
             class="mr-3"
-            color="var(--mh-blue)"
-            outlined
+            color="var(--mh-orange)"
             small
-            >Edit</v-btn
+            outlined
+            >View/Edit</v-btn
           >
           <v-btn
             @click="deleteReminder({ id: reminder.id })"
-            color="var(--mh-orange)"
+            color="error"
             outlined
             small
-          >Delete</v-btn
+          > <v-icon>
+            mdi-trash-can-outline
+           </v-icon></v-btn
           >
             </span>
+        </div>
+        </div>
+      
         </div>
     </div>
   </div>
     <v-dialog v-model="dialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
-          ><span v-if="reminder.id">Edit Activity Reminder</span
-          ><span v-else>Add New Activity Reminder</span>
+          ><span v-if="reminder.id">Edit Activity</span
+          ><span v-else>Add New Activity</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid">
@@ -160,10 +188,10 @@
               item-text="title"
               item-value="value"
               label="Focus Area"
-              :rules="[(v) => !!v || 'Category is required']"
+              :rules="[(v) => !!v || 'Focus Area required']"
               required
             ></v-select>
-            <v-select
+            <!-- <v-select
               v-model="reminder.level"
               :items="filteredLevels"
               item-text="title"
@@ -171,7 +199,7 @@
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
               required
-            ></v-select>
+            ></v-select> -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -199,7 +227,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="reminder.time"
-                  label="Scheduled Time"
+                  label="Scheduled Reminder"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   v-bind="attrs"
@@ -210,7 +238,8 @@
               </template>
               <v-time-picker
                 v-model="reminder.time"
-                format="24hr"
+                ampm-in-title
+                format="ampm"
                 @click:minute="$refs.menu.save(reminder.time)"
                 header-color="var(--mh-blue)"
               ></v-time-picker>
@@ -262,9 +291,10 @@ export default {
   },
  mounted() {
     this.fetchReminders();
+    this.fetchGoals();
   },
   methods: {
-    ...mapActions([ "updateReminderById", "fetchReminders", "removeReminder"]),
+    ...mapActions([ "updateReminderById", "fetchReminders", "removeReminder", "fetchGoals"]),
     log(e){
       console.log(e)
     },
@@ -357,6 +387,7 @@ export default {
       }));
     },
   },
+
 };
 </script>
 
@@ -403,8 +434,13 @@ export default {
 .icon {
   position: absolute;
   bottom:5%;
-  left:2.5%;
+  right:2.5%;
   color: var(--mh-orange)!important;
+}
+.levelBadge {
+  position: absolute;
+  top:5%;
+  right:2.5%;
 }
 .goal-progressbar {
   width: 100%;
@@ -468,7 +504,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden !important;
   overflow-x: hidden !important; 
   background-color: rgba(29,	51,	111,0.75);
  -webkit-backface-visibility: hidden; /* Safari */
@@ -490,6 +526,8 @@ export default {
   color: var(--mh-blue);
   background-color: white;
   transform: rotateY(180deg);
+  overflow-y: auto;
+  overflow-x: hidden !important; 
 }
 .fade-enter-active,
 .fade-leave-active {
@@ -500,5 +538,9 @@ export default {
 }
 .font-weight-bold{
  color: white;
+}
+.activityActions{
+  position: absolute;
+  bottom: 5%;
 }
 </style>

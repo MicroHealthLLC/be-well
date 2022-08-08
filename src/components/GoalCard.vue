@@ -32,7 +32,7 @@
       <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
         <div @click="isFlipped = !isFlipped" class="clickable">
           <p class="d-flex justify-space-between text-caption ma-0">
-            <span class="font-weight-bold">Category: </span
+            <span class="font-weight-bold values">Focus Area: </span
             ><v-chip x-small color="white"
               ><v-icon class="mr-1" x-small>{{
                 categoryIcon(goal.category)
@@ -41,16 +41,16 @@
             >
           </p>
           <p class="d-flex justify-space-between text-caption ma-0">
-            <span class="font-weight-bold">Last Completed: </span
-            >{{ new Date(goal.updatedAt).toDateString() }}
+            <span class="font-weight-bold values">Last Completed: </span
+            ><span class="values">{{ new Date(goal.updatedAt).toDateString() }}</span>
           </p>
           <p class="d-flex justify-space-between text-caption">
-            <span class="font-weight-bold">Completed Count: </span
-            >{{ goal.completedCount }}
+            <span class="font-weight-bold values">Completed Activities: </span
+            ><span class="">{{ goal.completedCount }}</span>
           </p>
         </div>
         <v-tooltip
-          :disabled="incompleteGoals.length < 5"
+          :disabled="incompleteGoals.length < 8"
           max-width="200"
           bottom
         >
@@ -58,7 +58,7 @@
             <div v-on="on" class="d-flex justify-center">
               <v-btn
                 @click="repeatGoal(goal)"
-                :disabled="incompleteGoals.length > 4"
+                :disabled="incompleteGoals.length > 8"
                 outlined
                 
                 >Repeat Goal</v-btn
@@ -180,9 +180,11 @@ export default {
 
 /* Style the back side */
 .flip-card-back {
-  color: var(--mh-green);
   background-color: white;
   transform: rotateY(180deg);
+}
+.flip-card-back.values {
+  color: var(--mh-green); 
 }
 .fade-enter-active,
 .fade-leave-active {

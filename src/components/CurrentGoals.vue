@@ -1,5 +1,5 @@
 <template>
-  <div class="flip-card" :load="log(reminders)">
+  <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
        
@@ -9,8 +9,7 @@
             align-center
             justify-center     
             "
-         >
-        
+         >       
             <v-tooltip
               max-width="200"
               bottom
@@ -70,29 +69,64 @@
            v-if="reminders.filter(t => t.category == goal.category).length < 1"
             @click="goToActivities"       
             class="newGoalBtn px-2 py-1"
-            ><small><em>Let's schedule an activity!</em></small></span
+            ><small>Click here to achieve your goal!</small></span
             >
-            <div class="d-flex align-center goal-progressbar px-2">
-              <v-progress-linear
+            <div class="d-flex align-center goal-progressbar pt-2 px-2">
+               <v-progress-linear
+                height="10"
                 :value="(goal.progress / goal.stepCount) * 100"
-                color="white"
-                height="5"
+                :load="log(goal)"
+                striped
                 rounded
+                color="lime"
               ></v-progress-linear>
-              <!-- <div class="text-sm-h5 font-weight-bold ml-5 mx-sm-5">
-                <span class="goal-progress-text">{{ goal.progress }}</span
-                >/{{ goal.stepCount }}
-              </div> -->
-            </div> 
+             </div> 
           
         </div>
         
       </div>
       <div class="justify-space-between flip-card-back">
-        <div class="clickable py-4 px-4" @click="isFlipped = !isFlipped">
-      <span class="">
+        <div class="arrowIcon" @click="isFlipped = !isFlipped">
+        <v-icon class="mr-1" color="var(--mh-orange)">mdi-arrow-u-left-bottom</v-icon>
+       </div>
+          <div class="clickable py-4 px-4" >
+         <div class="row">           
+           <div class="col">
+            <h5 class="orangeLabel d-flex">
+               PROGRESS TOWARDS GOAL
+            </h5>   
+           {{ goal.completedCount }} of {{goal.stepCount}}
+           </div>
+          <div class="col">
+          <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :value="(goal.progress / goal.stepCount) * 100"
+              color="primary"
+            >
+              {{ (goal.progress / goal.stepCount) * 100 }}%
+            </v-progress-circular>
+          </div>              
+         </div>         
+        <div class="row activityActions">
+        <div class="col">
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
+        </div>
+        </div>
+      
+        </div>
+
+      <!-- <span class="">
         Activities
-       
+        -->
          <!-- <v-checkbox
             v-for="(item, index) in reminders.filter(t => t.category == goal.category)"
             v-model="item.isComplete"
@@ -102,7 +136,7 @@
             hide-details
             color="var(--mh-orange)"
           > -->
-          <v-checkbox
+          <!-- <v-checkbox
             v-for="(item, index) in reminders.filter(t => t.category == goal.category)"
             @change="update(goal)"
             :key="index"
@@ -113,8 +147,8 @@
             <template v-slot:label
               ><div class="text-body-2">{{ item.contentType }}</div></template
             >
-          </v-checkbox>
-          <div class="d-block d-sm-flex justify-sm-end mt-5">
+          </v-checkbox> -->
+          <!-- <div class="d-block d-sm-flex justify-sm-end mt-5">
             <v-btn
               @click="openGoalForm(goal)"
               color="#2f53b6"
@@ -123,7 +157,7 @@
               outlined
               ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
             >
-          </div>
+          </div> -->
     
      
           <!-- <p class="d-flex justify-space-between text-caption ma-0">
@@ -143,9 +177,9 @@
             <span class="font-weight-bold">Completed Count: </span
             >{{ goal.completedCount }}
           </p> -->
-</span>
+<!-- </span> -->
 
-        </div>
+        
 
   
 
@@ -171,6 +205,104 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
+      <v-dialog v-model="dialog" width="750">
+      <v-card :disabled="saving" :loading="saving">
+        <v-card-title class="text-right pt-2 pb-0" 
+          >
+          <!-- <span v-if="goal.id">Edit Goal</span><span v-else><h2><b class="goalHeaders">Set A Goal...</b></h2></span>
+          <v-spacer></v-spacer> -->
+          <v-btn  @click="closeGoalForm" fab depressed x-small outlined
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="goalform" v-model="valid">
+            <!-- <v-text-field
+              v-model="goal.title"
+              label="My Goal is..."
+              :rules="[(v) => !!v || 'Goal title is required']"
+              required
+            ></v-text-field> -->
+            <v-select
+              v-model="goal.category"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="I want to improve my..."
+              :rules="[(v) => !!v || 'Improvement category is required']"
+              required
+            ></v-select>
+            <!-- <v-text-field
+              :disabled="goal.id != null || goal.id != undefined"
+              v-model.number="goal.stepCount"
+              @change="updateSteps"
+              label="Number of Goal Steps"
+              type="number"
+              min="1"
+              max="10"
+              :rules="[
+                (v) => !!v || 'Step Count is required',
+                (v) => v > 0 || 'Must be greater than 0',
+                (v) => v < 11 || 'Max Step Count is 10',
+              ]"
+              required
+            ></v-text-field> -->
+            <!-- <v-text-field
+              v-model="goal.checklist[index].title"
+              v-for="(step, index) in goal.checklist"
+              :key="index"
+              :label="`Step ${index + 1} Description`"
+              :rules="[(v) => !!v || 'Step Description is required']"
+              required
+            ></v-text-field> -->
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="goal.dueDate"
+                  label="I want to accomplish this goal by..."
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Date required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="goal.dueDate"
+                @input="menu = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn
+            @click="saveGoal"
+            class="px-10"
+            color="var(--mh-blue)"
+            depressed
+            dark
+            >Save</v-btn
+          >
+          <v-btn 
+            v-if="goal.id" 
+            color="error" 
+            @click="deleteGoal({ id: goal.id })" 
+            outlined
+            ><v-icon>
+            mdi-trash-can-outline
+           </v-icon></v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </div>
   </div>
 </template>
@@ -189,15 +321,55 @@ export default {
   data() {
     return {
       isFlipped: false,
+      dialog: false,
+      valid: true,
+      menu: false,
     };
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "reminders"]),
+    ...mapGetters(["incompleteGoals", "reminders", "saving"]),
   },
   methods: {
-    ...mapActions(["updateGoalById"]),
+    ...mapActions(["updateGoalById", "addGoal"]),
     log(e){
       console.log(e)
+    },
+    openGoalForm(goal) {
+      this.dialog = true;
+      this.goal = goal;
+    },
+    closeGoalForm() {
+      this.dialog = false;
+    },
+   async saveGoal() {
+      if (!this.$refs.goalform.validate()) {
+        return;
+      }
+      try {
+        if (this.goal.id) {
+          await this.updateGoalById({
+            id: this.goal.id,
+            title: this.goal.title,
+            category: this.goal.category,
+            dueDate: this.goal.dueDate,
+            progress: this.goal.progress,
+            checklist: this.goal.checklist,
+          });
+        } else {
+          await this.addGoal(this.goal);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      this.closeGoalForm();
+    },
+    async deleteGoal(id) {
+      try {
+        await this.removeGoal(id);
+      } catch (error) {
+        console.log(error);
+      }
+      this.closeGoalForm();
     },
    goToActivities() {
       console.log("this works")
@@ -249,13 +421,13 @@ export default {
 }
 .dueDate {
   position: absolute;
-  bottom:10%;
+  bottom:12%;
   left: 4%;
   color:white !important;
 }
 .activitiesIcon {
   position: absolute;
-  bottom:10%;
+  bottom:12%;
   right: 15%;
   color:white !important;
 }
@@ -263,7 +435,7 @@ export default {
 .activitiesCount:hover { transform: scale(1.2); }
 .newGoalBtn{
   color: white !important; 
-  top: 55%;
+  top: 50%;
   border: .8px solid white;
   border-radius: .25rem;
   background-color: rgba(29,	51,	111,0.30) !important;
@@ -274,9 +446,15 @@ export default {
 }
 .icon {
   position: absolute;
-  bottom:11%;
+  bottom:13%;
   right:4%;
   color:white !important;
+}
+.arrowIcon {
+  position: absolute;
+  bottom:5%;
+  right:2.5%;
+  color: var(--mh-orange)!important;
 }
 .goal-progressbar {
   width: 100%;
@@ -341,7 +519,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   background-color: rgba(29,	51,	111,0.75);
  -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
@@ -367,5 +545,16 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.activityActions{
+  position: absolute;
+  bottom: 5%;
+}
+.text-right{
+  justify-content: right;
+}
+.orangeLabel{
+ color: var(--mh-orange)
+
 }
 </style>

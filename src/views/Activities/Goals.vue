@@ -303,8 +303,14 @@
             dark
             >Save</v-btn
           >
-          <v-btn v-if="goal.id" @click="deleteGoal({ id: goal.id })" outlined
-            >Delete</v-btn
+          <v-btn 
+            v-if="goal.id" 
+            color="error"
+            @click="deleteGoal({ id: goal.id })" 
+            outlined
+            ><v-icon>
+            mdi-trash-can-outline
+           </v-icon></v-btn
           >
         </v-card-actions>
       </v-card>
@@ -396,10 +402,10 @@ export default {
         checklist: [{ title: "", isComplete: false }],
       };
     },
-    openGoalForm(goal) {
-      this.dialog = true;
-      this.goal = goal;
-    },
+    // openGoalForm(goal) {
+    //   this.dialog = true;
+    //   this.goal = goal;
+    // },
     closeGoalForm() {
       this.dialog = false;
     },
