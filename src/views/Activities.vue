@@ -1,40 +1,50 @@
 <template>
-  <v-row>
+  <v-row class="">
     <v-col>
       <!-- Navbar -->
-      <v-btn-toggle
+       <v-btn-toggle
         v-if="navVisible"
         class="nav-btns"
         color="var(--mh-green)"
         dense
-      >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/goals"
+      > 
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/goals"
           >Goals</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/reminders"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/reminders"
           >Reminders</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/videos"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/videos"
           >Videos</v-btn
-        >
-        <v-btn class="px-5" active-class="btn-route" to="/activities/articles"
+        > -->
+        <!-- <v-btn class="px-5" active-class="btn-route" to="/activities/articles"
           >Articles</v-btn
-        >
-      </v-btn-toggle>
+        > -->
+     </v-btn-toggle> 
       <!-- Category Selector -->
-      <v-chip-group
+      <div class="filterWrapper"  v-if="$route.name == 'Videos' || $route.name == 'Articles'">
+        <label class="text-light mb-2">
+          <b>FILTERS</b>
+        </label>
+        <br>
+        <label class="text-light mt-2">
+          Focus Area
+        </label>
+        <v-chip-group
         v-if="$route.name == 'Videos' || $route.name == 'Articles'"
         v-model="selectedCategory"
-        class="mt-2 mt-sm-4 categories"
+        class="categories mb-2"
         mandatory
+        column
       >
+      
         <v-chip class="mb-0" active-class="selected-category-chip" filter
           >All</v-chip
         >
         <v-chip
           v-for="(category, index) in filteredCategories"
           :key="index"
-          class="mb-0"
+          class="mb-0 categories"
           active-class="selected-category-chip"
           filter
           >{{ category.title
@@ -42,11 +52,16 @@
         >
       </v-chip-group>
       <!-- Filter Selector -->
-      <v-chip-group
+    
+       <label class="text-light mt-2">
+        Fitness Level
+      </label>
+        <v-chip-group
         v-if="$route.name == 'Videos' || $route.name == 'Articles'"
         v-model="selectedFilter"
         class="filters"
         mandatory
+        column
       >
         <v-chip
           v-for="(filter, index) in filters"
@@ -58,11 +73,35 @@
           >{{ filter.label }}</v-chip
         >
       </v-chip-group>
+
+          <!-- <label class="text-light mt-2">
+        My Favorites
+      </label>
+        <v-chip-group
+        v-if="$route.name == 'Videos' || $route.name == 'Articles'"
+        v-model="selectedFavFilter"
+        class="filters"
+        mandatory
+        column
+      >
+        <v-chip
+          v-for="(filter, index) in favFilters"
+          :key="index"
+          class="mt-0"
+
+          small
+          filter
+          >{{ filter.label }}</v-chip
+        >
+      </v-chip-group> -->
       <!-- Activities Content (Goals, Reminders, Videos, Articles, Podcasts) -->
+      </div>
+   
       <router-view
         v-if="mounted"
         :selectedCategory="selectedCategory"
         :selectedFilter="selectedFilter"
+        :selectedFavFilter="selectedFavFilter"
       ></router-view>
     </v-col>
   </v-row>
@@ -78,6 +117,7 @@ export default {
       mounted: false,
       selectedCategory: 0,
       selectedFilter: 0,
+      selectedFavFilter: 0,
     };
   },
   computed: {
@@ -112,12 +152,31 @@ export default {
         (filter) => this.$route.query.filter == filter.query
       );
     }
+    if (this.$route.query.favFilters) {
+      this.selectedFavFilter = this.favFilters.findIndex(
+        (favFilters) => this.$route.query.favFilters == favFilters.query
+      );
+    }
     this.mounted = true;
   },
 };
 </script>
 
 <style scoped>
+.text-light{
+  color:whitesmoke;
+}
+.filterWrapper{
+  background-color: rgba(0, 0, 0, .55)!important;
+  position:absolute;
+  right: 4%;
+  top:4%;
+  width: 20%;
+  padding: 1rem; 
+  height: auto; 
+  border-radius: .35rem;
+  margin-top: .25rem;
+}
 .nav-btns {
   white-space: nowrap;
   overflow-x: auto;
@@ -130,11 +189,6 @@ export default {
 }
 .v-btn--active >>> .v-btn__content {
   color: #5f772e;
-}
-.categories,
-.filters {
-  white-space: nowrap;
-  overflow-x: auto;
 }
 .selected-category-chip {
   background-color: #2f53b6;
@@ -155,5 +209,8 @@ export default {
 .advanced-filter-chip {
   background-color: #ff5252;
   color: white !important;
+}
+.v-slide-group__content{
+  white-space: ;
 }
 </style>

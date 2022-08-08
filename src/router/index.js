@@ -44,7 +44,6 @@ const routes = [
   },
   {
     path: "/activities",
-    redirect: "/activities/goals",
     name: "Activities",
     component: () =>
       import(/* webpackChunkName: "activities" */ "../views/Activities.vue"),

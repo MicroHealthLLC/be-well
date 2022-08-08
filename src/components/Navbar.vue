@@ -20,15 +20,25 @@
       <v-tabs
         v-if="!$vuetify.breakpoint.xsOnly"
         color="var(--mh-blue)"
-        slider-size="4"
+        slider-size="5"
         centered
         optional
         dense
       >
         <v-tabs-slider color="var(--mh-green)"></v-tabs-slider>
-        <v-tab to="/home"><v-icon class="mr-1">mdi-home</v-icon>Home</v-tab>
-        <v-tab to="/activities"
+        <!-- <v-tab to="/home"><v-icon class="mr-1">mdi-home</v-icon>Home</v-tab> -->
+      
+         <v-tab to="/activities/goals"
+          ><v-icon class="mr-1">mdi-flag-checkered</v-icon>Goals</v-tab
+        >
+        <v-tab to="/activities/reminders"
           ><v-icon class="mr-1">mdi-yoga</v-icon>Activities</v-tab
+        >
+        <v-tab to="/activities/videos"
+          ><v-icon class="mr-1">mdi-youtube</v-icon>Videos</v-tab
+        >
+            <v-tab to="/activities/articles"
+          ><v-icon class="mr-1">mdi-web</v-icon>Resources</v-tab
         >
         <v-tab to="/health"
           ><v-icon class="mr-1">mdi-heart-pulse</v-icon>Health</v-tab
@@ -36,6 +46,7 @@
         <v-tab to="/events"
           ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
         >
+      
       </v-tabs>
       <!-- User Dropdown Menu -->
       <v-menu v-if="!$vuetify.breakpoint.xsOnly" offset-y>

@@ -2,11 +2,11 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
-        <v-badge
+        <!-- <v-badge
           class="completed-count"
           :content="goal.completedCount"
           color="#2f53b6"
-        ></v-badge>
+        ></v-badge> -->
         <div
           class="
             d-flex
@@ -19,12 +19,12 @@
             font-weight-bold
           "
         >
-          <div>{{ goal.title }}</div>
+          <div class="goalTitle">{{ goal.title }}</div>
         </div>
         <div class="pa-4 card-body">
           <transition name="fade"
-            ><v-icon v-if="!isFlipped" class="checkmark" x-large color="white"
-              >mdi-checkbox-marked-circle-outline</v-icon
+            ><v-icon v-if="!isFlipped" class="checkmark" x-large
+              >mdi-flag-checkered</v-icon
             ></transition
           >
         </div>
@@ -32,7 +32,7 @@
       <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
         <div @click="isFlipped = !isFlipped" class="clickable">
           <p class="d-flex justify-space-between text-caption ma-0">
-            <span class="font-weight-bold">Category: </span
+            <span class="font-weight-bold values">Focus Area: </span
             ><v-chip x-small color="white"
               ><v-icon class="mr-1" x-small>{{
                 categoryIcon(goal.category)
@@ -41,16 +41,16 @@
             >
           </p>
           <p class="d-flex justify-space-between text-caption ma-0">
-            <span class="font-weight-bold">Last Completed: </span
-            >{{ new Date(goal.updatedAt).toDateString() }}
+            <span class="font-weight-bold values">Last Completed: </span
+            ><span class="values">{{ new Date(goal.updatedAt).toDateString() }}</span>
           </p>
           <p class="d-flex justify-space-between text-caption">
-            <span class="font-weight-bold">Completed Count: </span
-            >{{ goal.completedCount }}
+            <span class="font-weight-bold values">Completed Activities: </span
+            ><span class="">{{ goal.completedCount }}</span>
           </p>
         </div>
         <v-tooltip
-          :disabled="incompleteGoals.length < 5"
+          :disabled="incompleteGoals.length < 8"
           max-width="200"
           bottom
         >
@@ -58,9 +58,9 @@
             <div v-on="on" class="d-flex justify-center">
               <v-btn
                 @click="repeatGoal(goal)"
-                :disabled="incompleteGoals.length > 4"
+                :disabled="incompleteGoals.length > 8"
                 outlined
-                dark
+                
                 >Repeat Goal</v-btn
               >
             </div>
@@ -114,14 +114,19 @@ export default {
 <style scoped>
 .checkmark {
   font-size: 64px !important;
+  color: var(--mh-green)
 }
 .card-title {
-  background-color: #d1f97c;
   font-size: 12px;
+  color: var(--mh-green);
   min-height: 50px;
 }
+.goalTitle{
+ font-weight: 400;
+ font-size: 1.25rem;
+}
 .card-body {
-  background-color: var(--mh-green);
+  background-color: white;
 }
 .clamp-two-lines {
   overflow: hidden;
@@ -135,7 +140,7 @@ export default {
   top: 7px;
 }
 .flip-card {
-  background-color: transparent;
+
   height: 150px;
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }
@@ -170,14 +175,16 @@ export default {
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
   text-align: center;
-  background-color: var(--mh-green);
+  background-color: white;
 }
 
 /* Style the back side */
 .flip-card-back {
-  background-color: var(--mh-blue);
-  color: white;
+  background-color: white;
   transform: rotateY(180deg);
+}
+.flip-card-back.values {
+  color: var(--mh-green); 
 }
 .fade-enter-active,
 .fade-leave-active {
