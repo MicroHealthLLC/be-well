@@ -210,7 +210,7 @@ export default {
   background-color: #ff5252;
   color: white !important;
 }
-.v-slide-group__content{
+/* .v-slide-group__content{
   white-space: ;
-}
+} */
 </style>
