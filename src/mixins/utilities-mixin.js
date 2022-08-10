@@ -2,13 +2,13 @@ export default {
   data() {
     return {
       categories: [
-        {
+        /* {
           title: "",
           icon: "",
           query: "all",
           value: "ALL",
           image: "",
-        },
+        }, */
         {
           title: "Balance",
           icon: "mdi-human",
@@ -67,11 +67,11 @@ export default {
         },
       ],
       levels: [
-        {
+        /* {
           title: "All",
           value: "ALL",
           query: "all",
-        },
+        }, */
         {
           title: "Novice",
           value: "L1",
@@ -104,12 +104,12 @@ export default {
         },
       ],
       filters: [
-        {
+        /* {
           title: "All",
           label: "All",
           value: "ALL",
           query: "all",
-        },
+        }, */
         {
           title: "Novice",
           label: "Novice",
@@ -179,6 +179,7 @@ export default {
         Notification.requestPermission().then(function (permission) {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
+            console.log(activity.category)
             reg.showNotification(
               this.categoryString(activity.category),
               this.notification(activity)
