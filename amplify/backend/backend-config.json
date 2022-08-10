@@ -41,7 +41,16 @@
           },
           "additionalAuthenticationProviders": []
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "wellbeeinge2bd9338",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     }
   },
   "hosting": {

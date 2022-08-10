@@ -8,6 +8,6 @@
     },
     "conflictResolution": {},
     "apiName": "wellbeeing",
-    "gqlSchemaPath": "/mnt/c/Repos/well-beeing/amplify/backend/api/wellbeeing/schema.graphql"
+    "additionalAuthTypes": []
   }
 }
