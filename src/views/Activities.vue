@@ -22,7 +22,7 @@
         > -->
      </v-btn-toggle> 
       <!-- Category Selector -->
-      <div class="filterWrapper"  v-if="$route.name == 'Videos' || $route.name == 'Articles'">
+      <!-- <div class="filterWrapper"  v-if="$route.name == 'Videos' || $route.name == 'Articles'">
         <label class="text-light mb-2">
           <b>FILTERS</b>
         </label>
@@ -51,7 +51,7 @@
           }}<v-icon right small>{{ category.icon }}</v-icon></v-chip
         >
       </v-chip-group>
-      <!-- Filter Selector -->
+      Filter Selector 
     
        <label class="text-light mt-2">
         Fitness Level
@@ -72,7 +72,7 @@
           filter
           >{{ filter.label }}</v-chip
         >
-      </v-chip-group>
+      </v-chip-group> -->
 
           <!-- <label class="text-light mt-2">
         My Favorites
@@ -95,7 +95,7 @@
         >
       </v-chip-group> -->
       <!-- Activities Content (Goals, Reminders, Videos, Articles, Podcasts) -->
-      </div>
+      <!-- </div> -->
    
       <router-view
         v-if="mounted"

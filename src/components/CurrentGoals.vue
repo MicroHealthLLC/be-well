@@ -75,6 +75,7 @@
                <v-progress-linear
                 height="10"
                 :value="(goal.progress / goal.stepCount) * 100"
+                :load="log(goal)"
                 striped
                 rounded
                 color="lime"
@@ -329,10 +330,10 @@ export default {
     ...mapGetters(["incompleteGoals", "reminders", "saving"]),
   },
   methods: {
-    ...mapActions(["updateGoalById", "addGoal"]),
-    log(e){
-      console.log(e)
-    },
+    ...mapActions(["updateGoalById", "addGoal", "removeGoal"]),
+    // log(e){
+    //   console.log(e)
+    // },
     openGoalForm(goal) {
       this.dialog = true;
       this.goal = goal;

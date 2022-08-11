@@ -271,6 +271,43 @@ export const listFavoriteVideos = /* GraphQL */ `
     }
   }
 `;
+export const getPreferences = /* GraphQL */ `
+  query GetPreferences($id: ID!) {
+    getPreferences(id: $id) {
+      id
+      preference_items {
+        id
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPreferences = /* GraphQL */ `
+  query ListPreferences(
+    $filter: ModelPreferencesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPreferences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        preference_items {
+          id
+          category
+          level
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getEvent = /* GraphQL */ `
   query GetEvent($id: ID!) {
     getEvent(id: $id) {

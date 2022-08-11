@@ -279,9 +279,9 @@ export default {
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),    
-    //userCategories(){
-    //  return this.incompleteGoals.map(t => t.category)
-    //},
+    userCategories(){
+      return this.incompleteGoals.map(t => t.category)
+    },
     remind: {
       get() {
         return this.remindersOn;

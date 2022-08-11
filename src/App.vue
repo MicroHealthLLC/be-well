@@ -32,7 +32,7 @@ export default {
   name: "App",
   mixins: [utilitiesMixin],
   methods: {
-    ...mapActions(["fetchCurrentUser", "fetchReminders"]),
+    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferenceItems"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
     checkReminders() {
       // Get current time for check
@@ -61,7 +61,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["reminders", "remindersOn", "snackbar", "user"]),
+    ...mapGetters(["reminders", "remindersOn", "snackbar", "user", "preferenceItems"]),
     filteredReminders() {
       const now = new Date();
       const day = now.getDay();
@@ -75,6 +75,8 @@ export default {
     await this.fetchCurrentUser();
     if (this.user) {
       this.fetchReminders();
+      this.fetchPreferenceItems();
+      console.log(this.preferenceItems)
     }
     this.TOGGLE_REMINDERS_ON(true);
   },
@@ -99,8 +101,29 @@ export default {
 }
 .main-wrapper {
   background-color: #f0f3f7;
+  
 }
+.goalHeaders{
+ color: var(--mh-blue);
+}
+
 .clickable {
   cursor: pointer;
 }
+
+  ::-webkit-scrollbar {
+    background: #ededed;
+    overflow: hidden;
+    border-radius: 4px;
+    height: 8px;
+    margin:5px !important;
+    padding:2px !important;
+    width: 8px;
+  }  
+  ::-webkit-scrollbar-thumb {
+    background: lightgray;
+    border-radius: 4px;
+  }
+
+
 </style>
