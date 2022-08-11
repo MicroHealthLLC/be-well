@@ -101,6 +101,21 @@ type FavoriteVideo @model @auth(rules: [{ allow: owner }]) {
   video: Video @hasOne(fields: ["videoId"])
 }
 
+type Preferences @model @auth(
+ rules: [
+     { allow: owner }
+    ]
+  ) {
+  id: ID!
+  preference_items: [PreferenceItems]
+}
+
+type PreferenceItems {
+  id: ID!
+  category: Category!
+  level: Level!
+}
+
 type Event
   @model
   @auth(

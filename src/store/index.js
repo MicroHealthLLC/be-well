@@ -7,6 +7,7 @@ import eventStore from "./modules/event-store";
 import goalStore from "./modules/goal-store";
 import reminderStore from "./modules/reminder-store";
 import videoStore from "./modules/video-store";
+import preferencesStore from "./modules/preferences-store";
 
 Vue.use(Vuex);
 
@@ -40,5 +41,6 @@ export default new Vuex.Store({
     goalStore,
     reminderStore,
     videoStore,
+    preferencesStore
   },
 });

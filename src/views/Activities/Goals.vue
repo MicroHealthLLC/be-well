@@ -29,15 +29,15 @@
     </div>
     <v-divider class="mb-4"></v-divider>
     <!-- Goals Table -->
-    <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
+    <!-- <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
       <div class="d-flex text-center flex-column">
         <div class="mt-4">
           <v-icon color="grey" x-large>mdi-flag</v-icon>
           <p class="placeholder-text">You currently have no Goals set</p>
         </div>
       </div>
-    </v-card>
-    <div v-else>
+    </v-card> -->
+    <div>
        <v-row>
          <v-col        
           cols="12"

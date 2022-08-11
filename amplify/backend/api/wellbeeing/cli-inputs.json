@@ -8,6 +8,7 @@
     },
     "conflictResolution": {},
     "apiName": "wellbeeing",
-    "gqlSchemaPath": "/mnt/c/Repos/well-beeing/amplify/backend/api/wellbeeing/schema.graphql"
+    "gqlSchemaPath": "C:\\Users\\JuanRivera\\MH Repos\\Wellbeing app\\well-beeing\\amplify\\backend\\api\\wellbeeing\\schema.graphql",
+    "additionalAuthTypes": []
   }
 }

@@ -1,5 +1,5 @@
 <template>
-<div class="bg-img" :load="log(userCategories)">
+<div class="bg-img">
   <div class="bg-overlay">
     <div
       class="
@@ -115,7 +115,7 @@
           <v-form ref="form" v-model="valid">
             <v-select
               v-model="reminder.category"
-              :items="filteredCategories.filter(t => userCategories.includes(t.value))"
+              :items="filteredCategories"
               item-text="title"
               item-value="value"
               label="My Focus Area"
@@ -279,9 +279,9 @@ export default {
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),    
-    userCategories(){
-      return this.incompleteGoals.map(t => t.category)
-    },
+    // userCategories(){
+    //   return this.incompleteGoals.map(t => t.category)
+    // },
     remind: {
       get() {
         return this.remindersOn;

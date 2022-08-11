@@ -337,6 +337,51 @@ export const onDeleteFavoriteVideo = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePreferences = /* GraphQL */ `
+  subscription OnCreatePreferences($owner: String) {
+    onCreatePreferences(owner: $owner) {
+      id
+      preference_items {
+        id
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePreferences = /* GraphQL */ `
+  subscription OnUpdatePreferences($owner: String) {
+    onUpdatePreferences(owner: $owner) {
+      id
+      preference_items {
+        id
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePreferences = /* GraphQL */ `
+  subscription OnDeletePreferences($owner: String) {
+    onDeletePreferences(owner: $owner) {
+      id
+      preference_items {
+        id
+        category
+        level
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateEvent = /* GraphQL */ `
   subscription OnCreateEvent {
     onCreateEvent {
