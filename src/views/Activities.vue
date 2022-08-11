@@ -38,9 +38,9 @@
         column
       >
       
-        <!-- <v-chip class="mb-0" active-class="selected-category-chip" filter
+         <v-chip class="mb-0" active-class="selected-category-chip" filter
           >All</v-chip
-        > -->
+        > 
         <v-chip
           v-for="(category, index) in filteredCategories"
           :key="index"

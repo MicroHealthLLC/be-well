@@ -1,21 +1,50 @@
 <template>
-  <div class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <!-- Novice Videos -->
-    <span class="text-h6 text-sm-h5"
-      ><b class="goalHeaders">Novice {{ categoryTitle }} Videos</b></span
-    >
+  <div v-if="play">
+    <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
+      <v-card width="1200">
+        <div class="video-container">
+          <iframe
+            @click="nextVideo()"
+            :src="embedVideoURL + currentVideo.videoId"
+            width="560"
+            height="349"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <v-card-title
+          class="d-flex justify-space-between align-start flex-nowrap"
+        >
+          {{ levelToString(currentVideo.level) + " " + currentVideo.category }}
+          <div>
+            <router-link to="/activities/reminders"
+              ><v-btn class="ma-2 back" color="var(--mh-orange)" dark>
+                <v-icon dark left> mdi-arrow-left </v-icon>Back
+              </v-btn>
+            </router-link>
+            <v-btn @click="nextVideo()" class="ma-2 back" color="var(--mh-green)" dark> Next
+              <v-icon dark left> mdi-arrow-right </v-icon>
+            </v-btn>
+          </div>
+        </v-card-title>
+      </v-card>
+    </v-dialog>
+  </div>
+  <div v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
+    <span class="text-h6 text-sm-h5">
+      <b class="goalHeaders">Beginner {{ currentVideo.category }} Videos</b>
+    </span>
     <v-divider class="mb-4"></v-divider>
 
     <div class="grid-container mb-6">
       <video-card
-        v-for="(video, index) in noviceVideos"
+        v-for="(video, index) in videos"
         :key="index"
         :video="video"
       />
     </div>
 
-    <!-- Beginner Videos -->
-    <span class="text-h6 text-sm-h5"
+    <!-- <span class="text-h6 text-sm-h5"
       ><b class="goalHeaders">Beginner {{ categoryTitle }} Videos</b></span
     >
     <v-divider class="mb-4"></v-divider>
@@ -28,7 +57,6 @@
       />
     </div>
 
-    <!-- Competent Videos -->
     <span class="text-h6 text-sm-h5"
       ><b class="goalHeaders">Competent {{ categoryTitle }} Videos</b></span
     >
@@ -42,7 +70,6 @@
       />
     </div>
 
-    <!-- Proficient Videos -->
     <span class="text-h6 text-sm-h5"
       ><b class="goalHeaders">Proficient {{ categoryTitle }} Videos</b></span
     >
@@ -56,7 +83,6 @@
       />
     </div>
 
-    <!-- Expert Videos -->
     <span class="text-h6 text-sm-h5"
       ><b class="goalHeaders">Expert {{ categoryTitle }} Videos</b></span
     >
@@ -68,113 +94,31 @@
         :key="index"
         :video="video"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+//import { mapGetters } from "vuex";
+import videosMixin from "../../mixins/videos-mixin";
 import VideoCard from "../../components/VideoCard.vue";
-import youtube from "../../apis/youtube";
+//import youtube from "../../apis/youtube";
 
 export default {
   name: "Videos",
   props: ["selectedCategory"],
+  mixins: [videosMixin],
   components: {
     VideoCard,
   },
   data() {
     return {
-      noviceVideos: [],
-      beginnerVideos: [],
-      competentVideos: [],
-      proficientVideos: [],
-      expertVideos: [],
-      categories: [
-        {
-          title: "Balance",
-          query: "balance",
-          key: "BALANCE",
-        },
-        {
-          title: "Endurance",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Flexibility & Mobility",
-          query: "flexibility-mobility",
-          key: "FLEXIBILITY_MOBILITY",
-        },
-        {
-          title: "Mind",
-          query: "mind",
-          key: "MIND",
-        },
-        {
-          title: "Nutrition",
-          query: "nutrition",
-          key: "NUTRITION",
-        },
-        {
-          title: "Recovery",
-          query: "recovery",
-          key: "RECOVERY",
-        },
-        {
-          title: "Strength",
-          query: "strength",
-          key: "STRENGTH",
-        },
-        /* {
-          title: "",
-          query: "endurance",
-          key: "ENDURANCE",
-        },
-        {
-          title: "Ergonomics",
-          query: "ergonomics",
-          key: "ERGONOMICS",
-        },
-        {
-          title: "Meditation",
-          query: "meditation",
-          key: "MEDITATION",
-        },
-        {
-          title: "Muscle Tone/Movement",
-          query: "muscle-tone-movement",
-          key: "MUSCLE",
-        },
-        {
-          title: "Posture",
-          query: "posture",
-          key: "POSTURE",
-        },
-        {
-          title: "Stress Relief",
-          query: "stress-relief",
-          key: "STRESS_RELIEF",
-        },
-        {
-          title: "Stretching",
-          query: "stretching",
-          key: "STRETCHING",
-        },
-        {
-          title: "Yoga",
-          query: "yoga",
-          key: "YOGA",
-        }, */
-      ],
+      play: true,
+      embedVideoURL: "https://www.youtube.com/embed/",
     };
   },
   methods: {
-    async fetchCategoryVideos() {
+    /* async fetchCategoryVideos() {
       const key = this.categories[this.selectedCategory].key;
 
       const res = await youtube.get("", {
@@ -191,7 +135,7 @@ export default {
         },
       });
 
-      this.beginnerVideos = res1.data.items;
+    this.beginnerVideos = res1.data.items;
 
       const res2 = await youtube.get("", {
         params: {
@@ -216,18 +160,36 @@ export default {
       });
 
       this.expertVideos = res4.data.items;
+    }, */
+    levelToString(level) {
+      console.log(this.videos);
+      switch (level) {
+        case "L1":
+          return "Novice";
+        case "L2":
+          return "Beginner";
+        case "L3":
+          return "Competent";
+        case "L4":
+          return "Proficient";
+        case "L5":
+          return "Expert";
+        default:
+          return "Novice";
+      }
     },
   },
   computed: {
     categoryTitle() {
+      console.log(this.videos);
       return this.categories[this.selectedCategory].title;
     },
   },
-  async mounted() {
-    await this.fetchCategoryVideos();
+  mounted() {
+      this.nextVideo();
   },
   watch: {
-    selectedCategory() {
+    /* selectedCategory() {
       let categoryQuery = this.categories[this.selectedCategory].query;
 
       if (this.$route.query.category != categoryQuery) {
@@ -237,6 +199,11 @@ export default {
         });
 
         this.fetchCategoryVideos();
+      }
+    }, */
+    autoPlayVideo(videoId) {
+      if (this.play) {
+        this.embedVideoURL = `https://www.youtube.com/embed/${videoId}`;
       }
     },
   },
@@ -255,5 +222,20 @@ export default {
 }
 .goalHeaders {
   color: var(--mh-blue);
+}
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+a {
+  text-decoration: none;
 }
 </style>
