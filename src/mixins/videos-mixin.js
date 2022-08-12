@@ -367,10 +367,10 @@ export default {
         },
         {
           title: "Food & Hydration 1 2",
-          videoId: "",
+          videoId: "cN-jF7VplJc",
           category: "Nutrition",
           level: "n/a",
-          nextVideo: "cN-jF7VplJc",
+          nextVideo: "",
         },
       ],
     };
@@ -383,8 +383,14 @@ export default {
         let current = this.videos.filter(
           (v) => v.videoId == this.currentVideo.videoId
         );
-        let next = this.videos.filter((v) => v.videoId == current[0].nextVideo);
-        this.currentVideo = next[0];
+        if (current[0].nextVideo){
+          let next = this.videos.filter((v) => v.videoId == current[0].nextVideo);
+          this.currentVideo = next[0];
+        } else {
+          this.currentVideo = {}
+        }
+        
+        
       }
     },
     isEmpty(obj) {
