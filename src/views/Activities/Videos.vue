@@ -1,10 +1,9 @@
 <template>
   <div v-if="play">
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
-      <v-card width="1200">
+      <v-card width="1200" v-click-outside="onClickOutside">
         <div class="video-container">
           <iframe
-            @click="nextVideo()"
             :src="embedVideoURL + currentVideo.videoId"
             width="560"
             height="349"
@@ -118,6 +117,9 @@ export default {
     };
   },
   methods: {
+    onClickOutside() {
+      this.$router.push("/activities/reminders")
+    },
     /* async fetchCategoryVideos() {
       const key = this.categories[this.selectedCategory].key;
 
@@ -175,7 +177,7 @@ export default {
         case "L5":
           return "Expert";
         default:
-          return "Novice";
+          return "";
       }
     },
   },
@@ -189,23 +191,7 @@ export default {
       this.nextVideo();
   },
   watch: {
-    /* selectedCategory() {
-      let categoryQuery = this.categories[this.selectedCategory].query;
-
-      if (this.$route.query.category != categoryQuery) {
-        this.$router.replace({
-          name: "Videos",
-          query: { category: this.categories[this.selectedCategory].query },
-        });
-
-        this.fetchCategoryVideos();
-      }
-    }, */
-    autoPlayVideo(videoId) {
-      if (this.play) {
-        this.embedVideoURL = `https://www.youtube.com/embed/${videoId}`;
-      }
-    },
+    
   },
 };
 </script>

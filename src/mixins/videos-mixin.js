@@ -74,11 +74,8 @@ export default {
         let current = this.videos.filter(
           (v) => v.videoId == this.currentVideo.videoId
         );
-        console.log(current)
         let next = this.videos.filter((v) => v.videoId == current[0].nextVideo)
-        console.log(next)
         this.currentVideo = next[0];
-        console.log(this.currentVideo)
       }
     },
     isEmpty(obj) {
