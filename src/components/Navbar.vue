@@ -10,7 +10,7 @@
       <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
       <!-- App Logo -->
       <router-link to="/home"
-        ><v-img src="../assets/well-being-logo.png" width="125"
+        ><v-img src="../assets/well-being-logo-new.png" width="195"
       /></router-link>
 
       <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>

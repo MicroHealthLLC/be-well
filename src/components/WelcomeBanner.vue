@@ -14,7 +14,9 @@
               </div>
             </div> -->
             <span class="header">
-              <b>Bee a better version of <span class="mhG">You</span>.  <span class="brand">Well<span class="mhG">Beeing</span></span>'s got your back!</b>
+              <b>Be a better version of <span class="mhG">You</span>.
+              <p>We've got your back!</p>                
+               </b>
             </span>
          
           </div> </v-col
@@ -62,7 +64,7 @@ export default {
 .mh-message {
   text-align: left;
   padding: 5px 10px;
-  border-radius: .35rem;
+  border-radius: .75rem;
   background-color: rgba(221,	144,	54, 0.15);
   border: solid .5px rgba(221,	144,	54, 0.35);
 }

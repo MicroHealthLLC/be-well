@@ -11,8 +11,8 @@
             >{{ error }}</v-alert
           >
           <v-card-title class="d-flex flex-column"
-            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
-            <p class="text-body-1">Sign in to Well Beeing</p></v-card-title
+            ><v-img src="../assets/well-being-logo-new.png" max-width="300"></v-img>
+            <p class="text-body-1">Sign in to <span class="beWell">be well</span></p></v-card-title
           >
           <v-card-text>
             <v-form ref="form" v-model="valid">
@@ -108,5 +108,9 @@ a {
 }
 .main-container {
   height: 100vh;
+}
+.beWell {
+  font-family: inherit;
+  font-weight: 600;
 }
 </style>

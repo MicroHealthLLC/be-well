@@ -1,5 +1,5 @@
 <template>
-  <v-row :load="log(preferences)">
+  <v-row>
     <v-col class="col-12"
       ><span class="text-h6 text-sm-h5">My Profile</span>
 
@@ -159,61 +159,119 @@
               <v-divider></v-divider>
               <v-card-text>
               <template>
-              <!-- <v-data-table
+           
+              <v-data-table
+               v-if="preferences && preferences[0] && preferences[0].preference_items"
               :headers="headers"
-              :items="preferences"
+              :items="preferences[0].preference_items"
               class="elevation-1"
             >
-              <template v-slot:[`item.novice`]="{ item }">
+              <template v-slot:[`item.l1`]="{ item }">
                 <v-checkbox
-                  v-model="item.novice"  
-                  :disabled="item.beginner || item.competent || item.proficient || item.expert || item.not_interested"
-                  @click="noviceToggle(preferences.indexOf(item), item.novice)"   
+                  v-model="item.l1"  
+                  :disabled="item.l2 || item.l3 || item.l4 || item.l5 || item.not_interested"
+                  @click="noviceToggle(preferences[0].preference_items.indexOf(item), item.l1)"   
                   color="success"   
                  ></v-checkbox>
               </template>
-              <template v-slot:[`item.beginner`]="{ item }">
+              <template v-slot:[`item.l2`]="{ item }">
                 <v-checkbox
-                  v-model="item.beginner"  
-                  :disabled="item.novice || item.competent ||  item.proficient || item.expert || item.not_interested"
-                  @click="beginnerToggle(preferences.indexOf(item), item.beginner)"                  
+                  v-model="item.l2"  
+                  :disabled="item.l1 || item.l3 || item.l4 || item.l5 || item.not_interested"
+                  @click="beginnerToggle(preferences[0].preference_items.indexOf(item), item.l2)"                  
                   color="success"   
                ></v-checkbox>
               </template>
-              <template v-slot:[`item.competent`]="{ item }">
+              <template v-slot:[`item.l3`]="{ item }">
                 <v-checkbox
-                  v-model="item.competent"
-                  :disabled="item.novice || item.beginner ||  item.proficient || item.expert || item.not_interested"
-                  @click="competentToggle(preferences.indexOf(item), item.competent)"     
+                  v-model="item.l3"
+                  :disabled="item.l1 || item.l2 || item.l4 || item.l5 || item.not_interested"
+                  @click="competentToggle(preferences[0].preference_items.indexOf(item), item.l3)"     
                   color="success"  
                 ></v-checkbox>
               </template>
-              <template v-slot:[`item.proficient`]="{ item }">
+              <template v-slot:[`item.l4`]="{ item }">
                 <v-checkbox
-                  v-model="item.proficient"
-                  :disabled="item.novice || item.competent ||  item.beginner || item.expert || item.not_interested"
-                  @click="proficientToggle(preferences.indexOf(item), item.proficient)"     
+                  v-model="item.l4"
+                  :disabled="item.l1 || item.l2 || item.l3 || item.l5 || item.not_interested"
+                  @click="proficientToggle(preferences[0].preference_items.indexOf(item), item.l4)"     
                   color="success"   
                 ></v-checkbox>
               </template>
-              <template v-slot:[`item.expert`]="{ item }">
+              <template v-slot:[`item.l5`]="{ item }">
                 <v-checkbox
-                  v-model="item.expert"
-                  :disabled="item.novice || item.competent ||  item.proficient || item.beginner || item.not_interested"
-                  @click="expertToggle(preferences.indexOf(item), item.expert)"     
+                  v-model="item.l5"
+                   :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.not_interested"
+                  @click="expertToggle(preferences[0].preference_items.indexOf(item), item.l5)"     
                   color="success" 
               ></v-checkbox>
               </template>
               <template v-slot:[`item.not_interested`]="{ item }">
                 <v-checkbox
                   v-model="item.not_interested"
-                  :disabled="item.novice || item.competent ||  item.proficient || item.expert || item.beginner"
-                  @click="nIToggle(preferences.indexOf(item), item.not_interested)"     
+                    :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.l5"
+                  @click="nIToggle(preferences[0].preference_items.indexOf(item), item.not_interested)"     
                   color="success" 
                 ></v-checkbox>
               </template>
           
-             </v-data-table> -->
+             </v-data-table>
+              <v-data-table
+              v-else
+              :headers="headers"
+              :items="tablePreferences.preference_items"
+              class="elevation-1"
+            >
+              <template v-slot:[`item.l1`]="{ item }">
+                <v-checkbox
+                  v-model="item.l1"  
+                  :disabled="item.l2 || item.l3 || item.l4 || item.l5 || item.not_interested"
+                  @click="noviceToggle(tablePreferences.preference_items.indexOf(item), item.l1)"   
+                  color="success"   
+                 ></v-checkbox>
+              </template>
+              <template v-slot:[`item.l2`]="{ item }">
+                <v-checkbox
+                  v-model="item.l2"  
+                  :disabled="item.l1 || item.l3 || item.l4 || item.l5 || item.not_interested"
+                  @click="beginnerToggle(tablePreferences.preference_items.indexOf(item), item.l2)"                  
+                  color="success"   
+               ></v-checkbox>
+              </template>
+              <template v-slot:[`item.l3`]="{ item }">
+                <v-checkbox
+                  v-model="item.l3"
+                  :disabled="item.l1 || item.l2 || item.l4 || item.l5 || item.not_interested"
+                  @click="competentToggle(tablePreferences.preference_items.indexOf(item), item.l3)"     
+                  color="success"  
+                ></v-checkbox>
+              </template>
+              <template v-slot:[`item.l4`]="{ item }">
+                <v-checkbox
+                  v-model="item.l4"
+                  :disabled="item.l1 || item.l2 || item.l3 || item.l5 || item.not_interested"
+                  @click="proficientToggle(tablePreferences.preference_items.indexOf(item), item.l4)"     
+                  color="success"   
+                ></v-checkbox>
+              </template>
+              <template v-slot:[`item.l5`]="{ item }">
+                <v-checkbox
+                  v-model="item.l5"
+                   :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.not_interested"
+                  @click="expertToggle(tablePreferences.preference_items.indexOf(item), item.l5)"     
+                  color="success" 
+              ></v-checkbox>
+              </template>
+              <template v-slot:[`item.not_interested`]="{ item }">
+                <v-checkbox
+                  v-model="item.not_interested"
+                    :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.l5"
+                  @click="nIToggle(tablePreferences.preference_items.indexOf(item), item.not_interested)"     
+                  color="success" 
+                ></v-checkbox>
+              </template>
+          
+             </v-data-table>
               </template>
               </v-card-text>
               <v-card-actions class="d-flex justify-end">
@@ -244,7 +302,8 @@ export default {
     return {
       formValid: true,
       menu: false,
-      // isEditing: false, 
+      // isEditing: false,
+       
       given_name: "",
       family_name: "",
       birthdate: "",
@@ -253,107 +312,108 @@ export default {
       confirmPassword: "",
       hasError: false,
       error: "",
-      prefs:{ preference_items:[
-        {
-        level: "L1", category: "BALANCE"
-        },
-        {
-        level: "L2", category: "ENDURANCE"
-        }       
-       ]},
-      preferencesT: [
-         {
-          title: "Balance",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Endurance",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Ergonomics",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Flexibility & Mobility",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Mind",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Nutrition",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Recovery",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-        {
-          title: "Strength",
-          novice: false,
-          beginner: false,
-          competent: false, 
-          proficient:false, 
-          expert: false, 
-          not_interested: false, 
-        },
-      ],
+      tablePreferences: {
+            preference_items: [
+            {
+              category: "Balance",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Endurance",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Ergonomics",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Flexibility & Mobility",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Mind",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Nutrition",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Recovery",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+            {
+              category: "Strength",
+              l1: false,
+              l2: false,
+              l3: false, 
+              l4:false, 
+              l5: false, 
+              not_interested: false, 
+            },
+          ],
+        },    
         headers: [
           {
             text: 'Focus Area',
             align: 'start',
             sortable: false,
-            value: 'title',
+            value: 'category',
           },
-          { text: 'Novice', value: 'novice' },
-          { text: 'Beginner', value: 'beginner' },
-          { text: 'Competent', value: 'competent' },
-          { text: 'Proficient', value: 'proficient' },
-          { text: 'Expert', value: 'expert' },
+          { text: 'Novice', value: 'l1' },
+          { text: 'Beginner', value: 'l2' },
+          { text: 'Competent', value: 'l3' },
+          { text: 'Proficient', value: 'l4' },
+          { text: 'Expert', value: 'l5' },
           { text: 'Not Interested', value: 'not_interested' },
         ],
    
     };
   },
   methods: {
-    ...mapActions(["changePassword", "updateUser", "fetchPreferences", "addPreferences"]),
+    ...mapActions([
+      "changePassword", 
+      "updateUser", 
+      "fetchPreferences", 
+      "addPreferences", 
+      "addPreferenceItems",
+      "updatePreferencesById"
+      ]),
     // editPreferences(){
     //   this.isEditing = true;
     // },
@@ -361,33 +421,45 @@ export default {
       console.log(e)
     },
     async savePreferences() {
-      console.log(this.prefs)
-      this.addPreferences(this.prefs)
+      if(this.preferences && this.preferences[0].preference_items){
+       await this.updatePreferencesById({
+        id: this.preferences[0].id,
+        preference_items: this.preferences[0].preference_items
+        })
+        console.log(this.preferences[0])
+         console.log("update")
+      } else {
+        await this.addPreferences(this.tablePreferences)
+         console.log("new preference")
+      }
+      // console.log(this.tablePreferences)
+      // console.log(this.preferences[0])
+     
     },
-    // noviceToggle(i, val){
-    //   console.log(i, val) 
-    //   console.log("novice",  this.preferences[i].novice)     
-    // },
-    // beginnerToggle(i, val,){     
-    //   console.log(i, val) 
-    //   console.log("beginner", this.preferences[i].beginner)     
-    // },
-    // competentToggle(i, val){     
-    //    console.log(i, val)   
-    //    console.log("competent", this.preferences[i].competent)     
-    // },
-    // proficientToggle(i, val){     
-    //   console.log(i, val) 
-    //   console.log("proficient", this.preferences[i].proficient)     
-    // },
-    // expertToggle(i, val){     
-    //   console.log(i, val) 
-    //   console.log("expert", this.preferences[i].expert)     
-    // },
-    // nIToggle(i, val){     
-    //    console.log(i, val) 
-    //    console.log("not interested", this.preferences[i].not_interested)     
-    // },
+    noviceToggle(i, val){
+      console.log(i, val) 
+      // console.log("novice",  this.tablePreferences.preference_items[i].l1)     
+    },
+    beginnerToggle(i, val,){     
+      console.log(i, val) 
+      // console.log("beginner", this.tablePreferences. preference_items[i].l2)     
+    },
+    competentToggle(i, val){     
+       console.log(i, val)   
+      //  console.log("competent", this.tablePreferences[i].l3)     
+    },
+    proficientToggle(i, val){     
+      console.log(i, val) 
+      // console.log("proficient", this.tablePreferences[i].l5)     
+    },
+    expertToggle(i, val){     
+      console.log(i, val) 
+      // console.log("expert", this.tablePreferences[i].l6)     
+    },
+    nIToggle(i, val){     
+       console.log(i, val) 
+      //  console.log("not interested", this.tablePreferences[i].not_interested)     
+    },
     updatePreferences(){
       this.isEditing = false;
     },
@@ -424,7 +496,8 @@ export default {
   },
   computed: {
     ...mapGetters(["saving", "user", "preferences"]),
-  },
+
+ },
   mounted() {
     this.fetchPreferences();
     this.given_name = this.user.attributes.given_name || "";

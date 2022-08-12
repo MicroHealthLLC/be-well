@@ -185,8 +185,8 @@
             <v-select
               v-model="reminder.category"
               :items="filteredCategories"
-              item-text="title"
-              item-value="value"
+              item-text="category"
+              item-value="category"
               label="Focus Area"
               :rules="[(v) => !!v || 'Focus Area required']"
               required

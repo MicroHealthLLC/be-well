@@ -11,7 +11,7 @@
             >{{ error }}</v-alert
           >
           <v-card-title class="d-flex flex-column"
-            ><v-img src="../assets/well-being-logo.png" max-width="300"></v-img>
+            ><v-img src="../assets/well-being-logo-new.png" max-width="300"></v-img>
             <p class="text-body-1">Please sign up below</p></v-card-title
           >
           <v-card-text>

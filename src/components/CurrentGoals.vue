@@ -346,6 +346,7 @@ export default {
       }
       try {
         if (this.goal.id) {
+          console.log(this.goal.category)
           await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,

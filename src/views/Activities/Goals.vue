@@ -238,8 +238,8 @@
             <v-select
               v-model="goal.category"
               :items="filteredCategories"
-              item-text="title"
-              item-value="value"
+              item-text="category"
+              item-value="category"
               label="I want to improve my..."
               :rules="[(v) => !!v || 'Improvement category is required']"
               required
@@ -362,6 +362,7 @@ export default {
       }
       try {
         if (this.goal.id) {
+          console.log(this.goal.category)
           await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,
@@ -371,6 +372,7 @@ export default {
             checklist: this.goal.checklist,
           });
         } else {
+            console.log(this.goal.category.toUpperCase())
           await this.addGoal(this.goal);
         }
       } catch (error) {
@@ -391,7 +393,7 @@ export default {
       if (this.$refs.goalform) {
         this.$refs.goalform.resetValidation();
       }
-      this.category = this.goal.category
+      this.category = this.goal.category.toUpperCase()
       this.goal = {       
         category: "",
         dueDate: "",

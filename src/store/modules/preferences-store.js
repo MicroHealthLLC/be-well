@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { createPreferences } from "@/graphql/mutations";
-import { createPreferenceItems } from "@/graphql/mutations";
+// import { createPreferenceItems } from "@/graphql/mutations";
 import { updatePreferences } from "@/graphql/mutations";
 import { updatePreferenceItems } from "@/graphql/mutations";
 import { listPreferences } from "@/graphql/queries";
@@ -15,7 +15,7 @@ export default {
   },
   actions: {
     async addPreferences({ commit, dispatch }, preference) {
-      console.log(preference)
+      // console.log(preference)
       commit("TOGGLE_SAVING", true);
       try {
         await API.graphql(
@@ -32,23 +32,24 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async addPreferenceItems({ commit, dispatch }, preferenceItem) {
-        commit("TOGGLE_SAVING", true);
-        try {
-          await API.graphql(
-            graphqlOperation(createPreferenceItems, { input:preferenceItem })
-          );
-          dispatch("fetchPreferenceItems");
-          commit("SET_SNACKBAR", {
-            show: true,
-            message: "Preferences successfully added!",
-            color: "var(--mh-green)",
-          });
-        } catch (error) {
-          console.log(error);
-        }
-        commit("TOGGLE_SAVING", false);
-      },
+    // async addPreferenceItems({ commit, dispatch }, preferenceItem) {
+    //   console.log(preferenceItem)
+    //     commit("TOGGLE_SAVING", true);
+    //     try {
+    //       await API.graphql(
+    //         graphqlOperation(createPreferences, { input:preferenceItem })
+    //       );
+    //       dispatch("fetchPreferenceItems");
+    //       commit("SET_SNACKBAR", {
+    //         show: true,
+    //         message: "Preferences successfully added!",
+    //         color: "var(--mh-green)",
+    //       });
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //     commit("TOGGLE_SAVING", false);
+    //   },
     async updatePreferencesById({ commit, dispatch }, preference) {
       commit("TOGGLE_SAVING", true);
       try {
@@ -88,7 +89,7 @@ export default {
       try {
         const res = await API.graphql(graphqlOperation(listPreferences));
         commit("SET_PREFERENCES", res.data.listPreferences.items);
-        console.log(res.data.listPreferences.items);
+        // console.log(res.data.listPreferences.items);
       } catch (error) {
         console.log(error);
       }
@@ -96,8 +97,8 @@ export default {
     async fetchPreferenceItems({ commit }) {
         try {
           const res = await API.graphql(graphqlOperation(listPreferenceItems));
-          commit("SET_PREFERENCE_ITEMS", res.data.listPreferenceItems.items);
-          console.log(res.data.listPreferenceItems.items);
+          commit("SET_PREFERENCE_ITEMS", res.data);
+          console.log(res.data);
         } catch (error) {
           console.log(error);
         }
@@ -105,10 +106,10 @@ export default {
   },
   mutations: {
     SET_PREFERENCES: (state, preferences) => (state.preferences = preferences),
-    SET_PREFERENCE_ITEMS: (state, preferenceItems) => (state.preferenceItems = preferenceItems),
+    // SET_PREFERENCE_ITEMS: (state, preferenceItems) => (state.preferenceItems = preferenceItems),
   },
   getters: {
     preferences: (state) => state.preferences,
-    preferenceItems: (state) => state.preferenceItems
+    // preferenceItems: (state) => state.preferenceItems
   },
 };

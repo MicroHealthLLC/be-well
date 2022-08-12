@@ -276,9 +276,13 @@ export const getPreferences = /* GraphQL */ `
     getPreferences(id: $id) {
       id
       preference_items {
-        id
         category
-        level
+        l1
+        l2
+        l3
+        l4
+        l5
+        not_interested
       }
       createdAt
       updatedAt
@@ -296,9 +300,13 @@ export const listPreferences = /* GraphQL */ `
       items {
         id
         preference_items {
-          id
           category
-          level
+          l1
+          l2
+          l3
+          l4
+          l5
+          not_interested
         }
         createdAt
         updatedAt

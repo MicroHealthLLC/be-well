@@ -1,3 +1,4 @@
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -235,8 +236,12 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["preferences"]),
     filteredCategories() {
-      return this.categories.filter((category) => category.value != "ALL");
+      if (this.preferences && this.preferences[0]){
+        let prefs = this.preferences[0].preference_items
+        return prefs.filter(c => c.category && c.not_interested == false)
+      } else  return this.categories.filter((category) => category.value != "ALL");
     },
     filteredLevels() {
       return this.levels.filter((level) => level.value != "ALL");
