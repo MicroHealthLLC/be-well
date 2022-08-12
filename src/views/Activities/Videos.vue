@@ -1,7 +1,7 @@
 <template>
   <div v-if="play">
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
-      <v-card width="1200" v-click-outside="onClickOutside">
+      <v-card width="1200">
         <div class="video-container">
           <iframe
             :src="embedVideoURL + currentVideo.videoId"
@@ -14,7 +14,7 @@
         <v-card-title
           class="d-flex justify-space-between align-start flex-nowrap"
         >
-          {{ levelToString(currentVideo.level) + " " + currentVideo.category }}
+          {{ currentVideo.title }}
           <div>
             <router-link to="/activities/reminders"
               ><v-btn class="ma-2 back" color="var(--mh-orange)" dark>
@@ -37,7 +37,7 @@
 
     <div class="grid-container mb-6">
       <video-card
-        v-for="(video, index) in videos"
+        v-for="(video, index) in videos[0]"
         :key="index"
         :video="video"
       />
@@ -117,9 +117,9 @@ export default {
     };
   },
   methods: {
-    onClickOutside() {
+    /* onClickOutside() {
       this.$router.push("/activities/reminders")
-    },
+    }, */
     /* async fetchCategoryVideos() {
       const key = this.categories[this.selectedCategory].key;
 
