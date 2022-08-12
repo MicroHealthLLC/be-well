@@ -1,5 +1,5 @@
   <template>
-  <div class="flip-card" :load="log(reminders)">
+  <div class="flip-card">
 <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable fontWhite">
       <div class="row">
@@ -143,6 +143,7 @@
              <span class="d-block">
             <v-btn
             @click="notify(reminder)"
+            :load="log(reminder)"
             class="mr-3"
             color="var(--mh-blue)"
             outlined
@@ -298,7 +299,6 @@ export default {
     log(e){
       console.log(e)
     },
- 
     openReminderForm(reminder) {
       this.reminder = reminder;
       this.dialog = true;

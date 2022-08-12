@@ -38,9 +38,9 @@
         column
       >
       
-        <v-chip class="mb-0" active-class="selected-category-chip" filter
+         <v-chip class="mb-0" active-class="selected-category-chip" filter
           >All</v-chip
-        >
+        > 
         <v-chip
           v-for="(category, index) in filteredCategories"
           :key="index"
@@ -101,7 +101,6 @@
         v-if="mounted"
         :selectedCategory="selectedCategory"
         :selectedFilter="selectedFilter"
-        :selectedFavFilter="selectedFavFilter"
       ></router-view>
     </v-col>
   </v-row>
@@ -141,6 +140,7 @@ export default {
   },
   mounted() {
     // Check for category query parameter in URL to set category
+    console.log(this.$route)
     if (this.$route.query.category) {
       this.selectedCategory = this.categories.findIndex(
         (category) => this.$route.query.category == category.query
@@ -152,11 +152,11 @@ export default {
         (filter) => this.$route.query.filter == filter.query
       );
     }
-    if (this.$route.query.favFilters) {
+    /* if (this.$route.query.favFilters) {
       this.selectedFavFilter = this.favFilters.findIndex(
         (favFilters) => this.$route.query.favFilters == favFilters.query
       );
-    }
+    } */
     this.mounted = true;
   },
 };
@@ -210,7 +210,7 @@ export default {
   background-color: #ff5252;
   color: white !important;
 }
-.v-slide-group__content{
+/* .v-slide-group__content{
   white-space: ;
-}
+} */
 </style>

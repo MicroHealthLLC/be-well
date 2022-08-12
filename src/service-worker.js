@@ -2,11 +2,15 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 self.addEventListener("notificationclick", (event) => {
+  console.log(event)
   event.notification.close();
   if (event.action === "view-content") {
+    
     let content = contentType(event.notification.data.contentType);
     let category = categoryQuery(event.notification.data.category);
     let level = levelQuery(event.notification.data.level);
+
+    console.log(content, category, level)
 
     clients.openWindow(
       `/activities/${content}?category=${category}&filter=${level}`
@@ -31,17 +35,19 @@ function categoryQuery(key) {
     STRENGTH: "strength",
   };
 
-  return categories[key] || "endurance";
+  return categories[key] || "balance";
 }
 
 function levelQuery(key) {
   const levels = {
-    BEGINNER: "beginner",
-    INTERMEDIATE: "intermediate",
-    ADVANCED: "advanced",
+    NOVICE: "beginner-1",
+    BEGINNER: "beginner-2",
+    COMPETENT: "intermediate-1",
+    PROFICIENT: "intermediate-2",
+    EXPERT: "advanced"
   };
 
-  return levels[key] || "beginner";
+  return levels[key] || "beginner-1";
 }
 
 function contentType(key) {
