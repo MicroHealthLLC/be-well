@@ -39,7 +39,7 @@
       <video-card
         v-for="(video, index) in videos[0]"
         :key="index"
-        :video="video"
+        
       />
     </div>
 
