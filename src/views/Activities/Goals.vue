@@ -238,8 +238,8 @@
             <v-select
               v-model="goal.category"
               :items="filteredCategories"
-              item-text="category"
-              item-value="category"
+              item-text="title"
+              item-value="value"
               label="I want to improve my..."
               :rules="[(v) => !!v || 'Improvement category is required']"
               required

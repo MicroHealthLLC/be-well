@@ -237,14 +237,142 @@ export default {
   },
   computed: {
     ...mapGetters(["preferences"]),
+    //Not sure why prefs is firing off errors....need to fix so we can consolidate all preferenceLevels into one value
+  //  prefs(){
+  //     if (this.preferences && this.preferences[0]){   
+  //       let strengthL = "";
+  //       let endureL = "";
+  //       let sPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')
+  //       let flexPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')      
+  //       if(sPrefs[0].l1){
+  //         strengthL = 'L1'
+  //       }
+  //       if(sPrefs[0].l2){
+  //         strengthL = 'L2'
+  //       }
+  //       if(sPrefs[0].l3){
+  //         strengthL = 'L3'
+  //       }
+  //       if(sPrefs[0].l4){
+  //         strengthL = 'L4'
+  //       }  
+  //       if(flexPrefs [0].l1){
+  //          endureL = 'L1'
+  //       }
+  //       if(flexPrefs [0].l2){
+  //         endureL =  'L2'
+  //       }
+  //       if(flexPrefs[0].l3){
+  //          endureL = 'L3'
+  //       }
+  //       if(flexPrefs [0].l4){
+  //         endureL =  'L4'
+  //       }       
+        
+  //       return {
+  //         levels:{
+  //           strength: strengthL,
+  //           endurance: enduranceLevel
+  //         }
+  //        }
+  //       }      
+  //     },
+  strengthLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')         
+      if(prefs[0].l1){
+        console.log("Strength: L1")
+        return 'L1'
+      }
+      if(prefs[0].l2){
+        console.log("Strength: L2")
+        return 'L2'
+      }
+      if(prefs[0].l3){
+        console.log("Strength: L3")
+        return 'L3'
+      }
+      if(prefs[0].l4){
+        console.log("Strength: L4")
+        return 'L4'
+      }      
+   }
+  },
+    flexLevel(){
+      if (this.preferences && this.preferences[0]){
+        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
+        if(prefs[0].l1){
+          console.log("Flexibility & Mobility: L1")
+          return 'L1'
+        }
+        if(prefs[0].l2){
+          console.log("Flexibility & Mobility: L2")
+          return 'L2'
+        }
+        if(prefs[0].l3){
+          console.log("Flexibility & Mobility: L3")
+          return 'L3'
+        }
+        if(prefs[0].l4){
+          console.log("Flexibility & Mobility: L4")
+          return 'L4'
+        }      
+     }
+    },
+    enduranceLevel(){
+      if (this.preferences && this.preferences[0]){
+        console.log("endurance")
+        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Endurance')   
+        console.log(prefs)
+        if(prefs[0].l1){
+          console.log("Endurance: L1")
+          return 'L1'
+        }
+        if(prefs[0].l2){
+          console.log("Endurance: L2")
+          return 'L2'
+        }
+        if(prefs[0].l3){
+          console.log("Endurance: L3")
+          return 'L3'
+        }
+        if(prefs[0].l4){
+          console.log("Endurance: L4")
+          return 'L4'
+        }      
+     }
+    },
+    balanceLevel(){
+      if (this.preferences && this.preferences[0]){
+        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Balance')   
+        if(prefs[0].l1){
+          console.log("Balance: L1")
+          return 'L1'
+        }
+        if(prefs[0].l2){
+          console.log("Balance: L2")
+          return 'L2'
+        }
+        if(prefs[0].l3){
+          console.log("Balance: L3")
+          return 'L3'
+        }
+        if(prefs[0].l4){
+          console.log("Balance: L4")
+          return 'L4'
+        }      
+     }
+    },
     filteredCategories() {
       if (this.preferences && this.preferences[0]){
-        let prefs = this.preferences[0].preference_items
-        return prefs.filter(c => c.category && c.not_interested == false)
-      } else  return this.categories.filter((category) => category.value != "ALL");
+        let prefs = this.preferences[0].preference_items 
+        let filtered = prefs.filter(c => c.category && c.not_interested == false).map(c => c.category)        
+        return this.categories.filter((category) => category.value != "ALL" && filtered.includes(category.title)); 
+      } else  return this.categories.filter((category) => category.value != "ALL" );
     },
     filteredLevels() {
       return this.levels.filter((level) => level.value != "ALL");
     },
+   
   },
 };

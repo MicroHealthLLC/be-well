@@ -169,6 +169,7 @@
               <template v-slot:[`item.l1`]="{ item }">
                 <v-checkbox
                   v-model="item.l1"  
+                  v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   :disabled="item.l2 || item.l3 || item.l4 || item.l5 || item.not_interested"
                   @click="noviceToggle(preferences[0].preference_items.indexOf(item), item.l1)"   
                   color="success"   
@@ -176,7 +177,8 @@
               </template>
               <template v-slot:[`item.l2`]="{ item }">
                 <v-checkbox
-                  v-model="item.l2"  
+                  v-model="item.l2"
+                  v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   :disabled="item.l1 || item.l3 || item.l4 || item.l5 || item.not_interested"
                   @click="beginnerToggle(preferences[0].preference_items.indexOf(item), item.l2)"                  
                   color="success"   
@@ -185,6 +187,7 @@
               <template v-slot:[`item.l3`]="{ item }">
                 <v-checkbox
                   v-model="item.l3"
+                 v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   :disabled="item.l1 || item.l2 || item.l4 || item.l5 || item.not_interested"
                   @click="competentToggle(preferences[0].preference_items.indexOf(item), item.l3)"     
                   color="success"  
@@ -193,6 +196,7 @@
               <template v-slot:[`item.l4`]="{ item }">
                 <v-checkbox
                   v-model="item.l4"
+                  v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   :disabled="item.l1 || item.l2 || item.l3 || item.l5 || item.not_interested"
                   @click="proficientToggle(preferences[0].preference_items.indexOf(item), item.l4)"     
                   color="success"   
@@ -200,7 +204,8 @@
               </template>
               <template v-slot:[`item.l5`]="{ item }">
                 <v-checkbox
-                  v-model="item.l5"
+                   v-model="item.l5"
+                    v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                    :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.not_interested"
                   @click="expertToggle(preferences[0].preference_items.indexOf(item), item.l5)"     
                   color="success" 
@@ -332,15 +337,7 @@ export default {
               l5: false, 
               not_interested: false, 
             },
-            {
-              category: "Ergonomics",
-              l1: false,
-              l2: false,
-              l3: false, 
-              l4:false, 
-              l5: false, 
-              not_interested: false, 
-            },
+           
             {
               category: "Flexibility & Mobility",
               l1: false,
@@ -349,34 +346,7 @@ export default {
               l4:false, 
               l5: false, 
               not_interested: false, 
-            },
-            {
-              category: "Mind",
-              l1: false,
-              l2: false,
-              l3: false, 
-              l4:false, 
-              l5: false, 
-              not_interested: false, 
-            },
-            {
-              category: "Nutrition",
-              l1: false,
-              l2: false,
-              l3: false, 
-              l4:false, 
-              l5: false, 
-              not_interested: false, 
-            },
-            {
-              category: "Recovery",
-              l1: false,
-              l2: false,
-              l3: false, 
-              l4:false, 
-              l5: false, 
-              not_interested: false, 
-            },
+            },            
             {
               category: "Strength",
               l1: false,
@@ -384,6 +354,18 @@ export default {
               l3: false, 
               l4:false, 
               l5: false, 
+              not_interested: false, 
+            },
+             {
+              category: "Nutrition",
+              not_interested: false, 
+            },
+            {
+              category: "Recovery",
+              not_interested: false, 
+            },
+             {
+              category: "Ergonomics",
               not_interested: false, 
             },
           ],
@@ -496,7 +478,9 @@ export default {
   },
   computed: {
     ...mapGetters(["saving", "user", "preferences"]),
-
+  nonLevel(){
+    return 'Nutrition' && 'Ergonomics' && 'Recovery'
+  },
  },
   mounted() {
     this.fetchPreferences();

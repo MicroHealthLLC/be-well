@@ -1,5 +1,5 @@
   <template>
-  <div class="flip-card" :load="log(reminders)">
+  <div class="flip-card" :load="log(strengthLevel)">
 <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable fontWhite">
       <div class="row">
@@ -185,8 +185,8 @@
             <v-select
               v-model="reminder.category"
               :items="filteredCategories"
-              item-text="category"
-              item-value="category"
+              item-text="value"
+              item-value="value"
               label="Focus Area"
               :rules="[(v) => !!v || 'Focus Area required']"
               required
@@ -297,8 +297,7 @@ export default {
     ...mapActions([ "updateReminderById", "fetchReminders", "removeReminder", "fetchGoals"]),
     log(e){
       console.log(e)
-    },
- 
+    }, 
     openReminderForm(reminder) {
       this.reminder = reminder;
       this.dialog = true;
