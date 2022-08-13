@@ -37,18 +37,21 @@
 
 <script>
 import videosMixin from "../mixins/videos-mixin";
+import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
   name: "VideoModal",
-  mixins: [videosMixin],
+  mixins: [videosMixin, utilitiesMixin],
   data() {
     return {
       embedVideoURL: "https://www.youtube.com/embed/",
+      
     };
   },
   methods: {
     levelToString(level) {
       console.log(this.videos);
+      console.log(this.filteredCategories);
       switch (level) {
         case "L1":
           return "Novice";
@@ -67,7 +70,7 @@ export default {
   },
   computed: {},
   mounted() {
-    
+    this.nextVideo();
   },
   watch: {},
 };

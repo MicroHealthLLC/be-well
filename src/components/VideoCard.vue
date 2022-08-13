@@ -24,8 +24,8 @@
       >
     </v-card-actions>
     <!-- Play Video Modal -->
-    <VideoModal />
-    <!-- <v-dialog v-model="play" overlay-opacity="0.9">
+    <!-- <VideoModal /> -->
+    <v-dialog v-model="play" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
           <iframe
@@ -58,15 +58,14 @@
         <v-card-subtitle>Channel</v-card-subtitle>
         <v-card-text>Description</v-card-text>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
     <!-- Delete Video Dialog -->
     <v-dialog v-model="deleteDialog">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text
           >Are you sure you want to delete
-          <strong>Video Title</strong
-          >?</v-card-text
+          <strong>Video Title</strong>?</v-card-text
         >
         <v-card-actions class="justify-end">
           <v-btn @click="deleteDialog = false" color="secondary" small outlined
@@ -88,84 +87,88 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import VideoModal from "./VideoModal.vue";
+//import VideoModal from "./VideoModal.vue";
 export default {
-    name: "VideoCard",
-    props: {
-        video: {
-            type: Object,
-        },
+  name: "VideoCard",
+  props: {
+    video: {
+      type: Object,
     },
-    data() {
-        return {
-            //play: false,
-            embedVideoURL: "",
-            deleteDialog: false,
-        };
+  },
+  components: { },
+  data() {
+    return {
+      //play: false,
+      embedVideoURL: "",
+      deleteDialog: false,
+    };
+  },
+  methods: {
+    ...mapActions([
+      "addFavoriteVideo",
+      "deleteVideo",
+      "deleteFavoriteVideo",
+      "fetchFavoriteVideos",
+    ]),
+    ...mapMutations(["DELETE_VIDEO"]),
+    openVideoURL(videoId) {
+      window.open(`https://www.youtube.com/watch?v=${videoId}`);
     },
-    methods: {
-        ...mapActions([
-            "addFavoriteVideo",
-            "deleteVideo",
-            "deleteFavoriteVideo",
-            "fetchFavoriteVideos",
-        ]),
-        ...mapMutations(["DELETE_VIDEO"]),
-        openVideoURL(videoId) {
-            window.open(`https://www.youtube.com/watch?v=${videoId}`);
-        },
-        playVideo(videoId) {
-            this.play = true;
-            this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
-        },
-        openDeleteDialog() {
-            this.deleteDialog = true;
-        },
-        removeVideo() {
-            this.deleteVideo(this.video.id);
-            this.deleteDialog = false;
-        },
-        addFavorite() {
-            let favoriteVideo = {
-                videoId: this.video.id,
-                category: this.video.category,
-                level: this.video.level,
-            };
-            this.addFavoriteVideo(favoriteVideo);
-        },
-        removeFavorite() {
-            this.deleteFavoriteVideo(this.favoriteReference.id);
-            if (this.$route.query.filter == "favorites") {
-                this.DELETE_VIDEO(this.video.id);
-                this.play = false;
-            }
-        },
+    playVideo(videoId) {
+      this.play = true;
+      this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
     },
-    computed: {
-        ...mapGetters(["isEditor", "favoriteVideos"]),
-        showDeleteBtn() {
-            return this.isEditor && this.$route.name != "Home";
-        },
-        thumbnail() {
-            return (this.video.snippet.thumbnails.standard?.url ||
-                this.video.snippet.thumbnails.medium?.url ||
-                this.video.snippet.thumbnails.high?.url ||
-                this.video.snippet.thumbnails.default?.url ||
-                "");
-        },
-        favoriteReference() {
-            return this.favoriteVideos.find((video) => video.videoId == this.video.id);
-        },
+    openDeleteDialog() {
+      this.deleteDialog = true;
     },
-    watch: {
-        play(isPlaying) {
-            if (!isPlaying) {
-                console.log("Turn off video");
-                this.embedVideoURL = "";
-            }
-        },
+    removeVideo() {
+      this.deleteVideo(this.video.id);
+      this.deleteDialog = false;
     },
-    components: { VideoModal }
+    addFavorite() {
+      let favoriteVideo = {
+        videoId: this.video.id,
+        category: this.video.category,
+        level: this.video.level,
+      };
+      this.addFavoriteVideo(favoriteVideo);
+    },
+    removeFavorite() {
+      this.deleteFavoriteVideo(this.favoriteReference.id);
+      if (this.$route.query.filter == "favorites") {
+        this.DELETE_VIDEO(this.video.id);
+        this.play = false;
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["isEditor", "favoriteVideos"]),
+    showDeleteBtn() {
+      return this.isEditor && this.$route.name != "Home";
+    },
+    thumbnail() {
+      return (
+        this.video.snippet.thumbnails.standard?.url ||
+        this.video.snippet.thumbnails.medium?.url ||
+        this.video.snippet.thumbnails.high?.url ||
+        this.video.snippet.thumbnails.default?.url ||
+        ""
+      );
+    },
+    favoriteReference() {
+      return this.favoriteVideos.find(
+        (video) => video.videoId == this.video.id
+      );
+    },
+  },
+  watch: {
+    play(isPlaying) {
+      if (!isPlaying) {
+        console.log("Turn off video");
+        this.embedVideoURL = "";
+      }
+    },
+  },
 };
 </script>
 

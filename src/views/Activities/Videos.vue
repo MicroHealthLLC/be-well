@@ -1,5 +1,6 @@
 <template>
   <div v-if="play">
+    <!-- <VideoModal /> -->
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
@@ -21,7 +22,13 @@
                 <v-icon dark left> mdi-arrow-left </v-icon>Back
               </v-btn>
             </router-link>
-            <v-btn @click="nextVideo()" class="ma-2 back" color="var(--mh-green)" dark> Next
+            <v-btn
+              @click="nextVideo()"
+              class="ma-2 back"
+              color="var(--mh-green)"
+              dark
+            >
+              Next
               <v-icon dark left> mdi-arrow-right </v-icon>
             </v-btn>
           </div>
@@ -37,12 +44,11 @@
 
     <div class="grid-container mb-6">
       <video-card
-        v-for="(video, index) in videos[0]"
+        v-for="(video, index) in selectedCategory"
         :key="index"
-        
+        :video="video"
       />
     </div>
-
     <!-- <span class="text-h6 text-sm-h5"
       ><b class="goalHeaders">Beginner {{ categoryTitle }} Videos</b></span
     >
@@ -98,25 +104,40 @@
 </template>
 
 <script>
-//import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import videosMixin from "../../mixins/videos-mixin";
+import utilitiesMixin from "../../mixins/utilities-mixin";
 import VideoCard from "../../components/VideoCard.vue";
+//import VideoModal from "../../components/VideoModal.vue";
 //import youtube from "../../apis/youtube";
 
 export default {
   name: "Videos",
-  props: ["selectedCategory"],
-  mixins: [videosMixin],
+  //props: ["selectedCategory"],
+  mixins: [videosMixin, utilitiesMixin],
   components: {
     VideoCard,
+    //VideoModal
   },
   data() {
     return {
       play: true,
       embedVideoURL: "https://www.youtube.com/embed/",
+      /* favoriteCat:
+        this.$route.query.category.charAt(0).toUpperCase(),
+      favoriteLev: this.levelToString(this.$route.query.level), */
+      favoriteCat: "Strength",
+      favoriteLev: "L2"
     };
   },
   methods: {
+    selectedCategory() {
+      let vids = this.videos.filter(
+        (v) => v.category == this.favoriteCat && v.level == this.favoriteLev
+      );
+      console.log(vids);
+      return vids;
+    },
     /* onClickOutside() {
       this.$router.push("/activities/reminders")
     }, */
@@ -166,15 +187,15 @@ export default {
     levelToString(level) {
       console.log(this.videos);
       switch (level) {
-        case "L1":
+        case "L1" || "beginner-1":
           return "Novice";
-        case "L2":
+        case "L2" || "beginner-2":
           return "Beginner";
-        case "L3":
+        case "L3" || "intermediate-1":
           return "Competent";
-        case "L4":
+        case "L4" || "intermediate-2":
           return "Proficient";
-        case "L5":
+        case "L5" || "advanced":
           return "Expert";
         default:
           return "";
@@ -182,17 +203,18 @@ export default {
     },
   },
   computed: {
-    categoryTitle() {
+    ...mapGetters(["preferences"]),
+    /* categoryTitle() {
       console.log(this.videos);
+      console.log(this.preferences);
       return this.categories[this.selectedCategory].title;
-    },
+    }, */
   },
   mounted() {
-      this.nextVideo();
+    this.nextVideo(this.favoriteCat, this.favoriteLev);
+    this.selectedCategory();
   },
-  watch: {
-    
-  },
+  watch: {},
 };
 </script>
 

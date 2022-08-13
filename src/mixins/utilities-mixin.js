@@ -3,13 +3,13 @@ export default {
   data() {
     return {
       categories: [
-        /* {
+        {
           title: "",
           icon: "",
           query: "all",
           value: "ALL",
           image: "",
-        }, */
+        },
         {
           title: "Balance",
           icon: "mdi-human",
@@ -68,11 +68,11 @@ export default {
         },
       ],
       levels: [
-        /* {
+        {
           title: "All",
           value: "ALL",
           query: "all",
-        }, */
+        },
         {
           title: "Novice",
           value: "L1",
@@ -105,12 +105,12 @@ export default {
         },
       ],
       filters: [
-        /* {
+        {
           title: "All",
           label: "All",
           value: "ALL",
           query: "all",
-        }, */
+        },
         {
           title: "Novice",
           label: "Novice",
