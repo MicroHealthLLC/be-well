@@ -111,13 +111,9 @@ type Preferences @model @auth(
 }
 
 type PreferenceItems {
-  category: String
-  l1: Boolean 
-  l2: Boolean 
-  l3: Boolean 
-  l4: Boolean
-  l5: Boolean 
-  not_interested: Boolean
+  id: ID!
+  category: Category!
+  level: Level!
 }
 
 type Event
