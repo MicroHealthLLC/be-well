@@ -123,20 +123,25 @@ export default {
     return {
       play: true,
       embedVideoURL: "https://www.youtube.com/embed/",
-      /* favoriteCat:
-        this.$route.query.category.charAt(0).toUpperCase(),
-      favoriteLev: this.levelToString(this.$route.query.level), */
-      favoriteCat: "Strength",
-      favoriteLev: "L2"
+      favoriteCat: this.capitalizeFirstLet(this.$route.query.category),
+      favoriteLev: this.filterToLevel(this.$route.query.filter),
+      //favoriteCat: "Strength",
+      //favoriteLev: "L2"
     };
   },
   methods: {
     selectedCategory() {
+      console.log(this.$route);
+      console.log(this.favoriteCat)
+      console.log(this.favoriteLev);
       let vids = this.videos.filter(
         (v) => v.category == this.favoriteCat && v.level == this.favoriteLev
       );
       console.log(vids);
       return vids;
+    },
+    capitalizeFirstLet(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
     },
     /* onClickOutside() {
       this.$router.push("/activities/reminders")
@@ -187,20 +192,32 @@ export default {
     levelToString(level) {
       console.log(this.videos);
       switch (level) {
-        case "L1" || "beginner-1":
+        case "L1":
           return "Novice";
-        case "L2" || "beginner-2":
+        case "L2":
           return "Beginner";
-        case "L3" || "intermediate-1":
+        case "L3":
           return "Competent";
-        case "L4" || "intermediate-2":
+        case "L4":
           return "Proficient";
-        case "L5" || "advanced":
+        case "L5":
           return "Expert";
-        default:
-          return "";
       }
     },
+    filterToLevel(filter) {
+      switch (filter) {
+        case "beginner-1":
+          return "L1";
+        case "beginner-2":
+          return "L2";
+        case "intermediate-1":
+          return "L3";
+        case "intermediate-2":
+          return "L4";
+        case "advanced":
+          return "L5";
+      }
+    }
   },
   computed: {
     ...mapGetters(["preferences"]),
