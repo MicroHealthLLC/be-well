@@ -295,6 +295,89 @@ export default {
       if(prefs[0].l4){
         console.log("Strength: L4")
         return 'L4'
+      } 
+      if(prefs[0].l5){
+        console.log("Strength: L5")
+        return 'L5'
+      }       
+   }
+  },
+  balanceLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Balance')   
+      if(prefs[0].l1){
+        console.log("Balance: L1")
+        return 'L1'
+      }
+      if(prefs[0].l2){
+        console.log("Balance: L2")
+        return 'L2'
+      }
+      if(prefs[0].l3){
+        console.log("Balance: L3")
+        return 'L3'
+      }
+      if(prefs[0].l4){
+        console.log("Balance: L4")
+        return 'L4'
+      }  
+      if(prefs[0].l4){
+        console.log("Balance: L5")
+        return 'L5'
+      }      
+   }
+  },
+  enduranceLevel(){
+    if (this.preferences && this.preferences[0]){
+      console.log("endurance")
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Endurance')   
+      console.log(prefs)
+      if(prefs[0].l1){
+        console.log("Endurance: L1")
+        return 'L1'
+      }
+      if(prefs[0].l2){
+        console.log("Endurance: L2")
+        return 'L2'
+      }
+      if(prefs[0].l3){
+        console.log("Endurance: L3")
+        return 'L3'
+      }
+      if(prefs[0].l4){
+        console.log("Endurance: L4")
+        return 'L4'
+      }
+      if(prefs[0].l5){
+        console.log("Endurance: L5")
+        return 'L5'
+      }        
+   }
+  },
+  nutritionLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Nutrition')   
+      if(!prefs[0].not_interested){
+        console.log("Nutrition: ALL")
+        return 'NOT_APPLICABLE'
+      }      
+   }
+  },
+  recLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Recovery')   
+      if(!prefs[0].not_interested){
+        console.log("Recovery: ALL")
+        return 'NOT_APPLICABLE'
+      }      
+   }
+  },
+  ergLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Ergonomics')   
+      if(!prefs[0].not_interested){
+        console.log("Erg: ALL")
+        return 'NOT_APPLICABLE'
       }      
    }
   },
@@ -316,53 +399,16 @@ export default {
         if(prefs[0].l4){
           console.log("Flexibility & Mobility: L4")
           return 'L4'
-        }      
+        }   
+        if(prefs[0].l5){
+          console.log("Flexibility & Mobility: L5")
+          return 'L5'
+        }     
      }
     },
-    enduranceLevel(){
-      if (this.preferences && this.preferences[0]){
-        console.log("endurance")
-        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Endurance')   
-        console.log(prefs)
-        if(prefs[0].l1){
-          console.log("Endurance: L1")
-          return 'L1'
-        }
-        if(prefs[0].l2){
-          console.log("Endurance: L2")
-          return 'L2'
-        }
-        if(prefs[0].l3){
-          console.log("Endurance: L3")
-          return 'L3'
-        }
-        if(prefs[0].l4){
-          console.log("Endurance: L4")
-          return 'L4'
-        }      
-     }
-    },
-    balanceLevel(){
-      if (this.preferences && this.preferences[0]){
-        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Balance')   
-        if(prefs[0].l1){
-          console.log("Balance: L1")
-          return 'L1'
-        }
-        if(prefs[0].l2){
-          console.log("Balance: L2")
-          return 'L2'
-        }
-        if(prefs[0].l3){
-          console.log("Balance: L3")
-          return 'L3'
-        }
-        if(prefs[0].l4){
-          console.log("Balance: L4")
-          return 'L4'
-        }      
-     }
-    },
+ 
+  
+   
     filteredCategories() {
       if (this.preferences && this.preferences[0]){
         let prefs = this.preferences[0].preference_items 

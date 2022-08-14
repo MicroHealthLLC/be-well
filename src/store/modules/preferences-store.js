@@ -89,7 +89,7 @@ export default {
       try {
         const res = await API.graphql(graphqlOperation(listPreferences));
         commit("SET_PREFERENCES", res.data.listPreferences.items);
-        // console.log(res.data.listPreferences.items);
+      console.log(res.data.listPreferences.items);
       } catch (error) {
         console.log(error);
       }
