@@ -116,13 +116,13 @@
             <v-select
               v-model="reminder.category"
               :items="filteredCategories"
-              item-text="category"
-              item-value="category"
+              item-text="title"
+              item-value="value"
               label="My Focus Area"
               :rules="[(v) => !!v || 'Focus Area required']"
               required
             ></v-select>
-            <v-select
+            <!-- <v-select
               v-model="reminder.level"
               :items="filteredLevels"
               item-text="title"
@@ -130,7 +130,7 @@
               label="Level"
               :rules="[(v) => !!v || 'Level is required']"
               required
-            ></v-select> 
+            ></v-select>  -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -209,7 +209,7 @@ export default {
       valid: true,
       reminder: {
         category: "",
-        level: "",
+        level: this.filteredLEvel,
         frequency: "",
         contentType: "",
         time: null,
@@ -226,7 +226,9 @@ export default {
     ]),
     ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
    log(e){
-      console.log(e)
+      if (e){
+       console.log(e)
+      }
     },
     resetForm() {
       this.reminder = {
@@ -246,7 +248,7 @@ export default {
         if (this.reminder.id) {
           await this.updateReminderById({
             id: this.reminder.id,
-            category: this.reminder.category.toUpperCase(),
+            category: this.reminder.category,
             level: this.reminder.level,
             frequency: this.reminder.frequency,
             contentType: this.reminder.contentType,
@@ -279,9 +281,17 @@ export default {
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),    
-    // userCategories(){
-    //   return this.incompleteGoals.map(t => t.category)
-    // },
+    userPrefLevel() {
+      // return this.reminders
+      if (this.preferences && this.preferences[0]){
+        let strength = this.preferences[0].preference_items.map(t => t && t.category == "Strength")
+        if (this.reminder.category == 'STRENGTH' && strength ){
+          return this.strengthLevel
+        } else return ""
+      } else {
+         return ""
+     }
+    },
     remind: {
       get() {
         return this.remindersOn;
