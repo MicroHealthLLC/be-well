@@ -342,13 +342,9 @@ export const onCreatePreferences = /* GraphQL */ `
     onCreatePreferences(owner: $owner) {
       id
       preference_items {
+        id
         category
-        l1
-        l2
-        l3
-        l4
-        l5
-        not_interested
+        level
       }
       createdAt
       updatedAt
@@ -361,13 +357,9 @@ export const onUpdatePreferences = /* GraphQL */ `
     onUpdatePreferences(owner: $owner) {
       id
       preference_items {
+        id
         category
-        l1
-        l2
-        l3
-        l4
-        l5
-        not_interested
+        level
       }
       createdAt
       updatedAt
@@ -380,13 +372,9 @@ export const onDeletePreferences = /* GraphQL */ `
     onDeletePreferences(owner: $owner) {
       id
       preference_items {
+        id
         category
-        l1
-        l2
-        l3
-        l4
-        l5
-        not_interested
+        level
       }
       createdAt
       updatedAt

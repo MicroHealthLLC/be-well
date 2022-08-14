@@ -193,11 +193,11 @@ export default {
     notification(activity) {
       return {
         icon: "/img/icons/android-chrome-192x192.png",
-        body: "This is your daily Well Beeing reminder!",
+        body: "This is your daily reminder to be well!",
         image: this.imageURL(activity.category),
         actions: [
           {
-            title: "View Content",
+            title: "Start Activity",
             action: "view-content",
           },
           {

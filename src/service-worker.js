@@ -44,7 +44,8 @@ function levelQuery(key) {
     BEGINNER: "beginner-2",
     COMPETENT: "intermediate-1",
     PROFICIENT: "intermediate-2",
-    EXPERT: "advanced"
+    EXPERT: "advanced",
+    NOT_APPLICABLE: "na",
   };
 
   return levels[key] || "beginner-1";

@@ -17,11 +17,14 @@
         >
           {{ currentVideo.title }}
           <div>
-            <router-link to="/activities/reminders"
-              ><v-btn class="ma-2 back" color="var(--mh-orange)" dark>
-                <v-icon dark left> mdi-arrow-left </v-icon>Back
-              </v-btn>
-            </router-link>
+            <v-btn
+              @click="goBack"
+              class="ma-2 back"
+              color="var(--mh-orange)"
+              dark
+            >
+              <v-icon dark left> mdi-arrow-left </v-icon>Back
+            </v-btn>
             <v-btn
               @click="nextVideo()"
               class="ma-2 back"
@@ -37,69 +40,124 @@
     </v-dialog>
   </div>
   <div v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <span class="text-h6 text-sm-h5">
-      <b class="goalHeaders">Beginner {{ currentVideo.category }} Videos</b>
-    </span>
-    <v-divider class="mb-4"></v-divider>
+    <div v-if="!this.isEmpty(balanceVids)">
+      <span class="text-h6 text-sm-h5">
+        <b class="goalHeaders">All Balance Videos</b>
+      </span>
+      <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in selectedCategory"
-        :key="index"
-        :video="video"
-      />
-    </div>
-    <!-- <span class="text-h6 text-sm-h5"
-      ><b class="goalHeaders">Beginner {{ categoryTitle }} Videos</b></span
-    >
-    <v-divider class="mb-4"></v-divider>
-
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in beginnerVideos"
-        :key="index"
-        :video="video"
-      />
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in balanceVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="balanceVids.length"
+        />
+      </div>
     </div>
 
-    <span class="text-h6 text-sm-h5"
-      ><b class="goalHeaders">Competent {{ categoryTitle }} Videos</b></span
-    >
-    <v-divider class="mb-4"></v-divider>
+    <div v-if="!this.isEmpty(enduranceVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Endurance Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in competentVideos"
-        :key="index"
-        :video="video"
-      />
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in enduranceVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="enduranceVids.length"
+        />
+      </div>
     </div>
 
-    <span class="text-h6 text-sm-h5"
-      ><b class="goalHeaders">Proficient {{ categoryTitle }} Videos</b></span
-    >
-    <v-divider class="mb-4"></v-divider>
+    <div v-if="!this.isEmpty(strengthVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Strength Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in proficientVideos"
-        :key="index"
-        :video="video"
-      />
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in strengthVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="strengthVids.length"
+        />
+      </div>
     </div>
 
-    <span class="text-h6 text-sm-h5"
-      ><b class="goalHeaders">Expert {{ categoryTitle }} Videos</b></span
-    >
-    <v-divider class="mb-4"></v-divider>
+    <div v-if="!this.isEmpty(flexibilityVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Flexibility & Mobility Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
 
-    <div class="grid-container mb-6">
-      <video-card
-        v-for="(video, index) in expertVideos"
-        :key="index"
-        :video="video"
-      />
-    </div> -->
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in flexibilityVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="flexibilityVids.length"
+        />
+      </div>
+    </div>
+
+    <div v-if="!this.isEmpty(recoveryVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Recovery Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
+
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in recoveryVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="recoveryVids.length"
+        />
+      </div>
+    </div>
+    
+    <div v-if="!this.isEmpty(ergonomicsVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Ergonomics Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
+
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in ergonomicsVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="ergonomicsVids.length"
+        />
+      </div>
+    </div>
+
+    <div v-if="!this.isEmpty(nutritionVids)">
+      <span class="text-h6 text-sm-h5"
+        ><b class="goalHeaders">All Nutrition Videos</b></span
+      >
+      <v-divider class="mb-4"></v-divider>
+
+      <div class="grid-container mb-10">
+        <video-card
+          v-for="(video, index) in nutritionVids"
+          :key="index"
+          :video="video"
+          :count ="index + 1"
+          :total="nutritionVids.length"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -121,76 +179,53 @@ export default {
   },
   data() {
     return {
-      play: true,
+      play: this.$route.query.category ? true : false,
       embedVideoURL: "https://www.youtube.com/embed/",
-      favoriteCat: this.capitalizeFirstLet(this.$route.query.category),
-      favoriteLev: this.filterToLevel(this.$route.query.filter),
-      //favoriteCat: "Strength",
-      //favoriteLev: "L2"
+      favoriteCat: this.$route.query.category
+        ? this.capitalizeFirstLet(this.$route.query.category)
+        : "",
+      favoriteLev: this.$route.query.filter
+        ? this.filterToLevel(this.$route.query.filter)
+        : "",
+      balanceVids: [],
+      enduranceVids: [],
+      strengthVids: [],
+      flexibilityVids: [],
+      recoveryVids: [],
+      ergonomicsVids: [],
+      nutritionVids: [],
     };
   },
   methods: {
     selectedCategory() {
-      console.log(this.$route);
-      console.log(this.favoriteCat)
-      console.log(this.favoriteLev);
       let vids = this.videos.filter(
         (v) => v.category == this.favoriteCat && v.level == this.favoriteLev
       );
-      console.log(vids);
       return vids;
     },
     capitalizeFirstLet(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1)
+      return string.charAt(0).toUpperCase() + string.slice(1);
     },
-    /* onClickOutside() {
-      this.$router.push("/activities/reminders")
-    }, */
-    /* async fetchCategoryVideos() {
-      const key = this.categories[this.selectedCategory].key;
-
-      const res = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_BEGINNER_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.noviceVideos = res.data.items;
-
-      const res1 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_BEGINNER_${key}_PLAYLIST_ID`],
-        },
-      });
-
-    this.beginnerVideos = res1.data.items;
-
-      const res2 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_INTERMEDIATE_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.competentVideos = res2.data.items;
-
-      const res3 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_INTERMEDIATE_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.proficentVideos = res3.data.items;
-
-      const res4 = await youtube.get("", {
-        params: {
-          playlistId: process.env[`VUE_APP_ADVANCED_${key}_PLAYLIST_ID`],
-        },
-      });
-
-      this.expertVideos = res4.data.items;
-    }, */
+    seperateVideosbyCategory() {
+      let bal = this.videos.filter((v) => v.category == "Balance");
+      let end = this.videos.filter((v) => v.category == "Endurance");
+      let str = this.videos.filter((v) => v.category == "Strength");
+      let flex = this.videos.filter(
+        (v) => v.category == "Flexibility-mobility"
+      );
+      let rec = this.videos.filter((v) => v.category == "Recovery");
+      let erg = this.videos.filter((v) => v.category == "Ergonomics");
+      let nut = this.videos.filter((v) => v.category == "Nutrition");
+      this.balanceVids = bal;
+      this.enduranceVids = end;
+      this.strengthVids = str;
+      this.flexibilityVids = flex;
+      this.recoveryVids = rec;
+      this.ergonomicsVids = erg;
+      this.nutritionVids = nut;
+    },
     levelToString(level) {
-      console.log(this.videos);
+      //console.log(this.videos);
       switch (level) {
         case "L1":
           return "Novice";
@@ -216,8 +251,13 @@ export default {
           return "L4";
         case "advanced":
           return "L5";
+        case "na":
+          return "na";
       }
-    }
+    },
+    goBack() {
+      this.play = false;
+    },
   },
   computed: {
     ...mapGetters(["preferences"]),
@@ -230,6 +270,10 @@ export default {
   mounted() {
     this.nextVideo(this.favoriteCat, this.favoriteLev);
     this.selectedCategory();
+    if (!this.$route.query.category && !this.$route.query.filter) {
+      this.play = false;
+    }
+    this.seperateVideosbyCategory();
   },
   watch: {},
 };
