@@ -143,6 +143,7 @@
              <span class="d-block">
             <v-btn
             @click="notify(reminder)"
+            :load="log(reminder)"
             class="mr-3"
             color="var(--mh-blue)"
             outlined
