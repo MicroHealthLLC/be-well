@@ -180,7 +180,6 @@ export default {
         Notification.requestPermission().then(function (permission) {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
-            console.log(activity.category)
             reg.showNotification(
               this.categoryString(activity.category),
               this.notification(activity)
@@ -193,7 +192,7 @@ export default {
     notification(activity) {
       return {
         icon: "/img/icons/android-chrome-192x192.png",
-        body: "This is your daily reminder to be well!",
+        body: "This is your daily be well reminder!",
         image: this.imageURL(activity.category),
         actions: [
           {
@@ -301,6 +300,8 @@ export default {
         console.log("Strength: L5")
         return 'L5'
       }       
+    } else if (!this.preferences){
+      return 'L1'
    }
   },
   balanceLevel(){
@@ -325,7 +326,9 @@ export default {
       if(prefs[0].l4){
         console.log("Balance: L5")
         return 'L5'
-      }      
+      }  
+     } else if (!this.preferences){
+      return 'L1'
    }
   },
   enduranceLevel(){
@@ -352,7 +355,9 @@ export default {
       if(prefs[0].l5){
         console.log("Endurance: L5")
         return 'L5'
-      }        
+      } 
+    } else if (!this.preferences){
+      return 'L1'
    }
   },
   nutritionLevel(){
@@ -361,7 +366,9 @@ export default {
       if(!prefs[0].not_interested){
         console.log("Nutrition: ALL")
         return 'NOT_APPLICABLE'
-      }      
+      }
+    } else if (!this.preferences){
+      return 'NOT_APPLICABLE'
    }
   },
   recLevel(){
@@ -370,7 +377,9 @@ export default {
       if(!prefs[0].not_interested){
         console.log("Recovery: ALL")
         return 'NOT_APPLICABLE'
-      }      
+      }  
+    } else if (!this.preferences){
+      return 'NOT_APPLICABLE'
    }
   },
   ergLevel(){
@@ -379,34 +388,38 @@ export default {
       if(!prefs[0].not_interested){
         console.log("Erg: ALL")
         return 'NOT_APPLICABLE'
-      }      
+      }
+    } else if (!this.preferences){
+      return 'NOT_APPLICABLE'
    }
   },
-    flexLevel(){
-      if (this.preferences && this.preferences[0]){
-        let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
-        if(prefs[0].l1){
-          console.log("Flexibility & Mobility: L1")
-          return 'L1'
-        }
-        if(prefs[0].l2){
-          console.log("Flexibility & Mobility: L2")
-          return 'L2'
-        }
-        if(prefs[0].l3){
-          console.log("Flexibility & Mobility: L3")
-          return 'L3'
-        }
-        if(prefs[0].l4){
-          console.log("Flexibility & Mobility: L4")
-          return 'L4'
-        }   
-        if(prefs[0].l5){
-          console.log("Flexibility & Mobility: L5")
-          return 'L5'
-        }     
-     }
-    },
+  flexLevel(){
+    if (this.preferences && this.preferences[0]){
+      let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
+      if(prefs[0].l1){
+        console.log("Flexibility & Mobility: L1")
+        return 'L1'
+      }
+      if(prefs[0].l2){
+        console.log("Flexibility & Mobility: L2")
+        return 'L2'
+      }
+      if(prefs[0].l3){
+        console.log("Flexibility & Mobility: L3")
+        return 'L3'
+      }
+      if(prefs[0].l4){
+        console.log("Flexibility & Mobility: L4")
+        return 'L4'
+      }   
+      if(prefs[0].l5){
+        console.log("Flexibility & Mobility: L5")
+        return 'L5'
+      }  
+    } else if (!this.preferences){
+      return 'L1'
+   }
+  },
  
   
    

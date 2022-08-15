@@ -31,7 +31,7 @@
          </div>
       </div>
 
-        <div class="row mt-0">
+        <div class="row mt-0 px-1">
         <div class="col">
             <small class="d-block">Frequency</small>
            <span class="text-center">{{reminder.frequency}}</span>
@@ -41,7 +41,7 @@
             <span class="text-center">{{reminder.time}}</span>
          </div>
          <div class="col">
-                <small class="d-block">Content Type</small>
+                <small class="d-block">Type</small>
             <span class="text-center">
               <span v-if="reminder.contentType == 'Articles'">
                  <v-icon class="mr-1" color="white">mdi-file-document-outline</v-icon>
@@ -112,13 +112,8 @@
         </div>        
      </div>
    
-      <div class="justify-space-between flip-card-back">
-      
-       <div class="icon" @click="isFlipped = !isFlipped">
-        <v-icon class="mr-1" color="var(--mh-orange)">mdi-arrow-u-left-bottom</v-icon>
-       </div>
-
-        <div class="clickable py-4 px-4" >
+      <div class="justify-space-between px-4 flip-card-back">      
+        <div class="clickable py-4 px-4" @click="isFlipped = !isFlipped" >
          <div class="row">           
            <div class="col">
             <h5 class="orangeLabel d-flex">
@@ -133,7 +128,7 @@
             }}</v-chip>
          </span> 
         
-       
+        </div>
         
         <div class="row activityActions">
         <div class="col">
@@ -143,7 +138,6 @@
              <span class="d-block">
             <v-btn
             @click="notify(reminder)"
-            :load="log(reminder)"
             class="mr-3"
             color="var(--mh-blue)"
             outlined
@@ -172,7 +166,7 @@
         </div>
         </div>
       
-        </div>
+      
     </div>
   </div>
     <v-dialog v-model="dialog" max-width="600px">
@@ -263,9 +257,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
+import videosMixin from "../mixins/videos-mixin";
 
 export default {
-  mixins: [utilitiesMixin],
+  mixins: [utilitiesMixin, videosMixin],
   props: {
     reminder: {
       type: Object,
@@ -289,6 +284,24 @@ export default {
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving"]),
+    //  videoCounts() {
+    //   let bal = this.videos.filter((v) => v.category == "Balance");
+    //   let end = this.videos.filter((v) => v.category == "Endurance");
+    //   let str = this.videos.filter((v) => v.category == "Strength");
+    //   let flex = this.videos.filter(
+    //     (v) => v.category == "Flexibility-mobility"
+    //   );
+    //   let rec = this.videos.filter((v) => v.category == "Recovery");
+    //   let erg = this.videos.filter((v) => v.category == "Ergonomics");
+    //   let nut = this.videos.filter((v) => v.category == "Nutrition");
+    //   this.balanceVids = bal;
+    //   this.enduranceVids = end;
+    //   this.strengthVids = str;
+    //   this.flexibilityVids = flex;
+    //   this.recoveryVids = rec;
+    //   this.ergonomicsVids = erg;
+    //   this.nutritionVids = nut;
+    // },
   },
  mounted() {
     this.fetchReminders();

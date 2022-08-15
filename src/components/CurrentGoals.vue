@@ -5,6 +5,7 @@
        
         <div
           class=" 
+            px-3
             d-flex
             align-center
             justify-center     
@@ -67,7 +68,7 @@
                 <!-- Progress Bar -->
            <span
            v-if="reminders.filter(t => t.category == goal.category).length < 1"
-            @click="goToActivities"       
+            @click="openNewReminderForm"       
             class="newGoalBtn px-2 py-1"
             ><small>Click here to achieve your goal!</small></span
             >
@@ -75,7 +76,7 @@
                <v-progress-linear
                 height="10"
                 :value="(goal.progress / goal.stepCount) * 100"
-                striped
+               striped
                 rounded
                 color="lime"
               ></v-progress-linear>
@@ -85,11 +86,8 @@
         
       </div>
       <div class="justify-space-between flip-card-back">
-        <div class="arrowIcon" @click="isFlipped = !isFlipped">
-        <v-icon class="mr-1" color="var(--mh-orange)">mdi-arrow-u-left-bottom</v-icon>
-       </div>
-          <div class="clickable py-4 px-4" >
-         <div class="row">           
+         <div class="clickable py-4 px-4" >
+         <div class="row" @click="isFlipped = !isFlipped">           
            <div class="col">
             <h5 class="orangeLabel d-flex">
                PROGRESS TOWARDS GOAL
@@ -118,6 +116,9 @@
               outlined
               ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
             >
+        </div>
+         <div class="col-6"  @click="isFlipped = !isFlipped">
+            
         </div>
         </div>
       
@@ -204,6 +205,84 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
+          <v-dialog v-model="activityDialog" max-width="600px">
+      <v-card :disabled="saving" :loading="saving">
+        <v-card-title
+          ><span >Add New Activity</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="a_valid">
+        
+        <b class="mr-1">Focus Area:</b>{{ goal.category}}
+            <!-- <v-select
+              v-model="reminder.category"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="My Focus Area"
+              :rules="[(v) => !!v || 'Focus Area required']"
+              required
+            ></v-select> -->
+            <!-- <v-select
+              v-model="reminder.level"
+              :items="[userPrefLevel]"
+            ></v-select>   -->
+            <v-select
+              v-model="reminder.frequency"
+              :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
+              label="Frequency"
+              :rules="[(v) => !!v || 'Frequency is required']"
+              required
+            ></v-select>
+            <!-- <v-select
+              v-model="reminder.contentType"
+              label="Content Type"
+              :items="['Articles', 'Videos']"
+              :rules="[(v) => !!v || 'Content Type is required']"
+              required
+            ></v-select> -->
+            <v-menu
+              ref="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="reminder.time"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="reminder.time"
+                  label="Schedule A Reminder"
+                  prepend-icon="mdi-clock-time-four-outline"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Time is required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-model="reminder.time"
+                ampm-in-title
+                format="ampm"
+                @click:minute="$refs.menu.save(reminder.time)"
+                header-color="var(--mh-blue)"
+              ></v-time-picker>
+            </v-menu>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
+            >Save</v-btn
+          >
+          <v-btn @click="activityDialog = false" color="secondary" outlined
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
       <v-dialog v-model="dialog" width="750">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title class="text-right pt-2 pb-0" 
@@ -320,19 +399,82 @@ export default {
   data() {
     return {
       isFlipped: false,
+      activityDialog:false, 
       dialog: false,
+      reminder: {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      },
       valid: true,
+      a_valid: true, 
       menu: false,
     };
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "reminders", "saving"]),
+    ...mapGetters(["incompleteGoals", "reminders", "saving", "preferences"]),
+      userPrefLevel() {
+      // return this.reminders
+      if (this.preferences && this.preferences[0] && this.goal){
+        console.log("yes")
+        console.log(this.preferences)
+        let strength = this.preferences[0].preference_items.map(t => t && t.category == "Strength")
+        let flex = this.preferences[0].preference_items.map(t => t && t.category == "Flexibility & Mobility")
+        let balance = this.preferences[0].preference_items.map(t => t && t.category == "Balance")
+        let nutri = this.preferences[0].preference_items.map(t => t && t.category == "Nutrition")
+        let rec = this.preferences[0].preference_items.map(t => t && t.category == "Recovery")
+        let erg = this.preferences[0].preference_items.map(t => t && t.category == "Ergonomics")
+        let endur = this.preferences[0].preference_items.map(t => t && t.category == "Endurance")
+        if (this.goal.category == 'STRENGTH' && strength ){
+          return this.strengthLevel
+        }
+        if (this.goal.category == 'BALANCE' && balance ){
+          return this.balanceLevel
+        }
+        if (this.goal.category == 'ENDURANCE' && endur ){
+          return this.enduranceLevel
+        }
+        if (this.goal.category == 'NUTRITION' && nutri ){
+          return this.nutritionLevel
+        }
+        if (this.goal.category == 'RECOVERY' && rec ){
+          return this.recLevel
+        }
+        if (this.goal.category == 'ERGONOMICS' && erg ){
+          return this.ergLevel
+        }
+        if (this.goal.category == 'FLEXIBILITY_MOBILITY' && flex ){
+          return this.flexLevel                
+        } else return ""
+
+      } else {
+         return ""
+     }
+    },
   },
   methods: {
-    ...mapActions(["updateGoalById", "addGoal", "removeGoal"]),
+    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder"]),
     // log(e){
     //   console.log(e)
     // },
+  openNewReminderForm() {
+      this.resetForm();
+      this.activityDialog = true;
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
+    },
+    resetForm() {
+      this.reminder = {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      };
+    },
     openGoalForm(goal) {
       this.dialog = true;
       this.goal = goal;
@@ -356,8 +498,8 @@ export default {
             checklist: this.goal.checklist,
           });
         } else {
-          console.log(this.goal)
-          // await this.addGoal(this.goal);
+          // console.log(this.goal)
+          await this.addGoal(this.goal);
         }
       } catch (error) {
         console.log(error);
@@ -371,6 +513,24 @@ export default {
         console.log(error);
       }
       this.closeGoalForm();
+    },
+     async saveReminder() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
+      try {    
+           this.reminder.level = this.userPrefLevel
+           this.reminder.category = this.goal.category
+           this.reminder.contentType = 'Videos'
+           await this.addReminder(this.reminder);
+    
+        // Close form and reset form values
+        this.activityDialog = false;
+        this.resetForm();
+      } catch (error) {
+        console.log(error);
+      }
     },
    goToActivities() {
       console.log("this works")

@@ -312,8 +312,7 @@ export default {
     return {
       formValid: true,
       menu: false,
-      // isEditing: false,
-       
+      // isEditing: false,       
       given_name: "",
       family_name: "",
       birthdate: "",
@@ -326,38 +325,37 @@ export default {
             preference_items: [
             {
               category: "Balance",
-              l1: false,
+              l1: true,
               l2: false,
               l3: false, 
-              l4:false, 
+              l4: false, 
               l5: false, 
               not_interested: false, 
             },
             {
               category: "Endurance",
-              l1: false,
+              l1: true,
               l2: false,
               l3: false, 
               l4:false, 
               l5: false, 
               not_interested: false, 
-            },
-           
+            },           
             {
               category: "Flexibility & Mobility",
-              l1: false,
+              l1: true,
               l2: false,
               l3: false, 
-              l4:false, 
+              l4: false, 
               l5: false, 
               not_interested: false, 
             },            
             {
               category: "Strength",
-              l1: false,
+              l1: true,
               l2: false,
               l3: false, 
-              l4:false, 
+              l4: false, 
               l5: false, 
               not_interested: false, 
             },
@@ -408,18 +406,17 @@ export default {
       console.log(e)
     },
     async savePreferences() {
-      if(this.preferences.id){
-        // console.log(this.preferences)
-        //  console.log(this.tablePreferences)
-       await this.updatePreferencesById({
+      if(this.preferences){
+      await this.updatePreferencesById({
         id: this.preferences[0].id,
         preference_items: this.preferences[0].preference_items
         })
-     
+     console.log(this.preferences[0])
          console.log("update")
       } else {
       await this.addPreferences(this.tablePreferences)
         //  console.log(this.tablePreferences)
+         console.log("this is fi")
       }
       // console.log(this.tablePreferences)
       // console.log(this.preferences[0])

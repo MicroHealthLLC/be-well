@@ -208,8 +208,7 @@ export default {
         frequency: "",
         contentType: "",
         time: null,
-      },
-  
+      },  
     };
   },
   methods: {
@@ -225,6 +224,7 @@ export default {
        console.log(e)
       }
     },
+    
     resetForm() {
       this.reminder = {
         category: "",
