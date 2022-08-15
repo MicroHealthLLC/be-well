@@ -12,20 +12,29 @@
             allowfullscreen
           ></iframe>
         </div>
-        <v-card-title
-          class="d-flex justify-space-between align-start flex-nowrap"
+        <v-card-title> Focus Area: {{ currentVideo.category }} </v-card-title>
+        <v-card-text
+          ><div>
+            Activity:
+            <v-chip class="font-weight-bold" outlined
+              >{{
+                getVideoNum(currentVideo.category, currentVideo).index + 1
+              }}
+              of {{ getVideoNum(currentVideo.category, currentVideo).count }}
+              <!-- <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip> -->
+            </v-chip>
+          </div></v-card-text
         >
-          {{ currentVideo.title }}
+        <v-card-subtitle
+          class="d-flex justify-space-between align-start flex-nowrap"
+          ><v-chip v-if="currentVideo.level != 'na'" :color="levelToColor(currentVideo.level)">{{
+            levelToString(currentVideo.level)
+          }}</v-chip>
           <div>
-            <v-btn
-              @click="goBack"
-              class="ma-2 back"
-              color="var(--mh-orange)"
-              dark
-            >
+            <v-btn @click="goBack" class="back" color="var(--mh-orange)" dark>
               <v-icon dark left> mdi-arrow-left </v-icon>Back
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               @click="nextVideo()"
               class="ma-2 back"
               color="var(--mh-green)"
@@ -33,16 +42,16 @@
             >
               Next
               <v-icon dark left> mdi-arrow-right </v-icon>
-            </v-btn>
+            </v-btn> -->
           </div>
-        </v-card-title>
+        </v-card-subtitle>
       </v-card>
     </v-dialog>
   </div>
   <div v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
     <div v-if="!this.isEmpty(balanceVids)">
       <span class="text-h6 text-sm-h5">
-        <b class="goalHeaders">All Balance Videos</b>
+        <b class="goalHeaders">Balance Videos</b>
       </span>
       <v-divider class="mb-4"></v-divider>
 
@@ -51,7 +60,7 @@
           v-for="(video, index) in balanceVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="balanceVids.length"
         />
       </div>
@@ -59,7 +68,7 @@
 
     <div v-if="!this.isEmpty(enduranceVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Endurance Videos</b></span
+        ><b class="goalHeaders">Endurance Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -68,7 +77,7 @@
           v-for="(video, index) in enduranceVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="enduranceVids.length"
         />
       </div>
@@ -76,7 +85,7 @@
 
     <div v-if="!this.isEmpty(strengthVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Strength Videos</b></span
+        ><b class="goalHeaders">Strength Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -85,7 +94,7 @@
           v-for="(video, index) in strengthVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="strengthVids.length"
         />
       </div>
@@ -93,7 +102,7 @@
 
     <div v-if="!this.isEmpty(flexibilityVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Flexibility & Mobility Videos</b></span
+        ><b class="goalHeaders">Flexibility & Mobility Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -102,7 +111,7 @@
           v-for="(video, index) in flexibilityVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="flexibilityVids.length"
         />
       </div>
@@ -110,7 +119,7 @@
 
     <div v-if="!this.isEmpty(recoveryVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Recovery Videos</b></span
+        ><b class="goalHeaders">Recovery Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -119,15 +128,15 @@
           v-for="(video, index) in recoveryVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="recoveryVids.length"
         />
       </div>
     </div>
-    
+
     <div v-if="!this.isEmpty(ergonomicsVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Ergonomics Videos</b></span
+        ><b class="goalHeaders">Ergonomics Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -136,7 +145,7 @@
           v-for="(video, index) in ergonomicsVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="ergonomicsVids.length"
         />
       </div>
@@ -144,7 +153,7 @@
 
     <div v-if="!this.isEmpty(nutritionVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">All Nutrition Videos</b></span
+        ><b class="goalHeaders">Nutrition Videos</b></span
       >
       <v-divider class="mb-4"></v-divider>
 
@@ -153,7 +162,7 @@
           v-for="(video, index) in nutritionVids"
           :key="index"
           :video="video"
-          :count ="index + 1"
+          :count="index + 1"
           :total="nutritionVids.length"
         />
       </div>
@@ -257,6 +266,65 @@ export default {
     },
     goBack() {
       this.play = false;
+    },
+    levelToColor(level) {
+      //console.log(level);
+      switch (level) {
+        case "L1":
+        case "L2":
+          return "var(--mh-green)";
+        case "L3":
+        case "L4":
+          return "var(--mh-orange)";
+        case "L5":
+          return "error";
+      }
+    },
+    getVideoNum(category, video) {
+      let index = 0;
+      if (category == "Flexibility-mobility") {
+        index = this.flexibilityVids.indexOf(video);
+        return {
+          index: index,
+          count: this.flexibilityVids.length,
+        };
+      } else if (category == "Balance") {
+        index = this.balanceVids.indexOf(video);
+        return {
+          index: index,
+          count: this.balanceVids.length,
+        };
+      } else if (category == "Endurance") {
+        index = this.enduranceVids.indexOf(video);
+        return {
+          index: index,
+          count: this.enduranceVids.length,
+        };
+      } else if (category == "Ergonomics") {
+        index = this.ergonomicsVids.indexOf(video);
+        return {
+          index: index,
+          count: this.balanceVids.length,
+        };
+      } else if (category == "Strength") {
+        index = this.strengthVids.indexOf(video);
+        return {
+          index: index,
+          count: this.strengthVids.length,
+        };
+      } else if (category == "Recovery") {
+        index = this.recoveryVids.indexOf(video);
+        return {
+          index: index,
+          count: this.recoveryVids.length,
+        };
+      } else if (category == "Nutrition") {
+        index = this.nutritionVids.indexOf(video);
+        return {
+          index: index,
+          count: this.nutritionVids.length,
+        };
+      }
     },
   },
   computed: {

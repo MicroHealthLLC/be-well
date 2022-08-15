@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
@@ -112,9 +111,13 @@ type Preferences @model @auth(
 }
 
 type PreferenceItems {
-  id: ID!
-  category: Category!
-  level: Level!
+  category: String
+  l1: Boolean
+  l2: Boolean
+  l3: Boolean
+  l4: Boolean
+  l5: Boolean
+  not_interested: Boolean
 }
 
 type Event
@@ -251,4 +254,4 @@ enum SubmissionType {
   PHOTO
   VIDEO
 }
->>>>>>> af54fe12d265f645ae84371db28d046e738fe0de
+

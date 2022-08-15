@@ -7,15 +7,20 @@
       </div>
     </div>
 
-    <v-card-title>Focus Area: {{ this.video.category }}</v-card-title>
-    <v-card-subtitle class="video-title text-body-1 font-weight-bold"
+    <v-card-title class="video-title"
+      >Focus Area: {{ this.video.category }}</v-card-title
+    >
+    <v-card-subtitle class="text-body-1 font-weight-bold"
       ><span class="clamp-two-lines"
-        >{{ this.count }} of {{ this.total }}</span
+        >Activity:
+        <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip></span
       ></v-card-subtitle
     >
     <v-card-text v-if="this.video.level != 'na'">
       <span class="clamp-two-lines"
-        ><strong>Level: </strong>{{ levelToString(this.video.level) }}</span
+        ><v-chip :color="levelToColor(this.video.level)">{{
+          levelToString(this.video.level)
+        }}</v-chip></span
       >
     </v-card-text>
     <v-card-actions class="align-end">
@@ -40,11 +45,14 @@
             allowfullscreen
           ></iframe>
         </div>
-        <v-card-title>Focus Area: {{ this.video.category }}</v-card-title>
-        <v-card-subtitle
-          class="d-flex justify-space-between align-start flex-nowrap mb-2"
+        <v-card-title class="mb-1"
+          >Focus Area: {{ this.video.category }}</v-card-title
         >
-          <div>{{ this.count }} of {{ this.total }}</div>
+        <v-card-subtitle class="font-weight-bold">
+          <div>
+            Activity:
+            <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip>
+          </div>
           <!-- <div>
             <v-btn
               v-if="favoriteReference"
@@ -59,12 +67,12 @@
             >
           </div> -->
         </v-card-subtitle>
-        <v-card-subtitle
-          v-if="this.video.level != 'na'"
-        >
-          <strong>Level: </strong>{{ levelToString(this.video.level) }}
+        <v-card-subtitle v-if="this.video.level != 'na'">
+          <v-chip :color="levelToColor(this.video.level)">{{
+            levelToString(this.video.level)
+          }}</v-chip>
         </v-card-subtitle>
-        <v-btn @click="goBack" class="ma-2 back" color="var(--mh-orange)" dark>
+        <v-btn @click="goBack" class="ma-2 back">
           <v-icon dark left> mdi-arrow-left </v-icon>Back
         </v-btn>
       </v-card>
@@ -188,6 +196,19 @@ export default {
           return "/img/nutrition.jpg";
         case "Balance":
           return "/img/balance.jpg";
+      }
+    },
+    levelToColor(level) {
+      //console.log(level);
+      switch (level) {
+        case "L1":
+        case "L2":
+          return "var(--mh-green)";
+        case "L3":
+        case "L4":
+          return "var(--mh-orange)";
+        case "L5":
+          return "error";
       }
     },
   },

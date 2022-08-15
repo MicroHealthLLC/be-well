@@ -392,9 +392,10 @@ export default {
           );
           this.currentVideo = next[0];
         } else {
-          this.currentVideo = {};
+          this.currentVideo = false;
         }
       }
+      console.log(this.currentVideo)
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;

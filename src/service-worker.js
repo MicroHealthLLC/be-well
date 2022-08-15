@@ -29,7 +29,6 @@ function categoryQuery(key) {
     ENDURANCE: "endurance",
     ERGONOMICS: "ergonomics",
     FLEXIBILITY_MOBILITY: "flexibility-mobility",
-    MIND: "mind",
     NUTRITION: "nutrition",
     RECOVERY: "recovery",
     STRENGTH: "strength",
