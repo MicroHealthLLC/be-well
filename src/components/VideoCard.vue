@@ -1,39 +1,53 @@
 <template>
-  <v-card elevation="5">
-    <div @click="playVideo(video.videoId)" class="img-container clickable">
-      <img class="image" :src="getVideoImage(video.category)" width="100%" />
-      <div class="d-flex justify-center align-center overlay">
+  <v-card width="" elevation="8">
+    <div class="img-container">
+      <img
+        :src="
+          getFirstNonNullVal(_videos).category
+            ? getVideoImage(getFirstNonNullVal(_videos).category)
+            : ''
+        "
+        class="image"
+        width="100%"
+      />
+      <!-- <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
-      </div>
+      </div> -->
     </div>
 
-    <v-card-title class="video-title"
-      >Focus Area: {{ this.video.category }}</v-card-title
-    >
-    <v-card-subtitle class="text-body-1 font-weight-bold"
-      ><span class="clamp-two-lines"
-        >Activity:
-        <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip></span
-      ></v-card-subtitle
-    >
-    <v-card-text v-if="this.video.level != 'na'">
+    <!-- <v-card-title class="video-title"
+      >Focus Area: {{ getFirstNonNullVal(_videos).category }}</v-card-title
+    > --><v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
       <span class="clamp-two-lines"
-        ><v-chip :color="levelToColor(this.video.level)">{{
-          levelToString(this.video.level)
+        ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
+          levelToString(getFirstNonNullVal(_videos).level)
         }}</v-chip></span
       >
     </v-card-text>
+    <v-card-subtitle class="text-body-1 font-weight-bold"
+      ><span class="clamp-two-lines"
+        >Activities:
+        <v-chip
+          class="ma-1"
+          v-for="(item, index) in _videos"
+          :key="index"
+          @click="playVideo(item, item.category, item.level, index)"
+          outlined
+          >{{ index + 1 }}</v-chip
+        ></span
+      ></v-card-subtitle
+    >
+    
     <v-card-actions class="align-end">
-      <v-btn @click="playVideo(video.videoId)" text color="primary"
+      <!-- <v-btn @click="playVideo(video.videoId)" text color="primary"
         >View <v-icon class="mr-1">mdi-youtube</v-icon></v-btn
-      >
-      <v-spacer></v-spacer>
+      > -->
+      <!-- <v-spacer></v-spacer> -->
       <!-- <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
       > -->
     </v-card-actions>
     <!-- Play Video Modal -->
-    <!-- <VideoModal /> -->
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
@@ -45,13 +59,11 @@
             allowfullscreen
           ></iframe>
         </div>
-        <v-card-title class="mb-1"
-          >Focus Area: {{ this.video.category }}</v-card-title
-        >
+        <v-card-title class="mb-1">Focus Area: {{ currentCat }}</v-card-title>
         <v-card-subtitle class="font-weight-bold">
           <div>
             Activity:
-            <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip>
+            <v-chip outlined>{{ activityNum }}</v-chip>
           </div>
           <!-- <div>
             <v-btn
@@ -67,9 +79,9 @@
             >
           </div> -->
         </v-card-subtitle>
-        <v-card-subtitle v-if="this.video.level != 'na'">
-          <v-chip :color="levelToColor(this.video.level)">{{
-            levelToString(this.video.level)
+        <v-card-subtitle v-if="currentLev != 'na'">
+          <v-chip :color="levelToColor(currentLev)">{{
+            levelToString(currentLev)
           }}</v-chip>
         </v-card-subtitle>
         <v-btn @click="goBack" class="ma-2 back">
@@ -78,7 +90,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
-    <v-dialog v-model="deleteDialog">
+    <!-- <v-dialog v-model="deleteDialog">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text
@@ -99,20 +111,21 @@
           >
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </v-card>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import videosMixin from "../mixins/videos-mixin";
 //import VideoModal from "./VideoModal.vue";
 export default {
   name: "VideoCard",
+  mixins: [videosMixin],
   props: {
-    video: {
-      type: Object,
+    _videos: {
+      type: Array,
     },
-    count: Number,
     total: Number,
   },
   components: {},
@@ -121,6 +134,9 @@ export default {
       play: false,
       embedVideoURL: "",
       deleteDialog: false,
+      currentCat: "",
+      currentLev: "",
+      activityNum: "",
     };
   },
   methods: {
@@ -134,9 +150,17 @@ export default {
     openVideoURL(videoId) {
       window.open(`https://www.youtube.com/watch?v=${videoId}`);
     },
-    playVideo(videoId) {
+    log(e) {
+      if (e) {
+        console.log(e);
+      }
+    },
+    playVideo(video, cat, lev, num) {
       this.play = true;
-      this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
+      this.currentCat = cat;
+      this.currentLev = lev;
+      this.activityNum = num + 1;
+      this.embedVideoURL = `https://youtube.com/embed/${video.videoId}`;
     },
     goBack() {
       this.play = false;
@@ -198,8 +222,12 @@ export default {
           return "/img/balance.jpg";
       }
     },
+    getFirstNonNullVal(array) {
+      if (!this.isEmpty(array)) {
+        return array.find((v) => v !== this.isEmpty(v));
+      }
+    },
     levelToColor(level) {
-      //console.log(level);
       switch (level) {
         case "L1":
         case "L2":
@@ -216,7 +244,6 @@ export default {
     ...mapGetters(["isEditor", "favoriteVideos"]),
     showDeleteBtn() {
       console.log(this.video);
-
       return this.isEditor && this.$route.name != "Home";
     },
     thumbnail() {

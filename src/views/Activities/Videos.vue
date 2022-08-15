@@ -18,22 +18,35 @@
             Activity:
             <v-chip class="font-weight-bold" outlined
               >{{
-                getVideoNum(currentVideo.category, currentVideo).index + 1
+                getVideoNum(
+                  currentVideo.category,
+                  currentVideo.level,
+                  currentVideo
+                ).index + 1
               }}
-              of {{ getVideoNum(currentVideo.category, currentVideo).count }}
+              of
+              {{
+                getVideoNum(
+                  currentVideo.category,
+                  currentVideo.level,
+                  currentVideo
+                ).count
+              }}
               <!-- <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip> -->
             </v-chip>
           </div></v-card-text
         >
         <v-card-subtitle
           class="d-flex justify-space-between align-start flex-nowrap"
-          ><v-chip v-if="currentVideo.level != 'na'" :color="levelToColor(currentVideo.level)">{{
-            levelToString(currentVideo.level)
-          }}</v-chip>
+          ><v-chip
+            v-if="currentVideo.level != 'na'"
+            :color="levelToColor(currentVideo.level)"
+            >{{ levelToString(currentVideo.level) }}</v-chip
+          >
           <div>
-            <v-btn @click="goBack" class="back" color="var(--mh-orange)" dark>
-              <v-icon dark left> mdi-arrow-left </v-icon>Back
-            </v-btn>
+            <v-btn @click="goBack" class="ma-2 back">
+          <v-icon dark left> mdi-arrow-left </v-icon>Back
+        </v-btn>
             <!-- <v-btn
               @click="nextVideo()"
               class="ma-2 back"
@@ -48,126 +61,106 @@
       </v-card>
     </v-dialog>
   </div>
-  <div v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <div v-if="!this.isEmpty(balanceVids)">
+  <span v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
+    <span v-if="!this.isEmpty(balanceVids)">
       <span class="text-h6 text-sm-h5">
         <b class="goalHeaders">Balance Videos</b>
       </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in balanceVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="balanceVids.length"
-        />
-      </div>
-    </div>
+      <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
 
-    <div v-if="!this.isEmpty(enduranceVids)">
+    <span v-if="!this.isEmpty(enduranceVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Endurance Videos</b></span
-      >
+        ><b class="goalHeaders">Endurance Videos</b>
+      </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in enduranceVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="enduranceVids.length"
-        />
+    <div class="row">
+      <span class="col-2" width="auto" v-for="(level, i) in enduranceVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
       </div>
-    </div>
+    </span>
 
-    <div v-if="!this.isEmpty(strengthVids)">
+    <span v-if="!this.isEmpty(strengthVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Strength Videos</b></span
-      >
+        ><b class="goalHeaders">Strength Videos</b>
+      </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in strengthVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="strengthVids.length"
-        />
-      </div>
-    </div>
+      <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
 
-    <div v-if="!this.isEmpty(flexibilityVids)">
+    <span v-if="!this.isEmpty(flexibilityVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Flexibility & Mobility Videos</b></span
-      >
+        ><b class="goalHeaders">Flexibility & Mobility Videos</b>
+      </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in flexibilityVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="flexibilityVids.length"
-        />
-      </div>
-    </div>
+      <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
 
-    <div v-if="!this.isEmpty(recoveryVids)">
+    <span v-if="!this.isEmpty(recoveryVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Recovery Videos</b></span
-      >
+        ><b class="goalHeaders">Recovery Videos</b>
+      </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in recoveryVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="recoveryVids.length"
-        />
-      </div>
-    </div>
+      <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
 
-    <div v-if="!this.isEmpty(ergonomicsVids)">
+    <span v-if="!this.isEmpty(ergonomicsVids)">
       <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Ergonomics Videos</b></span
-      >
+        ><b class="goalHeaders">Ergonomics Videos</b>
+      </span>
+
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in ergonomicsVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="ergonomicsVids.length"
-        />
-      </div>
-    </div>
+      <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
 
-    <div v-if="!this.isEmpty(nutritionVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Nutrition Videos</b></span
-      >
+    <span v-if="!this.isEmpty(nutritionVids)">
+      <span class="text-h6 text-sm-h5">
+        <b class="goalHeaders">Nutrition Videos</b>
+      </span>
       <v-divider class="mb-4"></v-divider>
 
-      <div class="grid-container mb-10">
-        <video-card
-          v-for="(video, index) in nutritionVids"
-          :key="index"
-          :video="video"
-          :count="index + 1"
-          :total="nutritionVids.length"
-        />
-      </div>
-    </div>
-  </div>
+      <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
+        <span class="grid-container mb-10">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+    </span>
+  </span>
 </template>
 
 <script>
@@ -203,6 +196,13 @@ export default {
       recoveryVids: [],
       ergonomicsVids: [],
       nutritionVids: [],
+      balanceVidsbyLevel: {},
+      enduranceVidsbyLevel: {},
+      strengthVidsbyLevel: {},
+      flexibilityVidsbyLevel: {},
+      recoveryVidsbyLevel: {},
+      ergonomicsVidsbyLevel: {},
+      nutritionVidsbyLevel: {},
     };
   },
   methods: {
@@ -264,6 +264,22 @@ export default {
           return "na";
       }
     },
+    levelToLowercase(level) {
+      switch (level) {
+        case "L1":
+          return "novice";
+        case "L2":
+          return "beginner";
+        case "L3":
+          return "competent";
+        case "L4":
+          return "proficient";
+        case "L5":
+          return "expert";
+        case "na":
+          return "novice";
+      }
+    },
     goBack() {
       this.play = false;
     },
@@ -280,8 +296,21 @@ export default {
           return "error";
       }
     },
-    getVideoNum(category, video) {
+    getVideoNum(category, level, video) {
+      console.log(category);
+      console.log(video);
+      console.log(level);
+      console.log(this.flexibilityVidsbyLevel);
       let index = 0;
+      /* let lcLevel = this.levelToLowercase(level)
+      if (category == "Flexibility-mobility") {
+        let newVal = this.flexibilityVidsbyLevel.filter((k) => {
+          if (k == lcLevel){
+             k.indexOf(video)
+          }
+        })
+        console.log(newVal)
+        index = 0; */
       if (category == "Flexibility-mobility") {
         index = this.flexibilityVids.indexOf(video);
         return {
@@ -326,6 +355,59 @@ export default {
         };
       }
     },
+    seperateVideosByLevel(array) {
+      let novice = array.filter((v) => v.level == "L1");
+      let beginner = array.filter((v) => v.level == "L2");
+      let competent = array.filter((v) => v.level == "L3");
+      let proficient = array.filter((v) => v.level == "L4");
+      let expert = array.filter((v) => v.level == "L5");
+      let na = array.filter((v) => v.level == "na");
+      return {
+        novice: novice,
+        beginner: beginner,
+        competent: competent,
+        proficient: proficient,
+        expert: expert,
+        na: na,
+      };
+    },
+    videosByLevel() {
+      this.balanceVids[0]
+        ? (this.balanceVidsbyLevel = this.seperateVideosByLevel(
+            this.balanceVids
+          ))
+        : [];
+      this.enduranceVids[0]
+        ? (this.enduranceVidsbyLevel = this.seperateVideosByLevel(
+            this.enduranceVids
+          ))
+        : [];
+      this.ergonomicsVids[0]
+        ? (this.ergonomicsVidsbyLevel = this.seperateVideosByLevel(
+            this.ergonomicsVids
+          ))
+        : [];
+      this.strengthVids[0]
+        ? (this.strengthVidsbyLevel = this.seperateVideosByLevel(
+            this.strengthVids
+          ))
+        : [];
+      this.nutritionVids[0]
+        ? (this.nutritionVidsbyLevel = this.seperateVideosByLevel(
+            this.nutritionVids
+          ))
+        : [];
+      this.flexibilityVids[0]
+        ? (this.flexibilityVidsbyLevel = this.seperateVideosByLevel(
+            this.flexibilityVids
+          ))
+        : [];
+      this.recoveryVids[0]
+        ? (this.recoveryVidsbyLevel = this.seperateVideosByLevel(
+            this.recoveryVids
+          ))
+        : [];
+    },
   },
   computed: {
     ...mapGetters(["preferences"]),
@@ -342,6 +424,14 @@ export default {
       this.play = false;
     }
     this.seperateVideosbyCategory();
+    this.videosByLevel();
+
+    console.log(this.enduranceVidsbyLevel);
+    console.log(this.ergonomicsVidsbyLevel);
+    console.log(this.strengthVidsbyLevel);
+    console.log(this.nutritionVidsbyLevel);
+    console.log(this.flexibilityVidsbyLevel);
+    console.log(this.recoveryVidsbyLevel);
   },
   watch: {},
 };
