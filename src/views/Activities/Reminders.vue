@@ -1,5 +1,5 @@
 <template>
-<div class="bg-img">
+<div class="bg-img" :load="log(reminder)">
   <div class="bg-overlay">
     <div
       class="
@@ -124,13 +124,8 @@
             ></v-select>
             <!-- <v-select
               v-model="reminder.level"
-              :items="filteredLevels"
-              item-text="title"
-              item-value="value"
-              label="Level"
-              :rules="[(v) => !!v || 'Level is required']"
-              required
-            ></v-select>  -->
+              :items="[userPrefLevel]"
+            ></v-select>   -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -209,7 +204,7 @@ export default {
       valid: true,
       reminder: {
         category: "",
-        level: this.filteredLEvel,
+        level: this.userPrefLevel,
         frequency: "",
         contentType: "",
         time: null,
@@ -233,7 +228,7 @@ export default {
     resetForm() {
       this.reminder = {
         category: "",
-        level: "",
+        level: this.userPrefLevel,
         frequency: "",
         contentType: "",
         time: null,
@@ -255,8 +250,8 @@ export default {
             time: this.reminder.time,
           });
         } else {
-          // Call Vuex action to add reminder
-           console.log(this.reminder.level);
+          this.reminder.level = this.userPrefLevel
+          // Call Vuex action to add reminder   
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
@@ -283,11 +278,36 @@ export default {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),    
     userPrefLevel() {
       // return this.reminders
-      if (this.preferences && this.preferences[0]){
+      if (this.preferences && this.preferences[0] && this.reminder.category){
         let strength = this.preferences[0].preference_items.map(t => t && t.category == "Strength")
+        let flex = this.preferences[0].preference_items.map(t => t && t.category == "Flexibility & Mobility")
+        let balance = this.preferences[0].preference_items.map(t => t && t.category == "Balance")
+        let nutri = this.preferences[0].preference_items.map(t => t && t.category == "Nutrition")
+        let rec = this.preferences[0].preference_items.map(t => t && t.category == "Recovery")
+        let erg = this.preferences[0].preference_items.map(t => t && t.category == "Ergonomics")
+        let endur = this.preferences[0].preference_items.map(t => t && t.category == "Endurance")
         if (this.reminder.category == 'STRENGTH' && strength ){
           return this.strengthLevel
+        }
+        if (this.reminder.category == 'BALANCE' && balance ){
+          return this.balanceLevel
+        }
+        if (this.reminder.category == 'ENDURANCE' && endur ){
+          return this.enduranceLevel
+        }
+        if (this.reminder.category == 'NUTRITION' && nutri ){
+          return this.nutritionLevel
+        }
+        if (this.reminder.category == 'RECOVERY' && rec ){
+          return this.recLevel
+        }
+        if (this.reminder.category == 'ERGONOMICS' && erg ){
+          return this.ergLevel
+        }
+        if (this.reminder.category == 'FLEXIBILITY_MOBILITY' && flex ){
+          return this.flexLevel                
         } else return ""
+
       } else {
          return ""
      }
@@ -304,10 +324,14 @@ export default {
   mounted() {
     this.fetchReminders();
   },
+  
 };
 </script>
 
 <style scoped>
+/* .hide{
+  visibility: ;
+} */
 .text-right{
   justify-content: right;
 }

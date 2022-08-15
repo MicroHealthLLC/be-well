@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
@@ -250,3 +251,4 @@ enum SubmissionType {
   PHOTO
   VIDEO
 }
+>>>>>>> af54fe12d265f645ae84371db28d046e738fe0de

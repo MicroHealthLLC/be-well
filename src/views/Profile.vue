@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="col-12"
+    <v-col class="col-12" :load="log(preferences)"
       ><span class="text-h6 text-sm-h5">My Profile</span>
 
       <v-divider class="mb-4"></v-divider>
@@ -229,6 +229,7 @@
             >
               <template v-slot:[`item.l1`]="{ item }">
                 <v-checkbox
+                   v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   v-model="item.l1"  
                   :disabled="item.l2 || item.l3 || item.l4 || item.l5 || item.not_interested"
                   @click="noviceToggle(tablePreferences.preference_items.indexOf(item), item.l1)"   
@@ -237,7 +238,8 @@
               </template>
               <template v-slot:[`item.l2`]="{ item }">
                 <v-checkbox
-                  v-model="item.l2"  
+                   v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
+                   v-model="item.l2"  
                   :disabled="item.l1 || item.l3 || item.l4 || item.l5 || item.not_interested"
                   @click="beginnerToggle(tablePreferences.preference_items.indexOf(item), item.l2)"                  
                   color="success"   
@@ -245,7 +247,8 @@
               </template>
               <template v-slot:[`item.l3`]="{ item }">
                 <v-checkbox
-                  v-model="item.l3"
+                   v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
+                   v-model="item.l3"
                   :disabled="item.l1 || item.l2 || item.l4 || item.l5 || item.not_interested"
                   @click="competentToggle(tablePreferences.preference_items.indexOf(item), item.l3)"     
                   color="success"  
@@ -254,6 +257,7 @@
               <template v-slot:[`item.l4`]="{ item }">
                 <v-checkbox
                   v-model="item.l4"
+                  v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   :disabled="item.l1 || item.l2 || item.l3 || item.l5 || item.not_interested"
                   @click="proficientToggle(tablePreferences.preference_items.indexOf(item), item.l4)"     
                   color="success"   
@@ -261,8 +265,9 @@
               </template>
               <template v-slot:[`item.l5`]="{ item }">
                 <v-checkbox
+                  v-if="item.category !== 'Nutrition' && item.category !== 'Ergonomics' && item.category !== 'Recovery'"
                   v-model="item.l5"
-                   :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.not_interested"
+                  :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.not_interested"
                   @click="expertToggle(tablePreferences.preference_items.indexOf(item), item.l5)"     
                   color="success" 
               ></v-checkbox>
@@ -270,7 +275,7 @@
               <template v-slot:[`item.not_interested`]="{ item }">
                 <v-checkbox
                   v-model="item.not_interested"
-                    :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.l5"
+                  :disabled="item.l1 || item.l2 || item.l3 || item.l4 || item.l5"
                   @click="nIToggle(tablePreferences.preference_items.indexOf(item), item.not_interested)"     
                   color="success" 
                 ></v-checkbox>
@@ -403,16 +408,18 @@ export default {
       console.log(e)
     },
     async savePreferences() {
-      if(this.preferences && this.preferences[0].preference_items){
+      if(this.preferences.id){
+        // console.log(this.preferences)
+        //  console.log(this.tablePreferences)
        await this.updatePreferencesById({
         id: this.preferences[0].id,
         preference_items: this.preferences[0].preference_items
         })
-        console.log(this.preferences[0])
+     
          console.log("update")
       } else {
-        await this.addPreferences(this.tablePreferences)
-         console.log("new preference")
+      await this.addPreferences(this.tablePreferences)
+        //  console.log(this.tablePreferences)
       }
       // console.log(this.tablePreferences)
       // console.log(this.preferences[0])
