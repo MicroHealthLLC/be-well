@@ -372,7 +372,7 @@ export default {
             checklist: this.goal.checklist,
           });
         } else {
-            console.log(this.goal.category.toUpperCase())
+            console.log(this.goal)
           await this.addGoal(this.goal);
         }
       } catch (error) {

@@ -356,7 +356,8 @@ export default {
             checklist: this.goal.checklist,
           });
         } else {
-          await this.addGoal(this.goal);
+          console.log(this.goal)
+          // await this.addGoal(this.goal);
         }
       } catch (error) {
         console.log(error);
