@@ -55,7 +55,6 @@
         outlined
         elevation="2"
         :disabled="!(incompleteGoals.length < 8)"      
-        :block="$vuetify.breakpoint.xsOnly"        
       
         ><v-icon class="checkmark"
               >mdi-flag-checkered</v-icon>SET A GOAL...</v-btn

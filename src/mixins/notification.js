@@ -1,4 +1,4 @@
-export const notification = {
+/* export const notification = {
   data() {
     return {
       imageURLs: {
@@ -78,3 +78,4 @@ export const notification = {
     },
   },
 };
+ */

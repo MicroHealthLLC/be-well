@@ -75,7 +75,7 @@
                <v-progress-linear
                 height="10"
                 :value="(goal.progress / goal.stepCount) * 100"
-               striped
+                striped
                 rounded
                 color="lime"
               ></v-progress-linear>

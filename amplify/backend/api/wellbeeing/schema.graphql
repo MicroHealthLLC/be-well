@@ -112,11 +112,11 @@ type Preferences @model @auth(
 
 type PreferenceItems {
   category: String
-  l1: Boolean 
-  l2: Boolean 
-  l3: Boolean 
+  l1: Boolean
+  l2: Boolean
+  l3: Boolean
   l4: Boolean
-  l5: Boolean 
+  l5: Boolean
   not_interested: Boolean
 }
 
@@ -254,3 +254,5 @@ enum SubmissionType {
   PHOTO
   VIDEO
 }
+
+

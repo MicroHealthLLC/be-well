@@ -1,32 +1,40 @@
 <template>
   <v-card elevation="5">
-    <div @click="playVideo(video.resourceId)" class="img-container clickable">
-      <img class="image" :src="thumbnail" width="100%" />
+    <div @click="playVideo(video.videoId)" class="img-container clickable">
+      <img class="image" :src="getVideoImage(video.category)" width="100%" />
       <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
       </div>
     </div>
 
-    <v-card-title class="video-title text-body-1 font-weight-bold"
-      ><span class="clamp-two-lines">{{
-        video.snippet.title
-      }}</span></v-card-title
+    <v-card-title class="video-title"
+      >Focus Area: {{ this.video.category }}</v-card-title
     >
-    <v-card-subtitle>{{ video.snippet.channelTitle }}</v-card-subtitle>
-    <v-card-text>
-      <span class="clamp-two-lines">{{ video.snippet.description }}</span>
+    <v-card-subtitle class="text-body-1 font-weight-bold"
+      ><span class="clamp-two-lines"
+        >Activity:
+        <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip></span
+      ></v-card-subtitle
+    >
+    <v-card-text v-if="this.video.level != 'na'">
+      <span class="clamp-two-lines"
+        ><v-chip :color="levelToColor(this.video.level)">{{
+          levelToString(this.video.level)
+        }}</v-chip></span
+      >
     </v-card-text>
     <v-card-actions class="align-end">
-      <v-btn @click="playVideo(video.resourceId)" text color="primary"
-        >View Video</v-btn
+      <v-btn @click="playVideo(video.videoId)" text color="primary"
+        >View <v-icon class="mr-1">mdi-youtube</v-icon></v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
+      <!-- <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
-      >
+      > -->
     </v-card-actions>
     <!-- Play Video Modal -->
-    <v-dialog v-model="play" overlay-opacity="0.9">
+    <!-- <VideoModal /> -->
+    <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
           <iframe
@@ -37,12 +45,15 @@
             allowfullscreen
           ></iframe>
         </div>
-        <v-card-title
-          class="d-flex justify-space-between align-start flex-nowrap"
-          ><div>
-            {{ video.snippet.title }}
-          </div>
+        <v-card-title class="mb-1"
+          >Focus Area: {{ this.video.category }}</v-card-title
+        >
+        <v-card-subtitle class="font-weight-bold">
           <div>
+            Activity:
+            <v-chip outlined>{{ this.count }} of {{ this.total }}</v-chip>
+          </div>
+          <!-- <div>
             <v-btn
               v-if="favoriteReference"
               @click="removeFavorite"
@@ -54,10 +65,16 @@
             <v-btn v-else @click="addFavorite" title="Add to favorites" icon
               ><v-icon>mdi-star-outline</v-icon></v-btn
             >
-          </div></v-card-title
-        >
-        <v-card-subtitle>{{ video.snippet.channelTitle }}</v-card-subtitle>
-        <v-card-text>{{ video.snippet.description }}</v-card-text>
+          </div> -->
+        </v-card-subtitle>
+        <v-card-subtitle v-if="this.video.level != 'na'">
+          <v-chip :color="levelToColor(this.video.level)">{{
+            levelToString(this.video.level)
+          }}</v-chip>
+        </v-card-subtitle>
+        <v-btn @click="goBack" class="ma-2 back">
+          <v-icon dark left> mdi-arrow-left </v-icon>Back
+        </v-btn>
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
@@ -66,8 +83,7 @@
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text
           >Are you sure you want to delete
-          <strong>{{ video.snippet.title }}</strong
-          >?</v-card-text
+          <strong>Video Title</strong>?</v-card-text
         >
         <v-card-actions class="justify-end">
           <v-btn @click="deleteDialog = false" color="secondary" small outlined
@@ -89,13 +105,17 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+//import VideoModal from "./VideoModal.vue";
 export default {
   name: "VideoCard",
   props: {
     video: {
       type: Object,
     },
+    count: Number,
+    total: Number,
   },
+  components: {},
   data() {
     return {
       play: false,
@@ -118,6 +138,9 @@ export default {
       this.play = true;
       this.embedVideoURL = `https://youtube.com/embed/${videoId}`;
     },
+    goBack() {
+      this.play = false;
+    },
     openDeleteDialog() {
       this.deleteDialog = true;
     },
@@ -131,7 +154,6 @@ export default {
         category: this.video.category,
         level: this.video.level,
       };
-
       this.addFavoriteVideo(favoriteVideo);
     },
     removeFavorite() {
@@ -141,10 +163,60 @@ export default {
         this.play = false;
       }
     },
+    levelToString(level) {
+      switch (level) {
+        case "L1":
+          return "Novice";
+        case "L2":
+          return "Beginner";
+        case "L3":
+          return "Competent";
+        case "L4":
+          return "Proficient";
+        case "L5":
+          return "Expert";
+        case "na":
+          return "";
+      }
+    },
+    getVideoImage(videoCat) {
+      //console.log(videoCat)
+      switch (videoCat) {
+        case "Endurance":
+          return "/img/endurance.jpg";
+        case "Strength":
+          return "/img/strength.jpg";
+        case "Flexibility-mobility":
+          return "/img/flexibility_mobility.jpg";
+        case "Recovery":
+          return "/img/recovery.jpg";
+        case "Ergonomics":
+          return "/img/ergonomics.jpg";
+        case "Nutrition":
+          return "/img/nutrition.jpg";
+        case "Balance":
+          return "/img/balance.jpg";
+      }
+    },
+    levelToColor(level) {
+      //console.log(level);
+      switch (level) {
+        case "L1":
+        case "L2":
+          return "var(--mh-green)";
+        case "L3":
+        case "L4":
+          return "var(--mh-orange)";
+        case "L5":
+          return "error";
+      }
+    },
   },
   computed: {
     ...mapGetters(["isEditor", "favoriteVideos"]),
     showDeleteBtn() {
+      console.log(this.video);
+
       return this.isEditor && this.$route.name != "Home";
     },
     thumbnail() {
@@ -219,5 +291,8 @@ export default {
 }
 .img-container:hover .overlay {
   opacity: 1;
+}
+a {
+  text-decoration: none;
 }
 </style>
