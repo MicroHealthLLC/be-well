@@ -99,7 +99,7 @@
    
       <router-view
         v-if="mounted"
-        :selectedCategory="selectedCategory"
+        :selectedYTCategory="selectedCategory"
         :selectedFilter="selectedFilter"
       ></router-view>
     </v-col>
@@ -140,6 +140,7 @@ export default {
   },
   mounted() {
     // Check for category query parameter in URL to set category
+    this.mounted = true;
     console.log(this.$route)
     if (this.$route.query.category) {
       this.selectedCategory = this.categories.findIndex(
@@ -157,7 +158,7 @@ export default {
         (favFilters) => this.$route.query.favFilters == favFilters.query
       );
     } */
-    this.mounted = true;
+    
   },
 };
 </script>

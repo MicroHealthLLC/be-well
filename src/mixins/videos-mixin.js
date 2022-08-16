@@ -2,7 +2,7 @@ export default {
   data() {
     return {
       currentVideo: {},
-      videos: [
+      mcVideos: [
         // Balance Videos
         {
           title: "Balance Beginner 1 1",
@@ -53,13 +53,6 @@ export default {
           level: "L4",
           nextVideo: "",
         },
-        // {
-        //   title: "Intermediate Balance 2 2",
-        //   videoId: "01Mn0r3l2dI",
-        //   category: "Balance",
-        //   level: "L4",
-        //   nextVideo: "",
-        // },
         {
           title: "Balance Advanced 1 1",
           videoId: "FnQqMfNsmTI",
@@ -67,13 +60,7 @@ export default {
           level: "L5",
           nextVideo: "",
         },
-        // {
-        //   title: "Balance Advanced 1 2",
-        //   videoId: "0Hak187Nu_M",
-        //   category: "Balance",
-        //   level: "L5",
-        //   nextVideo: "",
-        // },
+        
 
 
         // Endurance Videos
