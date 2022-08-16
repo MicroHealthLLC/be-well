@@ -1,5 +1,5 @@
 <template>
-  <v-card  width="auto" elevation="8" v-if="_videos && _videos[0] || _videos && _videos[1]  ">
+  <v-card  width="auto" elevation="8" v-if="_videos && _videos[0] || _videos && _videos[1] ">
     <div class="img-container">
       <img
         v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category"
