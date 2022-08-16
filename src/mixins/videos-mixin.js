@@ -395,7 +395,7 @@ export default {
           this.currentVideo = false;
         }
       }
-      console.log(this.currentVideo)
+      //console.log(this.currentVideo)
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
