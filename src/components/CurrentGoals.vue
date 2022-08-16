@@ -75,7 +75,7 @@
             <div class="d-flex align-center goal-progressbar pt-2 px-2">
                <v-progress-linear
                 height="10"
-                :value="(goal.progress / goal.stepCount) * 100"
+                :value="50"
                striped
                 rounded
                 color="lime"
@@ -92,10 +92,20 @@
             <h5 class="orangeLabel d-flex">
                PROGRESS TOWARDS GOAL
             </h5>   
-           {{ goal.completedCount }} of {{goal.stepCount}}
+           {{ 1 }} of {{2 }}
            </div>
           <div class="col">
-          <v-progress-circular
+               <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :value="50"
+              color="primary"
+            >
+             {{ 50 }} %
+            </v-progress-circular> 
+            
+          <!-- <v-progress-circular
               :rotate="360"
               :size="100"
               :width="15"
@@ -103,7 +113,7 @@
               color="primary"
             >
               {{ (goal.progress / goal.stepCount) * 100 }}%
-            </v-progress-circular>
+            </v-progress-circular> -->
           </div>              
          </div>         
         <div class="row activityActions">

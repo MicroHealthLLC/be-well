@@ -119,7 +119,7 @@
             <h5 class="orangeLabel d-flex">
                 ACTIVITY PROGRESS 
             </h5>   
-             4 of 8 complete              
+             1 of 2 complete              
            </div>
          </div>
          <span class="levelBadge">
