@@ -99,11 +99,13 @@
 
       <v-divider class="mb-4"></v-divider>
 
+    <div class="row">
       <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
         <span class="grid-container mb-10">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      </div>
     </span>
 
     <span v-if="!this.isEmpty(flexibilityVids)">
@@ -112,12 +114,13 @@
       </span>
 
       <v-divider class="mb-4"></v-divider>
-
+      <div class="row">
       <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
         <span class="grid-container mb-10">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      </div>
     </span>
 
     <span v-if="!this.isEmpty(recoveryVids)">
@@ -126,12 +129,13 @@
       </span>
 
       <v-divider class="mb-4"></v-divider>
-
+      <div class="row">
       <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
         <span class="grid-container mb-10">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      </div>
     </span>
 
     <span v-if="!this.isEmpty(ergonomicsVids)">
@@ -140,12 +144,13 @@
       </span>
 
       <v-divider class="mb-4"></v-divider>
-
+      <div class="row">
       <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
         <span class="grid-container mb-10">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      </div>
     </span>
 
     <span v-if="!this.isEmpty(nutritionVids)">
@@ -153,12 +158,13 @@
         <b class="goalHeaders">Nutrition Videos</b>
       </span>
       <v-divider class="mb-4"></v-divider>
-
+      <div class="row">
       <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
         <span class="grid-container mb-10">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      </div>
     </span>
   </span>
 </template>

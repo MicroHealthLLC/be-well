@@ -1,5 +1,5 @@
 <template>
-  <v-card width="" elevation="8">
+  <v-card width="275px" elevation="8">
     <div class="img-container">
       <img
         :src="
@@ -17,28 +17,32 @@
 
     <!-- <v-card-title class="video-title"
       >Focus Area: {{ getFirstNonNullVal(_videos).category }}</v-card-title
-    > --><v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
-      <span class="clamp-two-lines"
-        ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
-          levelToString(getFirstNonNullVal(_videos).level)
-        }}</v-chip></span
-      >
-    </v-card-text>
-    <v-card-subtitle class="text-body-1 font-weight-bold"
-      ><span class="clamp-two-lines"
-        >Activities:
-        <v-chip
-          class="ma-1"
-          v-for="(item, index) in _videos"
-          :key="index"
-          @click="playVideo(item, item.category, item.level, index)"
-          outlined
-          >{{ index + 1 }}</v-chip
-        ></span
-      ></v-card-subtitle
-    >
-    
-    <v-card-actions class="align-end">
+    > -->
+    <div class="d-flex justify-content-start">
+      <v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
+        <span 
+          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
+            levelToString(getFirstNonNullVal(_videos).level)
+          }}</v-chip></span
+        >
+      </v-card-text>
+      <v-card-subtitle class="text-body-1 font-weight-bold">
+        <span 
+          >Activities:
+          <v-chip
+            class="ma-1"
+            v-for="(item, index) in _videos"
+            :key="index"
+            @click="playVideo(item, item.category, item.level, index)"
+            outlined
+          >
+            {{ index + 1 }}
+          </v-chip>
+        </span>
+      </v-card-subtitle>
+    </div>
+
+    <!-- <v-card-actions class="align-end"> -->
       <!-- <v-btn @click="playVideo(video.videoId)" text color="primary"
         >View <v-icon class="mr-1">mdi-youtube</v-icon></v-btn
       > -->
@@ -46,7 +50,7 @@
       <!-- <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
       > -->
-    </v-card-actions>
+    <!-- </v-card-actions> -->
     <!-- Play Video Modal -->
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
