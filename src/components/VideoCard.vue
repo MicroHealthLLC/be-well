@@ -1,5 +1,5 @@
 <template>
-  <v-card  width="auto" elevation="8" v-if="_videos && _videos[0] || _videos && _videos[1] ">
+  <v-card  width="auto" elevation="8" v-if="_videos">
     <div class="img-container">
       <img
         v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category"
@@ -12,7 +12,7 @@
         width="100%"
       />
 
-        <v-card-title class="py-0"><span class="mhBlue">
+        <v-card-title class="py-0"><span class="mhBlue"  v-if="_videos && _videos[0] && _videos[0].category">
           <h3 v-if="_videos[0].category == 'Flexibility-mobility'">Flexibility</h3>
           <h3 v-else>{{ _videos[0].category }}</h3>
           </span>
@@ -160,6 +160,7 @@ export default {
       "deleteVideo",
       "deleteFavoriteVideo",
       "fetchFavoriteVideos",
+      "fetchPreferences"
     ]),
     ...mapMutations(["DELETE_VIDEO"]),
     log(e){
@@ -273,6 +274,9 @@ export default {
         (video) => video.videoId == this.video.id
       );
     },
+  },
+   mounted() {
+    this.fetchPreferences();    
   },
   watch: {
     play(isPlaying) {

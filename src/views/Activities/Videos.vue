@@ -1,5 +1,5 @@
 <template>
-  <div v-if="play" :load="log(strengthVids)">
+  <div v-if="play">
     <!-- <VideoModal /> -->
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">

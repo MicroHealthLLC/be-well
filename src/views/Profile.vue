@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="col-12" :load="log(preferences)"
+    <v-col class="col-12"
       ><span class="text-h6 text-sm-h5">My Profile</span>
 
       <v-divider class="mb-4"></v-divider>
@@ -402,11 +402,12 @@ export default {
     // editPreferences(){
     //   this.isEditing = true;
     // },
-    log(e){
-      console.log(e)
-    },
+    // log(e){
+    //   console.log(e)
+    // },
     async savePreferences() {
-      if(this.preferences){
+      if(this.preferences && this.preferences[0] && this.preferences[0].id){
+         console.log(this.preferences[0].id, "update")
       await this.updatePreferencesById({
         id: this.preferences[0].id,
         preference_items: this.preferences[0].preference_items
@@ -416,7 +417,7 @@ export default {
       } else {
       await this.addPreferences(this.tablePreferences)
         //  console.log(this.tablePreferences)
-         console.log("this is fi")
+         console.log("this is new" + this.tablePreferences)
       }
       // console.log(this.tablePreferences)
       // console.log(this.preferences[0])
