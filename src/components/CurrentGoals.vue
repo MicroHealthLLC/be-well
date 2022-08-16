@@ -75,7 +75,7 @@
             <div class="d-flex align-center goal-progressbar pt-2 px-2">
                <v-progress-linear
                 height="10"
-                :value="50"
+                :value="0"
                striped
                 rounded
                 color="lime"
@@ -92,7 +92,7 @@
             <h5 class="orangeLabel d-flex">
                PROGRESS TOWARDS GOAL
             </h5>   
-           {{ 1 }} of {{2 }}
+           {{ 0 }} of {{2 }}
            </div>
           <div class="col">
                <v-progress-circular
@@ -102,7 +102,7 @@
               :value="50"
               color="primary"
             >
-             {{ 50 }} %
+             {{ 0 }} %
             </v-progress-circular> 
             
           <!-- <v-progress-circular

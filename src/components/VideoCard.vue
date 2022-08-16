@@ -1,5 +1,5 @@
 <template>
-  <v-card width="275px" elevation="8">
+  <v-card width="auto" elevation="8" :load="log(_videos)">
     <div class="img-container">
       <img
         :src="
@@ -10,6 +10,22 @@
         class="image"
         width="100%"
       />
+
+        <v-card-title class="py-0"><span class="mhBlue">
+          <h3 v-if="_videos[0].category == 'Flexibility-mobility'">Flexibility</h3>
+          <h3 v-else>{{ _videos[0].category }}</h3>
+          </span>
+        <span class="text-right"> 
+          
+          <h6 class><v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
+
+        <span 
+          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
+            levelToString(getFirstNonNullVal(_videos).level)
+          }}</v-chip></span
+        >
+      </v-card-text></h6></span>
+        </v-card-title>
       <!-- <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
       </div> -->
@@ -18,17 +34,11 @@
     <!-- <v-card-title class="video-title"
       >Focus Area: {{ getFirstNonNullVal(_videos).category }}</v-card-title
     > -->
-    <div class="d-flex justify-content-start">
-      <v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
+    <div class="text-center">    
+   
+      <v-card-subtitle class="text-body-1 pt-0 font-weight-bold">
         <span 
-          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
-            levelToString(getFirstNonNullVal(_videos).level)
-          }}</v-chip></span
-        >
-      </v-card-text>
-      <v-card-subtitle class="text-body-1 font-weight-bold">
-        <span 
-          >Activities:
+          >
           <v-chip
             class="ma-1"
             v-for="(item, index) in _videos"
@@ -83,7 +93,7 @@
             >
           </div> -->
         </v-card-subtitle>
-        <v-card-subtitle v-if="currentLev != 'na'">
+        <v-card-subtitle  class="text-center" v-if="currentLev != 'na'">
           <v-chip :color="levelToColor(currentLev)">{{
             levelToString(currentLev)
           }}</v-chip>
@@ -151,13 +161,11 @@ export default {
       "fetchFavoriteVideos",
     ]),
     ...mapMutations(["DELETE_VIDEO"]),
+    log(e){
+      console.log(e)
+    },
     openVideoURL(videoId) {
       window.open(`https://www.youtube.com/watch?v=${videoId}`);
-    },
-    log(e) {
-      if (e) {
-        console.log(e);
-      }
     },
     playVideo(video, cat, lev, num) {
       this.play = true;
@@ -245,7 +253,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isEditor", "favoriteVideos"]),
+    ...mapGetters(["isEditor", "favoriteVideos", "preferences"]),
     showDeleteBtn() {
       console.log(this.video);
       return this.isEditor && this.$route.name != "Home";
@@ -282,6 +290,9 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+.mhBlue{
+  color: var(--mh-blue);
 }
 .video-title {
   min-height: 80px;

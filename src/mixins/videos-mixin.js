@@ -3,6 +3,79 @@ export default {
     return {
       currentVideo: {},
       videos: [
+        // Balance Videos
+        {
+          title: "Balance Beginner 1 1",
+          videoId: "isIVduIDdi4",
+          category: "Balance",
+          level: "L1",
+          nextVideo: "7kXNrWp7bHQ",
+        },
+        {
+          title: "Balance Beginner 1 2",
+          videoId: "7kXNrWp7bHQ",
+          category: "Balance",
+          level: "L1",
+          nextVideo: "",
+        },
+        {
+          title: "Balance Beginner 2 1",
+          videoId: "-Q1Pv65SM6U",
+          category: "Balance",
+          level: "L2",
+          nextVideo: "P12NmR9PGRI",
+        },
+        {
+          title: "Balance Beginner 2 2",        
+          videoId: "P12NmR9PGRI",
+          category: "Balance",
+          level: "L2",
+          nextVideo: "",
+        },
+        {
+          title: "Intermediate Balance 1 1",
+          videoId: "5xT9k13v6Ls",
+          category: "Balance",
+          level: "L3",
+          nextVideo: "rytZxljdyFE",
+        },
+        {
+          title: "Intermediate Balance 1 2",
+          videoId: "rytZxljdyFE",
+          category: "Balance",
+          level: "L3",
+          nextVideo: "",
+        },
+        {
+          title: "IntermediateBalance 2 1",
+          videoId: "EYfkYOg1ra4",
+          category: "Balance",
+          level: "L4",
+          nextVideo: "",
+        },
+        // {
+        //   title: "Intermediate Balance 2 2",
+        //   videoId: "01Mn0r3l2dI",
+        //   category: "Balance",
+        //   level: "L4",
+        //   nextVideo: "",
+        // },
+        {
+          title: "Balance Advanced 1 1",
+          videoId: "FnQqMfNsmTI",
+          category: "Balance",
+          level: "L5",
+          nextVideo: "",
+        },
+        // {
+        //   title: "Balance Advanced 1 2",
+        //   videoId: "0Hak187Nu_M",
+        //   category: "Balance",
+        //   level: "L5",
+        //   nextVideo: "",
+        // },
+
+
         // Endurance Videos
         {
           title: "Endurance Beginner 1 1",

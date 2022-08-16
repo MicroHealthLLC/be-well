@@ -1,5 +1,5 @@
 <template>
-  <div v-if="play">
+  <div v-if="play" :load="log(strengthVids)">
     <!-- <VideoModal /> -->
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
@@ -61,111 +61,80 @@
       </v-card>
     </v-dialog>
   </div>
-  <span v-else class="mt-2 mb-2 mb-sm-2 mt-sm-4">
-    <span v-if="!this.isEmpty(balanceVids)">
-      <span class="text-h6 text-sm-h5">
-        <b class="goalHeaders">Balance Videos</b>
-      </span>
-
-      <v-divider class="mb-4"></v-divider>
-
-      <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
-          <video-card :_videos="level" :total="level.length" />
-        </span>
-      </span>
-    </span>
-
-    <span v-if="!this.isEmpty(enduranceVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Endurance Videos</b>
-      </span>
-
-      <v-divider class="mb-4"></v-divider>
-
-    <div class="row">
-      <span class="col-2" width="auto" v-for="(level, i) in enduranceVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
-          <video-card :_videos="level" :total="level.length" />
-        </span>
-      </span>
-      </div>
-    </span>
-
-    <span v-if="!this.isEmpty(strengthVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Strength Videos</b>
-      </span>
-
-      <v-divider class="mb-4"></v-divider>
-
-    <div class="row">
-      <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
-          <video-card :_videos="level" :total="level.length" />
-        </span>
-      </span>
-      </div>
-    </span>
-
-    <span v-if="!this.isEmpty(flexibilityVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Flexibility & Mobility Videos</b>
-      </span>
-
-      <v-divider class="mb-4"></v-divider>
+  <span v-else class="mb-sm-2">
+    <div class="">
       <div class="row">
-      <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
+         <div class="col-3" v-if="!this.isEmpty(balanceVids)" >          
+         <span  v-for="(level, i) in balanceVidsbyLevel" :key="i">    
+                <video-card :_videos="level" :total="level.length" />   
+ 
+         </span>
+         </div>
+
+         
+        <div v-if="!this.isEmpty(enduranceVids)" class="col-3" >   
+        <span   v-for="(level, i) in enduranceVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
-        </span>
-      </span>
+         </span>  
       </div>
-    </span>
 
-    <span v-if="!this.isEmpty(recoveryVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Recovery Videos</b>
+    <div v-if="!this.isEmpty(strengthVids)" class="col-3" >
+      <span v-for="(level, i) in strengthVidsbyLevel" :key="i" >
+       <video-card :_videos="level" :total="level.length" />       
       </span>
+ 
+    </div>
 
-      <v-divider class="mb-4"></v-divider>
-      <div class="row">
+    <div v-if="!this.isEmpty(flexibilityVids)"  class="col-3">
+     <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i"  >
+       <video-card :_videos="level" :total="level.length" />
+      </span>
+    
+    </div>     
+
+      </div>
+       <div class="row">
+    
+    <div v-if="!this.isEmpty(recoveryVids)"  class="col-3">    
+  
       <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
+        <span>
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
-      </div>
-    </span>
+  
+    </div>
 
-    <span v-if="!this.isEmpty(ergonomicsVids)">
-      <span class="text-h6 text-sm-h5"
-        ><b class="goalHeaders">Ergonomics Videos</b>
-      </span>
-
-      <v-divider class="mb-4"></v-divider>
-      <div class="row">
+    <div v-if="!this.isEmpty(ergonomicsVids)" class="col-3">
       <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
+        <span>
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
-      </div>
-    </span>
+   
+    </div>
 
-    <span v-if="!this.isEmpty(nutritionVids)">
-      <span class="text-h6 text-sm-h5">
-        <b class="goalHeaders">Nutrition Videos</b>
-      </span>
-      <v-divider class="mb-4"></v-divider>
-      <div class="row">
+    <div v-if="!this.isEmpty(nutritionVids)" class="col-3">
+     
+     
       <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
-        <span class="grid-container mb-10">
+        <span>
           <video-card :_videos="level" :total="level.length" />
         </span>
       </span>
+      
+    </div>
+
+      
+
       </div>
-    </span>
+    </div>
+
+
+  
+
+ 
+
   </span>
 </template>
 
@@ -222,15 +191,15 @@ export default {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
-      let bal = this.videos.filter((v) => v.category == "Balance");
-      let end = this.videos.filter((v) => v.category == "Endurance");
-      let str = this.videos.filter((v) => v.category == "Strength");
+      let bal = this.videos.filter((v) => v.category == "Balance" && v.level == this.balanceLevel);
+      let end = this.videos.filter((v) => v.category == "Endurance" && v.level == this.enduranceLevel);
+      let str = this.videos.filter((v) => v.category == "Strength" && v.level == this.strengthLevel);
       let flex = this.videos.filter(
-        (v) => v.category == "Flexibility-mobility"
+        (v) => v.category == "Flexibility-mobility" && v.level == this.flexLevel
       );
-      let rec = this.videos.filter((v) => v.category == "Recovery");
-      let erg = this.videos.filter((v) => v.category == "Ergonomics");
-      let nut = this.videos.filter((v) => v.category == "Nutrition");
+      let rec = this.videos.filter((v) => v.category == "Recovery" && v.level =="na");
+      let erg = this.videos.filter((v) => v.category == "Ergonomics" && v.level == "na");
+      let nut = this.videos.filter((v) => v.category == "Nutrition" && v.level == "na");
       this.balanceVids = bal;
       this.enduranceVids = end;
       this.strengthVids = str;
@@ -288,6 +257,9 @@ export default {
     },
     goBack() {
       this.play = false;
+    },
+    log(e){
+      console.log(e)
     },
     levelToColor(level) {
       //console.log(level);
