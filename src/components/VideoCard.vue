@@ -1,7 +1,8 @@
 <template>
-  <v-card width="auto" elevation="8" :load="log(_videos)">
+  <v-card  width="auto" elevation="8" v-if="_videos && _videos[0] || _videos && _videos[1]  ">
     <div class="img-container">
       <img
+        v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category"
         :src="
           getFirstNonNullVal(_videos).category
             ? getVideoImage(getFirstNonNullVal(_videos).category)
