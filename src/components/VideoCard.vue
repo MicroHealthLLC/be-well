@@ -1,32 +1,29 @@
 <template>
-  <v-card  width="auto" elevation="8" v-if="_videos">
+  <v-card width="auto" elevation="8" v-if="_videos">
     <div class="img-container">
-      <img
-        v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category"
-        :src="
-          getFirstNonNullVal(_videos).category
-            ? getVideoImage(getFirstNonNullVal(_videos).category)
-            : ''
-        "
-        class="image"
-        width="100%"
-      />
+      <img v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category" :src="
+        getFirstNonNullVal(_videos).category
+          ? getVideoImage(getFirstNonNullVal(_videos).category)
+          : ''
+      " class="image" width="100%" />
 
-        <v-card-title class="py-0"><span class="mhBlue"  v-if="_videos && _videos[0] && _videos[0].category">
+      <v-card-title class="py-0"><span class="mhBlue" v-if="_videos && _videos[0] && _videos[0].category">
           <h3 v-if="_videos[0].category == 'Flexibility-mobility'">Flexibility</h3>
           <h3 v-else>{{ _videos[0].category }}</h3>
-          </span>
-        <span class="text-right"> 
-          
-          <h6 class><v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
+        </span>
+        <span class="text-right">
 
-        <span 
-          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
-            levelToString(getFirstNonNullVal(_videos).level)
-          }}</v-chip></span
-        >
-      </v-card-text></h6></span>
-        </v-card-title>
+          <!-- <h6 class>
+            <v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
+              <span>
+                <v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
+                    levelToString(getFirstNonNullVal(_videos).level)
+                }}</v-chip>
+              </span>
+            </v-card-text>
+          </h6> -->
+        </span>
+      </v-card-title>
       <!-- <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
       </div> -->
@@ -35,18 +32,12 @@
     <!-- <v-card-title class="video-title"
       >Focus Area: {{ getFirstNonNullVal(_videos).category }}</v-card-title
     > -->
-    <div class="text-center">    
-   
+    <div class="text-center">
+
       <v-card-subtitle class="text-body-1 pt-0 font-weight-bold">
-        <span 
-          >
-          <v-chip
-            class="ma-1"
-            v-for="(item, index) in _videos"
-            :key="index"
-            @click="playVideo(item, item.category, item.level, index)"
-            outlined
-          >
+        <span>
+          <v-chip class="ma-1" v-for="(item, index) in _videos" :key="index"
+            @click="playVideo(item, item.category, item.level, index)" outlined>
             {{ index + 1 }}
           </v-chip>
         </span>
@@ -54,11 +45,11 @@
     </div>
 
     <!-- <v-card-actions class="align-end"> -->
-      <!-- <v-btn @click="playVideo(video.videoId)" text color="primary"
+    <!-- <v-btn @click="playVideo(video.videoId)" text color="primary"
         >View <v-icon class="mr-1">mdi-youtube</v-icon></v-btn
       > -->
-      <!-- <v-spacer></v-spacer> -->
-      <!-- <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
+    <!-- <v-spacer></v-spacer> -->
+    <!-- <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon
         ><v-icon>mdi-delete</v-icon></v-btn
       > -->
     <!-- </v-card-actions> -->
@@ -66,16 +57,10 @@
     <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
-          <iframe
-            :src="embedVideoURL"
-            width="560"
-            height="349"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
+          <iframe :src="embedVideoURL" width="560" height="349" frameborder="0" allowfullscreen></iframe>
         </div>
         <v-card-title class="mb-1">Focus Area: {{ currentCat }}</v-card-title>
-        <v-card-subtitle class="font-weight-bold">
+        <v-card-subtitle class="font-weight-bold pb-0">
           <div>
             Activity:
             <v-chip outlined>{{ activityNum }}</v-chip>
@@ -94,9 +79,9 @@
             >
           </div> -->
         </v-card-subtitle>
-        <v-card-subtitle  class="text-center" v-if="currentLev != 'na'">
+        <v-card-subtitle class="text-center pb-0" v-if="currentLev != 'na'">
           <v-chip :color="levelToColor(currentLev)">{{
-            levelToString(currentLev)
+              levelToString(currentLev)
           }}</v-chip>
         </v-card-subtitle>
         <v-btn @click="goBack" class="ma-2 back">
@@ -163,7 +148,7 @@ export default {
       "fetchPreferences"
     ]),
     ...mapMutations(["DELETE_VIDEO"]),
-    log(e){
+    log(e) {
       console.log(e)
     },
     openVideoURL(videoId) {
@@ -251,6 +236,8 @@ export default {
           return "var(--mh-orange)";
         case "L5":
           return "error";
+        default: 
+          return "blue";
       }
     },
   },
@@ -275,8 +262,8 @@ export default {
       );
     },
   },
-   mounted() {
-    this.fetchPreferences();    
+  mounted() {
+    this.fetchPreferences();
   },
   watch: {
     play(isPlaying) {
@@ -296,19 +283,24 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-.mhBlue{
+
+.mhBlue {
   color: var(--mh-blue);
 }
+
 .video-title {
   min-height: 80px;
   align-content: flex-start;
   word-break: break-word;
 }
+
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
+  /* 16:9 */
   height: 0;
 }
+
 .video-container iframe {
   position: absolute;
   top: 0;
@@ -316,10 +308,12 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .image {
   max-height: 200px;
   object-fit: cover;
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -332,13 +326,16 @@ export default {
   transition: 0.3s ease;
   background-color: rgba(0, 0, 0, 0.3);
 }
+
 .img-container {
   position: relative;
   width: 100%;
 }
+
 .img-container:hover .overlay {
   opacity: 1;
 }
+
 a {
   text-decoration: none;
 }
