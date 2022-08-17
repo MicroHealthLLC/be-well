@@ -1,5 +1,5 @@
 <template>
-  <v-card  width="auto" elevation="8" v-if="_videos">
+  <v-card  width="auto" elevation="8" v-if="_videos ">
     <div class="img-container">
       <img
         v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).category"
@@ -12,24 +12,26 @@
         width="100%"
       />
 
-        <v-card-title class="py-0"><span class="mhBlue"  v-if="_videos && _videos[0] && _videos[0].category">
+         <v-card-title class="py-0"><span class="mhBlue"  v-if="_videos && _videos[0] && _videos[0].category">
           <h3 v-if="_videos[0].category == 'Flexibility-mobility'">Flexibility</h3>
           <h3 v-else>{{ _videos[0].category }}</h3>
           </span>
-        <span class="text-right"> 
-          
-          <h6 class><v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
-
+         <span class="text-right">  
+       
+          <h6 class><v-card-text v-if=" getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).level != 'na'">
         <span 
-          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
-            levelToString(getFirstNonNullVal(_videos).level)
-          }}</v-chip></span
+          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">
+          <span class="wSmoke">
+            {{ levelToString(getFirstNonNullVal(_videos).level) }}
+          </span>
+          </v-chip>
+          </span
         >
-      </v-card-text></h6></span>
-        </v-card-title>
-      <!-- <div class="d-flex justify-center align-center overlay">
+      </v-card-text></h6></span> 
+        </v-card-title> 
+       <!-- <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
-      </div> -->
+      </div>  -->
     </div>
 
     <!-- <v-card-title class="video-title"
@@ -239,7 +241,7 @@ export default {
     getFirstNonNullVal(array) {
       if (!this.isEmpty(array)) {
         return array.find((v) => v !== this.isEmpty(v));
-      }
+      } 
     },
     levelToColor(level) {
       switch (level) {
@@ -290,6 +292,10 @@ export default {
 </script>
 
 <style scoped>
+.wSmoke{
+  color: whitesmoke;
+  font-weight: 500;
+}
 .clamp-two-lines {
   overflow: hidden;
   display: -webkit-box;

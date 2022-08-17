@@ -61,13 +61,12 @@
       </v-card>
     </v-dialog>
   </div>
-  <span v-else class="mb-sm-2">
+  <span v-else class="mb-sm-2" :load="log(nutritionLevel)">
     <div class="">
-      <div class="row">
-         <div class="col-3" v-if="!this.isEmpty(balanceVids)" >          
+     <div class="row">
+         <div class="col-3">          
          <span  v-for="(level, i) in balanceVidsbyLevel" :key="i">    
-                <video-card :_videos="level" :total="level.length" />   
- 
+            <video-card :_videos="level" :total="level.length" />    
          </span>
          </div>
 
@@ -93,10 +92,8 @@
     </div>     
 
       </div>
-       <div class="row">
-    
-    <div v-if="!this.isEmpty(recoveryVids)"  class="col-3">    
-  
+     <div class="row">    
+    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'ALL'"  class="col-3">   
       <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
         <span>
           <video-card :_videos="level" :total="level.length" />
@@ -105,7 +102,7 @@
   
     </div>
 
-    <div v-if="!this.isEmpty(ergonomicsVids)" class="col-3">
+    <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'ALL'" class="col-3">
       <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
         <span>
           <video-card :_videos="level" :total="level.length" />
@@ -114,7 +111,7 @@
    
     </div>
 
-    <div v-if="!this.isEmpty(nutritionVids)" class="col-3">
+    <div v-if="!this.isEmpty(nutritionVids) && nutritionLevel && nutritionLevel == 'ALL'" class="col-3">
      
      
       <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
@@ -139,7 +136,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import videosMixin from "../../mixins/videos-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 import VideoCard from "../../components/VideoCard.vue";
@@ -171,16 +168,17 @@ export default {
       recoveryVids: [],
       ergonomicsVids: [],
       nutritionVids: [],
-      balanceVidsbyLevel: {},
-      enduranceVidsbyLevel: {},
-      strengthVidsbyLevel: {},
-      flexibilityVidsbyLevel: {},
-      recoveryVidsbyLevel: {},
-      ergonomicsVidsbyLevel: {},
-      nutritionVidsbyLevel: {},
+      balanceVidsbyLevel: [],
+      enduranceVidsbyLevel: [],
+      strengthVidsbyLevel: [],
+      flexibilityVidsbyLevel: [],
+      recoveryVidsbyLevel: [],
+      ergonomicsVidsbyLevel: [],
+      nutritionVidsbyLevel: [],
     };
   },
   methods: {
+  ...mapActions(["fetchPreferences"]),
     selectedCategory() {
       let vids = this.videos.filter(
         (v) => v.category == this.favoriteCat && v.level == this.favoriteLev
@@ -201,6 +199,7 @@ export default {
       let erg = this.videos.filter((v) => v.category == "Ergonomics" && v.level == "na");
       let nut = this.videos.filter((v) => v.category == "Nutrition" && v.level == "na");
       this.balanceVids = bal;
+      console.log(bal)
       this.enduranceVids = end;
       this.strengthVids = str;
       this.flexibilityVids = flex;
@@ -351,49 +350,37 @@ export default {
     },
     videosByLevel() {
       this.balanceVids[0]
-        ? (this.balanceVidsbyLevel = this.seperateVideosByLevel(
-            this.balanceVids
-          ))
+        ? (this.balanceVidsbyLevel = [this.balanceVids]
+        )
         : [];
       this.enduranceVids[0]
-        ? (this.enduranceVidsbyLevel = this.seperateVideosByLevel(
-            this.enduranceVids
-          ))
+        ? (this.enduranceVidsbyLevel = [this.enduranceVids]
+          )
         : [];
       this.ergonomicsVids[0]
-        ? (this.ergonomicsVidsbyLevel = this.seperateVideosByLevel(
-            this.ergonomicsVids
-          ))
+        ? (this.ergonomicsVidsbyLevel = [this.ergonomicsVids]
+          )
         : [];
       this.strengthVids[0]
-        ? (this.strengthVidsbyLevel = this.seperateVideosByLevel(
-            this.strengthVids
-          ))
+        ? (this.strengthVidsbyLevel = [this.strengthVids]
+        )
         : [];
       this.nutritionVids[0]
-        ? (this.nutritionVidsbyLevel = this.seperateVideosByLevel(
-            this.nutritionVids
-          ))
+        ? (this.nutritionVidsbyLevel = [this.nutritionVids]
+          )
         : [];
       this.flexibilityVids[0]
-        ? (this.flexibilityVidsbyLevel = this.seperateVideosByLevel(
-            this.flexibilityVids
-          ))
+        ? (this.flexibilityVidsbyLevel = [this.flexibilityVids]
+          )
         : [];
       this.recoveryVids[0]
-        ? (this.recoveryVidsbyLevel = this.seperateVideosByLevel(
-            this.recoveryVids
-          ))
+        ? (this.recoveryVidsbyLevel = [this.recoveryVids]
+          )
         : [];
     },
   },
   computed: {
     ...mapGetters(["preferences"]),
-    /* categoryTitle() {
-      console.log(this.videos);
-      console.log(this.preferences);
-      return this.categories[this.selectedCategory].title;
-    }, */
   },
   mounted() {
     this.nextVideo(this.favoriteCat, this.favoriteLev);
@@ -401,15 +388,20 @@ export default {
     if (!this.$route.query.category && !this.$route.query.filter) {
       this.play = false;
     }
+      console.log(this.preferences);
+    if (!this.preferences) {
+      this.fetchPreferences();
+    }
+
     this.seperateVideosbyCategory();
     this.videosByLevel();
 
-    console.log(this.enduranceVidsbyLevel);
-    console.log(this.ergonomicsVidsbyLevel);
-    console.log(this.strengthVidsbyLevel);
-    console.log(this.nutritionVidsbyLevel);
-    console.log(this.flexibilityVidsbyLevel);
-    console.log(this.recoveryVidsbyLevel);
+    // console.log(this.enduranceVidsbyLevel);
+    // console.log(this.ergonomicsVidsbyLevel);
+    // console.log(this.strengthVidsbyLevel);
+    // console.log(this.nutritionVidsbyLevel);
+    // console.log(this.flexibilityVidsbyLevel);
+    // console.log(this.recoveryVidsbyLevel);
   },
   watch: {},
 };
