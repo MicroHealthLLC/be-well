@@ -57,8 +57,8 @@
     </v-dialog>
   </div>
   <span v-else class="mb-sm-2">
-    <h1 class="text--secondary">MicroHealth Videos</h1>
-    <div class="row mt-2">
+    <h1 class="text--secondary font-weight-light">MicroHealth Videos</h1>
+    <div class="row mt-1">
       <div class="col-3" v-if="!this.isEmpty(balanceVids)">
         <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
@@ -110,15 +110,42 @@
       </div>
     </div>
 
-    <h1 class="text--secondary mt-4">Other Interesting Videos</h1>
-    <div class="row">
-
-      <!-- <div class="col-3" v-if="!this.isEmpty(videos)">
-        <span>
-          <youtube-video-card v-for="(video, i) in videos" :key="i" :video="video" />
-        </span>
-      </div> -->
+    <h1 class="youtube-video-h1 text--secondary font-weight-light mb-4">Other Interesting Videos</h1>
+    <div v-if="videos.length > 0" class="row">
+      <div v-for="(video, index) in videos" :key="index" class="col-3 mb-6">
+        <youtube-video-card :video="video" />
+      </div>
     </div>
+
+    <v-btn v-if="showAddBtn" @click="openDialog" class="mt-5" color="primary" text>Add a New Video</v-btn>
+
+    <!-- Add Video Dialog -->
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card :disabled="saving" :loading="saving">
+        <v-card-title>Add Video</v-card-title>
+        <v-card-text>
+          <v-form ref="videoform" v-model="valid">
+            <v-text-field v-model="urlInput" @keydown.space.prevent label="YouTube Video Link"
+              hint="Ex: https://www.youtube.com/watch?v=XXXXXX" persistent-hint :rules="[
+                (v) => !!v || 'YouTube Video Link is required',
+                (v) => urlCheck(v) || 'Not a valid URL',
+              ]" required validate-on-blur></v-text-field>
+            <v-select v-model="newVideo.category" :items="filteredCategories" item-text="title" item-value="value"
+              label="Category" :rules="[(v) => !!v || 'Category is required']" required></v-select>
+            <v-select v-model="newVideo.level" :items="filteredLevels" item-text="title" item-value="value"
+              label="Level" :rules="[(v) => !!v || 'Level is required']" required></v-select>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark>Submit</v-btn>
+          <v-btn @click="dialog = false" color="secondary" outlined>Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- Floating Add Video Button -->
+    <v-btn v-if="showAddBtn" @click="openDialog" class="floating-btn" color="var(--mh-blue)" fab large dark>
+      <v-icon large>mdi-plus</v-icon>
+    </v-btn>
   </span>
 </template>
 
@@ -127,7 +154,7 @@ import { mapGetters, mapActions } from "vuex";
 import videosMixin from "../../mixins/videos-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
 import VideoCard from "../../components/VideoCard.vue";
-//import YoutubeVideoCard from "../../components/YoutubeVideoCard.vue";
+import YoutubeVideoCard from "../../components/YoutubeVideoCard.vue";
 //import VideoModal from "../../components/VideoModal.vue";
 //import youtube from "../../apis/youtube";
 
@@ -137,7 +164,7 @@ export default {
   mixins: [videosMixin, utilitiesMixin],
   components: {
     VideoCard,
-    //YoutubeVideoCard
+    YoutubeVideoCard
   },
   data() {
     return {
@@ -177,6 +204,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions([
+      "addVideo",
+      "fetchVideos",
+      "fetchYTVideos",
+      "fetchFavoriteVideos",
+      "fetchAllFavoriteVideos",
+    ]),
     selectedCat() {
       let vids = this.mhVideos.filter(
         (v) => v.category == this.notificationCat && v.level == this.notificationLev
@@ -187,6 +221,7 @@ export default {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
+      console.log(this.balanceVids)
       let bal = this.mhVideos.filter(
         (v) => v.category == "Balance" && v.level == this.balanceLevel
       );
@@ -372,103 +407,89 @@ export default {
     },
     videosByLevel() {
       this.balanceVids[0]
-        ? (this.balanceVidsbyLevel = this.seperateVideosByLevel(
-          this.balanceVids
-        ))
+        ? (this.balanceVidsbyLevel = [this.balanceVids]
+        )
         : [];
       this.enduranceVids[0]
-        ? (this.enduranceVidsbyLevel = this.seperateVideosByLevel(
-          this.enduranceVids
-        ))
+        ? (this.enduranceVidsbyLevel = [this.enduranceVids]
+        )
         : [];
       this.ergonomicsVids[0]
-        ? (this.ergonomicsVidsbyLevel = this.seperateVideosByLevel(
-          this.ergonomicsVids
-        ))
+        ? (this.ergonomicsVidsbyLevel = [this.ergonomicsVids]
+        )
         : [];
       this.strengthVids[0]
-        ? (this.strengthVidsbyLevel = this.seperateVideosByLevel(
-          this.strengthVids
-        ))
+        ? (this.strengthVidsbyLevel = [this.strengthVids]
+        )
         : [];
       this.nutritionVids[0]
-        ? (this.nutritionVidsbyLevel = this.seperateVideosByLevel(
-          this.nutritionVids
-        ))
+        ? (this.nutritionVidsbyLevel = [this.nutritionVids]
+        )
         : [];
       this.flexibilityVids[0]
-        ? (this.flexibilityVidsbyLevel = this.seperateVideosByLevel(
-          this.flexibilityVids
-        ))
+        ? (this.flexibilityVidsbyLevel = [this.flexibilityVids]
+        )
         : [];
       this.recoveryVids[0]
-        ? (this.recoveryVidsbyLevel = this.seperateVideosByLevel(
-          this.recoveryVids
-        ))
+        ? (this.recoveryVidsbyLevel = [this.recoveryVids]
+        )
         : [];
     },
-  },
+    // YoutubeMethods
 
-  // YoutubeMethods
-  ...mapActions([
-    "addVideo",
-    "fetchVideos",
-    "fetchYTVideos",
-    "fetchFavoriteVideos",
-    "fetchAllFavoriteVideos",
-  ]),
-  async addNewVideo() {
-    if (!this.$refs.videoform.validate()) {
-      return;
-    }
-    // Extract YouTube id from user provided URL
-    this.newVideo.resourceId = this.extractResourceId(this.urlInput);
-    // Boolean is passed for current category to determine if user is on same page
-    await this.addVideo({
-      video: this.newVideo,
-      currentCategory:
-        this.newVideo.category ==
-        this.categories[this.selectedCategory].value &&
-        this.newVideo.level == this.levels[this.selectedFilter].value,
-    });
-    this.dialog = false;
-  },
-  openDialog() {
-    this.resetForm();
-    this.selectedCategory == 0
-      ? (this.newVideo.category = "BALANCE")
-      : (this.newVideo.category =
-        this.categories[this.selectedCategory].value);
-    this.selectedFilter == 0
-      ? (this.newVideo.level = "L1")
-      : (this.newVideo.level = this.levels[this.selectedFilter].value);
-    this.dialog = true;
-    if (this.$refs.videoform) {
-      this.$refs.videoform.resetValidation();
-    }
-  },
-  resetForm() {
-    this.urlInput = "";
-    this.newVideo = {
-      resourceId: "",
-      category: "",
-      level: "",
-    };
-  },
-  urlCheck(url) {
-    return url.includes("youtube.com") || url.includes("youtu.be");
-  },
-  extractResourceId(url) {
-    let regExp =
-      /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;
-    let match = url.match(regExp);
-    return match ? url.match(regExp)[7] : "YouTube ID not found";
-  },
-  fetchSelectedPage(page) {
-    this.page = page;
-    this.start = (page - 1) * 12;
-    this.fetchYTVideos(this.start);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    async addNewVideo() {
+      if (!this.$refs.videoform.validate()) {
+        return;
+      }
+      // Extract YouTube id from user provided URL
+      this.newVideo.resourceId = this.extractResourceId(this.urlInput);
+      // Boolean is passed for current category to determine if user is on same page
+      await this.addVideo({
+        video: this.newVideo,
+        currentCategory:
+          this.newVideo.category ==
+          this.categories[this.selectedCategory].value &&
+          this.newVideo.level == this.levels[this.selectedFilter].value,
+      });
+      this.dialog = false;
+    },
+    openDialog() {
+      this.resetForm();
+      this.selectedCategory == 0
+        ? (this.newVideo.category = "BALANCE")
+        : (this.newVideo.category =
+          this.categories[this.selectedCategory].value);
+      this.selectedFilter == 0
+        ? (this.newVideo.level = "L1")
+        : (this.newVideo.level = this.levels[this.selectedFilter].value);
+      this.dialog = true;
+      if (this.$refs.videoform) {
+        this.$refs.videoform.resetValidation();
+      }
+    },
+    resetForm() {
+      this.urlInput = "";
+      this.newVideo = {
+        resourceId: "",
+        category: "",
+        level: "",
+      };
+    },
+    urlCheck(url) {
+      return url.includes("youtube.com") || url.includes("youtu.be");
+    },
+    extractResourceId(url) {
+      let regExp =
+        /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;
+      let match = url.match(regExp);
+      return match ? url.match(regExp)[7] : "YouTube ID not found";
+    },
+    fetchSelectedPage(page) {
+      this.page = page;
+      this.start = (page - 1) * 12;
+      this.fetchYTVideos(this.start);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
   computed: {
     ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos"]),
@@ -493,6 +514,7 @@ export default {
       return Math.ceil(this.awsVideos.length / 12);
     },
   },
+
   mounted() {
     // Youtube Videos
     console.log(this.videos)
@@ -522,20 +544,20 @@ export default {
   },
   // MicroHealth Videos
   beforeMount() {
-    /* this.nextVideo(this.notificationCat, this.notificationLev);
+    this.nextVideo(this.notificationCat, this.notificationLev);
     this.selectedCat();
     if (!this.$route.query.category && !this.$route.query.filter) {
-     this.play = false;
+      this.play = false;
     }
     this.seperateVideosbyCategory();
-    this.videosByLevel(); */
-    
+    this.videosByLevel();
+
     /* console.log(this.enduranceVidsbyLevel);
     console.log(this.ergonomicsVidsbyLevel);
     console.log(this.strengthVidsbyLevel);
     console.log(this.nutritionVidsbyLevel);
     console.log(this.flexibilityVidsbyLevel);
-    console.log(this.recoveryVidsbyLevel); */
+    console.log(this.recoveryVidsbyLevel);*/
   },
   watch: {
     selectedCategory() {
@@ -607,9 +629,12 @@ export default {
 </script>
 
 <style scoped>
+.youtube-video-h1 {
+  margin-top: 60px;
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
 }
 

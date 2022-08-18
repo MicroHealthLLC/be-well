@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="5">
+  <v-card elevation="8">
     <div @click="playVideo(video.resourceId)" class="img-container clickable">
       <img class="image" :src="thumbnail" width="100%" />
       <div class="d-flex justify-center align-center overlay">
@@ -25,7 +25,7 @@
       </v-btn>
     </v-card-actions>
     <!-- Play Video Modal -->
-    <v-dialog v-model="play" overlay-opacity="0.9">
+    <v-dialog v-model="play"  width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
           <iframe :src="embedVideoURL" width="560" height="349" frameborder="0" allowfullscreen></iframe>
@@ -125,7 +125,7 @@ export default {
       return this.isEditor && this.$route.name != "Home";
     },
     thumbnail() {
-      console.log(this.video)
+      //console.log(this.video)
       return (
         this.video.snippet.thumbnails.standard?.url ||
         this.video.snippet.thumbnails.medium?.url ||

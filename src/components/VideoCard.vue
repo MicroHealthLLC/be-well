@@ -13,7 +13,7 @@
         </span>
         <span class="text-right">
 
-          <!-- <h6 class>
+          <h6 class>
             <v-card-text v-if="getFirstNonNullVal(_videos).level != 'na'">
               <span>
                 <v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">{{
@@ -21,7 +21,7 @@
                 }}</v-chip>
               </span>
             </v-card-text>
-          </h6> -->
+          </h6>
         </span>
       </v-card-title>
       <!-- <div class="d-flex justify-center align-center overlay">
@@ -90,7 +90,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
-    <!-- <v-dialog v-model="deleteDialog">
+    <v-dialog v-model="deleteDialog">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text
@@ -111,7 +111,7 @@
           >
         </v-card-actions>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
   </v-card>
 </template>
 
