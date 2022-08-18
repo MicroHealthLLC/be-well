@@ -57,7 +57,7 @@
     </v-dialog>
   </div>
   <span v-else class="mb-sm-2">
-    <h1 class="text--secondary font-weight-light">MicroHealth Videos</h1>
+    <h1 class="text--secondary video-h1">MicroHealth Videos</h1>
     <div class="row mt-1">
       <div class="col-3" v-if="!this.isEmpty(balanceVids)">
         <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
@@ -114,7 +114,7 @@
       </div>
     </div>
 
-    <h1 class="youtube-video-h1 text--secondary font-weight-light mb-4">Other Interesting Videos</h1>
+    <h1 class="youtube-video-h1 video-h1 text--secondary mb-4">Other Interesting Videos</h1>
     <div v-if="videos.length > 0" class="row">
       <div v-for="(video, index) in videos" :key="index" class="col-3 mb-6">
         <youtube-video-card :video="video" />
@@ -503,6 +503,7 @@ export default {
     },
     showAddBtn() {
       // Check if on Editors list and whether last filter (Favorites) is selected
+      console.log(this.preferences)
       return this.isEditor && this.selectedFilter != this.filters.length - 1;
     },
     isLevel() {
@@ -641,6 +642,10 @@ export default {
 <style scoped>
 .youtube-video-h1 {
   margin-top: 60px;
+}
+
+.video-h1 {
+  font-weight: 400;
 }
 
 .grid-container {
