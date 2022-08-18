@@ -395,7 +395,7 @@ export default {
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Ergonomics')   
       if(!prefs[0].not_interested){
         console.log("ERGONOMICS: I AM INTERESTED")
-        return 'ALL'
+        return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
         console.log("ERGONOMICS: I AM NOT INTERESTED")

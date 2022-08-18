@@ -87,6 +87,15 @@
       </div>
       <div class="justify-space-between flip-card-back">
          <div class="clickable py-4 px-4" >
+            <v-btn
+              @click="openGoalForm(goal)"
+              color="#2f53b6"
+              :block="$vuetify.breakpoint.xsOnly"
+              small
+              outlined
+              class="editBtn"
+              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
+            >
          <div class="row" @click="isFlipped = !isFlipped">           
            <div class="col">
             <h5 class="orangeLabel d-flex">
@@ -102,7 +111,7 @@
               :value="50"
               color="primary"
             >
-             {{ 0 }} %
+             {{ 50 }} %
             </v-progress-circular> 
             
           <!-- <v-progress-circular
@@ -115,22 +124,9 @@
               {{ (goal.progress / goal.stepCount) * 100 }}%
             </v-progress-circular> -->
           </div>              
-         </div>         
-        <div class="row activityActions">
-        <div class="col">
-            <v-btn
-              @click="openGoalForm(goal)"
-              color="#2f53b6"
-              :block="$vuetify.breakpoint.xsOnly"
-              small
-              outlined
-              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
-            >
-        </div>
-         <div class="col-6"  @click="isFlipped = !isFlipped">
-            
-        </div>
-        </div>
+         </div>
+
+      
       
         </div>
 
@@ -582,6 +578,11 @@ export default {
 </script>
 
 <style scoped>
+.editBtn{
+  position: absolute;
+  bottom: 5%;
+  left: 3%;
+}
 .turnOver{
   position:absolute;
   right:4%;

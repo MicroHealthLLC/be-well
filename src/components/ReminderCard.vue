@@ -2,8 +2,20 @@
   <div class="flip-card" :load="log(strengthLevel)">
 <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable fontWhite">
+      <v-tooltip
+      max-width="200"
+      bottom
+    >
+    <div>Associated Goal</div>
+      <template v-slot:activator="{ on }">               
+        <div v-on="on" class="goalIcon activitiesCount">
+          <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>        
+        </div>
+      </template>          
+    </v-tooltip>    
       <div class="row">
         <div class="col">
+            <!-- <small class="d-block">Type</small> -->
            <h2>
             <span class="font-weight-bold text-light">
             <v-icon color="white" class="mr-1">{{ categoryIcon(reminder.category) }}</v-icon>
@@ -12,7 +24,7 @@
            </h2> 
          </div>
       </div>
-        <div class="row mt-0 mb-2 px-3">
+        <div class="row mt-0 px-3">
     
         <div class="col">
       <v-progress-linear
@@ -41,14 +53,18 @@
             <span class="text-center">{{reminder.time}}</span>
          </div>
          <div class="col">
-                <small class="d-block">Type</small>
-            <span class="text-center">
-              <span v-if="reminder.contentType == 'Articles'">
+                <!-- <small class="d-block">Type</small> -->
+            <span class="text-right">
+
+            
+
+            
+              <!-- <span v-if="reminder.contentType == 'Articles'">
                  <v-icon class="mr-1" color="white">mdi-file-document-outline</v-icon>
               </span>
               <span v-else>
                 <v-icon class="mr-1" color="white">mdi-youtube</v-icon>
-               </span>
+               </span> -->
                 
             </span>
           </div>
@@ -284,24 +300,6 @@ export default {
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving"]),
-    //  videoCounts() {
-    //   let bal = this.videos.filter((v) => v.category == "Balance");
-    //   let end = this.videos.filter((v) => v.category == "Endurance");
-    //   let str = this.videos.filter((v) => v.category == "Strength");
-    //   let flex = this.videos.filter(
-    //     (v) => v.category == "Flexibility-mobility"
-    //   );
-    //   let rec = this.videos.filter((v) => v.category == "Recovery");
-    //   let erg = this.videos.filter((v) => v.category == "Ergonomics");
-    //   let nut = this.videos.filter((v) => v.category == "Nutrition");
-    //   this.balanceVids = bal;
-    //   this.enduranceVids = end;
-    //   this.strengthVids = str;
-    //   this.flexibilityVids = flex;
-    //   this.recoveryVids = rec;
-    //   this.ergonomicsVids = erg;
-    //   this.nutritionVids = nut;
-    // },
   },
  mounted() {
     this.fetchReminders();
@@ -425,10 +423,13 @@ export default {
   left: 4%;
   color:white !important;
 }
-.activitiesIcon {
+.goalIcon {
   position: absolute;
   bottom:10%;
-  right: 15%;
+  right: 1%;
+
+}
+.text-light {
   color:white !important;
 }
 .activitiesCount {transition: all .2s ease-in-out;}
@@ -490,6 +491,12 @@ export default {
   position: absolute;
   right: 7px;
   top: 7px;  
+}
+.activitiesIcon {
+  position: absolute;
+  bottom:12%;
+  right: 15%;
+  color:white !important;
 }
 .flip-card {
   /* background-color: transparent; */
