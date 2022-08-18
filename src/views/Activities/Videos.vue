@@ -133,7 +133,7 @@ import VideoCard from "../../components/VideoCard.vue";
 
 export default {
   name: "Videos",
-  props: ["selectedTYCategory", "selectedFilter"],
+  props: ["selectedCategory", "selectedFilter"],
   mixins: [videosMixin, utilitiesMixin],
   components: {
     VideoCard,
@@ -143,10 +143,10 @@ export default {
     return {
       play: this.$route.query.category ? true : false,
       embedVideoURL: "https://www.youtube.com/embed/",
-      favoriteCat: this.$route.query.category
+      notificationCat: this.$route.query.category
         ? this.capitalizeFirstLet(this.$route.query.category)
         : "",
-      favoriteLev: this.$route.query.filter
+      notificationLev: this.$route.query.filter
         ? this.filterToLevel(this.$route.query.filter)
         : "",
       balanceVids: [],
@@ -164,7 +164,7 @@ export default {
       ergonomicsVidsbyLevel: {},
       nutritionVidsbyLevel: {},
       // Youtube
-      /* dialog: false,
+      dialog: false,
       valid: true,
       page: 1,
       start: 0,
@@ -173,13 +173,13 @@ export default {
         category: "",
         level: "",
       },
-      urlInput: "", */
+      urlInput: "",
     };
   },
   methods: {
-    selectedCategory() {
-      let vids = this.mcVideos.filter(
-        (v) => v.category == this.favoriteCat && v.level == this.favoriteLev
+    selectedCat() {
+      let vids = this.mhVideos.filter(
+        (v) => v.category == this.notificationCat && v.level == this.notificationLev
       );
       return vids;
     },
@@ -187,25 +187,25 @@ export default {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
-      let bal = this.mcVideos.filter(
+      let bal = this.mhVideos.filter(
         (v) => v.category == "Balance" && v.level == this.balanceLevel
       );
-      let end = this.mcVideos.filter(
+      let end = this.mhVideos.filter(
         (v) => v.category == "Endurance" && v.level == this.enduranceLevel
       );
-      let str = this.mcVideos.filter(
+      let str = this.mhVideos.filter(
         (v) => v.category == "Strength" && v.level == this.strengthLevel
       );
-      let flex = this.mcVideos.filter(
+      let flex = this.mhVideos.filter(
         (v) => v.category == "Flexibility-mobility" && v.level == this.flexLevel
       );
-      let rec = this.mcVideos.filter(
+      let rec = this.mhVideos.filter(
         (v) => v.category == "Recovery" && v.level == "na"
       );
-      let erg = this.mcVideos.filter(
+      let erg = this.mhVideos.filter(
         (v) => v.category == "Ergonomics" && v.level == "na"
       );
-      let nut = this.mcVideos.filter(
+      let nut = this.mhVideos.filter(
         (v) => v.category == "Nutrition" && v.level == "na"
       );
       this.balanceVids = bal;
@@ -287,7 +287,7 @@ export default {
       console.log(category);
       console.log(video);
       console.log(level);
-      console.log(this.mcVideos);
+      console.log(this.mhVideos);
       let index = 0;
       // Refactoring for notifaction videos page
 
@@ -428,17 +428,17 @@ export default {
       video: this.newVideo,
       currentCategory:
         this.newVideo.category ==
-        this.categories[this.selectedYTCategory].value &&
+        this.categories[this.selectedCategory].value &&
         this.newVideo.level == this.levels[this.selectedFilter].value,
     });
     this.dialog = false;
   },
   openDialog() {
     this.resetForm();
-    this.selectedYTCategory == 0
+    this.selectedCategory == 0
       ? (this.newVideo.category = "BALANCE")
       : (this.newVideo.category =
-        this.categories[this.selectedYTCategory].value);
+        this.categories[this.selectedCategory].value);
     this.selectedFilter == 0
       ? (this.newVideo.level = "L1")
       : (this.newVideo.level = this.levels[this.selectedFilter].value);
@@ -473,7 +473,7 @@ export default {
   computed: {
     ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos"]),
     categoryTitle() {
-      return this.categories[this.selectedYTCategory].title;
+      return this.categories[this.selectedCategory].title;
     },
     showAddBtn() {
       // Check if on Editors list and whether last filter (Favorites) is selected
@@ -493,11 +493,11 @@ export default {
       return Math.ceil(this.awsVideos.length / 12);
     },
   },
-  async mounted() {
+  mounted() {
     // Youtube Videos
     console.log(this.videos)
-    console.log(this.selectedYTCategory)
-    let category = "ALL";/* this.categories[this.selectedYTCategory].value; */
+    console.log(this.selectedCategory)
+    let category = "ALL";/* this.categories[this.selectedCategory].value; */
     let filter = "ALL";/* this.filters[this.selectedFilter].value; */
     console.log(category)
     console.log(filter)
@@ -522,14 +522,14 @@ export default {
   },
   // MicroHealth Videos
   beforeMount() {
-    this.nextVideo(this.favoriteCat, this.favoriteLev);
-    this.selectedCategory();
+    /* this.nextVideo(this.notificationCat, this.notificationLev);
+    this.selectedCat();
     if (!this.$route.query.category && !this.$route.query.filter) {
      this.play = false;
     }
     this.seperateVideosbyCategory();
-    this.videosByLevel();
-
+    this.videosByLevel(); */
+    
     /* console.log(this.enduranceVidsbyLevel);
     console.log(this.ergonomicsVidsbyLevel);
     console.log(this.strengthVidsbyLevel);
@@ -538,16 +538,16 @@ export default {
     console.log(this.recoveryVidsbyLevel); */
   },
   watch: {
-    selectedYTCategory() {
+    selectedCategory() {
       this.page = 1;
-      let categoryQuery = this.categories[this.selectedYTCategory].query;
-      let category = this.categories[this.selectedYTCategory].value;
+      let categoryQuery = this.categories[this.selectedCategory].query;
+      let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
       if (this.$route.query.category != categoryQuery) {
         this.$router.replace({
           name: "Videos",
           query: {
-            category: this.categories[this.selectedYTCategory].query,
+            category: this.categories[this.selectedCategory].query,
             filter: this.filters[this.selectedFilter].query,
           },
         });
@@ -573,13 +573,13 @@ export default {
     selectedFilter() {
       this.page = 1;
       let filterQuery = this.filters[this.selectedFilter].query;
-      let category = this.categories[this.selectedYTCategory].value;
+      let category = this.categories[this.selectedCategory].value;
       let filter = this.filters[this.selectedFilter].value;
       if (this.$route.query.filter != filterQuery) {
         this.$router.replace({
           name: "Videos",
           query: {
-            category: this.categories[this.selectedYTCategory].query,
+            category: this.categories[this.selectedCategory].query,
             filter: this.filters[this.selectedFilter].query,
           },
         });

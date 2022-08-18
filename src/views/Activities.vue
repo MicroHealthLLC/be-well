@@ -99,7 +99,7 @@
    
       <router-view
         v-if="mounted"
-        :selectedYTCategory="selectedCategory"
+        :selectedCategory="selectedCategory"
         :selectedFilter="selectedFilter"
       ></router-view>
     </v-col>

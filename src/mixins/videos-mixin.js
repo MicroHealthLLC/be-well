@@ -2,7 +2,7 @@ export default {
   data() {
     return {
       currentVideo: {},
-      mcVideos: [
+      mhVideos: [
         // Balance Videos
         {
           title: "Balance Beginner 1 1",
@@ -438,16 +438,16 @@ export default {
   methods: {
     nextVideo(category, level) {
       if (this.isEmpty(this.currentVideo)) {
-        let selected = this.videos.filter(
+        let selected = this.mhVideos.filter(
           (v) => v.category == category && v.level == level
         );
         this.currentVideo = selected[0];
       } else {
-        let current = this.videos.filter(
+        let current = this.mhVideos.filter(
           (v) => v.videoId == this.currentVideo.videoId
         );
         if (current[0].nextVideo) {
-          let next = this.videos.filter(
+          let next = this.mhVideos.filter(
             (v) => v.videoId == current[0].nextVideo
           );
           this.currentVideo = next[0];

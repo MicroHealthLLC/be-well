@@ -433,6 +433,6 @@ export default {
     filteredLevels() {
       return this.levels.filter((level) => level.value != "ALL");
     },
-   
+  
   },
 };
