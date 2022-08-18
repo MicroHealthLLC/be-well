@@ -65,35 +65,39 @@
         </span>
       </div>
 
-      <div v-if="!this.isEmpty(enduranceVids)" class="col-3">
-        <span v-for="(level, i) in enduranceVidsbyLevel" :key="i">
+         
+        <div v-if="!this.isEmpty(enduranceVids)" class="col-3" >   
+        <span   v-for="(level, i) in enduranceVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </div>
 
-      <div v-if="!this.isEmpty(strengthVids)" class="col-3">
-        <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
-          <video-card :_videos="level" :total="level.length" />
-        </span>
-      </div>
-
-      <div v-if="!this.isEmpty(flexibilityVids)" class="col-3">
-        <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
-          <video-card :_videos="level" :total="level.length" />
-        </span>
-      </div>
+    <div v-if="!this.isEmpty(strengthVids)" class="col-3" >
+      <span v-for="(level, i) in strengthVidsbyLevel" :key="i" >
+       <video-card :_videos="level" :total="level.length" />       
+      </span>
+ 
     </div>
 
-    <div class="row">
-      <div v-if="!this.isEmpty(recoveryVids)" class="col-3">
-        <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
-          <span>
-            <video-card :_videos="level" :total="level.length" />
-          </span>
-        </span>
-      </div>
+    <div v-if="!this.isEmpty(flexibilityVids)"  class="col-3">
+     <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i"  >
+       <video-card :_videos="level" :total="level.length" />
+      </span>
+    
+    </div>     
 
-      <div v-if="!this.isEmpty(ergonomicsVids)" class="col-3">
+      </div>
+     <div class="row">    
+    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'ALL'"  class="col-3">   
+      <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
+        <span>
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+      </span>
+  
+    </div>
+
+      <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'ALL'" class="col-3">
         <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
           <span>
             <video-card :_videos="level" :total="level.length" />
@@ -101,7 +105,7 @@
         </span>
       </div>
 
-      <div v-if="!this.isEmpty(nutritionVids)" class="col-3">
+      <div v-if="!this.isEmpty(nutritionVids) && nutritionLevel && nutritionLevel == 'ALL'" class="col-3">
         <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
           <span>
             <video-card :_videos="level" :total="level.length" />
@@ -183,13 +187,13 @@ export default {
       recoveryVids: [],
       ergonomicsVids: [],
       nutritionVids: [],
-      balanceVidsbyLevel: {},
-      enduranceVidsbyLevel: {},
-      strengthVidsbyLevel: {},
-      flexibilityVidsbyLevel: {},
-      recoveryVidsbyLevel: {},
-      ergonomicsVidsbyLevel: {},
-      nutritionVidsbyLevel: {},
+      balanceVidsbyLevel: [],
+      enduranceVidsbyLevel: [],
+      strengthVidsbyLevel: [],
+      flexibilityVidsbyLevel: [],
+      recoveryVidsbyLevel: [],
+      ergonomicsVidsbyLevel: [],
+      nutritionVidsbyLevel: [],
       // Youtube
       dialog: false,
       valid: true,
@@ -244,6 +248,7 @@ export default {
         (v) => v.category == "Nutrition" && v.level == "na"
       );
       this.balanceVids = bal;
+      console.log(bal)
       this.enduranceVids = end;
       this.strengthVids = str;
       this.flexibilityVids = flex;
@@ -549,6 +554,11 @@ export default {
     if (!this.$route.query.category && !this.$route.query.filter) {
       this.play = false;
     }
+      console.log(this.preferences);
+    if (!this.preferences) {
+      this.fetchPreferences();
+    }
+
     this.seperateVideosbyCategory();
     this.videosByLevel();
 
