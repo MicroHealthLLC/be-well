@@ -19,10 +19,10 @@
       max-width="200"
       bottom
     >
-    <div>Tie to Goal</div>
+    <div>Add to Goal</div>
       <template v-slot:activator="{ on }">               
         <div v-on="on" class="goalIcon activitiesCount">
-          <v-icon class="mr-1 text-dark" @click="showGoals">mdi-reminder</v-icon>        
+          <v-icon class="mr-1 text-dark" @click="showGoals">mdi-flag-checkered</v-icon>        
         </div>
       </template>          
     </v-tooltip>        
@@ -159,12 +159,22 @@
     <v-dialog v-model="dialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
-          ><span v-if="reminder.id">Edit Activity</span
-          ><span v-else>Add New Activity</span>
+          ><span v-if="reminder.id && !goalSelect">Edit Activity</span
+          ><span v-if="reminder.id && goalSelect">Select Goal</span
+          ><span v-if="!reminder.id">Add New Activity</span>
         </v-card-title>
         <v-card-text>
-          <v-form ref="form" v-model="valid">
+          <v-form ref="form" v-model="valid" v-if="goalSelect">         
             <v-select
+            v-model="goalId"
+            :items="incompleteGoals"
+            item-text="title"
+            item-value="id"
+            label="Select Goal"
+            ></v-select> 
+          </v-form>
+          <v-form v-else>
+              <v-select
               v-model="reminder.category"
               :items="filteredCategories"
               item-text="value"
@@ -173,15 +183,6 @@
               :rules="[(v) => !!v || 'Focus Area required']"
               required
             ></v-select>
-            <!-- <v-select
-              v-model="reminder.level"
-              :items="filteredLevels"
-              item-text="title"
-              item-value="value"
-              label="Level"
-              :rules="[(v) => !!v || 'Level is required']"
-              required
-            ></v-select> -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -226,8 +227,10 @@
                 header-color="var(--mh-blue)"
               ></v-time-picker>
             </v-menu>
+
+          
           </v-form>
-        </v-card-text>
+         </v-card-text>
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
             >Save</v-btn
@@ -237,44 +240,7 @@
           >
         </v-card-actions>
       </v-card>
-    </v-dialog>
-    <v-dialog v-model="goalsDialog" max-width="600px">
-      <v-card >
-        <v-card-title
-          ><span>Select Goal</span
-          >
-        </v-card-title>
-        <v-card-text>
-          <v-form >
-           <v-select
-              v-model="goalId"
-              :items="incompleteGoals"
-              item-text="title"
-              item-value="id"
-              label="Select Goal"
-              ></v-select> 
-            <!-- <v-select
-              v-model="reminder.level"
-              :items="filteredLevels"
-              item-text="title"
-              item-value="value"
-              label="Level"
-              :rules="[(v) => !!v || 'Level is required']"
-              required
-            ></v-select> -->
-          
-          </v-form>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-end">
-          <v-btn @click="saveGoal" class="px-6" color="var(--mh-blue)" dark
-            >Save</v-btn
-          >
-          <v-btn @click="goalsDialog = false" color="secondary" outlined
-            >Cancel</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    </v-dialog>  
   </div>
 </template>
 
@@ -297,7 +263,7 @@ export default {
     return {
     isFlipped: false,
     dialog: false,
-    goalsDialog: false,
+    goalSelect: false,
     intervalId: null,
     valid: true,
     goalId: "",  
@@ -330,31 +296,15 @@ export default {
       console.log(e)
     },
     showGoals(){
-      this.goalsDialog = true;
-      console.log("It works")
+      this.goalSelect = true;
+      this.dialog = true;
+      
+      console.log("this reminder on next line")
+       console.log(this.reminder)
     }, 
     openReminderForm(reminder) {
       this.reminder = reminder;
       this.dialog = true;
-    },
-    async saveGoal() {  
-      if(this.goalId){
-        this.goal = this.incompleteGoals.filter(t => t.id == this.goalId)[0]
-      }   
-      try {
-        console.log(this.goal)
-          await this.updateGoalById({
-            id: this.goal.id,
-            goal_activities: this.reminder,
-            category: this.goal.category,
-            dueDate: this.goal.dueDate,
-            progress: this.goal.progress,
-            checklist: this.goal.checklist,
-          });         
-      } catch (error) {
-        console.log(error);
-      }
-      this.closeGoalForm();
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -362,20 +312,27 @@ export default {
       }
       try {
         if (this.reminder.id) {
-          await this.updateReminderById({
-            id: this.reminder.id,
-            category: this.reminder.category,
-            level: this.reminder.level,
-            frequency: this.reminder.frequency,
-            contentType: this.reminder.contentType,
-            time: this.reminder.time,
-          });
+          // if (this.goalId){
+          //   this.reminder.goal = this.incompleteGoals.filter(t => t.id == this.goalId)[0]
+          // }
+      
+          console.log(this.reminder)
+          // await this.updateReminderById({
+          //   id: this.reminder.id,
+          //   category: this.reminder.category,
+          //   level: this.reminder.level,
+          //   goal: this.incompleteGoals.filter(t => t.id == this.goalId)[0],
+          //   frequency: this.reminder.frequency,
+          //   contentType: this.reminder.contentType,
+          //   time: this.reminder.time,
+          // });
         } else {
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
         this.dialog = false;
+        this.goalSelect = false;
         this.resetForm();
       } catch (error) {
         console.log(error);
@@ -477,7 +434,7 @@ export default {
   color:white !important;
 }
 .text-dark {
-  color: #374772;
+  color: #072f94;
 }
 .activitiesCount {transition: all .2s ease-in-out;}
 .activitiesCount:hover { transform: scale(1.2); }

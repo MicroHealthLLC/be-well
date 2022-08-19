@@ -11,6 +11,22 @@ export const createReminder = /* GraphQL */ `
       category
       level
       frequency
+      goal {
+        id
+        title
+        category
+        progress
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
       contentType
       time
       createdAt
@@ -29,6 +45,22 @@ export const updateReminder = /* GraphQL */ `
       category
       level
       frequency
+      goal {
+        id
+        title
+        category
+        progress
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
       contentType
       time
       createdAt
@@ -47,6 +79,22 @@ export const deleteReminder = /* GraphQL */ `
       category
       level
       frequency
+      goal {
+        id
+        title
+        category
+        progress
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
       contentType
       time
       createdAt
@@ -65,18 +113,6 @@ export const createGoal = /* GraphQL */ `
       title
       category
       progress
-      goal_activities {
-        id
-        category
-        level
-        frequency
-        contentType
-        time
-        createdAt
-        updatedAt
-        owner
-      }
-      stepCount
       dueDate
       isComplete
       completedCount
@@ -100,18 +136,6 @@ export const updateGoal = /* GraphQL */ `
       title
       category
       progress
-      goal_activities {
-        id
-        category
-        level
-        frequency
-        contentType
-        time
-        createdAt
-        updatedAt
-        owner
-      }
-      stepCount
       dueDate
       isComplete
       completedCount
@@ -135,18 +159,6 @@ export const deleteGoal = /* GraphQL */ `
       title
       category
       progress
-      goal_activities {
-        id
-        category
-        level
-        frequency
-        contentType
-        time
-        createdAt
-        updatedAt
-        owner
-      }
-      stepCount
       dueDate
       isComplete
       completedCount

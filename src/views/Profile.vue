@@ -107,7 +107,13 @@
                     :rules="[(v) => !!v || 'Last Name is required']"
                     required
                   ></v-text-field>
-                  <v-menu
+                   <v-text-field
+                    v-model="phone_number"
+                    label="Phone Number"
+                    :rules="[(v) => !!v || 'Phone Number is required']"
+                    required
+                  ></v-text-field>
+                  <!-- <v-menu
                     v-model="menu"
                     :close-on-content-click="false"
                     :nudge-right="40"
@@ -129,7 +135,7 @@
                       v-model="birthdate"
                       @input="menu = false"
                     ></v-date-picker>
-                  </v-menu>
+                  </v-menu> -->
                 </v-form>
               </v-card-text>
               <v-card-actions class="d-flex justify-end">
@@ -314,6 +320,7 @@ export default {
       menu: false,
       // isEditing: false,       
       given_name: "",
+      phone_number: "",
       family_name: "",
       birthdate: "",
       oldPassword: "",
@@ -458,6 +465,7 @@ export default {
       try {
         await this.updateUser({
           given_name: this.given_name,
+          phone_number: this.phone_number,
           family_name: this.family_name,
           birthdate: this.birthdate,
         });
