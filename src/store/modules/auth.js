@@ -115,6 +115,13 @@ export default {
         });
       } catch (error) {
         console.log(error);
+        if (error.toString().includes("Invalid phone number format")) {
+          commit("SET_SNACKBAR", {
+          show: true,
+          message: "Invalid Phone Number Provided!",
+          color: "red",
+        });
+        }
       }
       commit("TOGGLE_SAVING", false);
     },
