@@ -312,20 +312,19 @@ export default {
       }
       try {
         if (this.reminder.id) {
-          // if (this.goalId){
-          //   this.reminder.goal = this.incompleteGoals.filter(t => t.id == this.goalId)[0]
-          // }
-      
-          console.log(this.reminder)
-          // await this.updateReminderById({
-          //   id: this.reminder.id,
-          //   category: this.reminder.category,
-          //   level: this.reminder.level,
-          //   goal: this.incompleteGoals.filter(t => t.id == this.goalId)[0],
-          //   frequency: this.reminder.frequency,
-          //   contentType: this.reminder.contentType,
-          //   time: this.reminder.time,
-          // });
+         if (this.goalId){
+            this.reminder.goal = this.incompleteGoals.filter(t => t.id == this.goalId)[0]
+          }      
+          // console.log(this.reminder)
+          await this.updateReminderById({
+            id: this.reminder.id,
+            category: this.reminder.category,
+            level: this.reminder.level,
+            goal: this.reminder.goal,
+            frequency: this.reminder.frequency,
+            contentType: this.reminder.contentType,
+            time: this.reminder.time,
+          });
         } else {
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
