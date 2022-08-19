@@ -53,6 +53,17 @@ export const onCreateGoal = /* GraphQL */ `
       title
       category
       progress
+      goal_activities {
+        id
+        category
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
       stepCount
       dueDate
       isComplete
@@ -74,6 +85,17 @@ export const onUpdateGoal = /* GraphQL */ `
       title
       category
       progress
+      goal_activities {
+        id
+        category
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
       stepCount
       dueDate
       isComplete
@@ -95,6 +117,17 @@ export const onDeleteGoal = /* GraphQL */ `
       title
       category
       progress
+      goal_activities {
+        id
+        category
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
       stepCount
       dueDate
       isComplete

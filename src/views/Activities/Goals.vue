@@ -76,51 +76,6 @@
         <CurrentGoals :goal="goal">
 
         </CurrentGoals>
-          <!-- <div class="flip-card">
-          <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-           
-           
-           
-           
-           
-           <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
-             <v-icon class="mr-2" color="#2f53b6">mdi-flag</v-icon
-              >{{ goal.title }}
-        
-                    <div class="mt-2">
-                            <v-chip class="mr-2" color="#2f53b6" outlined small
-                              ><v-icon class="mr-1" small>{{
-                                categoryIcon(goal.category)
-                              }}</v-icon
-                              >{{ categoryString(goal.category) }}</v-chip
-                            >
-                            <v-chip title="Due Date" color="#2f53b6" outlined small>{{
-                              shortISODate(goal.dueDate)
-                            }}</v-chip>
-                     </div>
-             </div>
-        
-              <div class="d-flex flex-column justify-space-between flip-card-back pa-4">
-                          <div @click="isFlipped = !isFlipped" class="clickable">
-                      
-                            <span class="font-weight-bold">Category: </span>
-                    
-                
-                        
-                          </div>
-                </div>  
-                 
-                 
-                 
-             
-             
-
-
-
-
-            </div>
-            </div> -->
-
         </v-col>
       </v-row>
     </div>  
@@ -372,6 +327,8 @@ export default {
           });
         } else {
             console.log(this.goal)
+          this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+          // console.log(this.goal)
           await this.addGoal(this.goal);
         }
       } catch (error) {
@@ -399,7 +356,7 @@ export default {
         progress: 0,
         stepCount: 1,
         completedCount: 0,
-        title: "I want to improve my",
+        title: "",
         checklist: [{ title: "", isComplete: false }],
       };
     },

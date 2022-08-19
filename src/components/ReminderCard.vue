@@ -1,8 +1,9 @@
   <template>
-  <div class="flip-card" :load="log(strengthLevel)">
+  <div class="flip-card">
 <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-      <div @click="isFlipped = !isFlipped" class="flip-card-front clickable fontWhite">
-      <v-tooltip
+   <div class="flip-card-front clickable fontWhite">
+   <v-tooltip
+     v-if="associatedGoal == true"
       max-width="200"
       bottom
     >
@@ -12,8 +13,21 @@
           <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>        
         </div>
       </template>          
-    </v-tooltip>    
-      <div class="row">
+    </v-tooltip>  
+      <v-tooltip
+      v-else
+      max-width="200"
+      bottom
+    >
+    <div>Tie to Goal</div>
+      <template v-slot:activator="{ on }">               
+        <div v-on="on" class="goalIcon activitiesCount">
+          <v-icon class="mr-1 text-dark" @click="showGoals">mdi-reminder</v-icon>        
+        </div>
+      </template>          
+    </v-tooltip>        
+   <div @click="isFlipped = !isFlipped" >
+    <div class="row">
         <div class="col">
             <!-- <small class="d-block">Type</small> -->
            <h2>
@@ -69,55 +83,7 @@
             </span>
           </div>
       </div>
-    
-       
-       <!-- {{reminder}} -->
-        <!-- <v-data-table :headers="headers" :items="reminders">
-        <template v-slot:item.category="{ item }">
-          <span
-            ><v-icon class="mr-4">{{ categoryIcon(item.category) }}</v-icon>
-            {{ categoryString(item.category) }}</span
-          >
-        </template>
-        <template v-slot:item.level="{ item }">
-          <v-chip small :color="levelColor(item.level)" dark>{{
-            levelTitle(item.level)
-          }}</v-chip>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn
-            @click="notify(item)"
-            class="mr-3"
-            color="var(--mh-blue)"
-            outlined
-            x-small
-            title="Test Notification: Prototype Only"
-            >Test</v-btn
-          >
-          <v-btn
-            @click="openReminderForm(item)"
-            class="mr-3"
-            color="var(--mh-blue)"
-            outlined
-            x-small
-            >Edit</v-btn
-          >
-          <v-btn
-            @click="deleteReminder({ id: item.id })"
-            color="var(--mh-orange)"
-            outlined
-            x-small
-            depressed
-            >Delete</v-btn
-          >
-        </template>
-        <template v-slot:no-data>
-          <div class="mt-4">
-            <v-icon color="grey" x-large>mdi-alarm</v-icon>
-            <p>No Activity Reminders</p>
-          </div>
-        </template>
-      </v-data-table> -->
+  
         <div
           class=" 
             d-flex
@@ -125,7 +91,12 @@
             justify-center     
             "
          >          
-        </div>        
+        </div>    
+
+ </div>
+      
+     
+     
      </div>
    
       <div class="justify-space-between px-4 flip-card-back">      
@@ -267,6 +238,43 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="goalsDialog" max-width="600px">
+      <v-card >
+        <v-card-title
+          ><span>Select Goal</span
+          >
+        </v-card-title>
+        <v-card-text>
+          <v-form >
+           <v-select
+              v-model="goalId"
+              :items="incompleteGoals"
+              item-text="title"
+              item-value="id"
+              label="Select Goal"
+              ></v-select> 
+            <!-- <v-select
+              v-model="reminder.level"
+              :items="filteredLevels"
+              item-text="title"
+              item-value="value"
+              label="Level"
+              :rules="[(v) => !!v || 'Level is required']"
+              required
+            ></v-select> -->
+          
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="saveGoal" class="px-6" color="var(--mh-blue)" dark
+            >Save</v-btn
+          >
+          <v-btn @click="goalsDialog = false" color="secondary" outlined
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -281,44 +289,77 @@ export default {
     reminder: {
       type: Object,
     },
+    // goal: {
+    //   type: Object
+    // },
   },
   data() {
     return {
     isFlipped: false,
     dialog: false,
+    goalsDialog: false,
     intervalId: null,
     valid: true,
-    // reminder: {
-    // category: "",
-    // level: "",
-    // frequency: "",
-    // contentType: "",
-    // time: null,
-    //   },
-  
+    goalId: "",  
+    goal:null,  
     };
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving"]),
+   associatedGoal(){
+    let val = false
+    if(this.incompleteGoals && this.incompleteGoals.length > 0){
+        let goalActivities = this.incompleteGoals.filter(a => a.goal_activities &&  a.goal_activities.length > 0)
+        if( goalActivities && goalActivities.filter(a => a.id == this.reminder.id).length > 0 ){
+          console.log(goalActivities.filter(a => a.id == this.reminder.id))
+          val = true     
+        } 
+        return val
+      } else  {
+        return false
+    }
+   }
   },
  mounted() {
     this.fetchReminders();
     this.fetchGoals();
   },
   methods: {
-    ...mapActions([ "updateReminderById", "fetchReminders", "removeReminder", "fetchGoals"]),
+    ...mapActions([ "updateReminderById", "updateGoalById", "fetchReminders", "removeReminder", "fetchGoals"]),
     log(e){
       console.log(e)
+    },
+    showGoals(){
+      this.goalsDialog = true;
+      console.log("It works")
     }, 
     openReminderForm(reminder) {
       this.reminder = reminder;
       this.dialog = true;
     },
+    async saveGoal() {  
+      if(this.goalId){
+        this.goal = this.incompleteGoals.filter(t => t.id == this.goalId)[0]
+      }   
+      try {
+        console.log(this.goal)
+          await this.updateGoalById({
+            id: this.goal.id,
+            goal_activities: this.reminder,
+            category: this.goal.category,
+            dueDate: this.goal.dueDate,
+            progress: this.goal.progress,
+            checklist: this.goal.checklist,
+          });         
+      } catch (error) {
+        console.log(error);
+      }
+      this.closeGoalForm();
+    },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
         return;
       }
-
       try {
         if (this.reminder.id) {
           await this.updateReminderById({
@@ -342,6 +383,9 @@ export default {
     },
     async deleteReminder(id) {
       await this.removeReminder(id);
+    },
+    closeGoalForm() {
+      this.goalsDialog = false;
     },
     resetForm() {
       this.reminder = {
@@ -431,6 +475,9 @@ export default {
 }
 .text-light {
   color:white !important;
+}
+.text-dark {
+  color: #374772;
 }
 .activitiesCount {transition: all .2s ease-in-out;}
 .activitiesCount:hover { transform: scale(1.2); }
