@@ -388,7 +388,7 @@ export default {
     this.fetchPreferences();
     this.given_name = this.user.attributes.given_name || "";
     this.family_name = this.user.attributes.family_name || "";
-    this.phone_number = this.user.attributes.phone_number || "";
+    this.phone_number = this.user.attributes.phone_number.replace("+1", "") || "";
   },
 };
 </script>
