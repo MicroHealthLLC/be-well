@@ -333,9 +333,9 @@ export default {
   },
   enduranceLevel(){
     if (this.preferences && this.preferences[0]){
-      console.log("endurance")
+      //console.log("endurance")
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Endurance')   
-      console.log(prefs)
+      //console.log(prefs)
       if(prefs[0].l1){
         console.log("Endurance: L1")
         return 'L1'
@@ -442,6 +442,6 @@ export default {
     filteredLevels() {
       return this.levels.filter((level) => level.value != "ALL");
     },
-   
+  
   },
 };
