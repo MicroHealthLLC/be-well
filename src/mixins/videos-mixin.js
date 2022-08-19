@@ -2,7 +2,7 @@ export default {
   data() {
     return {
       currentVideo: {},
-      videos: [
+      mhVideos: [
         // Balance Videos
         {
           title: "Balance Beginner 1 1",
@@ -53,13 +53,6 @@ export default {
           level: "L4",
           nextVideo: "",
         },
-        // {
-        //   title: "Intermediate Balance 2 2",
-        //   videoId: "01Mn0r3l2dI",
-        //   category: "Balance",
-        //   level: "L4",
-        //   nextVideo: "",
-        // },
         {
           title: "Balance Advanced 1 1",
           videoId: "FnQqMfNsmTI",
@@ -67,13 +60,7 @@ export default {
           level: "L5",
           nextVideo: "",
         },
-        // {
-        //   title: "Balance Advanced 1 2",
-        //   videoId: "0Hak187Nu_M",
-        //   category: "Balance",
-        //   level: "L5",
-        //   nextVideo: "",
-        // },
+        
 
 
         // Endurance Videos
@@ -451,16 +438,16 @@ export default {
   methods: {
     nextVideo(category, level) {
       if (this.isEmpty(this.currentVideo)) {
-        let selected = this.videos.filter(
+        let selected = this.mhVideos.filter(
           (v) => v.category == category && v.level == level
         );
         this.currentVideo = selected[0];
       } else {
-        let current = this.videos.filter(
+        let current = this.mhVideos.filter(
           (v) => v.videoId == this.currentVideo.videoId
         );
         if (current[0].nextVideo) {
-          let next = this.videos.filter(
+          let next = this.mhVideos.filter(
             (v) => v.videoId == current[0].nextVideo
           );
           this.currentVideo = next[0];
