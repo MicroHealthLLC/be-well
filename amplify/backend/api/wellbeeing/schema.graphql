@@ -18,6 +18,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   title: String!
   category: Category!
   progress: Int!
+  goal_activities: [Reminder]
   stepCount: Int
   dueDate: AWSDate!
   isComplete: Boolean
