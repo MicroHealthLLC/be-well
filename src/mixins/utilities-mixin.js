@@ -440,6 +440,7 @@ export default {
       } else  return this.categories.filter((category) => category.value != "ALL" );
     },
     filteredLevels() {
+      console.log("filteredLevels");
       return this.levels.filter((level) => level.value != "ALL");
     },
   
