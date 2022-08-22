@@ -6,13 +6,15 @@ export const onCreateReminder = /* GraphQL */ `
     onCreateReminder(owner: $owner) {
       id
       category
-      level
-      frequency
       goal {
         id
         title
         category
+        reminders {
+          nextToken
+        }
         progress
+        stepCount
         dueDate
         isComplete
         completedCount
@@ -24,6 +26,9 @@ export const onCreateReminder = /* GraphQL */ `
         updatedAt
         owner
       }
+      goalId
+      level
+      frequency
       contentType
       time
       createdAt
@@ -37,13 +42,15 @@ export const onUpdateReminder = /* GraphQL */ `
     onUpdateReminder(owner: $owner) {
       id
       category
-      level
-      frequency
       goal {
         id
         title
         category
+        reminders {
+          nextToken
+        }
         progress
+        stepCount
         dueDate
         isComplete
         completedCount
@@ -55,6 +62,9 @@ export const onUpdateReminder = /* GraphQL */ `
         updatedAt
         owner
       }
+      goalId
+      level
+      frequency
       contentType
       time
       createdAt
@@ -68,13 +78,15 @@ export const onDeleteReminder = /* GraphQL */ `
     onDeleteReminder(owner: $owner) {
       id
       category
-      level
-      frequency
       goal {
         id
         title
         category
+        reminders {
+          nextToken
+        }
         progress
+        stepCount
         dueDate
         isComplete
         completedCount
@@ -86,6 +98,9 @@ export const onDeleteReminder = /* GraphQL */ `
         updatedAt
         owner
       }
+      goalId
+      level
+      frequency
       contentType
       time
       createdAt
@@ -100,7 +115,23 @@ export const onCreateGoal = /* GraphQL */ `
       id
       title
       category
+      reminders {
+        items {
+          id
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       progress
+      stepCount
       dueDate
       isComplete
       completedCount
@@ -120,7 +151,23 @@ export const onUpdateGoal = /* GraphQL */ `
       id
       title
       category
+      reminders {
+        items {
+          id
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       progress
+      stepCount
       dueDate
       isComplete
       completedCount
@@ -140,7 +187,23 @@ export const onDeleteGoal = /* GraphQL */ `
       id
       title
       category
+      reminders {
+        items {
+          id
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       progress
+      stepCount
       dueDate
       isComplete
       completedCount

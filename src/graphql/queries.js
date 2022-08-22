@@ -6,13 +6,15 @@ export const getReminder = /* GraphQL */ `
     getReminder(id: $id) {
       id
       category
-      level
-      frequency
       goal {
         id
         title
         category
+        reminders {
+          nextToken
+        }
         progress
+        stepCount
         dueDate
         isComplete
         completedCount
@@ -24,6 +26,9 @@ export const getReminder = /* GraphQL */ `
         updatedAt
         owner
       }
+      goalId
+      level
+      frequency
       contentType
       time
       createdAt
@@ -42,13 +47,12 @@ export const listReminders = /* GraphQL */ `
       items {
         id
         category
-        level
-        frequency
         goal {
           id
           title
           category
           progress
+          stepCount
           dueDate
           isComplete
           completedCount
@@ -56,6 +60,9 @@ export const listReminders = /* GraphQL */ `
           updatedAt
           owner
         }
+        goalId
+        level
+        frequency
         contentType
         time
         createdAt
@@ -72,7 +79,23 @@ export const getGoal = /* GraphQL */ `
       id
       title
       category
+      reminders {
+        items {
+          id
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       progress
+      stepCount
       dueDate
       isComplete
       completedCount
@@ -97,7 +120,11 @@ export const listGoals = /* GraphQL */ `
         id
         title
         category
+        reminders {
+          nextToken
+        }
         progress
+        stepCount
         dueDate
         isComplete
         completedCount
@@ -589,13 +616,12 @@ export const remindersByLevel = /* GraphQL */ `
       items {
         id
         category
-        level
-        frequency
         goal {
           id
           title
           category
           progress
+          stepCount
           dueDate
           isComplete
           completedCount
@@ -603,6 +629,9 @@ export const remindersByLevel = /* GraphQL */ `
           updatedAt
           owner
         }
+        goalId
+        level
+        frequency
         contentType
         time
         createdAt

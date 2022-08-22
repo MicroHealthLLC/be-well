@@ -30,6 +30,7 @@ export default {
     async updateReminderById({ commit, dispatch }, reminder) {
       commit("TOGGLE_SAVING", true);
       try {
+        console.log("updateReminderById", reminder);
         await API.graphql(
           graphqlOperation(updateReminder, { input: reminder })
         );

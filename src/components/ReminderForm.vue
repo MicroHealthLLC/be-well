@@ -7,6 +7,13 @@
     <v-card-text>
       <v-form ref="form" v-model="valid">
         <v-select
+          v-model="reminder.goalId"
+          :items="incompleteGoals"
+          item-text="title"
+          item-value="id"
+          label="Select Goal"
+        ></v-select>
+        <v-select
           v-model="reminder.category"
           :items="filteredCategories"
           item-text="title"
@@ -73,7 +80,9 @@
       <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
         >Submit</v-btn
       >
-      <v-btn @click="toggleReminderFormDialog" color="secondary" outlined>Cancel</v-btn>
+      <v-btn @click="toggleReminderFormDialog" color="secondary" outlined
+        >Cancel</v-btn
+      >
     </v-card-actions>
   </v-card>
 </template>
@@ -97,10 +106,10 @@ export default {
     return {
       dialog: false,
       intervalId: null,
-      valid: true
+      valid: true,
     };
   },
-  methods:{
+  methods: {
     ...mapActions([
       "addReminder",
       "removeReminder",
@@ -109,6 +118,7 @@ export default {
     ]),
     resetForm() {
       this.reminder = {
+        goalId: "",
         category: "",
         level: this.userPrefLevel,
         frequency: "",
@@ -116,8 +126,8 @@ export default {
         time: null,
       };
     },
-    toggleReminderFormDialog(){
-      this.$emit("toggleReminderFormDialog", false)
+    toggleReminderFormDialog() {
+      this.$emit("toggleReminderFormDialog", false);
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -133,24 +143,25 @@ export default {
             frequency: this.reminder.frequency,
             contentType: this.reminder.contentType,
             time: this.reminder.time,
+            goalId: this.reminder.goalId,
           });
         } else {
-          console.log("this.userPrefLevel",this.userPrefLevel)
-          console.log("this.preferences", this.preferences)
+          console.log("this.userPrefLevel", this.userPrefLevel);
+          console.log("this.preferences", this.preferences);
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
-        this.toggleReminderFormDialog()
+        this.toggleReminderFormDialog();
         this.resetForm();
       } catch (error) {
         console.log(error);
       }
     },
   },
-  computed:{
-    ...mapGetters([ "saving"]),
+  computed: {
+    ...mapGetters(["incompleteGoals", "saving"]),
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.reminder.category) {
@@ -200,7 +211,7 @@ export default {
         return "";
       }
     },
-  }
+  },
 };
 </script>
 

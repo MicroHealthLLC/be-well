@@ -224,6 +224,7 @@ export default {
     },
     resetForm() {
       this.reminder = {
+        goalId: "",
         category: "",
         level: "",
         frequency: "",
