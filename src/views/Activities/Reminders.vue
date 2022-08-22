@@ -140,6 +140,7 @@ export default {
     log(e) {
       if (e) {
         console.log(e);
+        console.log(this.incompleteGoals)
       }
     },
     toggleReminderFormDialog(value){

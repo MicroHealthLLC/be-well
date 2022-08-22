@@ -206,7 +206,6 @@ export default {
       menu: false,
       // isEditing: false,       
       given_name: "",
-      phone_number: "",
       family_name: "",
       phone_number: "",
       oldPassword: "",
@@ -356,7 +355,6 @@ export default {
       try {
         await this.updateUser({
           given_name: this.given_name,
-          phone_number: this.phone_number,
           family_name: this.family_name,
           phone_number: this.cleanPhoneNum(this.phone_number),
         });
