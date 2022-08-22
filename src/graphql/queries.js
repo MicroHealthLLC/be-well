@@ -121,6 +121,18 @@ export const listGoals = /* GraphQL */ `
         title
         category
         reminders {
+          items {
+            id
+            category
+            goalId
+            level
+            frequency
+            contentType
+            time
+            createdAt
+            updatedAt
+            owner
+          }
           nextToken
         }
         progress
