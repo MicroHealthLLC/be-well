@@ -6,6 +6,27 @@ export const getReminder = /* GraphQL */ `
     getReminder(id: $id) {
       id
       category
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      goalId
       level
       frequency
       contentType
@@ -26,6 +47,20 @@ export const listReminders = /* GraphQL */ `
       items {
         id
         category
+        goal {
+          id
+          title
+          category
+          progress
+          stepCount
+          dueDate
+          isComplete
+          completedCount
+          createdAt
+          updatedAt
+          owner
+        }
+        goalId
         level
         frequency
         contentType
@@ -44,6 +79,21 @@ export const getGoal = /* GraphQL */ `
       id
       title
       category
+      reminders {
+        items {
+          id
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       progress
       stepCount
       dueDate
@@ -70,6 +120,21 @@ export const listGoals = /* GraphQL */ `
         id
         title
         category
+        reminders {
+          items {
+            id
+            category
+            goalId
+            level
+            frequency
+            contentType
+            time
+            createdAt
+            updatedAt
+            owner
+          }
+          nextToken
+        }
         progress
         stepCount
         dueDate
@@ -563,6 +628,20 @@ export const remindersByLevel = /* GraphQL */ `
       items {
         id
         category
+        goal {
+          id
+          title
+          category
+          progress
+          stepCount
+          dueDate
+          isComplete
+          completedCount
+          createdAt
+          updatedAt
+          owner
+        }
+        goalId
         level
         frequency
         contentType

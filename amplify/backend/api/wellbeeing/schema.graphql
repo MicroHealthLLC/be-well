@@ -1,6 +1,8 @@
 type Reminder @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   category: Category!
+  goal: Goal @belongsTo(fields: ["goalId"])
+  goalId: ID @index(name: "byGoal")
   level: Level!
     @index(
       name: "remindersByLevel"
@@ -17,6 +19,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   title: String!
   category: Category!
+  reminders: [Reminder] @hasMany(indexName: "byGoal",fields: ["id"])
   progress: Int!
   stepCount: Int
   dueDate: AWSDate!
@@ -256,3 +259,4 @@ enum SubmissionType {
 }
 
 
+ 

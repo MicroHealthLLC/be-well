@@ -1,5 +1,5 @@
 <template>
-  <div class="flip-card">
+  <div class="flip-card" :load="log(goal)">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
        
@@ -32,9 +32,9 @@
                 <div v-on="on" class="activitiesIcon activitiesCount">
                  <v-icon class="mr-1" color="white" left>mdi-yoga</v-icon> 
                  <v-badge
-                  v-if="reminders.filter(t => t.category == goal.category).length > 0"
+                  v-if="goal && goal.goal_activities > 0"
                   class="completed-count"
-                  :content="reminders.filter(t => t.category == goal.category).length"
+                  :content="goal.goal_activities.length"
                   color="success"
                  ></v-badge>
                <v-badge
@@ -64,7 +64,7 @@
           
               </v-tooltip>
      
-           <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }} <span class="lowerCase">{{ goal.category }}</span></h3></div> 
+           <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }}</h3></div> 
                 <!-- Progress Bar -->
            <span
            v-if="reminders.filter(t => t.category == goal.category).length < 1"
@@ -87,14 +87,24 @@
       </div>
       <div class="justify-space-between flip-card-back">
          <div class="clickable py-4 px-4" >
+         <v-icon  class="editBtn" @click="openGoalForm(goal)" right>mdi-square-edit-outline</v-icon>
+
          <div class="row" @click="isFlipped = !isFlipped">           
            <div class="col">
-            <h5 class="orangeLabel d-flex">
-               PROGRESS TOWARDS GOAL
-            </h5>   
-           {{ 0 }} of {{2 }}
+              <h5 class="orangeLabel d-flex">
+                GOAL ACTIVITIES
+              </h5>   
+                <h5>Walking</h5>
+                <h5>Running</h5> 
            </div>
-          <div class="col">
+          <div class="col pr-0">
+            <h5 class="orangeLabel d-flex">
+               COMPLETED
+            </h5>  
+             <h5 class="text-left">0 of 3</h5>  
+             <h5 class="text-left">2 of 3</h5>  
+          </div>
+          <div class="col pl-0">
                <v-progress-circular
               :rotate="360"
               :size="100"
@@ -102,9 +112,11 @@
               :value="50"
               color="primary"
             >
-             {{ 0 }} %
+             {{ 50 }} %
             </v-progress-circular> 
-            
+             <h5 class="orangeLabel pt-1 d-flex">
+             GOAL PROGRESS
+            </h5>   
           <!-- <v-progress-circular
               :rotate="360"
               :size="100"
@@ -115,22 +127,9 @@
               {{ (goal.progress / goal.stepCount) * 100 }}%
             </v-progress-circular> -->
           </div>              
-         </div>         
-        <div class="row activityActions">
-        <div class="col">
-            <v-btn
-              @click="openGoalForm(goal)"
-              color="#2f53b6"
-              :block="$vuetify.breakpoint.xsOnly"
-              small
-              outlined
-              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
-            >
-        </div>
-         <div class="col-6"  @click="isFlipped = !isFlipped">
-            
-        </div>
-        </div>
+         </div>
+
+      
       
         </div>
 
@@ -466,9 +465,9 @@ export default {
   },
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder"]),
-    // log(e){
-    //   console.log(e)
-    // },
+    log(e){
+      console.log(e)
+    },
   openNewReminderForm() {
       this.resetForm();
       this.activityDialog = true;
@@ -498,7 +497,7 @@ export default {
       }
       try {
         if (this.goal.id) {
-          console.log(this.goal.category)
+          console.log(this.goal.id)
           await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,
@@ -582,6 +581,13 @@ export default {
 </script>
 
 <style scoped>
+.editBtn{
+  position: absolute;
+  top: 5%;
+  right: 1.5%;
+  color: var(--mh-green);
+  font-weight: 300 !important;
+}
 .turnOver{
   position:absolute;
   right:4%;
