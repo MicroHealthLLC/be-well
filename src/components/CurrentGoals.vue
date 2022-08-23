@@ -1,8 +1,18 @@
 <template>
   <div class="flip-card" :load="log(goal)">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-      <div @click="isFlipped = !isFlipped" class="flip-card-front clickable">
-       
+      <div class="flip-card-front clickable">
+           <span
+            v-if="goal.reminders.items && goal.reminders.items.length == 0 "
+            @click="openNewReminderForm"       
+            class="newGoalBtn 
+            px-2 
+            py-1 
+            d-block  
+            align-center
+            justify-center   "
+            ><small>Click here to achieve your goals</small></span
+            >
         <div
           class=" 
             px-3
@@ -10,6 +20,7 @@
             align-center
             justify-center     
             "
+            @click="isFlipped = !isFlipped" 
          >       
             <v-tooltip
               max-width="200"
@@ -32,9 +43,9 @@
                 <div v-on="on" class="activitiesIcon activitiesCount">
                  <v-icon class="mr-1" color="white" left>mdi-yoga</v-icon> 
                  <v-badge
-                  v-if="goal && goal.goal_activities > 0"
+                  v-if="goal && goal.reminders.items && goal.reminders.items.length > 0"
                   class="completed-count"
-                  :content="goal.goal_activities.length"
+                  :content="goal.reminders.items.length"
                   color="success"
                  ></v-badge>
                <v-badge
@@ -66,12 +77,7 @@
      
            <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }}</h3></div> 
                 <!-- Progress Bar -->
-           <span
-           v-if="reminders.filter(t => t.category == goal.category).length < 1"
-            @click="openNewReminderForm"       
-            class="newGoalBtn px-2 py-1"
-            ><small>Click here to achieve your goal!</small></span
-            >
+       
             <div class="d-flex align-center goal-progressbar pt-2 px-2">
                <v-progress-linear
                 height="10"
@@ -93,16 +99,49 @@
            <div class="col">
               <h5 class="orangeLabel d-flex">
                 GOAL ACTIVITIES
-              </h5>   
-                <h5>Walking</h5>
-                <h5>Running</h5> 
+              </h5>  
+              <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
+                <span v-for="activity, i in goal.reminders.items" :key="i">
+                  <h5>{{ activity.category }}</h5>
+                </span>
+
+              </span> 
+             <span v-else>              
+            <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div>Add Activity</div>
+              <template v-slot:activator="{ on }">               
+                <div v-on="on">
+                  <v-icon small left @click="openNewReminderForm">mdi-plus</v-icon>
+                </div>
+              </template>          
+            </v-tooltip>
+           </span> 
+               
            </div>
           <div class="col pr-0">
             <h5 class="orangeLabel d-flex">
                COMPLETED
             </h5>  
-             <h5 class="text-left">0 of 3</h5>  
-             <h5 class="text-left">2 of 3</h5>  
+           <!-- This will need to be changed to capture the quantity of activities and the progress levels -->
+            <!-- <span v-for="goal.reminders.items && goal.reminders.items.length > 0" :key="i"> -->
+              <!-- <span v-for="activity, i in goal.reminders.items" :key="i"> -->
+                  <!-- <h5>{{ activity.completedCount }} of {{ activity.length }}</h5> -->
+
+<!-- The follwoing two span can be replaced by the preceding code once activities are ready to save progress -->
+              <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
+                <span v-for="activity, i in goal.reminders.items" :key="i">
+                  <h5>{{ goal.completedCount }} of {{ goal.stepCount }}</h5>
+                </span>
+              </span> 
+                
+                <!-- </span> -->
+   <!-- </span>  -->
+            <!-- <span v-else>
+              <h5>---</h5>
+            </span> -->
           </div>
           <div class="col pl-0">
                <v-progress-circular
