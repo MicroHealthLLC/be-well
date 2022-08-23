@@ -1,11 +1,21 @@
 <template>
   <v-card :disabled="saving" :loading="saving">
     <v-card-title
-      ><span v-if="reminder.id">Edit Activity Reminder</span
+      ><span v-if="reminder.id && !associatedGoal">Edit Activity Reminder</span
+      ><span v-if="associatedGoal">Add Goal to Activity</span
       ><span v-else>Add New Activity Reminder</span>
     </v-card-title>
     <v-card-text>
-      <v-form ref="form" v-model="valid">
+       <v-form ref="form" v-model="valid" v-if="associatedGoal">
+        <v-select
+          v-model="reminder.goalId"
+          :items="incompleteGoals"
+          item-text="title"
+          item-value="id"
+          label="Select Goal"
+        ></v-select>
+       </v-form>
+      <v-form ref="form" v-model="valid" v-else>
         <v-select
           v-model="reminder.goalId"
           :items="incompleteGoals"
@@ -22,7 +32,7 @@
           :rules="[(v) => !!v || 'Category is required']"
           required
         ></v-select>
-        <v-select
+        <!-- <v-select
           v-model="reminder.level"
           :items="filteredLevels"
           item-text="title"
@@ -30,7 +40,7 @@
           label="Level"
           :rules="[(v) => !!v || 'Level is required']"
           required
-        ></v-select>
+        ></v-select> -->
         <v-select
           v-model="reminder.frequency"
           :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -38,13 +48,13 @@
           :rules="[(v) => !!v || 'Frequency is required']"
           required
         ></v-select>
-        <v-select
+        <!-- <v-select
           v-model="reminder.contentType"
           label="Content Type"
           :items="['Articles', 'Videos']"
           :rules="[(v) => !!v || 'Content Type is required']"
           required
-        ></v-select>
+        ></v-select> -->
         <v-menu
           ref="menu"
           :close-on-content-click="false"
@@ -88,7 +98,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
 
 export default {
@@ -114,20 +124,25 @@ export default {
       "addReminder",
       "removeReminder",
       "fetchReminders",
+      "SET_ASSOCIATED_GOAL",
       "updateReminderById",
+    ]),
+        ...mapMutations([
+      "SET_ASSOCIATED_GOAL",
     ]),
     resetForm() {
       this.reminder = {
-        goalId: "",
+        goalId: null,
         category: "",
         level: this.userPrefLevel,
         frequency: "",
-        contentType: "",
+        contentType: "Videos",
         time: null,
       };
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);
+      this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -149,11 +164,19 @@ export default {
           console.log("this.userPrefLevel", this.userPrefLevel);
           console.log("this.preferences", this.preferences);
           this.reminder.level = this.userPrefLevel;
+          // if (this.goalId){
+          //    this.reminder.goalId = this.goalId;
+          // } else {
+          //    this.reminder.goalId = "";
+          // }
+
+          this.reminder.contentType = 'Videos';
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
+        this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
         this.resetForm();
       } catch (error) {
         console.log(error);
@@ -161,7 +184,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "saving"]),
+    ...mapGetters(["incompleteGoals", "saving", "associatedGoal"]),
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.reminder.category) {

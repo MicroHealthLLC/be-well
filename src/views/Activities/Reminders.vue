@@ -44,6 +44,22 @@
               <v-dialog v-model="dialog" max-width="600px">
                 <ReminderForm :reminder="reminder" @toggleReminderFormDialog="toggleReminderFormDialog"></ReminderForm>
               </v-dialog>
+          <v-tooltip max-width="200" bottom>
+          <div>Add Goal to New Activity</div>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="goalIcon activitiesCount">
+            <span @click="toggleReminderFormDialog">
+             <v-icon class="text-dark" 
+                >mdi-flag-checkered</v-icon
+              >
+              <v-icon class="text-dark smPlusSign"
+                >mdi-plus</v-icon
+              >
+            </span>
+              
+            </div>
+          </template>
+        </v-tooltip>
             </div>
           </div>
         </v-col>
@@ -150,8 +166,18 @@ export default {
         Notification.requestPermission();
       }
     },
+     resetForm() {
+      this.reminder = {
+        goalId: "",
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "Videos",
+        time: null,
+      };
+    },
     openNewReminderForm() {
-      // this.resetForm();
+      this.resetForm();
       this.toggleReminderFormDialog(true)
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
@@ -167,6 +193,55 @@ export default {
       set(value) {
         this.TOGGLE_REMINDERS_ON(value);
       },
+    },
+     userPrefLevel() {
+      // return this.reminders
+      if (this.preferences && this.preferences[0] && this.reminder.category) {
+        let strength = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Strength"
+        );
+        let flex = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Flexibility & Mobility"
+        );
+        let balance = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Balance"
+        );
+        let nutri = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Nutrition"
+        );
+        let rec = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Recovery"
+        );
+        let erg = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Ergonomics"
+        );
+        let endur = this.preferences[0].preference_items.map(
+          (t) => t && t.category == "Endurance"
+        );
+        if (this.reminder.category == "STRENGTH" && strength) {
+          return this.strengthLevel;
+        }
+        if (this.reminder.category == "BALANCE" && balance) {
+          return this.balanceLevel;
+        }
+        if (this.reminder.category == "ENDURANCE" && endur) {
+          return this.enduranceLevel;
+        }
+        if (this.reminder.category == "NUTRITION" && nutri) {
+          return this.nutritionLevel;
+        }
+        if (this.reminder.category == "RECOVERY" && rec) {
+          return this.recLevel;
+        }
+        if (this.reminder.category == "ERGONOMICS" && erg) {
+          return this.ergLevel;
+        }
+        if (this.reminder.category == "FLEXIBILITY_MOBILITY" && flex) {
+          return this.flexLevel;
+        } else return "";
+      } else {
+        return "";
+      }
     },
   },
   mounted() {
@@ -254,6 +329,9 @@ export default {
   color: white;
   transform: rotateY(180deg);
 }
+.smPlusSign {
+  font-size: 85%;
+}
 .goalHeaders {
   color: var(--mh-blue);
 }
@@ -292,5 +370,19 @@ export default {
 .goalCol {
   overflow-y: hidden !important; /* Hide vertical scrollbar */
   overflow-x: hidden !important;
+}
+.goalIcon {
+  position: absolute;
+  bottom: 10%;
+  right: 1%;
+}
+.activitiesCount {
+  transition: all 0.2s ease-in-out;
+}
+.activitiesCount:hover {
+  transform: scale(1.2);
+}
+.text-dark {
+  color: #072f94;
 }
 </style>

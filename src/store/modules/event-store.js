@@ -18,6 +18,7 @@ export default {
       link: "",
     },
     events: [],
+    associate_goal: false, 
   },
   actions: {
     async addEvent({ commit }, event) {
@@ -179,6 +180,7 @@ export default {
         (event1, event2) => new Date(event1.date) - new Date(event2.date)
       );
     },
+    SET_ASSOCIATED_GOAL: (state, goal) => (state.associate_goal = goal),
     SET_PARTICIPANTS: (state, updatedEvent) => {
       // Update event for Event Details page
       state.event.participants = updatedEvent.participants;
@@ -194,5 +196,6 @@ export default {
   getters: {
     event: (state) => state.event,
     events: (state) => state.events,
+    associatedGoal: (state) => state.associate_goal,
   },
 };

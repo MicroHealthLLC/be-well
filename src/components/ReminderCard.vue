@@ -2,8 +2,11 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div class="flip-card-front clickable fontWhite">
-        <v-tooltip v-if="associatedGoal == true" max-width="200" bottom>
-          <div>Associated Goal</div>
+        <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+          <div>
+            <span >
+             {{ reminder.goal.title }}
+          </span></div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
               <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
@@ -14,9 +17,14 @@
           <div>Add to Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
-              <v-icon class="mr-1 text-dark" @click="showGoals"
+            <span @click="showGoals">
+             <v-icon class="text-dark" 
                 >mdi-flag-checkered</v-icon
               >
+              <v-icon class="text-dark smPlusSign"
+                >mdi-plus</v-icon
+              >
+            </span>
             </div>
           </template>
         </v-tooltip>
@@ -136,7 +144,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
 import videosMixin from "../mixins/videos-mixin";
 import ReminderForm from "./ReminderForm.vue";
@@ -166,7 +174,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "reminders", "saving"]),
+    ...mapGetters(["incompleteGoals", "reminders", "saving", "associatedGoal"]),
     associatedGoal() {
       let val = false;
       if (this.incompleteGoals && this.incompleteGoals.length > 0) {
@@ -198,23 +206,23 @@ export default {
       "removeReminder",
       "fetchGoals",
     ]),
+    ...mapMutations([ "SET_ASSOCIATED_GOAL"]),
     log(e) {
       console.log(e);
     },
     toggleReminderFormDialog(value){
       this.dialog = value;
     },
-    showGoals() {
-      this.goalSelect = true;
+    showGoals() {  
       this.toggleReminderFormDialog(true);
-
+      this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
       console.log("this reminder on next line");
       console.log(this.reminder);
     },
     openReminderForm(reminder) {
       this.reminder = reminder;
       this.toggleReminderFormDialog(true);
-      console.log("reminder", reminder);      
+      console.log("reminder", reminder);     
     },
     async deleteReminder(id) {
       await this.removeReminder(id);
@@ -340,6 +348,9 @@ export default {
   position: absolute;
   top: 5%;
   right: 2.5%;
+}
+.smPlusSign {
+  font-size: 85%;
 }
 .goal-progressbar {
   width: 100%;
