@@ -89,7 +89,7 @@
               <v-card-text>
                 <template>
 
-                  <v-data-table v-if="preferences && preferences[0] && preferences[0].preference_items"
+                  <v-data-table disable-sort v-if="preferences && preferences[0] && preferences[0].preference_items"
                     :headers="headers" :items="preferences[0].preference_items" class="elevation-1">
                     <template v-slot:[`item.l1`]="{ item }">
                       <v-checkbox v-model="item.l1"
@@ -134,7 +134,7 @@
                     </template>
 
                   </v-data-table>
-                  <v-data-table v-else :headers="headers" :items="tablePreferences.preference_items"
+                  <v-data-table disable-sort v-else :headers="headers" :items="tablePreferences.preference_items"
                     class="elevation-1">
                     <template v-slot:[`item.l1`]="{ item }">
                       <v-checkbox

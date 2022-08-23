@@ -14,7 +14,7 @@
           </template>
         </v-tooltip>
         <v-tooltip v-else max-width="200" bottom>
-          <div>Add to Goal</div>
+          <div>Add Activity to Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
             <span @click="showGoals">

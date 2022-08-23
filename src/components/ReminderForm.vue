@@ -28,8 +28,8 @@
           :items="filteredCategories"
           item-text="title"
           item-value="value"
-          label="Category"
-          :rules="[(v) => !!v || 'Category is required']"
+          label="Select Activity Name"
+          :rules="[(v) => !!v || 'Activity Name is required']"
           required
         ></v-select>
         <!-- <v-select
@@ -68,7 +68,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="reminder.time"
-              label="Scheduled Time"
+              label="Schedule A Reminder"
               prepend-icon="mdi-clock-time-four-outline"
               readonly
               v-bind="attrs"
@@ -79,7 +79,8 @@
           </template>
           <v-time-picker
             v-model="reminder.time"
-            format="24hr"
+            format="ampm"
+             ampm-in-title
             @click:minute="$refs.menu.save(reminder.time)"
             header-color="var(--mh-blue)"
           ></v-time-picker>
@@ -142,7 +143,14 @@ export default {
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);
-      this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
+      this.resetForm();
+    if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
+      if(this.dialog == false){
+      this.SET_ASSOCIATED_GOAL(false)
+      }
+      
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -164,12 +172,6 @@ export default {
           console.log("this.userPrefLevel", this.userPrefLevel);
           console.log("this.preferences", this.preferences);
           this.reminder.level = this.userPrefLevel;
-          // if (this.goalId){
-          //    this.reminder.goalId = this.goalId;
-          // } else {
-          //    this.reminder.goalId = "";
-          // }
-
           this.reminder.contentType = 'Videos';
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);

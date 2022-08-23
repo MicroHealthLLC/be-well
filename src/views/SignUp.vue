@@ -61,16 +61,10 @@
               <v-text-field
                 v-model="phoneNumber"
                 label="Phone Number"
-                :rules="[
-                  (v) => !!v || 'Phone Number is required',
-                  (v) => v.length === 12 || 'Incorrect phone number format',
-                  (v) =>
-                    v.match(/[0-9]{3}-[0-9]{3}-[0-9]{4}/) != null ||
-                    'Incorrect phone number format',
-                ]"
+                :rules="[(v) => !!v || 'Phone Number is required']"
                 required
                 validate-on-blur
-                hint="Format: 123-456-7890"
+                hint="Enter a valid 10 digit phone number"
                 persistent-hint
               ></v-text-field>
             </v-form>
@@ -126,7 +120,7 @@ export default {
             firstName: this.firstName,
             lastName: this.lastName,
             password: this.password,
-            phoneNumber: "+1" + this.phoneNumber.split("-").join(""),
+            phoneNumber:this.cleanPhoneNum(this.phoneNumber),
           });
 
           this.$router.push({
@@ -138,6 +132,10 @@ export default {
           this.error = error.message;
         }
       }
+    },
+    cleanPhoneNum(phoneNumber) {
+      let pn = phoneNumber.replace(/\D/g,'')
+      return pn.length == 10 ? "+1".concat(pn) : "invalid phone number"
     },
   },
   computed: {
