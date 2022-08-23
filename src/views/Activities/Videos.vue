@@ -456,6 +456,7 @@ export default {
           this.categories[this.selectedCategory].value &&
           this.newVideo.level == this.levels[this.selectedFilter].value,
       });
+      this.fetchVideos();
       this.dialog = false;
     },
     openDialog() {

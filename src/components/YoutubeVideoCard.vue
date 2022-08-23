@@ -49,7 +49,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
-    <v-dialog v-model="deleteDialog">
+    <v-dialog v-model="deleteDialog" width="50%">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text>Are you sure you want to delete
