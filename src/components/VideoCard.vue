@@ -7,24 +7,23 @@
           : ''
       " class="image" width="100%" />
 
-        <v-card-title class="py-0"><span class="mhBlue"  v-if="_videos && _videos[0] && _videos[0].category">
+      <v-card-title class="py-0"><span class="mhBlue" v-if="_videos && _videos[0] && _videos[0].category">
           <h3 v-if="_videos[0].category == 'Flexibility-mobility'">Flexibility</h3>
           <h3 v-else>{{ _videos[0].category }}</h3>
-          </span>
-         <span class="text-right">  
-       
-          <h6 class><v-card-text v-if=" getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).level != 'na'">
-        <span 
-          ><v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">
-          <span class="wSmoke">
-            {{ levelToString(getFirstNonNullVal(_videos).level) }}
-          </span>
-          </v-chip>
-          </span
-        >
-      </v-card-text></h6></span> 
-        </v-card-title> 
-       <!-- <div class="d-flex justify-center align-center overlay">
+        </span>
+        <span class="text-right">
+          <v-card-text v-if="getFirstNonNullVal(_videos) && getFirstNonNullVal(_videos).level != 'na'">
+            <span>
+              <v-chip :color="levelToColor(getFirstNonNullVal(_videos).level)">
+                <span class="wSmoke">
+                  {{ levelToString(getFirstNonNullVal(_videos).level) }}
+                </span>
+              </v-chip>
+            </span>
+          </v-card-text>
+        </span>
+      </v-card-title>
+      <!-- <div class="d-flex justify-center align-center overlay">
         <v-btn fab depressed><v-icon large>mdi-play</v-icon></v-btn>
       </div>  -->
     </div>
@@ -35,12 +34,16 @@
     <div class="text-center">
 
       <v-card-subtitle class="text-body-1 pt-0 font-weight-bold">
-        <span>
-          <v-chip class="ma-1" v-for="(item, index) in _videos" :key="index"
-            @click="playVideo(item, item.category, item.level, index)" outlined>
-            {{ index + 1 }}
-          </v-chip>
-        </span>
+        <template>
+          <span v-for="(item, index) in _videos" :key="index">
+            <v-hover v-slot="{ hover }">
+              <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
+                <span v-if="hover"><v-icon color="red">mdi-youtube</v-icon></span>
+                <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
+              </v-chip>
+            </v-hover>
+          </span>
+        </template>
       </v-card-subtitle>
     </div>
 
@@ -93,22 +96,12 @@
     <v-dialog v-model="deleteDialog">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
-        <v-card-text
-          >Are you sure you want to delete
-          <strong>Video Title</strong>?</v-card-text
-        >
+        <v-card-text>Are you sure you want to delete
+          <strong>Video Title</strong>?
+        </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn @click="deleteDialog = false" color="secondary" small outlined
-            >Cancel</v-btn
-          >
-          <v-btn
-            @click="removeVideo"
-            class="px-5"
-            color="var(--mh-blue)"
-            small
-            dark
-            >Delete</v-btn
-          >
+          <v-btn @click="deleteDialog = false" color="secondary" small outlined>Cancel</v-btn>
+          <v-btn @click="removeVideo" class="px-5" color="var(--mh-blue)" small dark>Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -224,7 +217,7 @@ export default {
     getFirstNonNullVal(array) {
       if (!this.isEmpty(array)) {
         return array.find((v) => v !== this.isEmpty(v));
-      } 
+      }
     },
     levelToColor(level) {
       switch (level) {
@@ -236,7 +229,7 @@ export default {
           return "var(--mh-orange)";
         case "L5":
           return "error";
-        default: 
+        default:
           return "blue";
       }
     },
@@ -277,14 +270,15 @@ export default {
 </script>
 
 <style scoped>
-.wSmoke{
+.wSmoke {
   color: whitesmoke;
   font-weight: 500;
 }
+
 .clamp-two-lines {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
