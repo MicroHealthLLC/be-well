@@ -2,17 +2,80 @@
   <div class="flip-card" :load="log(goal)">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div class="flip-card-front clickable">
-           <span
+           <!-- <span
             v-if="goal.reminders.items && goal.reminders.items.length == 0 "
             @click="openNewReminderForm"       
-            class="newGoalBtn 
-            px-2 
-            py-1 
-            d-block  
-            align-center
-            justify-center   "
-            ><small>Click here to achieve your goals</small></span
+            class="newGoalBtn"
+            ><small>Click here to achieve your goals</small> -->
+            <span
+             class="newGoalBtn2"
+             
             >
+            <v-tooltip
+              max-width="200"
+              bottom
+              
+            >
+            <div v-if="goal && goal.reminders.items && goal.reminders.items.length < 1">Click to add Activity</div>
+             <div v-else>Activities</div>
+              <template v-slot:activator="{ on }">               
+                <div v-on="on" class="activitiesIcon activitiesCount">
+               
+               
+               <span v-if="goal && goal.reminders.items && goal.reminders.items.length > 0">
+                <v-icon class="mr-1" color="white">mdi-yoga</v-icon> 
+                 <v-badge                
+                  class="completed-count"                 
+                  :content="goal.reminders.items.length"
+                  color="success"
+                 ></v-badge>
+               </span>
+                <span
+                v-else
+                @click="openNewReminderForm"
+                >
+                <v-icon class="mr-1" color="white">mdi-yoga</v-icon> 
+                <v-badge                 
+                class="completed-count ml-1"
+                :content="'0'"
+                color="error"
+                ></v-badge>
+                </span>
+          
+                </div>
+              </template>          
+            </v-tooltip>  
+            </span> 
+               <span
+             class="newGoalBtn3"
+             
+            >          
+            <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div>{{ categoryString(goal.category) }}</div>
+           <template v-slot:activator="{ on }">
+            <div v-on="on" class="icon"
+              > <v-icon color="white">{{
+                categoryIcon(goal.category)
+              }}</v-icon
+              ></div
+            >
+           </template>
+          
+              </v-tooltip>
+     
+            
+            
+            
+            
+            </span
+
+
+            >
+         <div @click="isFlipped = !isFlipped" class="testC">
+      
         <div
           class=" 
             px-3
@@ -20,7 +83,7 @@
             align-center
             justify-center     
             "
-            @click="isFlipped = !isFlipped" 
+            
          >       
             <v-tooltip
               max-width="200"
@@ -34,47 +97,7 @@
               </template>          
             </v-tooltip>
           
-              <v-tooltip
-              max-width="200"
-              bottom
-            >
-            <div>Activities</div>
-              <template v-slot:activator="{ on }">               
-                <div v-on="on" class="activitiesIcon activitiesCount">
-                 <v-icon class="mr-1" color="white" left>mdi-yoga</v-icon> 
-                 <v-badge
-                  v-if="goal && goal.reminders.items && goal.reminders.items.length > 0"
-                  class="completed-count"
-                  :content="goal.reminders.items.length"
-                  color="success"
-                 ></v-badge>
-               <v-badge
-                  v-else
-                  class="completed-count"
-                  :content="'0'"
-                  color="error"
-              ></v-badge>
-                </div>
-              </template>          
-            </v-tooltip>            
-            
 
-            <v-tooltip
-              max-width="200"
-              bottom
-            >
-            <div >{{ categoryString(goal.category) }}</div>
-           <template v-slot:activator="{ on }">
-            <div v-on="on" class="icon"
-              > <v-icon class="mr-1" color="white">{{
-                categoryIcon(goal.category)
-              }}</v-icon
-              ></div
-            >
-           </template>
-          
-              </v-tooltip>
-     
            <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }}</h3></div> 
                 <!-- Progress Bar -->
        
@@ -89,9 +112,28 @@
              </div> 
           
         </div>
+        </div>      
         
       </div>
       <div class="justify-space-between flip-card-back">
+         <span class="addActivityBtn">
+
+              <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div>Add Activity</div>
+              <template v-slot:activator="{ on }">               
+                <div v-on="on">
+                <span @click="openNewReminderForm" v-if="goal.reminders.items && goal.reminders.items.length < 1">
+                  <v-icon small>mdi-plus</v-icon>
+                  <v-icon>mdi-yoga</v-icon> 
+                </span>
+                  
+                </div>
+              </template>          
+            </v-tooltip>
+              </span>            
          <div class="clickable py-4 px-4" >
          <v-icon  class="editBtn" @click="openGoalForm(goal)" right>mdi-square-edit-outline</v-icon>
 
@@ -106,18 +148,9 @@
                 </span>
 
               </span> 
-             <span v-else>              
-            <v-tooltip
-              max-width="200"
-              bottom
-            >
-            <div>Add Activity</div>
-              <template v-slot:activator="{ on }">               
-                <div v-on="on">
-                  <v-icon small left @click="openNewReminderForm">mdi-plus</v-icon>
-                </div>
-              </template>          
-            </v-tooltip>
+             <span v-else>  
+             
+         
            </span> 
                
            </div>
@@ -148,10 +181,10 @@
               :rotate="360"
               :size="100"
               :width="15"
-              :value="50"
+              :value="goal.completedCount / goal.stepCount "
               color="primary"
             >
-             {{ 50 }} %
+             {{ goal.completedCount / goal.stepCount }} %
             </v-progress-circular> 
              <h5 class="orangeLabel pt-1 d-flex">
              GOAL PROGRESS
@@ -262,19 +295,6 @@
           <v-form ref="form" v-model="a_valid">
         
         <b class="mr-1">Focus Area:</b>{{ goal.category}}
-            <!-- <v-select
-              v-model="reminder.category"
-              :items="filteredCategories"
-              item-text="title"
-              item-value="value"
-              label="My Focus Area"
-              :rules="[(v) => !!v || 'Focus Area required']"
-              required
-            ></v-select> -->
-            <!-- <v-select
-              v-model="reminder.level"
-              :items="[userPrefLevel]"
-            ></v-select>   -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -282,13 +302,6 @@
               :rules="[(v) => !!v || 'Frequency is required']"
               required
             ></v-select>
-            <!-- <v-select
-              v-model="reminder.contentType"
-              label="Content Type"
-              :items="['Articles', 'Videos']"
-              :rules="[(v) => !!v || 'Content Type is required']"
-              required
-            ></v-select> -->
             <v-menu
               ref="menu"
               :close-on-content-click="false"
@@ -503,11 +516,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder"]),
+    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
     log(e){
       console.log(e)
     },
   openNewReminderForm() {
+    console.log("this works")
       this.resetForm();
       this.activityDialog = true;
       if (this.$refs.form) {
@@ -571,6 +585,7 @@ export default {
            this.reminder.level = this.userPrefLevel
            this.reminder.category = this.goal.category
            this.reminder.contentType = 'Videos'
+           this.reminder.goalId = this.goal.id
            await this.addReminder(this.reminder);
     
         // Close form and reset form values
@@ -647,18 +662,36 @@ export default {
   right: 15%;
   color:white !important;
 }
-.activitiesCount {transition: all .2s ease-in-out;}
-.activitiesCount:hover { transform: scale(1.2); }
+/* .activitiesCount {transition: all .2s ease-in-out;}
+.activitiesCount:hover { transform: scale(1.2); } */
 .newGoalBtn{
   color: white !important; 
-  top: 50%;
-  border: .8px solid white;
-  border-radius: .25rem;
-  background-color: rgba(29,	51,	111,0.30) !important;
-  margin: 5px auto 5px auto;
+  top: 60%;
   position:absolute;
+  margin:0 auto;
+  display:block;
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%); 
+  transform: translateY(-50%);
+}
+.newGoalBtn2{
+  color: white !important; 
+  bottom: 12%;
+  right: 10%;
+  position:absolute;
+  margin:0 auto;
+  display:block;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.newGoalBtn3{
+  color: white !important; 
+  bottom: 12%;
+  right: 3%;
+  position:absolute;
+  margin:0 auto;
+  display:block;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 .icon {
   position: absolute;
@@ -772,5 +805,14 @@ export default {
 .orangeLabel{
  color: var(--mh-orange)
 
+}
+.testC{
+  height: 100%;
+}
+.addActivityBtn{
+  position:absolute;
+  top: 30%;
+  left: 10%;
+  cursor: pointer;
 }
 </style>

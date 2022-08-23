@@ -432,8 +432,7 @@ export default {
   margin:0 auto;
   display:block;
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
- 
+  transform: translateY(-50%); 
 }
 .newGoalCard {
   height: 150px;

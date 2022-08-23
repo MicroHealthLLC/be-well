@@ -45,7 +45,7 @@
                 <ReminderForm :reminder="reminder" @toggleReminderFormDialog="toggleReminderFormDialog"></ReminderForm>
               </v-dialog>
           <v-tooltip max-width="200" bottom>
-          <div>Add Goal to New Activity</div>
+          <div>Create New Activity for Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
             <span @click="toggleReminderFormDialog">
@@ -158,9 +158,6 @@ export default {
         console.log(e);
       }
     },
-    toggleReminderFormDialog(value){
-      this.dialog = value;
-    },
     requestPermission() {
       if (Notification.permission !== "granted") {
         Notification.requestPermission();
@@ -179,6 +176,13 @@ export default {
     openNewReminderForm() {
       this.resetForm();
       this.toggleReminderFormDialog(true)
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
+    },
+    toggleReminderFormDialog(value){
+      this.dialog = value;
+      this.resetForm();
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
