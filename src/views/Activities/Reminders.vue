@@ -164,18 +164,7 @@ export default {
         Notification.requestPermission();
       }
     },
-     resetForm() {
-      this.reminder = {
-        goalId: "",
-        category: "",
-        level: this.userPrefLevel,
-        frequency: "",
-        contentType: "Videos",
-        time: null,
-      };
-    },
     openNewReminderForm() {
-      this.resetForm();
       this.toggleReminderFormDialog(true)
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
@@ -183,7 +172,6 @@ export default {
     },
     toggleReminderFormDialog(value){
       this.dialog = value;
-      this.resetForm();
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
