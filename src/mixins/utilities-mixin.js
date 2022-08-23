@@ -1,4 +1,4 @@
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -159,6 +159,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["fetchPreferences"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -235,6 +236,9 @@ export default {
       );
     },
   },
+  mounted() {
+    this.fetchPreferences()
+  },
   computed: {
     ...mapGetters(["preferences"]),
     //Not sure why prefs is firing off errors....need to fix so we can consolidate all preferenceLevels into one value
@@ -268,7 +272,6 @@ export default {
   //       if(flexPrefs [0].l4){
   //         endureL =  'L4'
   //       }       
-        
   //       return {
   //         levels:{
   //           strength: strengthL,
