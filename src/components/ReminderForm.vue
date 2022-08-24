@@ -6,7 +6,7 @@
       ><span v-else>Add New Activity Reminder</span>
     </v-card-title>
     <v-card-text>
-       <v-form ref="form" v-model="valid" v-if="associatedGoal">
+      <v-form ref="form" v-model="valid" v-if="associatedGoal">
         <v-select
           v-model="reminder.goalId"
           :items="incompleteGoals"
@@ -14,7 +14,7 @@
           item-value="id"
           label="Select Goal"
         ></v-select>
-       </v-form>
+      </v-form>
       <v-form ref="form" v-model="valid" v-else>
         <v-select
           v-model="reminder.goalId"
@@ -80,7 +80,7 @@
           <v-time-picker
             v-model="reminder.time"
             format="ampm"
-             ampm-in-title
+            ampm-in-title
             @click:minute="$refs.menu.save(reminder.time)"
             header-color="var(--mh-blue)"
           ></v-time-picker>
@@ -120,6 +120,11 @@ export default {
       valid: true,
     };
   },
+  mounted() {
+    if (!this.reminder.id) {
+      this.resetForm();
+    }
+  },
   methods: {
     ...mapActions([
       "addReminder",
@@ -128,29 +133,25 @@ export default {
       "SET_ASSOCIATED_GOAL",
       "updateReminderById",
     ]),
-        ...mapMutations([
-      "SET_ASSOCIATED_GOAL",
-    ]),
+    ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     resetForm() {
       this.reminder = {
-        goalId: null,
         category: "",
-        level: this.userPrefLevel,
+        level: "",
         frequency: "",
-        contentType: "Videos",
+        contentType: "",
         time: null,
       };
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);
       this.resetForm();
-    if (this.$refs.form) {
+      if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
-      if(this.dialog == false){
-      this.SET_ASSOCIATED_GOAL(false)
+      if (this.dialog == false) {
+        this.SET_ASSOCIATED_GOAL(false);
       }
-      
     },
     async saveReminder() {
       if (!this.$refs.form.validate()) {
@@ -172,13 +173,13 @@ export default {
           console.log("this.userPrefLevel", this.userPrefLevel);
           console.log("this.preferences", this.preferences);
           this.reminder.level = this.userPrefLevel;
-          this.reminder.contentType = 'Videos';
+          this.reminder.contentType = "Videos";
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
-        this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
+        this.SET_ASSOCIATED_GOAL(!this.associatedGoal);
         this.resetForm();
       } catch (error) {
         console.log(error);

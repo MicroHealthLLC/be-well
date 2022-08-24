@@ -230,16 +230,6 @@ export default {
     closeGoalForm() {
       this.goalsDialog = false;
     },
-    resetForm() {
-      this.reminder = {
-        goalId: "",
-        category: "",
-        level: "",
-        frequency: "",
-        contentType: "",
-        time: null,
-      };
-    },
     levelColor(level) {
       return level == "L1" || level == "L2"
         ? "var(--mh-green)"
