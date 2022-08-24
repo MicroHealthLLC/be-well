@@ -58,6 +58,9 @@
   </div>
   <span v-else class="mb-sm-2">
     <h1 class="text--secondary video-h1">MicroHealth Videos</h1>
+    <v-btn @click="addNewWatchedVideo(newWatchedVideo)">Add Watched Video</v-btn>
+    <v-btn @click="getWatchedVideos()">Fetch Watched Videos</v-btn>
+    <v-btn @click="deleteWatchedVideos()">Remove All Watched Videos</v-btn>
     <div class="row mt-1">
       <div class="col-3" v-if="!this.isEmpty(balanceVids)">
         <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
@@ -65,37 +68,37 @@
         </span>
       </div>
 
-         
-        <div v-if="!this.isEmpty(enduranceVids)" class="col-3" >   
-        <span   v-for="(level, i) in enduranceVidsbyLevel" :key="i">
+
+      <div v-if="!this.isEmpty(enduranceVids)" class="col-3">
+        <span v-for="(level, i) in enduranceVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </div>
 
-    <div v-if="!this.isEmpty(strengthVids)" class="col-3" >
-      <span v-for="(level, i) in strengthVidsbyLevel" :key="i" >
-       <video-card :_videos="level" :total="level.length" />       
-      </span>
- 
-    </div>
-
-    <div v-if="!this.isEmpty(flexibilityVids)"  class="col-3">
-     <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i"  >
-       <video-card :_videos="level" :total="level.length" />
-      </span>
-    
-    </div>     
-
-      </div>
-     <div class="row">    
-    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'NOT_APPLICABLE'"  class="col-3">   
-      <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
-        <span>
+      <div v-if="!this.isEmpty(strengthVids)" class="col-3">
+        <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
         </span>
-      </span>
-  
+
+      </div>
+
+      <div v-if="!this.isEmpty(flexibilityVids)" class="col-3">
+        <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+
+      </div>
+
     </div>
+    <div class="row">
+      <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'NOT_APPLICABLE'" class="col-3">
+        <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
+          <span>
+            <video-card :_videos="level" :total="level.length" />
+          </span>
+        </span>
+
+      </div>
 
       <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'NOT_APPLICABLE'" class="col-3">
         <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
@@ -199,6 +202,13 @@ export default {
       valid: true,
       page: 1,
       start: 0,
+      newWatchedVideo: {
+        title: "Sitting Ergonomics 1 1",
+        videoId: "GwyuVcCBx0Q",
+        category: "Ergonomics",
+        level: "na",
+        nextVideo: "ft2kze0WYJY",
+      },
       newVideo: {
         resourceId: "",
         category: "",
@@ -210,6 +220,9 @@ export default {
   methods: {
     ...mapActions([
       "addVideo",
+      "addWatchedVideo",
+      "removeWatchedVideo",
+      "fetchWatchedVideos",
       "fetchVideos",
       "fetchYTVideos",
       "fetchFavoriteVideos",
@@ -320,7 +333,7 @@ export default {
         case "L4":
           return "var(--mh-orange)";
         case "L5":
-          return "error";  
+          return "error";
       }
     },
     getVideoNum(category, level, video) {
@@ -441,7 +454,7 @@ export default {
         ? (this.recoveryVidsbyLevel = [this.recoveryVids]
         )
         : [];
-        console.log(this.recoveryVidsbyLevel)
+      console.log(this.recoveryVidsbyLevel)
     },
     // YoutubeMethods
 
@@ -461,6 +474,24 @@ export default {
       });
       this.fetchVideos();
       this.dialog = false;
+    },
+    getWatchedVideos() {
+      this.fetchWatchedVideos();
+      console.log(this.watchedVideos)
+    },
+    deleteWatchedVideos() {
+      if (this.watchedVideos) {
+        this.watchedVideos.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        });
+      }
+      console.log(this.watchedVideos)
+    },
+    // Infinite Loop!! :(
+    addNewWatchedVideo(v) {
+      console.log(v)
+      this.addWatchedVideo(v);
+
     },
     openDialog() {
       this.resetForm();
@@ -501,13 +532,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos"]),
+    ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos", "watchedVideos"]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
     showAddBtn() {
       // Check if on Editors list and whether last filter (Favorites) is selected
-      console.log(this.preferences)
+      //console.log(this.preferences)
       return this.isEditor && this.selectedFilter != this.filters.length - 1;
     },
     isLevel() {
@@ -526,13 +557,8 @@ export default {
   },
 
   mounted() {
-    // Youtube Videos
-    console.log(this.videos)
-    console.log(this.selectedCategory)
     let category = "ALL";/* this.categories[this.selectedCategory].value; */
     let filter = "ALL";/* this.filters[this.selectedFilter].value; */
-    console.log(category)
-    console.log(filter)
     if (category == "ALL" && filter == "ALL") {
       this.fetchVideos();
     } else if (category != "ALL" && filter == "ALL") {
@@ -559,7 +585,7 @@ export default {
     if (!this.$route.query.category && !this.$route.query.filter) {
       this.play = false;
     }
-      console.log(this.preferences);
+    console.log(this.preferences);
     if (!this.preferences) {
       this.fetchPreferences();
     }
