@@ -88,7 +88,7 @@
 
       </div>
      <div class="row">    
-    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'ALL'"  class="col-3">   
+    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'NOT_APPLICABLE'"  class="col-3">   
       <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
         <span>
           <video-card :_videos="level" :total="level.length" />
@@ -97,7 +97,7 @@
   
     </div>
 
-      <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'ALL'" class="col-3">
+      <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'NOT_APPLICABLE'" class="col-3">
         <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
           <span>
             <video-card :_videos="level" :total="level.length" />
@@ -105,7 +105,7 @@
         </span>
       </div>
 
-      <div v-if="!this.isEmpty(nutritionVids) && nutritionLevel && nutritionLevel == 'ALL'" class="col-3">
+      <div v-if="!this.isEmpty(nutritionVids) && nutritionLevel && nutritionLevel == 'NOT_APPLICABLE'" class="col-3">
         <span v-for="(level, i) in nutritionVidsbyLevel" :key="i">
           <span>
             <video-card :_videos="level" :total="level.length" />
@@ -225,7 +225,7 @@ export default {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
-      console.log(this.balanceVids)
+      console.log(this.mhVideos)
       let bal = this.mhVideos.filter(
         (v) => v.category == "Balance" && v.level == this.balanceLevel
       );
@@ -248,13 +248,13 @@ export default {
         (v) => v.category == "Nutrition" && v.level == "na"
       );
       this.balanceVids = bal;
-      console.log(bal)
       this.enduranceVids = end;
       this.strengthVids = str;
       this.flexibilityVids = flex;
       this.recoveryVids = rec;
       this.ergonomicsVids = erg;
       this.nutritionVids = nut;
+
     },
     levelToString(level) {
       //console.log(this.videos);
@@ -320,7 +320,7 @@ export default {
         case "L4":
           return "var(--mh-orange)";
         case "L5":
-          return "error";
+          return "error";  
       }
     },
     getVideoNum(category, level, video) {
@@ -394,13 +394,14 @@ export default {
         };
       }
     },
-    seperateVideosByLevel(array) {
+    /* seperateVideosByLevel(array) {
+      console.log(array)
       let novice = array.filter((v) => v.level == "L1");
       let beginner = array.filter((v) => v.level == "L2");
       let competent = array.filter((v) => v.level == "L3");
       let proficient = array.filter((v) => v.level == "L4");
       let expert = array.filter((v) => v.level == "L5");
-      let na = array.filter((v) => v.level == "na");
+      let na = array.filter((v) => v.level == "NOT_APPLICABLE");
       return {
         novice: novice,
         beginner: beginner,
@@ -409,8 +410,9 @@ export default {
         expert: expert,
         na: na,
       };
-    },
+    }, */
     videosByLevel() {
+      console.log(this.recoveryVids)
       this.balanceVids[0]
         ? (this.balanceVidsbyLevel = [this.balanceVids]
         )
@@ -439,6 +441,7 @@ export default {
         ? (this.recoveryVidsbyLevel = [this.recoveryVids]
         )
         : [];
+        console.log(this.recoveryVidsbyLevel)
     },
     // YoutubeMethods
 
