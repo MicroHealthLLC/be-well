@@ -5,7 +5,7 @@ import { listWatchedVideos } from "@/graphql/queries";
 
 export default {
   state: {
-    watchedVideos: [],
+    watched_videos: [],
   },
   actions: {
     async addWatchedVideo({ commit, dispatch }, video) {
@@ -29,7 +29,7 @@ export default {
         dispatch("fetchWatchedVideos");
         commit("SET_SNACKBAR", {
           show: true,
-          message: "WatchedVideo Removed",
+          message: "WatchedVideos Removed",
           color: "var(--mh-orange)",
         });
       } catch (error) {
@@ -46,10 +46,10 @@ export default {
     },
   },
   mutations: {
-    ADD_WATCHED_VIDEO: (state, video) => state.watchedVideos.push(video),
-    SET_WATCHED_VIDEOS: (state, videos) => (state.watchedVideos = videos),
+    ADD_WATCHED_VIDEO: (state, video) => state.watched_videos.push(video),
+    SET_WATCHED_VIDEOS: (state, videos) => (state.watched_videos = videos),
   },
   getters: {
-    watchedVideos: (state) => state.watchedVideos,
+    watchedVideos: (state) => state.watched_videos,
   },
 };

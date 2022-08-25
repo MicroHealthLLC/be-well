@@ -1,3 +1,5 @@
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   data() {
     return {
@@ -60,9 +62,6 @@ export default {
           level: "L5",
           nextVideo: "",
         },
-        
-
-
         // Endurance Videos
         {
           title: "Endurance Beginner 1 1",
@@ -435,12 +434,22 @@ export default {
       ],
     };
   },
+  /* mounted() {
+    this.fetchWatchedVideos()
+  }, */
   methods: {
+    ...mapActions([
+      "fetchWatchedVideos",
+    ]),
     nextVideo(category, level) {
-      if (this.isEmpty(this.currentVideo)) {
+      console.log(this.getIdsArray(this.watchedVideos))
+      if (this.isEmpty(this.currentVideo)) {  
         let selected = this.mhVideos.filter(
-          (v) => v.category == category && v.level == level
+          (v) => v.category == category && v.level == level && !this.getIdsArray(this.watchedVideos).includes(v.videoId)
         );
+        /* for (let i = 0; i < selected.length; i++) {
+          if (selected[i].videoId)
+        } */
         this.currentVideo = selected[0];
       } else {
         let current = this.mhVideos.filter(
@@ -460,6 +469,12 @@ export default {
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     },
+    getIdsArray(array) {
+      return array.map((v) => v.videoId)
+    }
   },
-  computed: {},
+  
+  computed: {
+    ...mapGetters(["watchedVideos",]),
+  },
 };

@@ -38,27 +38,13 @@
               levelToString(currentVideo.level)
           }}
           </v-chip>
-          <div>
-            <v-btn @click="goBack" class="ma-2 back">
-              <v-icon dark left> mdi-arrow-left </v-icon>Back
-            </v-btn>
-            <!-- <v-btn
-              @click="nextVideo()"
-              class="ma-2 back"
-              color="var(--mh-green)"
-              dark
-            >
-              Next
-              <v-icon dark left> mdi-arrow-right </v-icon>
-            </v-btn> -->
-          </div>
         </v-card-subtitle>
       </v-card>
     </v-dialog>
   </div>
   <span v-else class="mb-sm-2">
     <h1 class="text--secondary video-h1">MicroHealth Videos</h1>
-    <v-btn @click="addNewWatchedVideo(newWatchedVideo)">Add Watched Video</v-btn>
+    <v-btn @click="addNewWatchedVideo(currentVideo)">Add Watched Video</v-btn>
     <v-btn @click="getWatchedVideos()">Fetch Watched Videos</v-btn>
     <v-btn @click="deleteWatchedVideos()">Remove All Watched Videos</v-btn>
     <div class="row mt-1">
@@ -183,6 +169,8 @@ export default {
       notificationLev: this.$route.query.filter
         ? this.filterToLevel(this.$route.query.filter)
         : "",
+      //notificationCat: "Strength",
+      //notificationLev: "L3",  
       balanceVids: [],
       enduranceVids: [],
       strengthVids: [],
@@ -217,12 +205,57 @@ export default {
       urlInput: "",
     };
   },
+  mounted() {
+    //this.getWatchedVideos()
+    /* if (this.watchedVideos) {
+      console.log(this.watchedVideos) 
+    } */
+    let category = "ALL";/* this.categories[this.selectedCategory].value; */
+    let filter = "ALL";/* this.filters[this.selectedFilter].value; */
+    if (category == "ALL" && filter == "ALL") {
+      this.fetchVideos();
+    } else if (category != "ALL" && filter == "ALL") {
+      this.fetchVideos({
+        filter: { category: { eq: category } },
+      });
+    } else if (category == "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { level: { eq: filter } },
+      });
+    } else if (category != "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { category: { eq: category }, level: { eq: filter } },
+      });
+    } else {
+      this.fetchFavoriteVideos(category);
+    }
+    this.fetchAllFavoriteVideos();
+
+    // MicroHealth Videos
+    if (!this.preferences) {
+      this.fetchPreferences();
+    }
+    if (this.play == true) {
+      this.nextVideo(this.notificationCat, this.notificationLev);
+      //console.log(this.currentVideo)
+      //console.log(this.watchedVideos)
+      if (this.watchedVideos.length == 0 && this.currentVideo) {
+        console.log("if no watched videos")
+        this.addNewWatchedVideo(this.currentVideo)
+      } else {
+        console.log("if watchedVideos exists")
+        this.checkForWatchedVideo()
+      }
+    }
+    this.seperateVideosbyCategory();
+    this.videosByLevel();
+    console.log(this.watchedVideos)
+  },
   methods: {
     ...mapActions([
       "addVideo",
       "addWatchedVideo",
       "removeWatchedVideo",
-      "fetchWatchedVideos",
       "fetchVideos",
       "fetchYTVideos",
       "fetchFavoriteVideos",
@@ -238,7 +271,7 @@ export default {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
-      console.log(this.mhVideos)
+      //console.log(this.mhVideos)
       let bal = this.mhVideos.filter(
         (v) => v.category == "Balance" && v.level == this.balanceLevel
       );
@@ -319,12 +352,12 @@ export default {
     goBack() {
       this.play = false;
       this.$router.push("/activities/videos");
+      this.currentVideo = {}
     },
     log(e) {
       console.log(e);
     },
     levelToColor(level) {
-      //console.log(level);
       switch (level) {
         case "L1":
         case "L2":
@@ -425,7 +458,6 @@ export default {
       };
     }, */
     videosByLevel() {
-      console.log(this.recoveryVids)
       this.balanceVids[0]
         ? (this.balanceVidsbyLevel = [this.balanceVids]
         )
@@ -454,7 +486,6 @@ export default {
         ? (this.recoveryVidsbyLevel = [this.recoveryVids]
         )
         : [];
-      console.log(this.recoveryVidsbyLevel)
     },
     // YoutubeMethods
 
@@ -487,11 +518,17 @@ export default {
       }
       console.log(this.watchedVideos)
     },
-    // Infinite Loop!! :(
     addNewWatchedVideo(v) {
-      console.log(v)
-      this.addWatchedVideo(v);
-
+      this.addWatchedVideo(v)
+    },
+    checkForWatchedVideo() {
+      console.log(this.currentVideo)
+      let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
+      console.log(matched)
+      if (matched) {
+        this.nextVideo(this.notificationCat, this.notificationLev);
+        console.log(this.watchedVideos, this.currentVideo)
+      } this.addNewWatchedVideo(this.currentVideo)
     },
     openDialog() {
       this.resetForm();
@@ -532,7 +569,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos", "watchedVideos"]),
+    ...mapGetters(["preferences", "awsVideos", "isEditor", "saving", "videos"]),
     categoryTitle() {
       return this.categories[this.selectedCategory].title;
     },
@@ -540,6 +577,12 @@ export default {
       // Check if on Editors list and whether last filter (Favorites) is selected
       //console.log(this.preferences)
       return this.isEditor && this.selectedFilter != this.filters.length - 1;
+    },
+    loadedWatchedVideos() {
+      if (this.watchedVideos.items && this.watchedVideos.items.length > 0) {
+        console.log(this.watchedVideos.items)
+        return this.watchedVideos.items
+      } else return []
     },
     isLevel() {
       let filter = this.filters[this.selectedFilter].value;
@@ -556,52 +599,8 @@ export default {
     },
   },
 
-  mounted() {
-    let category = "ALL";/* this.categories[this.selectedCategory].value; */
-    let filter = "ALL";/* this.filters[this.selectedFilter].value; */
-    if (category == "ALL" && filter == "ALL") {
-      this.fetchVideos();
-    } else if (category != "ALL" && filter == "ALL") {
-      this.fetchVideos({
-        filter: { category: { eq: category } },
-      });
-    } else if (category == "ALL" && this.isLevel) {
-      this.fetchVideos({
-        filter: { level: { eq: filter } },
-      });
-    } else if (category != "ALL" && this.isLevel) {
-      this.fetchVideos({
-        filter: { category: { eq: category }, level: { eq: filter } },
-      });
-    } else {
-      this.fetchFavoriteVideos(category);
-    }
-    this.fetchAllFavoriteVideos();
-  },
-  // MicroHealth Videos
-  beforeMount() {
-    this.nextVideo(this.notificationCat, this.notificationLev);
-    this.selectedCat();
-    if (!this.$route.query.category && !this.$route.query.filter) {
-      this.play = false;
-    }
-    console.log(this.preferences);
-    if (!this.preferences) {
-      this.fetchPreferences();
-    }
-
-    this.seperateVideosbyCategory();
-    this.videosByLevel();
-
-    /* console.log(this.enduranceVidsbyLevel);
-    console.log(this.ergonomicsVidsbyLevel);
-    console.log(this.strengthVidsbyLevel);
-    console.log(this.nutritionVidsbyLevel);
-    console.log(this.flexibilityVidsbyLevel);
-    console.log(this.recoveryVidsbyLevel);*/
-  },
   watch: {
-    selectedCategory() {
+    /* selectedCategory() {
       this.page = 1;
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
@@ -664,7 +663,7 @@ export default {
           this.fetchFavoriteVideos(category);
         }
       }
-    },
+    }, */
   },
 };
 </script>

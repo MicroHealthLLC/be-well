@@ -159,7 +159,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPreferences"]),
+    ...mapActions(["fetchPreferences", "fetchWatchedVideos"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -238,9 +238,11 @@ export default {
   },
   mounted() {
     this.fetchPreferences()
+    this.fetchWatchedVideos()
+    console.log(this.watchedVideos)
   },
   computed: {
-    ...mapGetters(["preferences"]),
+    ...mapGetters(["preferences", "watchedVideos"]),
     //Not sure why prefs is firing off errors....need to fix so we can consolidate all preferenceLevels into one value
   //  prefs(){
   //     if (this.preferences && this.preferences[0]){   
@@ -371,7 +373,7 @@ export default {
         return 'NOT_APPLICABLE'
       }
       if(prefs[0].not_interested){
-        console.log("Nutrition: I AM NOT INTERESTED")
+        //console.log("Nutrition: I AM NOT INTERESTED")
         return false
       }
     } else if (!this.preferences){
@@ -382,7 +384,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Recovery')   
       if(!prefs[0].not_interested){
-        console.log("Recovery: I AM INTERESTED")
+        //console.log("Recovery: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
@@ -397,7 +399,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Ergonomics')   
       if(!prefs[0].not_interested){
-        console.log("ERGONOMICS: I AM INTERESTED")
+        //console.log("ERGONOMICS: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
@@ -443,7 +445,7 @@ export default {
       } else  return this.categories.filter((category) => category.value != "ALL" );
     },
     filteredLevels() {
-      console.log("filteredLevels");
+      //console.log("filteredLevels");
       return this.levels.filter((level) => level.value != "ALL");
     },
   
