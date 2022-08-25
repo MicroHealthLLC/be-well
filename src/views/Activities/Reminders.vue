@@ -155,8 +155,8 @@ export default {
     ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON", "SET_ASSOCIATED_GOAL"]),
     log(e) {
       if (e) {
-        console.log(e);
-        console.log(this.incompleteGoals)
+        //console.log(e);
+        //console.log(this.incompleteGoals)
       }
     },
     requestPermission() {

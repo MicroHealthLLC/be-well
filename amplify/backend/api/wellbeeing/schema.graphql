@@ -89,6 +89,15 @@ type Video
   createdAt: AWSDateTime!
 }
 
+type WatchedVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  videoId: String!
+  category: String!
+  level: String!
+  nextVideo: String!
+}
+
 type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   articleId: ID!
