@@ -21,6 +21,7 @@ export default {
           title: "Endurance",
           icon: "mdi-run",
           query: "endurance",
+          // activities: ["walking", "yard word", "dancing", "swimming", "biking", "hiking", "climbing stairs"],
           value: "ENDURANCE",
           image: "/img/endurance.jpg",
         },
@@ -64,6 +65,106 @@ export default {
           icon: "mdi-weight-lifter",
           query: "strength",
           value: "STRENGTH",
+          image: "/img/strength.jpg",
+        },
+      ],
+      activities: [     
+        //Endurance          
+        {
+          title: "Walking",
+          icon: "mdi-human",
+          query: "walking",
+          category: "ENDURANCE",
+          value: "WALKING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Jogging",
+          icon: "mdi-human",
+          query: "jogging",
+          category: "ENDURANCE",
+          value: "JOGGING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Yard Work",
+          icon: "mdi-human",
+          query: "yard_work",
+          category: "ENDURANCE",
+          value: "YARD_WORK",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Dancing",
+          icon: "mdi-human",
+          query: "dancing",
+          category: "ENDURANCE",
+          value: "DANCING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Swimming",
+          icon: "mdi-human",
+          query: "swimming",
+          category: "ENDURANCE",
+          value: "SWIMMING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Biking",
+          icon: "mdi-human",
+          query: "biking",
+          category: "ENDURANCE",
+          value: "BIKING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Climbing stairs",
+          icon: "mdi-heart-plus",
+          category: "ENDURANCE",
+          query: "climbing_stairs",
+          value: "CLIMBING_STAIRS",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Other, sport",
+          icon: "mdi-weight-lifter",
+          query: "other",
+          category: "ENDURANCE",
+          value: "OTHER",
+          image: "/img/endurance.jpg",
+        },
+        //Strength
+        {
+          title: "Lifting weights",
+          icon: "mdi-human",
+          query: "lifting_weights",
+          category: "STRENGTH",
+          value: "LIFTING_WEIGHTS",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Resistance bands",
+          icon: "mdi-human",
+          query: "resistance_bands",
+          category: "STRENGTH",
+          value: "RESISTANCE_BANDS",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Bodyweight exercises",
+          icon: "mdi-human",
+          query: "body_weight_exercises",
+          category: "STRENGTH",
+          value: "body_weight_exercises",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Other, strength",
+          icon: "mdi-weight-lifter",
+          query: "other_s",
+          category: "STRENGTH",
+          value: "OTHER_S",
           image: "/img/strength.jpg",
         },
       ],
@@ -241,45 +342,6 @@ export default {
   },
   computed: {
     ...mapGetters(["preferences"]),
-    //Not sure why prefs is firing off errors....need to fix so we can consolidate all preferenceLevels into one value
-  //  prefs(){
-  //     if (this.preferences && this.preferences[0]){   
-  //       let strengthL = "";
-  //       let endureL = "";
-  //       let sPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')
-  //       let flexPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')      
-  //       if(sPrefs[0].l1){
-  //         strengthL = 'L1'
-  //       }
-  //       if(sPrefs[0].l2){
-  //         strengthL = 'L2'
-  //       }
-  //       if(sPrefs[0].l3){
-  //         strengthL = 'L3'
-  //       }
-  //       if(sPrefs[0].l4){
-  //         strengthL = 'L4'
-  //       }  
-  //       if(flexPrefs [0].l1){
-  //          endureL = 'L1'
-  //       }
-  //       if(flexPrefs [0].l2){
-  //         endureL =  'L2'
-  //       }
-  //       if(flexPrefs[0].l3){
-  //          endureL = 'L3'
-  //       }
-  //       if(flexPrefs [0].l4){
-  //         endureL =  'L4'
-  //       }       
-  //       return {
-  //         levels:{
-  //           strength: strengthL,
-  //           endurance: enduranceLevel
-  //         }
-  //        }
-  //       }      
-  //     },
   strengthLevel(){
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')         

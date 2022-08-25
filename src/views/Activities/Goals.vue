@@ -183,13 +183,35 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="goalform" v-model="valid">
+          <span class="mb-3">
+          <v-btn   
+            @click="improveGoalToggle"        
+            outlined
+            color="var(--mh-blue)"
+            depressed            
+            ><v-icon>
+            mdi-button-pointer
+           </v-icon>Choose Improvement Goal</v-btn
+          >
+          <span class="mx-2">or</span>
+          <v-btn    
+            @click="createGoalToggle"             
+            color="var(--mh-orange)"           
+            outlined
+            ><v-icon>
+            mdi-pencil
+           </v-icon>Create Your Own Goal</v-btn
+          >
+        </span>
             <!-- <v-text-field
               v-model="goal.title"
               label="My Goal is..."
               :rules="[(v) => !!v || 'Goal title is required']"
               required
             ></v-text-field> -->
-            <v-select
+          
+             <span v-if="improvementGoal">             
+              <v-select
               v-model="goal.category"
               :items="filteredCategories"
               item-text="title"
@@ -198,6 +220,26 @@
               :rules="[(v) => !!v || 'Improvement category is required']"
               required
             ></v-select>
+            </span>
+            <span v-else>
+              <v-text-field
+              v-model="goal.title"
+              label="ex: I want to lose 5 lbs..."
+              :rules="[(v) => !!v || 'Goal title is required']"
+              required
+            ></v-text-field>
+              <v-select
+              v-model="goal.category"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="Focus Area"
+              :rules="[(v) => !!v || 'Focus Area is required']"
+              required
+            ></v-select>
+
+            </span>
+          
             <!-- <v-text-field
               :disabled="goal.id != null || goal.id != undefined"
               v-model.number="goal.stepCount"
@@ -291,6 +333,8 @@ export default {
   data() {
     return {
       dialog: false,
+      improvementGoal: true, 
+      createOwnGoal: false, 
       isFlipped: false,
       valid: true,
       menu: false,
@@ -327,7 +371,9 @@ export default {
           });
         } else {
             console.log(this.goal)
-          this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+            if(this.improvementGoal){
+              this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+            }       
           // console.log(this.goal)
           await this.addGoal(this.goal);
         }
@@ -343,6 +389,16 @@ export default {
         console.log(error);
       }
       this.closeGoalForm();
+    },
+    improveGoalToggle(){
+      this.createOwnGoal = !this.createOwnGoal
+      this.improvementGoal = true
+      console.log("default Goal Toggle")
+    },
+    createGoalToggle(){
+      this.improvementGoal = !this.improvementGoal
+      this.createOwnGoal = true
+      console.log("create Goal Toggle")
     },
     openNewGoalForm() {
       this.dialog = true;
