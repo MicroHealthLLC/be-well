@@ -4,12 +4,14 @@
       <div class="flip-card-front clickable fontWhite">
         <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div>
-            <span >
+            <span>
              {{ reminder.goal.title }}
           </span></div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
+              <span @click="showGoals">
               <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
+              </span>
             </div>
           </template>
         </v-tooltip>
@@ -37,7 +39,10 @@
                   <v-icon color="white" class="mr-1">{{
                     categoryIcon(reminder.category)
                   }}</v-icon>
-                  <span class="pt-1">
+                  <span class="pt-1" v-if="reminder.activity">
+                    {{ reminder.activity }}</span
+                  >           
+                  <span class="pt-1" v-else>
                     {{ categoryString(reminder.category) }}</span
                   >
                 </span>
@@ -215,14 +220,15 @@ export default {
     },
     showGoals() {  
       this.toggleReminderFormDialog(true);
-      this.SET_ASSOCIATED_GOAL(!this.associatedGoal)
+      this.SET_ASSOCIATED_GOAL(true)
       console.log("this reminder on next line");
       console.log(this.reminder);
     },
     openReminderForm(reminder) {
-      this.reminder = reminder;
+      // this.reminder = reminder;
       this.toggleReminderFormDialog(true);
-      console.log("reminder", reminder);     
+      console.log("reminder", reminder);  
+       this.SET_ASSOCIATED_GOAL(false);   
     },
     async deleteReminder(id) {
       await this.removeReminder(id);

@@ -31,6 +31,7 @@ export const getReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -65,6 +66,7 @@ export const listReminders = /* GraphQL */ `
         frequency
         contentType
         time
+        activity
         createdAt
         updatedAt
         owner
@@ -88,6 +90,7 @@ export const getGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -126,6 +129,7 @@ export const listGoals = /* GraphQL */ `
             category
             goalId
             level
+            activity
             frequency
             contentType
             time
@@ -646,6 +650,7 @@ export const remindersByLevel = /* GraphQL */ `
         frequency
         contentType
         time
+        activity
         createdAt
         updatedAt
         owner

@@ -12,6 +12,7 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   frequency: String!
   contentType: String!
   time: String!
+  activity: String
   createdAt: AWSDateTime!
 }
 

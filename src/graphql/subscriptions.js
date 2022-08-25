@@ -31,6 +31,7 @@ export const onCreateReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -67,6 +68,7 @@ export const onUpdateReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -103,6 +105,7 @@ export const onDeleteReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -124,6 +127,7 @@ export const onCreateGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -160,6 +164,7 @@ export const onUpdateGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -196,6 +201,7 @@ export const onDeleteGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner

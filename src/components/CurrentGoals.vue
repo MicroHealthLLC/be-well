@@ -8,18 +8,15 @@
             class="newGoalBtn"
             ><small>Click here to achieve your goals</small> -->
             <span
-             class="newGoalBtn2"
-             
+             class="newGoalBtn2"             
             >
             <v-tooltip
               max-width="200"
-              bottom
-              
-            >
-            <div v-if="goal && goal.reminders.items && goal.reminders.items.length < 1">Click to add Activity</div>
-             <div v-else>Activities</div>
+              bottom              
+            >          
+             <div>Add Activity</div>
               <template v-slot:activator="{ on }">               
-                <div v-on="on" class="activitiesIcon activitiesCount">
+                <div v-on="on" class="activitiesIcon activitiesCount" @click="openNewReminderForm">
                
                
                <span v-if="goal && goal.reminders.items && goal.reminders.items.length > 0">
@@ -31,8 +28,7 @@
                  ></v-badge>
                </span>
                 <span
-                v-else
-                @click="openNewReminderForm"
+                v-else               
                 >
                 <v-icon class="mr-1" color="white">mdi-yoga</v-icon> 
                 <v-badge                 
@@ -40,15 +36,13 @@
                 :content="'0'"
                 color="error"
                 ></v-badge>
-                </span>
-          
+                </span>          
                 </div>
               </template>          
             </v-tooltip>  
-            </span> 
-               <span
-             class="newGoalBtn3"
-             
+            </span>             
+            <span
+             class="newGoalBtn3"             
             >          
             <v-tooltip
               max-width="200"
@@ -65,11 +59,6 @@
            </template>
           
               </v-tooltip>
-     
-            
-            
-            
-            
             </span
 
 
@@ -143,8 +132,9 @@
                 GOAL ACTIVITIES
               </h5>  
               <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
-                <span v-for="activity, i in goal.reminders.items" :key="i">
-                  <h5>{{ activity.category }}</h5>
+                <span v-for="item, i in goal.reminders.items" :key="i">                
+                  <h5 v-if="item.activity">{{ item.activity }}</h5>
+                   <h5 v-else>{{ item.category }}</h5>
                 </span>
 
               </span> 
@@ -294,7 +284,15 @@
         <v-card-text>
           <v-form ref="form" v-model="a_valid">
         
-        <b class="mr-1">Focus Area:</b>{{ goal.category}}
+            <v-select
+              v-model="reminder.activity"
+              :items="activities"
+              item-text="title"
+              item-value="title"
+              label="Select Activity"
+              :rules="[(v) => !!v || 'Activity required']"
+              required
+            ></v-select>
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -358,8 +356,8 @@
           <v-form ref="goalform" v-model="valid">
             <!-- <v-text-field
               v-model="goal.title"
-              label="My Goal is..."
-              :rules="[(v) => !!v || 'Goal title is required']"
+              label="ex: I want to lose 10 lbs..."
+              :rules="[(v) => !!v || 'Goal is required']"
               required
             ></v-text-field> -->
             <v-select
@@ -465,6 +463,7 @@ export default {
       reminder: {
         category: "",
         level: this.userPrefLevel,
+        activity: "",
         frequency: "",
         contentType: "",
         time: null,
@@ -676,7 +675,7 @@ export default {
 .newGoalBtn2{
   color: white !important; 
   bottom: 12%;
-  right: 10%;
+  right: 45%;
   position:absolute;
   margin:0 auto;
   display:block;
