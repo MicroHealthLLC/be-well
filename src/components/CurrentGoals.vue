@@ -145,40 +145,12 @@
               <h5 class="orangeLabel d-flex">
                 GOAL ACTIVITIES
               </h5>  
-              <!-- <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
-                <span v-for="item, i in goal.reminders.items" :key="i">                
-                  <h5 v-if="item.activity">{{ item.activity }}</h5>
-                   <h5 v-else>{{ item.category }}</h5>
-                </span>
-
-              </span> 
-             <span v-else>  
-             
-         
-           </span>  -->
-               
+            
            </div>
           <div class="col pr-0">
             <h5 class="orangeLabel d-flex">
                COMPLETED
             </h5>  
-           <!-- This will need to be changed to capture the quantity of activities and the progress levels -->
-            <!-- <span v-for="goal.reminders.items && goal.reminders.items.length > 0" :key="i"> -->
-              <!-- <span v-for="activity, i in goal.reminders.items" :key="i"> -->
-                  <!-- <h5>{{ activity.completedCount }} of {{ activity.length }}</h5> -->
-
-<!-- The follwoing two span can be replaced by the preceding code once activities are ready to save progress -->
-              <!-- <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
-                <span v-for="activity, i in goal.reminders.items" :key="i">
-                  <h5>{{ goal.completedCount }} of {{ goal.stepCount }}</h5>
-                </span>
-              </span>  -->
-                
-                <!-- </span> -->
-   <!-- </span>  -->
-            <!-- <span v-else>
-              <h5>---</h5>
-            </span> -->
           </div>
           <!-- <div class="col pl-0"> -->
                <!-- <v-progress-circular
@@ -225,13 +197,8 @@
                 </span>
               </span> 
             </div>
-
-
-          </div>
-
-</div>
-      
-      
+         </div>
+        </div> 
       
         </div>
 
@@ -289,13 +256,6 @@
             >{{ goal.completedCount }}
           </p> -->
 <!-- </span> -->
-
-        
-
-  
-
-         
-
 
         <v-tooltip
           :disabled="incompleteGoals.length < 5"
@@ -393,8 +353,7 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="goalform" v-model="valid">
-            <v-text-field
-             
+            <v-text-field             
               v-model="goal.title"
               label="Goal"
               :rules="[(v) => !!v || 'Goal is required']"
