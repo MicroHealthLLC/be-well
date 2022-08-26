@@ -110,11 +110,12 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import utilitiesMixin from "../mixins/utilities-mixin";
 import videosMixin from "../mixins/videos-mixin";
 //import VideoModal from "./VideoModal.vue";
 export default {
   name: "VideoCard",
-  mixins: [videosMixin],
+  mixins: [videosMixin, utilitiesMixin],
   props: {
     _videos: {
       type: Array,
@@ -179,22 +180,6 @@ export default {
         this.play = false;
       }
     },
-    levelToString(level) {
-      switch (level) {
-        case "L1":
-          return "Novice";
-        case "L2":
-          return "Beginner";
-        case "L3":
-          return "Competent";
-        case "L4":
-          return "Proficient";
-        case "L5":
-          return "Expert";
-        case "na":
-          return "";
-      }
-    },
     getVideoImage(videoCat) {
       //console.log(videoCat)
       switch (videoCat) {
@@ -217,20 +202,6 @@ export default {
     getFirstNonNullVal(array) {
       if (!this.isEmpty(array)) {
         return array.find((v) => v !== this.isEmpty(v));
-      }
-    },
-    levelToColor(level) {
-      switch (level) {
-        case "L1":
-        case "L2":
-          return "var(--mh-green)";
-        case "L3":
-        case "L4":
-          return "var(--mh-orange)";
-        case "L5":
-          return "error";
-        default:
-          return "blue";
       }
     },
   },

@@ -5,12 +5,13 @@
         <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div>
             <span>
-             {{ reminder.goal.title }}
-          </span></div>
+              {{ reminder.goal.title }}
+            </span>
+          </div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
               <span @click="showGoals">
-              <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
+                <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
               </span>
             </div>
           </template>
@@ -19,14 +20,10 @@
           <div>Add Activity to Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
-            <span @click="showGoals">
-             <v-icon class="text-dark" 
-                >mdi-flag-checkered</v-icon
-              >
-              <v-icon class="text-dark smPlusSign"
-                >mdi-plus</v-icon
-              >
-            </span>
+              <span @click="showGoals">
+                <v-icon class="text-dark">mdi-flag-checkered</v-icon>
+                <v-icon class="text-dark smPlusSign">mdi-plus</v-icon>
+              </span>
             </div>
           </template>
         </v-tooltip>
@@ -37,27 +34,21 @@
               <h2>
                 <span class="font-weight-bold text-light">
                   <v-icon color="white" class="mr-1">{{
-                    categoryIcon(reminder.category)
+                      categoryIcon(reminder.category)
                   }}</v-icon>
                   <span class="pt-1" v-if="reminder.activity">
-                    {{ reminder.activity }}</span
-                  >           
+                    {{ reminder.activity }}</span>
                   <span class="pt-1" v-else>
-                    {{ categoryString(reminder.category) }}</span
-                  >
+                    {{ categoryString(reminder.category) }}</span>
                 </span>
               </h2>
             </div>
           </div>
           <div class="row mt-0 px-3">
             <div class="col">
-              <v-progress-linear
-                height="10"
-                value="50"
-                rounded
-                striped
-                color="lime"
-              ></v-progress-linear>
+              <v-progress-linear height="10" rounded striped color="lime" :value="getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+              checkForNA(reminder.level))">
+              </v-progress-linear>
 
               <!-- <span>
              <v-chip small :color="levelColor(reminder.level)" dark>{{
@@ -98,12 +89,16 @@
           <div class="row">
             <div class="col">
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
-              1 of 2 complete
+              {{ getCompletedActivities(capitalizeFirstLet((reminder.category).toLowerCase()),
+                  checkForNA(reminder.level)).length
+              }} of {{
+    getActivities(capitalizeFirstLet((reminder.category).toLowerCase()), checkForNA(reminder.level)).length
+}}
             </div>
           </div>
           <span class="levelBadge">
             <v-chip small :color="levelColor(reminder.level)" dark>{{
-              levelTitle(reminder.level)
+                levelTitle(reminder.level)
             }}</v-chip>
           </span>
         </div>
@@ -112,31 +107,13 @@
           <div class="col">
             <h5 class="orangeLabel font-weight-bold">ACTIVITY ACTIONS</h5>
             <span class="d-block">
-              <v-btn
-                @click="notify(reminder)"
-                class="mr-3"
-                color="var(--mh-blue)"
-                outlined
-                small
-                title="Test Notification: Prototype Only"
-                >Test</v-btn
-              >
-              <v-btn
-                @click="openReminderForm(reminder)"
-                class="mr-3"
-                color="var(--mh-orange)"
-                small
-                outlined
-                >View/Edit</v-btn
-              >
-              <v-btn
-                @click="deleteReminder({ id: reminder.id })"
-                color="error"
-                outlined
-                small
-              >
-                <v-icon> mdi-trash-can-outline </v-icon></v-btn
-              >
+              <v-btn @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined small
+                title="Test Notification: Prototype Only">Test</v-btn>
+              <v-btn @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small outlined>View/Edit
+              </v-btn>
+              <v-btn @click="deleteReminder({ id: reminder.id })" color="error" outlined small>
+                <v-icon> mdi-trash-can-outline </v-icon>
+              </v-btn>
             </span>
           </div>
         </div>
@@ -211,14 +188,14 @@ export default {
       "removeReminder",
       "fetchGoals",
     ]),
-    ...mapMutations([ "SET_ASSOCIATED_GOAL"]),
+    ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e) {
       console.log(e);
     },
-    toggleReminderFormDialog(value){
+    toggleReminderFormDialog(value) {
       this.dialog = value;
     },
-    showGoals() {  
+    showGoals() {
       this.toggleReminderFormDialog(true);
       this.SET_ASSOCIATED_GOAL(true)
       console.log("this reminder on next line");
@@ -227,8 +204,8 @@ export default {
     openReminderForm(reminder) {
       // this.reminder = reminder;
       this.toggleReminderFormDialog(true);
-      console.log("reminder", reminder);  
-       this.SET_ASSOCIATED_GOAL(false);   
+      console.log("reminder", reminder);
+      this.SET_ASSOCIATED_GOAL(false);
     },
     async deleteReminder(id) {
       await this.removeReminder(id);
@@ -240,15 +217,18 @@ export default {
       return level == "L1" || level == "L2"
         ? "var(--mh-green)"
         : level == "L3" || level == "L4"
-        ? "var(--mh-orange)"
-        : level == "L5"
-        ? "error"
-        : "primary";
+          ? "var(--mh-orange)"
+          : level == "L5"
+            ? "error"
+            : "primary";
     },
 
     goToActivities() {
       console.log("this works");
       this.$router.push("/activities/reminders");
+    },
+    getProgressValue(cat, lev) {
+      return this.getCompletedActivities(cat, lev).length / this.getActivities(cat, lev).length * 100
     },
     async update(goal) {
       let updatedProgress = goal.checklist.reduce(
@@ -289,40 +269,50 @@ export default {
 .orangeLabel {
   color: var(--mh-orange);
 }
+
 .fontWhite {
   color: white;
 }
+
 .turnOver {
   position: absolute;
   right: 4%;
   bottom: 5%;
 }
+
 .lowerCase {
   text-transform: lowercase;
 }
+
 .dueDate {
   position: absolute;
   bottom: 10%;
   left: 4%;
   color: white !important;
 }
+
 .goalIcon {
   position: absolute;
   bottom: 10%;
   right: 1%;
 }
+
 .text-light {
   color: white !important;
 }
+
 .text-dark {
   color: #072f94;
 }
+
 .activitiesCount {
   transition: all 0.2s ease-in-out;
 }
+
 .activitiesCount:hover {
   transform: scale(1.2);
 }
+
 .newGoalBtn {
   color: white !important;
   top: 55%;
@@ -334,63 +324,76 @@ export default {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+
 .icon {
   position: absolute;
   bottom: 5%;
   right: 2.5%;
   color: var(--mh-orange) !important;
 }
+
 .levelBadge {
   position: absolute;
   top: 5%;
   right: 2.5%;
 }
+
 .smPlusSign {
   font-size: 85%;
 }
+
 .goal-progressbar {
   width: 100%;
   position: absolute;
   bottom: 4%;
 }
+
 .checkmark {
   font-size: 64px !important;
 }
+
 .card-title {
   color: var(--mh-blue);
   font-size: 12px;
   min-height: 50px;
 }
+
 .goalTitle {
   font-weight: 500;
   color: rgba(255, 255, 255);
   /* text-align: center;
  vertical-align: middle; */
 }
+
 .card-body {
   background-color: white;
 }
+
 .jw {
   /* text-align: center; */
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .completed-count {
   position: absolute;
   right: 7px;
   top: 7px;
 }
+
 .activitiesIcon {
   position: absolute;
   bottom: 12%;
   right: 15%;
   color: white !important;
 }
+
 .flip-card {
   /* background-color: transparent; */
   height: 150px;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
 
 /* This container is needed to position the front and back side */
@@ -416,7 +419,8 @@ export default {
   overflow-y: hidden !important;
   overflow-x: hidden !important;
   background-color: rgba(29, 51, 111, 0.75);
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden;
+  /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
@@ -426,7 +430,8 @@ export default {
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
   text-align: center;
-  overflow-y: hidden !important; /* Hide vertical scrollbar */
+  overflow-y: hidden !important;
+  /* Hide vertical scrollbar */
   overflow-x: hidden !important;
 }
 
@@ -438,16 +443,24 @@ export default {
   overflow-y: auto;
   overflow-x: hidden !important;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
+
 .font-weight-bold {
   color: white;
 }
+
 .activityActions {
   position: absolute;
   bottom: 5%;

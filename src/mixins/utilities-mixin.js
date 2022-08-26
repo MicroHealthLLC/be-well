@@ -340,7 +340,6 @@ export default {
   mounted() {
     this.fetchPreferences()
     this.fetchWatchedVideos()
-    console.log(this.watchedVideos)
   },
   computed: {
     ...mapGetters(["preferences", "watchedVideos"]),
@@ -348,7 +347,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')         
       if(prefs[0].l1){
-        console.log("Strength: L1")
+        //console.log("Strength: L1")
         return 'L1'
       }
       if(prefs[0].l2){
@@ -387,7 +386,7 @@ export default {
         return 'L3'
       }
       if(prefs[0].l4){
-        console.log("Balance: L4")
+        //console.log("Balance: L4")
         return 'L4'
       }  
       if(prefs[0].l4){
@@ -416,7 +415,7 @@ export default {
         return 'L3'
       }
       if(prefs[0].l4){
-        console.log("Endurance: L4")
+        //console.log("Endurance: L4")
         return 'L4'
       }
       if(prefs[0].l5){
@@ -476,7 +475,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
       if(prefs[0].l1){
-        console.log("Flexibility & Mobility: L1")
+        //console.log("Flexibility & Mobility: L1")
         return 'L1'
       }
       if(prefs[0].l2){

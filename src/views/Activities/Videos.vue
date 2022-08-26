@@ -83,7 +83,6 @@
             <video-card :_videos="level" :total="level.length" />
           </span>
         </span>
-
       </div>
 
       <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'NOT_APPLICABLE'" class="col-3">
@@ -149,7 +148,6 @@ import utilitiesMixin from "../../mixins/utilities-mixin";
 import VideoCard from "../../components/VideoCard.vue";
 import YoutubeVideoCard from "../../components/YoutubeVideoCard.vue";
 //import VideoModal from "../../components/VideoModal.vue";
-//import youtube from "../../apis/youtube";
 
 export default {
   name: "Videos",
@@ -169,8 +167,6 @@ export default {
       notificationLev: this.$route.query.filter
         ? this.filterToLevel(this.$route.query.filter)
         : "",
-      //notificationCat: "Strength",
-      //notificationLev: "L3",  
       balanceVids: [],
       enduranceVids: [],
       strengthVids: [],
@@ -190,13 +186,6 @@ export default {
       valid: true,
       page: 1,
       start: 0,
-      newWatchedVideo: {
-        title: "Sitting Ergonomics 1 1",
-        videoId: "GwyuVcCBx0Q",
-        category: "Ergonomics",
-        level: "na",
-        nextVideo: "ft2kze0WYJY",
-      },
       newVideo: {
         resourceId: "",
         category: "",
@@ -206,10 +195,6 @@ export default {
     };
   },
   mounted() {
-    //this.getWatchedVideos()
-    /* if (this.watchedVideos) {
-      console.log(this.watchedVideos) 
-    } */
     let category = "ALL";/* this.categories[this.selectedCategory].value; */
     let filter = "ALL";/* this.filters[this.selectedFilter].value; */
     if (category == "ALL" && filter == "ALL") {
@@ -237,19 +222,15 @@ export default {
     }
     if (this.play == true) {
       this.nextVideo(this.notificationCat, this.notificationLev);
-      //console.log(this.currentVideo)
       //console.log(this.watchedVideos)
-      if (this.watchedVideos.length == 0 && this.currentVideo) {
-        console.log("if no watched videos")
+      if (this.currentVideo) {
         this.addNewWatchedVideo(this.currentVideo)
-      } else {
-        console.log("if watchedVideos exists")
+      } /* else {
         this.checkForWatchedVideo()
-      }
+      } */
     }
     this.seperateVideosbyCategory();
     this.videosByLevel();
-    console.log(this.watchedVideos)
   },
   methods: {
     ...mapActions([
@@ -266,9 +247,6 @@ export default {
         (v) => v.category == this.notificationCat && v.level == this.notificationLev
       );
       return vids;
-    },
-    capitalizeFirstLet(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
     },
     seperateVideosbyCategory() {
       //console.log(this.mhVideos)
@@ -302,53 +280,7 @@ export default {
       this.nutritionVids = nut;
 
     },
-    levelToString(level) {
-      //console.log(this.videos);
-      switch (level) {
-        case "L1":
-          return "Novice";
-        case "L2":
-          return "Beginner";
-        case "L3":
-          return "Competent";
-        case "L4":
-          return "Proficient";
-        case "L5":
-          return "Expert";
-      }
-    },
-    filterToLevel(filter) {
-      switch (filter) {
-        case "beginner-1":
-          return "L1";
-        case "beginner-2":
-          return "L2";
-        case "intermediate-1":
-          return "L3";
-        case "intermediate-2":
-          return "L4";
-        case "advanced":
-          return "L5";
-        case "na":
-          return "na";
-      }
-    },
-    levelToLowercase(level) {
-      switch (level) {
-        case "L1":
-          return "novice";
-        case "L2":
-          return "beginner";
-        case "L3":
-          return "competent";
-        case "L4":
-          return "proficient";
-        case "L5":
-          return "expert";
-        case "na":
-          return "novice";
-      }
-    },
+    
     goBack() {
       this.play = false;
       this.$router.push("/activities/videos");
@@ -357,18 +289,7 @@ export default {
     log(e) {
       console.log(e);
     },
-    levelToColor(level) {
-      switch (level) {
-        case "L1":
-        case "L2":
-          return "var(--mh-green)";
-        case "L3":
-        case "L4":
-          return "var(--mh-orange)";
-        case "L5":
-          return "error";
-      }
-    },
+    
     getVideoNum(category, level, video) {
       console.log(category);
       console.log(video);
@@ -440,23 +361,6 @@ export default {
         };
       }
     },
-    /* seperateVideosByLevel(array) {
-      console.log(array)
-      let novice = array.filter((v) => v.level == "L1");
-      let beginner = array.filter((v) => v.level == "L2");
-      let competent = array.filter((v) => v.level == "L3");
-      let proficient = array.filter((v) => v.level == "L4");
-      let expert = array.filter((v) => v.level == "L5");
-      let na = array.filter((v) => v.level == "NOT_APPLICABLE");
-      return {
-        novice: novice,
-        beginner: beginner,
-        competent: competent,
-        proficient: proficient,
-        expert: expert,
-        na: na,
-      };
-    }, */
     videosByLevel() {
       this.balanceVids[0]
         ? (this.balanceVidsbyLevel = [this.balanceVids]
@@ -522,13 +426,15 @@ export default {
       this.addWatchedVideo(v)
     },
     checkForWatchedVideo() {
-      console.log(this.currentVideo)
-      let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
+       console.log(this.currentVideo)
+       console.log(this.watchedVideos)
+      /*let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
       console.log(matched)
       if (matched) {
         this.nextVideo(this.notificationCat, this.notificationLev);
+        this.addNewWatchedVideo(this.currentVideo)
         console.log(this.watchedVideos, this.currentVideo)
-      } this.addNewWatchedVideo(this.currentVideo)
+      }  */
     },
     openDialog() {
       this.resetForm();
