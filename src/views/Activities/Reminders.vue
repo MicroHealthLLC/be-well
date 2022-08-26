@@ -262,7 +262,7 @@ export default {
   transform: translateY(-50%);
 }
 .newGoalCard {
-  height: 150px;
+  height: 130px;
   /* background-color: rgba(29,	51,	111,0.85); */
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }

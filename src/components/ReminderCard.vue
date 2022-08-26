@@ -32,9 +32,9 @@
         </v-tooltip>
         <div @click="isFlipped = !isFlipped">
           <div class="row">
-            <div class="col">
+            <div class="col mt-2">
               <!-- <small class="d-block">Type</small> -->
-              <h2>
+              <h3>
                 <span class="font-weight-bold text-light">
                   <v-icon color="white" class="mr-1">{{
                     categoryIcon(reminder.category)
@@ -46,7 +46,7 @@
                     {{ categoryString(reminder.category) }}</span
                   >
                 </span>
-              </h2>
+              </h3>
             </div>
           </div>
           <div class="row mt-0 px-3">
@@ -68,17 +68,45 @@
           </div>
 
           <div class="row mt-0 px-1">
-            <div class="col">
+            <div class="col pb-0">
               <small class="d-block">Frequency</small>
-              <span class="text-center">{{ reminder.frequency }}</span>
+              <span class="text-center pl-1">{{ reminder.frequency }}</span>
             </div>
-            <div class="col">
+            <div class="col pb-0">
               <small class="d-block">Time</small>
               <span class="text-center">{{ reminder.time }}</span>
             </div>
-            <div class="col">
+            <div class="col lHeight pb-0">
               <!-- <small class="d-block">Type</small> -->
-              <span class="text-right">
+            <span class="text-right">
+            <!-- <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+          <div>
+            <span>
+             {{ reminder.goal.title }}
+          </span></div>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" >
+              <span @click="showGoals">
+              <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
+              </span>
+            </div>
+          </template>
+        </v-tooltip>
+        <v-tooltip v-else max-width="200" bottom>
+          <div>Add Activity to Goal</div>
+          <template v-slot:activator="{ on }">
+            <div v-on="on">
+            <span @click="showGoals">
+             <v-icon class="text-dark" 
+                >mdi-flag-checkered</v-icon
+              >
+              <v-icon class="text-dark smPlusSign"
+                >mdi-plus</v-icon
+              >
+            </span>
+            </div>
+          </template>
+        </v-tooltip> -->
                 <!-- <span v-if="reminder.contentType == 'Articles'">
                  <v-icon class="mr-1" color="white">mdi-file-document-outline</v-icon>
               </span>
@@ -308,7 +336,7 @@ export default {
 }
 .goalIcon {
   position: absolute;
-  bottom: 10%;
+  bottom: 12%;
   right: 1%;
 }
 .text-light {
@@ -333,6 +361,9 @@ export default {
   position: absolute;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+.lHeight {
+  line-height:3.5;
 }
 .icon {
   position: absolute;
@@ -389,7 +420,7 @@ export default {
 }
 .flip-card {
   /* background-color: transparent; */
-  height: 150px;
+  height: 130px !important;
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }
 
@@ -421,6 +452,13 @@ export default {
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
     0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.enduranceColor{
+  background-color: rgba(29, 51, 111, 0.75);
+}
+.strengthColor{
+  background-color: rgba(111, 92, 29, 0.75);
 }
 
 /* Style the front side (fallback if image is missing) */
