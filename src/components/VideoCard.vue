@@ -36,21 +36,25 @@
       <v-card-subtitle class="text-body-1 pt-0 font-weight-bold">
         <template>
           <span v-for="(item, index) in _videos" :key="index">
-          <v-badge v-if="getIdsArray(watchedVideos).includes(item.videoId)">
-            <v-hover v-slot="{ hover }">
-              <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
-                <span v-if="hover"><v-icon color="red">mdi-youtube</v-icon></span>
-                <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
-              </v-chip>
-            </v-hover>
+            <v-badge v-if="getIdsArray(watchedVideos).includes(item.videoId)" bottom overlap offset-x="20" offset-y="16" icon="mdi-check" color="green">
+              <v-hover v-slot="{ hover }">
+                <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
+                  <span v-if="hover">
+                    <v-icon color="red">mdi-youtube</v-icon>
+                  </span>
+                  <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
+                </v-chip>
+              </v-hover>
             </v-badge>
             <span v-else>
-            <v-hover v-slot="{ hover }">
-              <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
-                <span v-if="hover"><v-icon color="red">mdi-youtube</v-icon></span>
-                <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
-              </v-chip>
-            </v-hover>
+              <v-hover v-slot="{ hover }">
+                <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
+                  <span v-if="hover">
+                    <v-icon color="red">mdi-youtube</v-icon>
+                  </span>
+                  <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
+                </v-chip>
+              </v-hover>
             </span>
           </span>
         </template>
