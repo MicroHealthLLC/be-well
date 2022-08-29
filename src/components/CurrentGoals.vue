@@ -283,11 +283,20 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="a_valid">        
-            <v-select
+            <!-- <v-select
               v-model="reminder.activity"
               :items="activities"
               item-text="title"
               item-value="title"
+              label="Select Activity"
+              :rules="[(v) => !!v || 'Activity required']"
+              required
+            ></v-select> -->
+            <v-select
+              v-model="reminder.activity"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
               label="Select Activity"
               :rules="[(v) => !!v || 'Activity required']"
               required
