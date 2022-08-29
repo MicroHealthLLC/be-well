@@ -13,12 +13,16 @@
         video.snippet.title
     }}</span>
     </v-card-title>
-    <v-card-subtitle>{{ video.snippet.channelTitle }}</v-card-subtitle>
+    <v-divider></v-divider>
+    <div class="d-flex flex-row justify-space-between">
+    <v-card-subtitle class="font-weight-bold">{{ video.snippet.channelTitle }}</v-card-subtitle>
+    <v-card-subtitle>Views: 100</v-card-subtitle>
+    </div>
     <v-card-text>
       <span class="clamp-two-lines">{{ video.snippet.description }}</span>
     </v-card-text>
     <v-card-actions class="align-end">
-      <v-btn @click="playVideo(video.resourceId)" text color="primary">View Video</v-btn>
+      <v-btn @click="playVideo(video.resourceId)" text color="primary">Play<v-icon class="ml-1" large color="primary">mdi-youtube</v-icon></v-btn>
       <v-spacer></v-spacer>
       <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon>
         <v-icon>mdi-delete</v-icon>
