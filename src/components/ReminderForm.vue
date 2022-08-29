@@ -1,9 +1,12 @@
 <template>
   <v-card :disabled="saving" :loading="saving" :load="log(reminder)">
     <v-card-title
-      ><span v-if="reminder.id && !associatedGoal">Edit Activity Reminder</span
+      ><span v-if="reminder.id && !associatedGoal">
+      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Edit Activity</span
       ><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span
-      ><span v-else>Add New Activity Reminder</span>
+      ><span v-if="!reminder.id"><v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Add Activity</span>
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
@@ -62,19 +65,19 @@
             @click:minute="$refs.menu.save(reminder.time)"
             header-color="var(--mh-blue)"
           ></v-time-picker>
-        </v-menu>
-        <!-- <v-select
-          v-model="reminder.goalId"
-          :items="incompleteGoals"
-          item-text="title"
-          item-value="id"
-          label="Associate with Goal?"
-        ></v-select>  -->
+          </v-menu>
+          <v-select
+            v-model="reminder.goalId"
+            :items="incompleteGoals"
+            item-text="title"
+            item-value="id"
+            label="Associate with Goal?"
+          ></v-select>  
       </v-form>
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
       <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
-        >Submit</v-btn
+        >Save</v-btn
       >
       <v-btn @click="toggleReminderFormDialog" color="secondary" outlined
         >Cancel</v-btn
@@ -135,16 +138,19 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-      // if(!this.reminder.goalId){
-      //  let goalId = this.reminder.goalId
-      //  this.$delete(this.reminder[goalId])     
-      //   console.log("yes")
-      //    console.log(this.reminder)
-      // }
+      if(!this.reminder.goalId){
+        let obj = this.reminder
+        Object.keys(obj).forEach(key => {
+        if (obj[key] === null) {
+          delete obj[key];
+        }
+      });
+
+       console.log(this.reminder)
+      }
 
       try {
         if (this.reminder.id) {
-          console.log(this.activities.filter(t => t && t.title == this.reminder.activity)[0].category)
           await this.updateReminderById({
             id: this.reminder.id,
             category: this.reminder.category,
@@ -164,7 +170,6 @@ export default {
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
-        console.log(this.reminder)         
         this.SET_ASSOCIATED_GOAL(false);
         this.$refs.form.reset();
       } catch (error) {

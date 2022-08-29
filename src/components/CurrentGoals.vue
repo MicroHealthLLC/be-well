@@ -8,7 +8,7 @@
             class="newGoalBtn"
             ><small>Click here to achieve your goals</small> -->
             <span
-             class="newGoalBtn2"             
+             class="newGoalBtn3"             
             >
             <v-tooltip
               max-width="200"
@@ -44,7 +44,7 @@
             <span
              class="newGoalBtn3"             
             >          
-            <v-tooltip
+            <!-- <v-tooltip
               max-width="200"
               bottom
             >
@@ -58,10 +58,8 @@
             >
            </template>
           
-              </v-tooltip>
+              </v-tooltip> -->
             </span
-
-
             >
          <div @click="isFlipped = !isFlipped" class="testC">
       
@@ -71,8 +69,7 @@
             d-flex
             align-center
             justify-center     
-            "
-            
+            "            
          >       
             <v-tooltip
               max-width="200"
@@ -81,20 +78,38 @@
             <div>Due Date</div>
               <template v-slot:activator="{ on }">               
                 <div v-on="on" class="dueDate">
-                  <v-icon color="white" small left>mdi-calendar</v-icon>{{new Date(goal.dueDate).toLocaleDateString()}}
+                  <v-icon color="white" small left class="mr-1">mdi-calendar</v-icon>
+                  <small>{{new Date(goal.dueDate).toLocaleDateString()}}</small>
                 </div>
               </template>          
             </v-tooltip>
           
 
-           <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">{{ goal.title  }}</h3></div> 
+           <div class="jw font-weight-bold pt-3"> <h3 class="goalTitle">
+           <v-tooltip
+              max-width="200"
+              bottom
+            >
+            <div class="d-inline">{{ categoryString(goal.category) }}</div>
+           <template v-slot:activator="{ on }">
+            <div v-on="on" class="d-inline"> <v-icon color="white">{{
+                categoryIcon(goal.category)
+              }}</v-icon
+              ></div
+            >
+           </template>
+          
+              </v-tooltip>
+            {{ goal.title  }}</h3>
+            
+            </div> 
                 <!-- Progress Bar -->
        
             <div class="d-flex align-center goal-progressbar pt-2 px-2">
                <v-progress-linear
                 height="10"
                 :value="0"
-               striped
+                striped
                 rounded
                 color="lime"
               ></v-progress-linear>
@@ -106,10 +121,9 @@
       </div>
       <div class="justify-space-between flip-card-back">
          <span class="addActivityBtn">
-
-              <v-tooltip
-              max-width="200"
-              bottom
+            <v-tooltip
+            max-width="200"
+            bottom
             >
             <div>Add Activity</div>
               <template v-slot:activator="{ on }">               
@@ -131,43 +145,15 @@
               <h5 class="orangeLabel d-flex">
                 GOAL ACTIVITIES
               </h5>  
-              <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
-                <span v-for="item, i in goal.reminders.items" :key="i">                
-                  <h5 v-if="item.activity">{{ item.activity }}</h5>
-                   <h5 v-else>{{ item.category }}</h5>
-                </span>
-
-              </span> 
-             <span v-else>  
-             
-         
-           </span> 
-               
+            
            </div>
           <div class="col pr-0">
             <h5 class="orangeLabel d-flex">
                COMPLETED
             </h5>  
-           <!-- This will need to be changed to capture the quantity of activities and the progress levels -->
-            <!-- <span v-for="goal.reminders.items && goal.reminders.items.length > 0" :key="i"> -->
-              <!-- <span v-for="activity, i in goal.reminders.items" :key="i"> -->
-                  <!-- <h5>{{ activity.completedCount }} of {{ activity.length }}</h5> -->
-
-<!-- The follwoing two span can be replaced by the preceding code once activities are ready to save progress -->
-              <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
-                <span v-for="activity, i in goal.reminders.items" :key="i">
-                  <h5>{{ goal.completedCount }} of {{ goal.stepCount }}</h5>
-                </span>
-              </span> 
-                
-                <!-- </span> -->
-   <!-- </span>  -->
-            <!-- <span v-else>
-              <h5>---</h5>
-            </span> -->
           </div>
-          <div class="col pl-0">
-               <v-progress-circular
+          <!-- <div class="col pl-0"> -->
+               <!-- <v-progress-circular
               :rotate="360"
               :size="100"
               :width="15"
@@ -175,10 +161,10 @@
               color="primary"
             >
              {{ goal.completedCount / goal.stepCount }} %
-            </v-progress-circular> 
-             <h5 class="orangeLabel pt-1 d-flex">
+            </v-progress-circular>  -->
+             <!-- <h5 class="orangeLabel pt-1 d-flex">
              GOAL PROGRESS
-            </h5>   
+            </h5>    -->
           <!-- <v-progress-circular
               :rotate="360"
               :size="100"
@@ -188,10 +174,31 @@
             >
               {{ (goal.progress / goal.stepCount) * 100 }}%
             </v-progress-circular> -->
-          </div>              
+          <!-- </div>               -->
          </div>
+    <div class="progressWrapper">
+    <div class="row mt-0">
+              <div class="col pt-0">
+               <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
+                   <span v-for="item, i in goal.reminders.items" :key="i">                
+                      <h5 v-if="item.activity">{{ item.activity }}</h5>
+                      <h5 v-else>{{ item.category }}</h5>
+                   </span>
+                </span> 
+                <span v-else>             
+                </span> 
+              </div>
 
-      
+             <div class="col pt-0 pr-0">
+<!-- The follwoing two span can be replaced once activities are ready to save progress -->
+              <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
+                <span v-for="g, i in goal.reminders.items" :key="i">
+                  <h5>{{ goal.completedCount }} of {{ goal.stepCount }}</h5>
+                </span>
+              </span> 
+            </div>
+         </div>
+        </div> 
       
         </div>
 
@@ -250,13 +257,6 @@
           </p> -->
 <!-- </span> -->
 
-        
-
-  
-
-         
-
-
         <v-tooltip
           :disabled="incompleteGoals.length < 5"
           max-width="200"
@@ -276,14 +276,13 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
-          <v-dialog v-model="activityDialog" max-width="600px">
+    <v-dialog v-model="activityDialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><span >Add New Activity</span>
         </v-card-title>
         <v-card-text>
-          <v-form ref="form" v-model="a_valid">
-        
+          <v-form ref="form" v-model="a_valid">        
             <v-select
               v-model="reminder.activity"
               :items="activities"
@@ -354,18 +353,18 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="goalform" v-model="valid">
-            <!-- <v-text-field
+            <v-text-field             
               v-model="goal.title"
-              label="ex: I want to lose 10 lbs..."
+              label="Goal"
               :rules="[(v) => !!v || 'Goal is required']"
               required
-            ></v-text-field> -->
-            <v-select
+            ></v-text-field>
+            <v-select             
               v-model="goal.category"
               :items="filteredCategories"
               item-text="title"
               item-value="value"
-              label="I want to improve my..."
+              label="Focus Area"
               :rules="[(v) => !!v || 'Improvement category is required']"
               required
             ></v-select>
@@ -634,6 +633,10 @@ export default {
 </script>
 
 <style scoped>
+.progressWrapper {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 .editBtn{
   position: absolute;
   top: 5%;
@@ -658,7 +661,7 @@ export default {
 .activitiesIcon {
   position: absolute;
   bottom:12%;
-  right: 15%;
+  right: 3%;
   color:white !important;
 }
 /* .activitiesCount {transition: all .2s ease-in-out;}
@@ -685,7 +688,7 @@ export default {
 .newGoalBtn3{
   color: white !important; 
   bottom: 12%;
-  right: 3%;
+  right: 8%;
   position:absolute;
   margin:0 auto;
   display:block;
