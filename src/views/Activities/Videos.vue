@@ -410,7 +410,7 @@ export default {
       this.fetchVideos();
       this.dialog = false;
     },
-    getWatchedVideos() {
+    /* getWatchedVideos() {
       this.fetchWatchedVideos();
       console.log(this.watchedVideos)
     },
@@ -424,7 +424,7 @@ export default {
     },
     addNewWatchedVideo(v) {
       this.addWatchedVideo(v)
-    },
+    }, */
     checkForWatchedVideo() {
        console.log(this.currentVideo)
        console.log(this.watchedVideos)

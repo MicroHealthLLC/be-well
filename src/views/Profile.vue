@@ -74,6 +74,7 @@
                   </v-menu>
                 </v-form>
               </v-card-text>
+              <v-btn @click="deleteWatchedVideos()">Remove All Videos from Watched List</v-btn>
               <v-card-actions class="d-flex justify-end">
 
                 <v-btn @click="editProfile" class="px-10" color="primary" :block="$vuetify.breakpoint.xsOnly"
@@ -177,7 +178,6 @@
                         @click="nIToggle(tablePreferences.preference_items.indexOf(item), item.not_interested)"
                         color="success"></v-checkbox>
                     </template>
-
                   </v-data-table>
                 </template>
               </v-card-text>

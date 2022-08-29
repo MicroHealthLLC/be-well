@@ -260,7 +260,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPreferences", "fetchWatchedVideos"]),
+    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -335,6 +335,14 @@ export default {
       return (
         this.categories.find((category) => category.value == value).image || ""
       );
+    },
+    deleteWatchedVideos() {
+      if (this.watchedVideos) {
+        this.watchedVideos.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        });
+      }
+      console.log(this.watchedVideos)
     },
   },
   mounted() {
