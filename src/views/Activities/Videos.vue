@@ -222,12 +222,12 @@ export default {
     }
     if (this.play == true) {
       this.nextVideo(this.notificationCat, this.notificationLev);
-      //console.log(this.watchedVideos)
+      console.log(this.currentVideo)
       if (this.currentVideo) {
         this.addNewWatchedVideo(this.currentVideo)
-      } /* else {
-        this.checkForWatchedVideo()
-      } */
+      } else {
+        this.play = false;
+      }
     }
     this.seperateVideosbyCategory();
     this.videosByLevel();
@@ -421,10 +421,10 @@ export default {
         });
       }
       console.log(this.watchedVideos)
-    },
+    },*/
     addNewWatchedVideo(v) {
       this.addWatchedVideo(v)
-    }, */
+    }, 
     checkForWatchedVideo() {
        console.log(this.currentVideo)
        console.log(this.watchedVideos)

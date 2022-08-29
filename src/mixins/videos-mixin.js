@@ -448,7 +448,7 @@ export default {
         );
         if (selected[0]) {
           this.currentVideo = selected[0];
-        } else this.closeModal()
+        } else this.closeModal();
         
         console.log(level
           + " "
@@ -488,8 +488,24 @@ export default {
       let catVids = this.getActivities(cat, lev)
       return catVids.filter((v) => this.getIdsArray(this.watchedVideos).includes(v.videoId))
     },
+    getProgressValue(cat, lev) {
+      //console.log(cat, lev)
+      return this.getCompletedActivities(cat, lev).length / this.getActivities(cat, lev).length * 100
+    },
+    getGoalProgressValue(reminders) {
+      let total = 0
+      if (reminders) {
+        reminders.forEach((r) => {
+          let val = this.getCompletedActivities(this.capitalizeFirstLet((r.category).toLowerCase()),
+          this.checkForNA(r.level)).length / this.getActivities(this.capitalizeFirstLet((r.category).toLowerCase()),
+          this.checkForNA(r.level)).length
+          total += val
+        })
+      return total / reminders.length * 100
+      }
+    },
     closeModal() {
-
+      console.log("Completed")
     },
     levelToString(level) {
       //console.log(this.videos);

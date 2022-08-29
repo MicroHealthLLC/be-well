@@ -354,6 +354,9 @@ export default {
   },
   methods: {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
+    log(e) {
+      console.log(e)
+    },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
         return;

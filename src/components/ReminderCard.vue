@@ -46,9 +46,16 @@
           </div>
           <div class="row mt-0 px-3">
             <div class="col">
-              <v-progress-linear height="10" rounded striped color="lime" :value="getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
-              checkForNA(reminder.level))">
-              </v-progress-linear>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-progress-linear height="10" rounded striped color="lime" :value="getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                  checkForNA(reminder.level))" v-bind="attrs" v-on="on">
+                  </v-progress-linear>
+                </template>
+                <span>{{ getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                    checkForNA(reminder.level))
+                }}%</span>
+              </v-tooltip>
 
               <!-- <span>
              <v-chip small :color="levelColor(reminder.level)" dark>{{
@@ -69,8 +76,8 @@
             </div>
             <div class="col lHeight pb-0">
               <!-- <small class="d-block">Type</small> -->
-            <span class="text-right">
-            <!-- <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+              <span class="text-right">
+                <!-- <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div>
             <span>
              {{ reminder.goal.title }}
@@ -255,9 +262,6 @@ export default {
       console.log("this works");
       this.$router.push("/activities/reminders");
     },
-    getProgressValue(cat, lev) {
-      return this.getCompletedActivities(cat, lev).length / this.getActivities(cat, lev).length * 100
-    },
     async update(goal) {
       let updatedProgress = goal.checklist.reduce(
         (accumulator, item) =>
@@ -352,9 +356,11 @@ export default {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+
 .lHeight {
-  line-height:3.5;
+  line-height: 3.5;
 }
+
 .icon {
   position: absolute;
   bottom: 5%;
@@ -422,7 +428,8 @@ export default {
 .flip-card {
   /* background-color: transparent; */
   height: 130px !important;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
 
 /* This container is needed to position the front and back side */
@@ -456,10 +463,11 @@ export default {
     0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
 }
 
-.enduranceColor{
+.enduranceColor {
   background-color: rgba(29, 51, 111, 0.75);
 }
-.strengthColor{
+
+.strengthColor {
   background-color: rgba(111, 92, 29, 0.75);
 }
 
