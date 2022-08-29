@@ -160,6 +160,10 @@ export default {
 
       try {
         if (this.reminder.id) {
+          let goal_reminders = this.incompleteGoals.map((g) => {
+            return { goalID: g.id, reminderID: this.reminder.id };
+          });
+
           await this.updateReminderById({
             id: this.reminder.id,
             category: this.reminder.category,
@@ -167,7 +171,7 @@ export default {
             frequency: this.reminder.frequency,
             contentType: this.reminder.contentType,
             time: this.reminder.time,
-            goalId: this.reminder.goalId,
+            GoalReminders: goal_reminders,
           });
         } else {
           console.log("this.userPrefLevel", this.userPrefLevel);

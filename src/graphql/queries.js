@@ -6,27 +6,17 @@ export const getReminder = /* GraphQL */ `
     getReminder(id: $id) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -47,20 +37,9 @@ export const listReminders = /* GraphQL */ `
       items {
         id
         category
-        goal {
-          id
-          title
-          category
-          progress
-          stepCount
-          dueDate
-          isComplete
-          completedCount
-          createdAt
-          updatedAt
-          owner
+        goals {
+          nextToken
         }
-        goalId
         level
         frequency
         contentType
@@ -82,12 +61,8 @@ export const getGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -121,18 +96,6 @@ export const listGoals = /* GraphQL */ `
         title
         category
         reminders {
-          items {
-            id
-            category
-            goalId
-            level
-            frequency
-            contentType
-            time
-            createdAt
-            updatedAt
-            owner
-          }
           nextToken
         }
         progress
@@ -608,6 +571,95 @@ export const listCompetitionSubmissions = /* GraphQL */ `
     }
   }
 `;
+export const getGoalReminders = /* GraphQL */ `
+  query GetGoalReminders($id: ID!) {
+    getGoalReminders(id: $id) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listGoalReminders = /* GraphQL */ `
+  query ListGoalReminders(
+    $filter: ModelGoalRemindersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGoalReminders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        reminderID
+        goalID
+        reminder {
+          id
+          category
+          level
+          frequency
+          contentType
+          time
+          createdAt
+          updatedAt
+          owner
+        }
+        goal {
+          id
+          title
+          category
+          progress
+          stepCount
+          dueDate
+          isComplete
+          completedCount
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const remindersByLevel = /* GraphQL */ `
   query RemindersByLevel(
     $level: Level!
@@ -628,20 +680,9 @@ export const remindersByLevel = /* GraphQL */ `
       items {
         id
         category
-        goal {
-          id
-          title
-          category
-          progress
-          stepCount
-          dueDate
-          isComplete
-          completedCount
-          createdAt
-          updatedAt
-          owner
+        goals {
+          nextToken
         }
-        goalId
         level
         frequency
         contentType

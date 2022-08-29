@@ -6,27 +6,17 @@ export const onCreateReminder = /* GraphQL */ `
     onCreateReminder(owner: $owner) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -42,27 +32,17 @@ export const onUpdateReminder = /* GraphQL */ `
     onUpdateReminder(owner: $owner) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -78,27 +58,17 @@ export const onDeleteReminder = /* GraphQL */ `
     onDeleteReminder(owner: $owner) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -118,12 +88,8 @@ export const onCreateGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -154,12 +120,8 @@ export const onUpdateGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -190,12 +152,8 @@ export const onDeleteGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -827,6 +785,144 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateGoalReminders = /* GraphQL */ `
+  subscription OnCreateGoalReminders($owner: String) {
+    onCreateGoalReminders(owner: $owner) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateGoalReminders = /* GraphQL */ `
+  subscription OnUpdateGoalReminders($owner: String) {
+    onUpdateGoalReminders(owner: $owner) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteGoalReminders = /* GraphQL */ `
+  subscription OnDeleteGoalReminders($owner: String) {
+    onDeleteGoalReminders(owner: $owner) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
       updatedAt
       owner
     }
