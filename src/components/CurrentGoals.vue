@@ -243,34 +243,80 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
-      <v-dialog v-model="activityDialog" max-width="600px">
-        <v-card :disabled="saving" :loading="saving">
-          <v-card-title><span>Add New Activity</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form" v-model="a_valid">
-              <v-select v-model="reminder.activity" :items="activities" item-text="title" item-value="title"
-                label="Select Activity" :rules="[(v) => !!v || 'Activity required']" required></v-select>
-              <v-select v-model="reminder.frequency" :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']" label="Frequency"
-                :rules="[(v) => !!v || 'Frequency is required']" required></v-select>
-              <v-menu ref="menu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="reminder.time"
-                transition="scale-transition" offset-y max-width="290px" min-width="290px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field v-model="reminder.time" label="Schedule A Reminder"
-                    prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs" v-on="on"
-                    :rules="[(v) => !!v || 'Time is required']" required></v-text-field>
-                </template>
-                <v-time-picker v-model="reminder.time" ampm-in-title format="ampm"
-                  @click:minute="$refs.menu.save(reminder.time)" header-color="var(--mh-blue)"></v-time-picker>
-              </v-menu>
-            </v-form>
-          </v-card-text>
-          <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark>Save</v-btn>
-            <v-btn @click="activityDialog = false" color="secondary" outlined>Cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <v-dialog v-model="activityDialog" max-width="600px">
+      <v-card :disabled="saving" :loading="saving">
+        <v-card-title
+          ><span >Add New Activity</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="a_valid">        
+            <!-- <v-select
+              v-model="reminder.activity"
+              :items="activities"
+              item-text="title"
+              item-value="title"
+              label="Select Activity"
+              :rules="[(v) => !!v || 'Activity required']"
+              required
+            ></v-select> -->
+            <v-select
+              v-model="reminder.activity"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="Select Activity"
+              :rules="[(v) => !!v || 'Activity required']"
+              required
+            ></v-select>
+            <v-select
+              v-model="reminder.frequency"
+              :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
+              label="Frequency"
+              :rules="[(v) => !!v || 'Frequency is required']"
+              required
+            ></v-select>
+            <v-menu
+              ref="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="reminder.time"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="reminder.time"
+                  label="Schedule A Reminder"
+                  prepend-icon="mdi-clock-time-four-outline"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Time is required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-model="reminder.time"
+                ampm-in-title
+                format="ampm"
+                @click:minute="$refs.menu.save(reminder.time)"
+                header-color="var(--mh-blue)"
+              ></v-time-picker>
+            </v-menu>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
+            >Save</v-btn
+          >
+          <v-btn @click="activityDialog = false" color="secondary" outlined
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
       <v-dialog v-model="dialog" width="750">
         <v-card :disabled="saving" :loading="saving">
           <v-card-title class="text-right pt-2 pb-0">

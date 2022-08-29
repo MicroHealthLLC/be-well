@@ -19,16 +19,25 @@
         ></v-select>
       </v-form>
       <v-form ref="form" v-model="valid" v-else>
-      
-        <v-select
+      <!-- reminder.activity will included activity names -->
+        <!-- <v-select
           v-model="reminder.activity"
-          :items="activities"
+          :items="filteredCategories"
           item-text="title"
           item-value="title"
           label="Select Activity"
           :rules="[(v) => !!v || 'Activity is required']"
           required
-        ></v-select>
+        ></v-select> -->
+         <v-select
+          v-model="reminder.category"
+          :items="filteredCategories"
+          item-text="title"
+          item-value="value"
+          label="Select Activity"
+          :rules="[(v) => !!v || 'Activity is required']"
+          required
+        ></v-select> 
         <v-select
           v-model="reminder.frequency"
           :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -163,7 +172,7 @@ export default {
           });
         } else {       
           this.reminder.contentType = "Videos";
-          this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
+          // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
