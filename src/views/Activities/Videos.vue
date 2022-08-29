@@ -44,9 +44,9 @@
   </div>
   <span v-else class="mb-sm-2">
     <h1 class="text--secondary video-h1">MicroHealth Videos</h1>
-    <v-btn @click="addNewWatchedVideo(currentVideo)">Add Watched Video</v-btn>
+    <!-- <v-btn @click="addNewWatchedVideo(currentVideo)">Add Watched Video</v-btn>
     <v-btn @click="getWatchedVideos()">Fetch Watched Videos</v-btn>
-    <v-btn @click="deleteWatchedVideos()">Remove All Watched Videos</v-btn>
+    <v-btn @click="deleteWatchedVideos()">Remove All Watched Videos</v-btn> -->
     <div class="row mt-1">
       <div class="col-3" v-if="!this.isEmpty(balanceVids)">
         <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
