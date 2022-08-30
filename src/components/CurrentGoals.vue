@@ -84,7 +84,7 @@
                   <v-progress-linear :value="getGoalProgressValue(goal.reminders.items)" height="10" striped rounded
                     color="lime" v-bind="attrs" v-on="on"></v-progress-linear>
                 </template>
-                <span>{{ goal.reminders.items[0] ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span>
+                <span>{{ getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span>
               </v-tooltip>
             </div>
           </div>

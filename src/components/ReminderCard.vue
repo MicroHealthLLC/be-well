@@ -52,8 +52,9 @@
                   checkForNA(reminder.level))" v-bind="attrs" v-on="on">
                   </v-progress-linear>
                 </template>
-                <span>{{ Math.round(getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
-                    checkForNA(reminder.level)))
+                <span>{{ getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                    checkForNA(reminder.level)) ? Math.round(getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                    checkForNA(reminder.level))) : 0
                 }}%</span>
               </v-tooltip>
 
