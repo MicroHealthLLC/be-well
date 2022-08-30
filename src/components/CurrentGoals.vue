@@ -9,7 +9,8 @@
             ><small>Click here to achieve your goals</small> -->
         <span class="newGoalBtn3">
           <v-tooltip max-width="200" bottom>
-            <div>Add Activity</div>
+            <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
+            <div v-else>Schedule Your 1st Activity</div>
             <template v-slot:activator="{ on }">
               <div v-on="on" class="activitiesIcon activitiesCount" @click="openNewReminderForm">
 
@@ -246,7 +247,8 @@
     <v-dialog v-model="activityDialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
-          ><span >Add New Activity</span>
+          ><span v-if="goal && goal.reminders.items.length > 0">Add New Activity</span>
+          <span v-else >Schedule Your First Activity</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="a_valid">        
@@ -260,14 +262,31 @@
               required
             ></v-select> -->
             <v-select
+              v-if="goal && goal.reminders.items.length > 0"
               v-model="reminder.activity"
               :items="filteredCategories"
               item-text="title"
               item-value="value"
-              label="Select Activity"
-              :rules="[(v) => !!v || 'Activity required']"
+              label="Select Activity Type"
+              :rules="[(v) => !!v || 'Activity Type required']"
               required
             ></v-select>
+          
+            <span v-else class="mb-2">
+              <small class="d-block activityT">Activity Type</small>
+              <span class="defaultA">{{ defaultActivity }}</span>             
+            </span>
+            <!-- <v-select
+              v-else
+              :load="log(defaultActivity)"
+              v-model="defaultActivity"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="Select Activity Type"
+              :rules="[(v) => !!v || 'Activity Type required']"
+              required
+            ></v-select> -->
             <v-select
               v-model="reminder.frequency"
               :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
@@ -412,6 +431,11 @@ export default {
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving", "preferences"]),
+    defaultActivity(){
+      if(this.goal){
+        return this.filteredCategories.filter(item => item.value == this.goal.category)[0].title
+      } else return null 
+    },
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.goal) {
@@ -481,7 +505,7 @@ export default {
       this.dialog = false;
     },
     async saveGoal() {
-      if (!this.$refs.goalform.validate()) {
+      if (!this.activityDialog && !this.$refs.goalform.validate()) {
         return;
       }
       try {
@@ -493,7 +517,7 @@ export default {
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
-            checklist: this.goal.checklist,
+            checklist: this.goal.checklist,           
           });
         } else {
           // console.log(this.goal)
@@ -516,13 +540,13 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-
       try {
         this.reminder.level = this.userPrefLevel
         this.reminder.category = this.goal.category
         this.reminder.contentType = 'Videos'
         this.reminder.goalId = this.goal.id
         await this.addReminder(this.reminder);
+        this.saveGoal()
 
         // Close form and reset form values
         this.activityDialog = false;
@@ -774,15 +798,21 @@ export default {
 .orangeLabel {
   color: var(--mh-orange)
 }
-
 .testC {
   height: 100%;
 }
-
 .addActivityBtn {
   position: absolute;
   top: 30%;
   left: 10%;
   cursor: pointer;
+}
+.activityT{
+  color: #1976d2 !important;
+  /* font-size:16px */
+}
+.defaultA{
+  font-size:16px;
+  color: rgba(0, 0, 0, 0.87)
 }
 </style>
