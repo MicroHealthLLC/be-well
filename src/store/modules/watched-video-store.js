@@ -15,7 +15,7 @@ export default {
         dispatch("fetchWatchedVideos");
         commit("SET_SNACKBAR", {
           show: true,
-          message: "WatchedVideo Successfully Added!",
+          message: "Video Added to Watched List!",
           color: "var(--mh-green)",
         });
       } catch (error) {
@@ -29,7 +29,7 @@ export default {
         dispatch("fetchWatchedVideos");
         commit("SET_SNACKBAR", {
           show: true,
-          message: "WatchedVideos Removed",
+          message: "Watched Videos Reset",
           color: "var(--mh-orange)",
         });
       } catch (error) {

@@ -496,8 +496,9 @@ export default {
       let total = 0
       if (reminders) {
         reminders.forEach((r) => {
-          let val = this.getCompletedActivities(this.capitalizeFirstLet((r.category).toLowerCase()),
-          this.checkForNA(r.level)).length / this.getActivities(this.capitalizeFirstLet((r.category).toLowerCase()),
+          console.log(r)
+          let val = this.getCompletedActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
+          this.checkForNA(r.level)).length / this.getActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
           this.checkForNA(r.level)).length
           total += val
         })
@@ -558,6 +559,10 @@ export default {
     },
     checkForNA(level) {
       return level == "NOT_APPLICABLE" ? "na" : level
+    },
+    checkForFlex(category) {
+      console.log(category)
+      return category == "FLEXIBILITY_MOBILITY" ? "FLEXIBILITY-MOBILITY" : category
     },
     levelToColor(level) {
       switch (level) {

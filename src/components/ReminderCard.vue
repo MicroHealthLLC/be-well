@@ -48,12 +48,12 @@
             <div class="col">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-progress-linear height="10" rounded striped color="lime" :value="getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                  <v-progress-linear height="10" rounded striped color="lime" :value="getProgressValue(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                   checkForNA(reminder.level))" v-bind="attrs" v-on="on">
                   </v-progress-linear>
                 </template>
-                <span>{{ getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
-                    checkForNA(reminder.level)) ? Math.round(getProgressValue(capitalizeFirstLet((reminder.category).toLowerCase()),
+                <span>{{ getProgressValue(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
+                    checkForNA(reminder.level)) ? Math.round(getProgressValue(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                     checkForNA(reminder.level))) : 0
                 }}%</span>
               </v-tooltip>
@@ -125,10 +125,10 @@
           <div class="row">
             <div class="col">
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
-              {{ getCompletedActivities(capitalizeFirstLet((reminder.category).toLowerCase()),
+              {{ getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                   checkForNA(reminder.level)).length
               }} of {{
-    getActivities(capitalizeFirstLet((reminder.category).toLowerCase()), checkForNA(reminder.level)).length
+    getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()), checkForNA(reminder.level)).length
 }}
             </div>
           </div>
