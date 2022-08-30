@@ -40,7 +40,7 @@
         ></v-select> 
         <v-select
           v-model="reminder.frequency"
-          :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
+          :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
           label="Frequency"
           :rules="[(v) => !!v || 'Frequency is required']"
           required
