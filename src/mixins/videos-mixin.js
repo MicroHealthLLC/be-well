@@ -561,7 +561,6 @@ export default {
       return level == "NOT_APPLICABLE" ? "na" : level
     },
     checkForFlex(category) {
-      //console.log(category)
       return category == "FLEXIBILITY_MOBILITY" ? "FLEXIBILITY-MOBILITY" : category
     },
     levelToColor(level) {
