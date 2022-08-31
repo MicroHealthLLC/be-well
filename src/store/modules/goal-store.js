@@ -2,8 +2,9 @@ import { API, graphqlOperation } from "aws-amplify";
 import { createGoal } from "@/graphql/mutations";
 import { updateGoal } from "@/graphql/mutations";
 import { deleteGoal } from "@/graphql/mutations";
+import { extendedListGoals } from "@/graphql/extended_queries";
 // import { getGoal } from "@/graphql/queries";
-import { listGoals } from "@/graphql/queries";
+// import { listGoals } from "@/graphql/queries";
 // import awsconfig from "@/aws-exports";
 
 export default {
@@ -56,7 +57,8 @@ export default {
     },
     async fetchGoals({ commit }) {
       try {
-        const res = await API.graphql(graphqlOperation(listGoals));
+      const res = await API.graphql(graphqlOperation(extendedListGoals));
+      //  const res = await API.graphql(graphqlOperation(listGoals));
         commit("SET_GOALS", res.data.listGoals.items);
       } catch (error) {
         console.log(error);
