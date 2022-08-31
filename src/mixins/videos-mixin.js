@@ -1,3 +1,5 @@
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   data() {
     return {
@@ -60,9 +62,6 @@ export default {
           level: "L5",
           nextVideo: "",
         },
-        
-
-
         // Endurance Videos
         {
           title: "Endurance Beginner 1 1",
@@ -435,14 +434,31 @@ export default {
       ],
     };
   },
+  /* mounted() {
+    this.fetchWatchedVideos()
+  }, */
   methods: {
+    ...mapActions([
+      "fetchWatchedVideos",
+    ]),
     nextVideo(category, level) {
-      if (this.isEmpty(this.currentVideo)) {
+      if (this.isEmpty(this.currentVideo)) {  
         let selected = this.mhVideos.filter(
-          (v) => v.category == category && v.level == level
+          (v) => v.category == category && v.level == level && !this.getIdsArray(this.watchedVideos).includes(v.videoId)
         );
-        this.currentVideo = selected[0];
-      } else {
+        if (selected[0]) {
+          this.currentVideo = selected[0];
+        } else this.closeModal();
+        
+        console.log(level
+          + " "
+          + category
+          + " "
+          + "Progress: " 
+          + this.getCompletedActivities(category, level).length 
+          + " / " 
+          + this.getActivities(category, level).length)
+      } /* else {
         let current = this.mhVideos.filter(
           (v) => v.videoId == this.currentVideo.videoId
         );
@@ -454,12 +470,114 @@ export default {
         } else {
           this.currentVideo = false;
         }
-      }
-      //console.log(this.currentVideo)
+      } */
+    },
+    capitalizeFirstLet(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     },
+    getIdsArray(array) {
+      return array.map((v) => v.videoId)
+    },
+    getActivities(cat, lev) {
+      return this.mhVideos.filter((v) => v.category == cat && v.level == lev)
+    },
+    getCompletedActivities(cat, lev) {
+      let catVids = this.getActivities(cat, lev)
+      return catVids.filter((v) => this.getIdsArray(this.watchedVideos).includes(v.videoId))
+    },
+    getProgressValue(cat, lev) {
+      //console.log(cat, lev)
+      return this.getCompletedActivities(cat, lev).length / this.getActivities(cat, lev).length * 100
+    },
+    getGoalProgressValue(reminders) {
+      let total = 0
+      if (reminders) {
+        reminders.forEach((r) => {
+          console.log(r)
+          let val = this.getCompletedActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
+          this.checkForNA(r.level)).length / this.getActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
+          this.checkForNA(r.level)).length
+          total += val
+        })
+      return total / reminders.length * 100
+      }
+    },
+    closeModal() {
+      console.log("Completed")
+    },
+    levelToString(level) {
+      //console.log(this.videos);
+      switch (level) {
+        case "L1":
+          return "Novice";
+        case "L2":
+          return "Beginner";
+        case "L3":
+          return "Competent";
+        case "L4":
+          return "Proficient";
+        case "L5":
+          return "Expert";
+        case "na":
+          return "";  
+      }
+    },
+    filterToLevel(filter) {
+      switch (filter) {
+        case "beginner-1":
+          return "L1";
+        case "beginner-2":
+          return "L2";
+        case "intermediate-1":
+          return "L3";
+        case "intermediate-2":
+          return "L4";
+        case "advanced":
+          return "L5";
+        case "na":
+          return "na";
+      }
+    },
+    levelToLowercase(level) {
+      switch (level) {
+        case "L1":
+          return "novice";
+        case "L2":
+          return "beginner";
+        case "L3":
+          return "competent";
+        case "L4":
+          return "proficient";
+        case "L5":
+          return "expert";
+        case "na":
+          return "novice";
+      }
+    },
+    checkForNA(level) {
+      return level == "NOT_APPLICABLE" ? "na" : level
+    },
+    checkForFlex(category) {
+      console.log(category)
+      return category == "FLEXIBILITY_MOBILITY" ? "FLEXIBILITY-MOBILITY" : category
+    },
+    levelToColor(level) {
+      switch (level) {
+        case "L1":
+        case "L2":
+          return "var(--mh-green)";
+        case "L3":
+        case "L4":
+          return "var(--mh-orange)";
+        case "L5":
+          return "error";
+      }
+    },
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["watchedVideos",]),
+  },
 };

@@ -36,12 +36,26 @@
       <v-card-subtitle class="text-body-1 pt-0 font-weight-bold">
         <template>
           <span v-for="(item, index) in _videos" :key="index">
-            <v-hover v-slot="{ hover }">
-              <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
-                <span v-if="hover"><v-icon color="red">mdi-youtube</v-icon></span>
-                <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
-              </v-chip>
-            </v-hover>
+            <v-badge v-if="getIdsArray(watchedVideos).includes(item.videoId)" bottom overlap offset-x="20" offset-y="16" icon="mdi-check" color="green">
+              <v-hover v-slot="{ hover }">
+                <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
+                  <span v-if="hover">
+                    <v-icon color="red">mdi-youtube</v-icon>
+                  </span>
+                  <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
+                </v-chip>
+              </v-hover>
+            </v-badge>
+            <span v-else>
+              <v-hover v-slot="{ hover }">
+                <v-chip class="video-chip ma-1" @click="playVideo(item, item.category, item.level, index)" outlined>
+                  <span v-if="hover">
+                    <v-icon color="red">mdi-youtube</v-icon>
+                  </span>
+                  <span v-if="!hover" class="px-1">{{ index + 1 }}</span>
+                </v-chip>
+              </v-hover>
+            </span>
           </span>
         </template>
       </v-card-subtitle>
@@ -110,11 +124,12 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import utilitiesMixin from "../mixins/utilities-mixin";
 import videosMixin from "../mixins/videos-mixin";
 //import VideoModal from "./VideoModal.vue";
 export default {
   name: "VideoCard",
-  mixins: [videosMixin],
+  mixins: [videosMixin, utilitiesMixin],
   props: {
     _videos: {
       type: Array,
@@ -179,22 +194,6 @@ export default {
         this.play = false;
       }
     },
-    levelToString(level) {
-      switch (level) {
-        case "L1":
-          return "Novice";
-        case "L2":
-          return "Beginner";
-        case "L3":
-          return "Competent";
-        case "L4":
-          return "Proficient";
-        case "L5":
-          return "Expert";
-        case "na":
-          return "";
-      }
-    },
     getVideoImage(videoCat) {
       //console.log(videoCat)
       switch (videoCat) {
@@ -217,20 +216,6 @@ export default {
     getFirstNonNullVal(array) {
       if (!this.isEmpty(array)) {
         return array.find((v) => v !== this.isEmpty(v));
-      }
-    },
-    levelToColor(level) {
-      switch (level) {
-        case "L1":
-        case "L2":
-          return "var(--mh-green)";
-        case "L3":
-        case "L4":
-          return "var(--mh-orange)";
-        case "L5":
-          return "error";
-        default:
-          return "blue";
       }
     },
   },

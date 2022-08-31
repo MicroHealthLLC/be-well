@@ -38,26 +38,15 @@
               levelToString(currentVideo.level)
           }}
           </v-chip>
-          <div>
-            <v-btn @click="goBack" class="ma-2 back">
-              <v-icon dark left> mdi-arrow-left </v-icon>Back
-            </v-btn>
-            <!-- <v-btn
-              @click="nextVideo()"
-              class="ma-2 back"
-              color="var(--mh-green)"
-              dark
-            >
-              Next
-              <v-icon dark left> mdi-arrow-right </v-icon>
-            </v-btn> -->
-          </div>
         </v-card-subtitle>
       </v-card>
     </v-dialog>
   </div>
   <span v-else class="mb-sm-2">
     <h1 class="text--secondary video-h1">MicroHealth Videos</h1>
+    <!-- <v-btn @click="addNewWatchedVideo(currentVideo)">Add Watched Video</v-btn>
+    <v-btn @click="getWatchedVideos()">Fetch Watched Videos</v-btn>
+    <v-btn @click="deleteWatchedVideos()">Remove All Watched Videos</v-btn> -->
     <div class="row mt-1">
       <div class="col-3" v-if="!this.isEmpty(balanceVids)">
         <span v-for="(level, i) in balanceVidsbyLevel" :key="i">
@@ -65,37 +54,36 @@
         </span>
       </div>
 
-         
-        <div v-if="!this.isEmpty(enduranceVids)" class="col-3" >   
-        <span   v-for="(level, i) in enduranceVidsbyLevel" :key="i">
+
+      <div v-if="!this.isEmpty(enduranceVids)" class="col-3">
+        <span v-for="(level, i) in enduranceVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
         </span>
       </div>
 
-    <div v-if="!this.isEmpty(strengthVids)" class="col-3" >
-      <span v-for="(level, i) in strengthVidsbyLevel" :key="i" >
-       <video-card :_videos="level" :total="level.length" />       
-      </span>
- 
-    </div>
-
-    <div v-if="!this.isEmpty(flexibilityVids)"  class="col-3">
-     <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i"  >
-       <video-card :_videos="level" :total="level.length" />
-      </span>
-    
-    </div>     
-
-      </div>
-     <div class="row">    
-    <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'NOT_APPLICABLE'"  class="col-3">   
-      <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
-        <span>
+      <div v-if="!this.isEmpty(strengthVids)" class="col-3">
+        <span v-for="(level, i) in strengthVidsbyLevel" :key="i">
           <video-card :_videos="level" :total="level.length" />
         </span>
-      </span>
-  
+
+      </div>
+
+      <div v-if="!this.isEmpty(flexibilityVids)" class="col-3">
+        <span v-for="(level, i) in flexibilityVidsbyLevel" :key="i">
+          <video-card :_videos="level" :total="level.length" />
+        </span>
+
+      </div>
+
     </div>
+    <div class="row">
+      <div v-if="!this.isEmpty(recoveryVids) && recLevel && recLevel == 'NOT_APPLICABLE'" class="col-3">
+        <span v-for="(level, i) in recoveryVidsbyLevel" :key="i">
+          <span>
+            <video-card :_videos="level" :total="level.length" />
+          </span>
+        </span>
+      </div>
 
       <div v-if="!this.isEmpty(ergonomicsVids) && ergLevel && ergLevel == 'NOT_APPLICABLE'" class="col-3">
         <span v-for="(level, i) in ergonomicsVidsbyLevel" :key="i">
@@ -160,7 +148,6 @@ import utilitiesMixin from "../../mixins/utilities-mixin";
 import VideoCard from "../../components/VideoCard.vue";
 import YoutubeVideoCard from "../../components/YoutubeVideoCard.vue";
 //import VideoModal from "../../components/VideoModal.vue";
-//import youtube from "../../apis/youtube";
 
 export default {
   name: "Videos",
@@ -207,9 +194,49 @@ export default {
       urlInput: "",
     };
   },
+  mounted() {
+    let category = "ALL";/* this.categories[this.selectedCategory].value; */
+    let filter = "ALL";/* this.filters[this.selectedFilter].value; */
+    if (category == "ALL" && filter == "ALL") {
+      this.fetchVideos();
+    } else if (category != "ALL" && filter == "ALL") {
+      this.fetchVideos({
+        filter: { category: { eq: category } },
+      });
+    } else if (category == "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { level: { eq: filter } },
+      });
+    } else if (category != "ALL" && this.isLevel) {
+      this.fetchVideos({
+        filter: { category: { eq: category }, level: { eq: filter } },
+      });
+    } else {
+      this.fetchFavoriteVideos(category);
+    }
+    this.fetchAllFavoriteVideos();
+
+    // MicroHealth Videos
+    if (!this.preferences) {
+      this.fetchPreferences();
+    }
+    if (this.play == true) {
+      this.nextVideo(this.notificationCat, this.notificationLev);
+      console.log(this.currentVideo)
+      if (this.currentVideo) {
+        this.addNewWatchedVideo(this.currentVideo)
+      } else {
+        this.play = false;
+      }
+    }
+    this.seperateVideosbyCategory();
+    this.videosByLevel();
+  },
   methods: {
     ...mapActions([
       "addVideo",
+      "addWatchedVideo",
+      "removeWatchedVideo",
       "fetchVideos",
       "fetchYTVideos",
       "fetchFavoriteVideos",
@@ -221,11 +248,8 @@ export default {
       );
       return vids;
     },
-    capitalizeFirstLet(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    },
     seperateVideosbyCategory() {
-      console.log(this.mhVideos)
+      //console.log(this.mhVideos)
       let bal = this.mhVideos.filter(
         (v) => v.category == "Balance" && v.level == this.balanceLevel
       );
@@ -256,73 +280,16 @@ export default {
       this.nutritionVids = nut;
 
     },
-    levelToString(level) {
-      //console.log(this.videos);
-      switch (level) {
-        case "L1":
-          return "Novice";
-        case "L2":
-          return "Beginner";
-        case "L3":
-          return "Competent";
-        case "L4":
-          return "Proficient";
-        case "L5":
-          return "Expert";
-      }
-    },
-    filterToLevel(filter) {
-      switch (filter) {
-        case "beginner-1":
-          return "L1";
-        case "beginner-2":
-          return "L2";
-        case "intermediate-1":
-          return "L3";
-        case "intermediate-2":
-          return "L4";
-        case "advanced":
-          return "L5";
-        case "na":
-          return "na";
-      }
-    },
-    levelToLowercase(level) {
-      switch (level) {
-        case "L1":
-          return "novice";
-        case "L2":
-          return "beginner";
-        case "L3":
-          return "competent";
-        case "L4":
-          return "proficient";
-        case "L5":
-          return "expert";
-        case "na":
-          return "novice";
-      }
-    },
+    
     goBack() {
       this.play = false;
       this.$router.push("/activities/videos");
+      this.currentVideo = {}
     },
     log(e) {
       console.log(e);
     },
-    levelToColor(level) {
-      //console.log(level);
-      switch (level) {
-        case "L1":
-        case "L2":
-          return "var(--mh-green)";
-        case "L3":
-        case "L4":
-          return "var(--mh-orange)";
-        case "L5":
-          return "error";  
-      }
-    },
+    
     getVideoNum(category, level, video) {
       console.log(category);
       console.log(video);
@@ -394,25 +361,7 @@ export default {
         };
       }
     },
-    /* seperateVideosByLevel(array) {
-      console.log(array)
-      let novice = array.filter((v) => v.level == "L1");
-      let beginner = array.filter((v) => v.level == "L2");
-      let competent = array.filter((v) => v.level == "L3");
-      let proficient = array.filter((v) => v.level == "L4");
-      let expert = array.filter((v) => v.level == "L5");
-      let na = array.filter((v) => v.level == "NOT_APPLICABLE");
-      return {
-        novice: novice,
-        beginner: beginner,
-        competent: competent,
-        proficient: proficient,
-        expert: expert,
-        na: na,
-      };
-    }, */
     videosByLevel() {
-      console.log(this.recoveryVids)
       this.balanceVids[0]
         ? (this.balanceVidsbyLevel = [this.balanceVids]
         )
@@ -441,7 +390,6 @@ export default {
         ? (this.recoveryVidsbyLevel = [this.recoveryVids]
         )
         : [];
-        console.log(this.recoveryVidsbyLevel)
     },
     // YoutubeMethods
 
@@ -461,6 +409,32 @@ export default {
       });
       this.fetchVideos();
       this.dialog = false;
+    },
+    /* getWatchedVideos() {
+      this.fetchWatchedVideos();
+      console.log(this.watchedVideos)
+    },
+    deleteWatchedVideos() {
+      if (this.watchedVideos) {
+        this.watchedVideos.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        });
+      }
+      console.log(this.watchedVideos)
+    },*/
+    addNewWatchedVideo(v) {
+      this.addWatchedVideo(v)
+    }, 
+    checkForWatchedVideo() {
+       console.log(this.currentVideo)
+       console.log(this.watchedVideos)
+      /*let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
+      console.log(matched)
+      if (matched) {
+        this.nextVideo(this.notificationCat, this.notificationLev);
+        this.addNewWatchedVideo(this.currentVideo)
+        console.log(this.watchedVideos, this.currentVideo)
+      }  */
     },
     openDialog() {
       this.resetForm();
@@ -507,8 +481,14 @@ export default {
     },
     showAddBtn() {
       // Check if on Editors list and whether last filter (Favorites) is selected
-      console.log(this.preferences)
+      //console.log(this.preferences)
       return this.isEditor && this.selectedFilter != this.filters.length - 1;
+    },
+    loadedWatchedVideos() {
+      if (this.watchedVideos.items && this.watchedVideos.items.length > 0) {
+        console.log(this.watchedVideos.items)
+        return this.watchedVideos.items
+      } else return []
     },
     isLevel() {
       let filter = this.filters[this.selectedFilter].value;
@@ -525,57 +505,8 @@ export default {
     },
   },
 
-  mounted() {
-    // Youtube Videos
-    console.log(this.videos)
-    console.log(this.selectedCategory)
-    let category = "ALL";/* this.categories[this.selectedCategory].value; */
-    let filter = "ALL";/* this.filters[this.selectedFilter].value; */
-    console.log(category)
-    console.log(filter)
-    if (category == "ALL" && filter == "ALL") {
-      this.fetchVideos();
-    } else if (category != "ALL" && filter == "ALL") {
-      this.fetchVideos({
-        filter: { category: { eq: category } },
-      });
-    } else if (category == "ALL" && this.isLevel) {
-      this.fetchVideos({
-        filter: { level: { eq: filter } },
-      });
-    } else if (category != "ALL" && this.isLevel) {
-      this.fetchVideos({
-        filter: { category: { eq: category }, level: { eq: filter } },
-      });
-    } else {
-      this.fetchFavoriteVideos(category);
-    }
-    this.fetchAllFavoriteVideos();
-  },
-  // MicroHealth Videos
-  beforeMount() {
-    this.nextVideo(this.notificationCat, this.notificationLev);
-    this.selectedCat();
-    if (!this.$route.query.category && !this.$route.query.filter) {
-      this.play = false;
-    }
-      console.log(this.preferences);
-    if (!this.preferences) {
-      this.fetchPreferences();
-    }
-
-    this.seperateVideosbyCategory();
-    this.videosByLevel();
-
-    /* console.log(this.enduranceVidsbyLevel);
-    console.log(this.ergonomicsVidsbyLevel);
-    console.log(this.strengthVidsbyLevel);
-    console.log(this.nutritionVidsbyLevel);
-    console.log(this.flexibilityVidsbyLevel);
-    console.log(this.recoveryVidsbyLevel);*/
-  },
   watch: {
-    selectedCategory() {
+    /* selectedCategory() {
       this.page = 1;
       let categoryQuery = this.categories[this.selectedCategory].query;
       let category = this.categories[this.selectedCategory].value;
@@ -638,7 +569,7 @@ export default {
           this.fetchFavoriteVideos(category);
         }
       }
-    },
+    }, */
   },
 };
 </script>

@@ -34,6 +34,7 @@ export const createReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -73,6 +74,7 @@ export const updateReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -112,6 +114,7 @@ export const deleteReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -136,6 +139,7 @@ export const createGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -175,6 +179,7 @@ export const updateGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -214,6 +219,7 @@ export const deleteGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -337,6 +343,60 @@ export const deleteVideo = /* GraphQL */ `
       category
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createWatchedVideo = /* GraphQL */ `
+  mutation CreateWatchedVideo(
+    $input: CreateWatchedVideoInput!
+    $condition: ModelWatchedVideoConditionInput
+  ) {
+    createWatchedVideo(input: $input, condition: $condition) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateWatchedVideo = /* GraphQL */ `
+  mutation UpdateWatchedVideo(
+    $input: UpdateWatchedVideoInput!
+    $condition: ModelWatchedVideoConditionInput
+  ) {
+    updateWatchedVideo(input: $input, condition: $condition) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteWatchedVideo = /* GraphQL */ `
+  mutation DeleteWatchedVideo(
+    $input: DeleteWatchedVideoInput!
+    $condition: ModelWatchedVideoConditionInput
+  ) {
+    deleteWatchedVideo(input: $input, condition: $condition) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

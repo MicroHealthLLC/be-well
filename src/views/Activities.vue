@@ -141,7 +141,7 @@ export default {
   mounted() {
     // Check for category query parameter in URL to set category
     this.mounted = true;
-    console.log(this.$route)
+    //console.log(this.$route)
     if (this.$route.query.category) {
       this.selectedCategory = this.categories.findIndex(
         (category) => this.$route.query.category == category.query

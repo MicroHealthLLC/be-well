@@ -21,6 +21,7 @@ export default {
           title: "Endurance",
           icon: "mdi-run",
           query: "endurance",
+          // activities: ["walking", "yard word", "dancing", "swimming", "biking", "hiking", "climbing stairs"],
           value: "ENDURANCE",
           image: "/img/endurance.jpg",
         },
@@ -64,6 +65,106 @@ export default {
           icon: "mdi-weight-lifter",
           query: "strength",
           value: "STRENGTH",
+          image: "/img/strength.jpg",
+        },
+      ],
+      activities: [     
+        //Endurance          
+        {
+          title: "Walking",
+          icon: "mdi-human",
+          query: "walking",
+          category: "ENDURANCE",
+          value: "WALKING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Jogging",
+          icon: "mdi-human",
+          query: "jogging",
+          category: "ENDURANCE",
+          value: "JOGGING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Yard Work",
+          icon: "mdi-human",
+          query: "yard_work",
+          category: "ENDURANCE",
+          value: "YARD_WORK",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Dancing",
+          icon: "mdi-human",
+          query: "dancing",
+          category: "ENDURANCE",
+          value: "DANCING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Swimming",
+          icon: "mdi-human",
+          query: "swimming",
+          category: "ENDURANCE",
+          value: "SWIMMING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Biking",
+          icon: "mdi-human",
+          query: "biking",
+          category: "ENDURANCE",
+          value: "BIKING",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Climbing stairs",
+          icon: "mdi-heart-plus",
+          category: "ENDURANCE",
+          query: "climbing_stairs",
+          value: "CLIMBING_STAIRS",
+          image: "/img/endurance.jpg",
+        },
+        {
+          title: "Other, sport",
+          icon: "mdi-weight-lifter",
+          query: "other",
+          category: "ENDURANCE",
+          value: "OTHER",
+          image: "/img/endurance.jpg",
+        },
+        //Strength
+        {
+          title: "Lifting weights",
+          icon: "mdi-human",
+          query: "lifting_weights",
+          category: "STRENGTH",
+          value: "LIFTING_WEIGHTS",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Resistance bands",
+          icon: "mdi-human",
+          query: "resistance_bands",
+          category: "STRENGTH",
+          value: "RESISTANCE_BANDS",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Bodyweight exercises",
+          icon: "mdi-human",
+          query: "body_weight_exercises",
+          category: "STRENGTH",
+          value: "body_weight_exercises",
+          image: "/img/strength.jpg",
+        },
+        {
+          title: "Other, strength",
+          icon: "mdi-weight-lifter",
+          query: "other_s",
+          category: "STRENGTH",
+          value: "OTHER_S",
           image: "/img/strength.jpg",
         },
       ],
@@ -159,7 +260,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPreferences"]),
+    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -235,56 +336,26 @@ export default {
         this.categories.find((category) => category.value == value).image || ""
       );
     },
+    deleteWatchedVideos() {
+      if (this.watchedVideos) {
+        this.watchedVideos.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        });
+      }
+      console.log(this.watchedVideos)
+    },
   },
   mounted() {
     this.fetchPreferences()
+    this.fetchWatchedVideos()
   },
   computed: {
-    ...mapGetters(["preferences"]),
-    //Not sure why prefs is firing off errors....need to fix so we can consolidate all preferenceLevels into one value
-  //  prefs(){
-  //     if (this.preferences && this.preferences[0]){   
-  //       let strengthL = "";
-  //       let endureL = "";
-  //       let sPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')
-  //       let flexPrefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')      
-  //       if(sPrefs[0].l1){
-  //         strengthL = 'L1'
-  //       }
-  //       if(sPrefs[0].l2){
-  //         strengthL = 'L2'
-  //       }
-  //       if(sPrefs[0].l3){
-  //         strengthL = 'L3'
-  //       }
-  //       if(sPrefs[0].l4){
-  //         strengthL = 'L4'
-  //       }  
-  //       if(flexPrefs [0].l1){
-  //          endureL = 'L1'
-  //       }
-  //       if(flexPrefs [0].l2){
-  //         endureL =  'L2'
-  //       }
-  //       if(flexPrefs[0].l3){
-  //          endureL = 'L3'
-  //       }
-  //       if(flexPrefs [0].l4){
-  //         endureL =  'L4'
-  //       }       
-  //       return {
-  //         levels:{
-  //           strength: strengthL,
-  //           endurance: enduranceLevel
-  //         }
-  //        }
-  //       }      
-  //     },
+    ...mapGetters(["preferences", "watchedVideos"]),
   strengthLevel(){
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Strength')         
       if(prefs[0].l1){
-        console.log("Strength: L1")
+        //console.log("Strength: L1")
         return 'L1'
       }
       if(prefs[0].l2){
@@ -323,7 +394,7 @@ export default {
         return 'L3'
       }
       if(prefs[0].l4){
-        console.log("Balance: L4")
+        //console.log("Balance: L4")
         return 'L4'
       }  
       if(prefs[0].l4){
@@ -352,7 +423,7 @@ export default {
         return 'L3'
       }
       if(prefs[0].l4){
-        console.log("Endurance: L4")
+        //console.log("Endurance: L4")
         return 'L4'
       }
       if(prefs[0].l5){
@@ -371,7 +442,7 @@ export default {
         return 'NOT_APPLICABLE'
       }
       if(prefs[0].not_interested){
-        console.log("Nutrition: I AM NOT INTERESTED")
+        //console.log("Nutrition: I AM NOT INTERESTED")
         return false
       }
     } else if (!this.preferences){
@@ -382,7 +453,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Recovery')   
       if(!prefs[0].not_interested){
-        console.log("Recovery: I AM INTERESTED")
+        //console.log("Recovery: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
@@ -397,7 +468,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Ergonomics')   
       if(!prefs[0].not_interested){
-        console.log("ERGONOMICS: I AM INTERESTED")
+        //console.log("ERGONOMICS: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
@@ -412,7 +483,7 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
       if(prefs[0].l1){
-        console.log("Flexibility & Mobility: L1")
+        //console.log("Flexibility & Mobility: L1")
         return 'L1'
       }
       if(prefs[0].l2){
@@ -443,7 +514,7 @@ export default {
       } else  return this.categories.filter((category) => category.value != "ALL" );
     },
     filteredLevels() {
-      console.log("filteredLevels");
+      //console.log("filteredLevels");
       return this.levels.filter((level) => level.value != "ALL");
     },
   

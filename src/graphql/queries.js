@@ -31,6 +31,7 @@ export const getReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -65,6 +66,7 @@ export const listReminders = /* GraphQL */ `
         frequency
         contentType
         time
+        activity
         createdAt
         updatedAt
         owner
@@ -88,6 +90,7 @@ export const getGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -126,6 +129,7 @@ export const listGoals = /* GraphQL */ `
             category
             goalId
             level
+            activity
             frequency
             contentType
             time
@@ -219,6 +223,43 @@ export const listVideos = /* GraphQL */ `
         category
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getWatchedVideo = /* GraphQL */ `
+  query GetWatchedVideo($id: ID!) {
+    getWatchedVideo(id: $id) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listWatchedVideos = /* GraphQL */ `
+  query ListWatchedVideos(
+    $filter: ModelWatchedVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWatchedVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        videoId
+        category
+        level
+        nextVideo
+        createdAt
+        updatedAt
+        owner
       }
       nextToken
     }
@@ -646,6 +687,7 @@ export const remindersByLevel = /* GraphQL */ `
         frequency
         contentType
         time
+        activity
         createdAt
         updatedAt
         owner

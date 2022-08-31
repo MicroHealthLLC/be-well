@@ -31,6 +31,7 @@ export const onCreateReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -67,6 +68,7 @@ export const onUpdateReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -103,6 +105,7 @@ export const onDeleteReminder = /* GraphQL */ `
       frequency
       contentType
       time
+      activity
       createdAt
       updatedAt
       owner
@@ -124,6 +127,7 @@ export const onCreateGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -160,6 +164,7 @@ export const onUpdateGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -196,6 +201,7 @@ export const onDeleteGoal = /* GraphQL */ `
           frequency
           contentType
           time
+          activity
           createdAt
           updatedAt
           owner
@@ -301,6 +307,51 @@ export const onDeleteVideo = /* GraphQL */ `
       category
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onCreateWatchedVideo = /* GraphQL */ `
+  subscription OnCreateWatchedVideo($owner: String) {
+    onCreateWatchedVideo(owner: $owner) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateWatchedVideo = /* GraphQL */ `
+  subscription OnUpdateWatchedVideo($owner: String) {
+    onUpdateWatchedVideo(owner: $owner) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteWatchedVideo = /* GraphQL */ `
+  subscription OnDeleteWatchedVideo($owner: String) {
+    onDeleteWatchedVideo(owner: $owner) {
+      id
+      title
+      videoId
+      category
+      level
+      nextVideo
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

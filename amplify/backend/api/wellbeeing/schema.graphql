@@ -12,6 +12,7 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   frequency: String!
   contentType: String!
   time: String!
+  activity: String
   createdAt: AWSDateTime!
 }
 
@@ -86,6 +87,15 @@ type Video
       sortKeyFields: ["createdAt"]
     )
   createdAt: AWSDateTime!
+}
+
+type WatchedVideo @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  videoId: String!
+  category: String!
+  level: String!
+  nextVideo: String!
 }
 
 type FavoriteArticle @model @auth(rules: [{ allow: owner }]) {

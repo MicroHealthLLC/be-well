@@ -1,9 +1,12 @@
 <template>
-  <v-card :disabled="saving" :loading="saving">
+  <v-card :disabled="saving" :loading="saving" :load="log(reminder)">
     <v-card-title
-      ><span v-if="reminder.id && !associatedGoal">Edit Activity Reminder</span
-      ><span v-if="associatedGoal">Add Goal to Activity</span
-      ><span v-else>Add New Activity Reminder</span>
+      ><span v-if="reminder.id && !associatedGoal">
+      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Edit Activity</span
+      ><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span
+      ><span v-if="!reminder.id"><v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Add Activity</span>
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
@@ -16,45 +19,32 @@
         ></v-select>
       </v-form>
       <v-form ref="form" v-model="valid" v-else>
-        <v-select
-          v-model="reminder.goalId"
-          :items="incompleteGoals"
+      <!-- reminder.activity will included activity names -->
+        <!-- <v-select
+          v-model="reminder.activity"
+          :items="filteredCategories"
           item-text="title"
-          item-value="id"
-          label="Select Goal"
-        ></v-select>
-        <v-select
+          item-value="title"
+          label="Select Activity"
+          :rules="[(v) => !!v || 'Activity is required']"
+          required
+        ></v-select> -->
+         <v-select
           v-model="reminder.category"
           :items="filteredCategories"
           item-text="title"
           item-value="value"
-          label="Select Activity Name"
-          :rules="[(v) => !!v || 'Activity Name is required']"
+          label="Select Activity"
+          :rules="[(v) => !!v || 'Activity is required']"
           required
-        ></v-select>
-        <!-- <v-select
-          v-model="reminder.level"
-          :items="filteredLevels"
-          item-text="title"
-          item-value="value"
-          label="Level"
-          :rules="[(v) => !!v || 'Level is required']"
-          required
-        ></v-select> -->
+        ></v-select> 
         <v-select
           v-model="reminder.frequency"
-          :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs']"
+          :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
           label="Frequency"
           :rules="[(v) => !!v || 'Frequency is required']"
           required
         ></v-select>
-        <!-- <v-select
-          v-model="reminder.contentType"
-          label="Content Type"
-          :items="['Articles', 'Videos']"
-          :rules="[(v) => !!v || 'Content Type is required']"
-          required
-        ></v-select> -->
         <v-menu
           ref="menu"
           :close-on-content-click="false"
@@ -84,12 +74,19 @@
             @click:minute="$refs.menu.save(reminder.time)"
             header-color="var(--mh-blue)"
           ></v-time-picker>
-        </v-menu>
+          </v-menu>
+          <v-select
+            v-model="reminder.goalId"
+            :items="incompleteGoals"
+            item-text="title"
+            item-value="id"
+            label="Associate with Goal?"
+          ></v-select>  
       </v-form>
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
       <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
-        >Submit</v-btn
+        >Save</v-btn
       >
       <v-btn @click="toggleReminderFormDialog" color="secondary" outlined
         >Cancel</v-btn
@@ -122,8 +119,9 @@ export default {
   },
   mounted() {
     if (!this.reminder.id) {
-      this.resetForm();
+       this.$refs.form.reset();
     }
+    console.log(this.reminder)
   },
   methods: {
     ...mapActions([
@@ -134,28 +132,30 @@ export default {
       "updateReminderById",
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
-    resetForm() {
-      this.reminder = {
-        category: "",
-        level: "",
-        frequency: "",
-        contentType: "",
-        time: null,
-      };
+    log(e){
+      console.log(e)
     },
     toggleReminderFormDialog() {
-      this.$emit("toggleReminderFormDialog", false);
-      this.resetForm();
+      this.$emit("toggleReminderFormDialog", false);    
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
-      if (this.dialog == false) {
-        this.SET_ASSOCIATED_GOAL(false);
-      }
-    },
+      // this.SET_ASSOCIATED_GOAL(false)
+   },
     async saveReminder() {
+      
       if (!this.$refs.form.validate()) {
         return;
+      }
+      if(!this.reminder.goalId){
+        let obj = this.reminder
+        Object.keys(obj).forEach(key => {
+        if (obj[key] === null) {
+          delete obj[key];
+        }
+      });
+
+       console.log(this.reminder)
       }
 
       try {
@@ -164,23 +164,23 @@ export default {
             id: this.reminder.id,
             category: this.reminder.category,
             level: this.reminder.level,
+            activity: this.reminder.activity,
             frequency: this.reminder.frequency,
             contentType: this.reminder.contentType,
             time: this.reminder.time,
             goalId: this.reminder.goalId,
           });
-        } else {
-          console.log("this.userPrefLevel", this.userPrefLevel);
-          console.log("this.preferences", this.preferences);
-          this.reminder.level = this.userPrefLevel;
+        } else {       
           this.reminder.contentType = "Videos";
+          // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
+          this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
-        this.SET_ASSOCIATED_GOAL(!this.associatedGoal);
-        this.resetForm();
+        this.SET_ASSOCIATED_GOAL(false);
+        this.$refs.form.reset();
       } catch (error) {
         console.log(error);
       }

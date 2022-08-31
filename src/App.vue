@@ -53,8 +53,8 @@ export default {
     frequencyDays(frequency) {
       if (frequency == "Mon/Wed/Fri") {
         return [1, 3, 5];
-      } else if (frequency == "Tues/Thurs") {
-        return [2, 4];
+      } else if (frequency == "Tues/Thurs/Sat") {
+        return [2, 4, 6];
       } else {
         return [0, 1, 2, 3, 4, 5, 6];
       }

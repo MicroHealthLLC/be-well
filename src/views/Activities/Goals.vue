@@ -269,6 +269,135 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- <v-dialog v-model="dialog" width="750">
+      <v-card :disabled="saving" :loading="saving" class="px-5">
+      <v-toolbar flat>
+       <template v-slot:extension>
+        <v-tabs
+          v-model="tabs"
+          fixed-tabs
+          @click="handleClick"
+        >
+          <v-tabs-slider></v-tabs-slider>
+          <v-tab
+            href="#mobile-tabs-5-1"
+          
+              >
+            <v-icon>mdi-button-pointer</v-icon>Select Improve Goal
+          </v-tab>
+        or
+          <v-tab
+            href="#mobile-tabs-5-2"
+          
+          >
+            <v-icon>mdi-pencil</v-icon>Create Your Own Goal
+          </v-tab>        
+        </v-tabs>
+        </template>
+        </v-toolbar>
+        <v-tabs-items v-model="tabs">
+          <v-tab-item :value="'mobile-tabs-5-1'">
+            <v-select
+              v-model="goal.category"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="I want to improve my..."
+              :rules="[(v) => !!v || 'Improvement category is required']"
+              required
+            ></v-select>
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="goal.dueDate"
+                  label="I want to accomplish this goal by..."
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Date required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="goal.dueDate"
+                @input="menu = false"
+              ></v-date-picker>
+            </v-menu>
+          
+          </v-tab-item>
+          <v-tab-item :value="'mobile-tabs-5-2'">
+            <v-text-field
+              v-model="goal.title"
+              label="ex: I want to lose 5 lbs..."
+              :rules="[(v) => !!v || 'Goal title is required']"
+              required
+            ></v-text-field>
+              <v-select
+              v-model="goal.category"
+              :items="filteredCategories"
+              item-text="title"
+              item-value="value"
+              label="Focus Area"
+              :rules="[(v) => !!v || 'Focus Area is required']"
+              required
+            ></v-select>
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="goal.dueDate"
+                  label="I want to accomplish this goal by..."
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Date required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="goal.dueDate"
+                @input="menu = false"
+              ></v-date-picker>
+            </v-menu>
+        </v-tab-item>
+         </v-tabs-items>
+      
+        <v-card-actions class="d-flex justify-end">
+          <v-btn
+            @click="saveGoal"
+            class="px-10 mb-3"
+            color="var(--mh-blue)"
+            depressed
+            dark
+            >Save</v-btn
+          >
+          <v-btn 
+            v-if="goal.id" 
+            color="error"
+            @click="deleteGoal({ id: goal.id })" 
+            outlined
+            ><v-icon>
+            mdi-trash-can-outline
+           </v-icon></v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog> -->
   </div>
   </div>
 
@@ -290,7 +419,13 @@ export default {
   },
   data() {
     return {
+      goalFormTabs: [
+          'Select Improve Goal', 'Create Your Own Goal'
+      ],
+      tabs: null, 
       dialog: false,
+      improvementGoal: true, 
+      createOwnGoal: false, 
       isFlipped: false,
       valid: true,
       menu: false,
@@ -310,6 +445,9 @@ export default {
   },
   methods: {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
+    log(e) {
+      console.log(e)
+    },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
         return;
@@ -327,7 +465,9 @@ export default {
           });
         } else {
             console.log(this.goal)
-          this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+            if(this.improvementGoal){
+              this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+            }       
           // console.log(this.goal)
           await this.addGoal(this.goal);
         }
@@ -343,6 +483,19 @@ export default {
         console.log(error);
       }
       this.closeGoalForm();
+    },
+    improveGoalToggle(){
+      this.createOwnGoal = !this.createOwnGoal
+      this.improvementGoal = true
+      console.log("default Goal Toggle")
+    },
+    createGoalToggle(){
+      this.improvementGoal = !this.improvementGoal
+      this.createOwnGoal = true
+      console.log("create Goal Toggle")
+    },
+    handleClick(e){
+      console.log(e)
     },
     openNewGoalForm() {
       this.dialog = true;

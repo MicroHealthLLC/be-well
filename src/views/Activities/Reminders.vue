@@ -44,7 +44,7 @@
               <v-dialog v-model="dialog" max-width="600px">
                 <ReminderForm :reminder="reminder" @toggleReminderFormDialog="toggleReminderFormDialog"></ReminderForm>
               </v-dialog>
-          <v-tooltip max-width="200" bottom>
+          <!-- <v-tooltip max-width="200" bottom>
           <div>Create New Activity for Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
@@ -59,7 +59,7 @@
               
             </div>
           </template>
-        </v-tooltip>
+        </v-tooltip> -->
             </div>
           </div>
         </v-col>
@@ -152,11 +152,11 @@ export default {
       "removeReminder",
       "fetchReminders",
     ]),
-    ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
+    ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON", "SET_ASSOCIATED_GOAL"]),
     log(e) {
       if (e) {
-        console.log(e);
-        console.log(this.incompleteGoals)
+        //console.log(e);
+        //console.log(this.incompleteGoals)
       }
     },
     requestPermission() {
@@ -165,8 +165,9 @@ export default {
       }
     },
     openNewReminderForm() {
+      this.SET_ASSOCIATED_GOAL(false)     
       this.toggleReminderFormDialog(true)
-      if (this.$refs.form) {
+      if (this.$refs.form) {       
         this.$refs.form.resetValidation();
       }
     },
@@ -262,7 +263,7 @@ export default {
   transform: translateY(-50%);
 }
 .newGoalCard {
-  height: 150px;
+  height: 130px;
   /* background-color: rgba(29,	51,	111,0.85); */
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }
