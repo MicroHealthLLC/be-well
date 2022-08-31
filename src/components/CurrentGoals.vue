@@ -82,7 +82,7 @@
             <div class="d-flex align-center goal-progressbar pt-2 px-2">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-progress-linear :value="getGoalProgressValue(goal.reminders.items)" height="10" striped rounded
+                  <v-progress-linear :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0" height="10" striped rounded
                     color="lime" v-bind="attrs" v-on="on"></v-progress-linear>
                 </template>
                 <span>{{ getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span>
