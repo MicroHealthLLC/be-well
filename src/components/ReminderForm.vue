@@ -2,11 +2,13 @@
   <v-card :disabled="saving" :loading="saving" :load="log(reminder)">
     <v-card-title
       ><span v-if="reminder.id && !associatedGoal">
-      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
-      >mdi-yoga</v-icon>Edit Activity</span
+        <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Edit
+        Activity</span
       ><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span
-      ><span v-if="!reminder.id"><v-icon color="var(--mh-green)" class="mr-1 mb-1"
-      >mdi-yoga</v-icon>Add Activity</span>
+      ><span v-if="!reminder.id"
+        ><v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Add
+        Activity</span
+      >
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
@@ -19,7 +21,7 @@
         ></v-select>
       </v-form>
       <v-form ref="form" v-model="valid" v-else>
-      <!-- reminder.activity will included activity names -->
+        <!-- reminder.activity will included activity names -->
         <!-- <v-select
           v-model="reminder.activity"
           :items="filteredCategories"
@@ -29,7 +31,7 @@
           :rules="[(v) => !!v || 'Activity is required']"
           required
         ></v-select> -->
-         <v-select
+        <v-select
           v-model="reminder.category"
           :items="filteredCategories"
           item-text="title"
@@ -37,7 +39,7 @@
           label="Select Activity"
           :rules="[(v) => !!v || 'Activity is required']"
           required
-        ></v-select> 
+        ></v-select>
         <v-select
           v-model="reminder.frequency"
           :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
@@ -74,14 +76,14 @@
             @click:minute="$refs.menu.save(reminder.time)"
             header-color="var(--mh-blue)"
           ></v-time-picker>
-          </v-menu>
-          <v-select
-            v-model="reminder.goalId"
-            :items="incompleteGoals"
-            item-text="title"
-            item-value="id"
-            label="Associate with Goal?"
-          ></v-select>  
+        </v-menu>
+        <v-select
+          v-model="reminder.goalId"
+          :items="incompleteGoals"
+          item-text="title"
+          item-value="id"
+          label="Associate with Goal?"
+        ></v-select>
       </v-form>
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
@@ -119,9 +121,9 @@ export default {
   },
   mounted() {
     if (!this.reminder.id) {
-       this.$refs.form.reset();
+      this.$refs.form.reset();
     }
-    console.log(this.reminder)
+    console.log(this.reminder);
   },
   methods: {
     ...mapActions([
@@ -132,30 +134,29 @@ export default {
       "updateReminderById",
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
-    log(e){
-      console.log(e)
+    log(e) {
+      console.log(e);
     },
     toggleReminderFormDialog() {
-      this.$emit("toggleReminderFormDialog", false);    
+      this.$emit("toggleReminderFormDialog", false);
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
       // this.SET_ASSOCIATED_GOAL(false)
-   },
+    },
     async saveReminder() {
-      
       if (!this.$refs.form.validate()) {
         return;
       }
-      if(!this.reminder.goalId){
-        let obj = this.reminder
-        Object.keys(obj).forEach(key => {
-        if (obj[key] === null) {
-          delete obj[key];
-        }
-      });
+      if (!this.reminder.goalId) {
+        let obj = this.reminder;
+        Object.keys(obj).forEach((key) => {
+          if (obj[key] === null) {
+            delete obj[key];
+          }
+        });
 
-       console.log(this.reminder)
+        console.log(this.reminder);
       }
 
       try {
@@ -168,9 +169,9 @@ export default {
             frequency: this.reminder.frequency,
             contentType: this.reminder.contentType,
             time: this.reminder.time,
-            goalId: this.reminder.goalId,
+            goalIds: ["d3badd43-c52a-4acf-a72b-721359a42b1a"],
           });
-        } else {       
+        } else {
           this.reminder.contentType = "Videos";
           // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
           this.reminder.level = this.userPrefLevel;

@@ -9,27 +9,17 @@ export const createReminder = /* GraphQL */ `
     createReminder(input: $input, condition: $condition) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -49,27 +39,17 @@ export const updateReminder = /* GraphQL */ `
     updateReminder(input: $input, condition: $condition) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -89,27 +69,17 @@ export const deleteReminder = /* GraphQL */ `
     deleteReminder(input: $input, condition: $condition) {
       id
       category
-      goal {
-        id
-        title
-        category
-        reminders {
-          nextToken
+      goals {
+        items {
+          id
+          reminderID
+          goalID
+          createdAt
+          updatedAt
+          owner
         }
-        progress
-        stepCount
-        dueDate
-        isComplete
-        completedCount
-        checklist {
-          title
-          isComplete
-        }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
-      goalId
       level
       frequency
       contentType
@@ -133,13 +103,8 @@ export const createGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
-          activity
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -173,13 +138,8 @@ export const updateGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
-          activity
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -213,13 +173,8 @@ export const deleteGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          category
-          goalId
-          level
-          frequency
-          contentType
-          time
-          activity
+          reminderID
+          goalID
           createdAt
           updatedAt
           owner
@@ -986,6 +941,156 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createGoalReminders = /* GraphQL */ `
+  mutation CreateGoalReminders(
+    $input: CreateGoalRemindersInput!
+    $condition: ModelGoalRemindersConditionInput
+  ) {
+    createGoalReminders(input: $input, condition: $condition) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        activity
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateGoalReminders = /* GraphQL */ `
+  mutation UpdateGoalReminders(
+    $input: UpdateGoalRemindersInput!
+    $condition: ModelGoalRemindersConditionInput
+  ) {
+    updateGoalReminders(input: $input, condition: $condition) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        activity
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteGoalReminders = /* GraphQL */ `
+  mutation DeleteGoalReminders(
+    $input: DeleteGoalRemindersInput!
+    $condition: ModelGoalRemindersConditionInput
+  ) {
+    deleteGoalReminders(input: $input, condition: $condition) {
+      id
+      reminderID
+      goalID
+      reminder {
+        id
+        category
+        goals {
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        activity
+        createdAt
+        updatedAt
+        owner
+      }
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        completedCount
+        checklist {
+          title
+          isComplete
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
       updatedAt
       owner
     }
