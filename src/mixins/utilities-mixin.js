@@ -368,11 +368,11 @@ export default {
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Nutrition')   
       if(!prefs[0].not_interested){
         console.log("Nutrition: I AM INTERESTED")
-        return 'ALL'
+        return 'NOT_APPLICABLE'
       }
       if(prefs[0].not_interested){
         console.log("Nutrition: I AM NOT INTERESTED")
-        return 'NOT_APPLICABLE'
+        return false
       }
     } else if (!this.preferences){
       return 'NOT_APPLICABLE'
@@ -383,11 +383,11 @@ export default {
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Recovery')   
       if(!prefs[0].not_interested){
         console.log("Recovery: I AM INTERESTED")
-        return 'ALL'
+        return 'NOT_APPLICABLE'
       }  
       if(prefs[0].not_interested){
         console.log("RECOVERY: I AM NOT INTERESTED")
-        return 'NOT_APPLICABLE'
+        return false
       }
     } else if (!this.preferences){
       return 'NOT_APPLICABLE'
@@ -402,7 +402,7 @@ export default {
       }  
       if(prefs[0].not_interested){
         console.log("ERGONOMICS: I AM NOT INTERESTED")
-        return 'NOT_APPLICABLE'
+        return false
       }
     } else if (!this.preferences){
       return 'NOT_APPLICABLE'
