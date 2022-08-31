@@ -34,10 +34,10 @@
               <h3>
                 <span class="font-weight-bold text-light">
                   <v-icon color="white" class="mr-1">{{
-                      categoryIcon(reminder.category)
+                      categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}</v-icon>
                   <span class="pt-1" v-if="reminder.activity">
-                    {{ reminder.activity }}</span>
+                    {{ this.capitalizeFirstLet((reminder.activity).toLowerCase()) }}</span>
                   <span class="pt-1" v-else>
                     {{ categoryString(reminder.category) }}</span>
                 </span>
