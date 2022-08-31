@@ -1,5 +1,5 @@
 <template>
-  <v-card :disabled="saving" :loading="saving" :load="log(reminder)">
+  <v-card :disabled="saving" :loading="saving">
     <v-card-title
       ><span v-if="reminder.id && !associatedGoal">
       <v-icon color="var(--mh-green)" class="mr-1 mb-1"
@@ -155,7 +155,7 @@ export default {
         }
       });
 
-       console.log(this.reminder)
+       //console.log(this.reminder)
       }
 
       try {
@@ -175,6 +175,7 @@ export default {
           // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
+          //console.log(this.reminder)
           await this.addReminder(this.reminder);
         }
         // Close form and reset form values

@@ -261,9 +261,9 @@
               :rules="[(v) => !!v || 'Activity required']"
               required
             ></v-select> -->
+            <span v-if="goal && goal.reminders.items.length > 0">
             <v-select
-              v-if="goal && goal.reminders.items.length > 0"
-              v-model="reminder.activity"
+              v-model="reminder.category"
               :items="filteredCategories"
               item-text="title"
               item-value="value"
@@ -271,11 +271,11 @@
               :rules="[(v) => !!v || 'Activity Type required']"
               required
             ></v-select>
-          
-            <span v-else class="mb-2">
-              <small class="d-block activityT">Activity Type</small>
-              <span class="defaultA">{{ defaultActivity }}</span>             
-            </span>
+          </span>
+          <span v-else class="mb-2">
+            <small class="d-block activityT">Activity Type</small>
+              <span class="defaultA">{{ defaultActivity }}</span>
+          </span>
             <!-- <v-select
               v-else
               :load="log(defaultActivity)"
@@ -418,7 +418,7 @@ export default {
       dialog: false,
       reminder: {
         category: "",
-        level: this.userPrefLevel,
+        level: "",
         activity: "",
         frequency: "",
         contentType: "",
@@ -439,8 +439,8 @@ export default {
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.goal) {
-        console.log("yes")
-        console.log(this.preferences)
+        //console.log("yes")
+        //console.log(this.preferences)
         let strength = this.preferences[0].preference_items.map(t => t && t.category == "Strength")
         let flex = this.preferences[0].preference_items.map(t => t && t.category == "Flexibility & Mobility")
         let balance = this.preferences[0].preference_items.map(t => t && t.category == "Balance")
@@ -474,6 +474,44 @@ export default {
         return ""
       }
     },
+    userReminderPrefLevel() {
+      // return this.reminders
+      if (this.preferences && this.preferences[0] && this.reminder) {
+        //console.log("yes")
+        //console.log(this.preferences)
+        let strength = this.preferences[0].preference_items.map(t => t && t.category == "Strength")
+        let flex = this.preferences[0].preference_items.map(t => t && t.category == "Flexibility & Mobility")
+        let balance = this.preferences[0].preference_items.map(t => t && t.category == "Balance")
+        let nutri = this.preferences[0].preference_items.map(t => t && t.category == "Nutrition")
+        let rec = this.preferences[0].preference_items.map(t => t && t.category == "Recovery")
+        let erg = this.preferences[0].preference_items.map(t => t && t.category == "Ergonomics")
+        let endur = this.preferences[0].preference_items.map(t => t && t.category == "Endurance")
+        if (this.reminder.category == 'STRENGTH' && strength) {
+          return this.strengthLevel
+        }
+        if (this.reminder.category == 'BALANCE' && balance) {
+          return this.balanceLevel
+        }
+        if (this.reminder.category == 'ENDURANCE' && endur) {
+          return this.enduranceLevel
+        }
+        if (this.reminder.category == 'NUTRITION' && nutri) {
+          return this.nutritionLevel
+        }
+        if (this.reminder.category == 'RECOVERY' && rec) {
+          return this.recLevel
+        }
+        if (this.reminder.category == 'ERGONOMICS' && erg) {
+          return this.ergLevel
+        }
+        if (this.reminder.category == 'FLEXIBILITY_MOBILITY' && flex) {
+          return this.flexLevel
+        } else return ""
+
+      } else {
+        return ""
+      }
+    },
   },
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
@@ -481,7 +519,7 @@ export default {
       console.log(e)
     },
     openNewReminderForm() {
-      console.log("this works")
+      //console.log("this works")
       this.resetForm();
       this.activityDialog = true;
       if (this.$refs.form) {
@@ -491,7 +529,7 @@ export default {
     resetForm() {
       this.reminder = {
         category: "",
-        level: this.userPrefLevel,
+        level: "",
         frequency: "",
         contentType: "",
         time: null,
@@ -510,7 +548,7 @@ export default {
       }
       try {
         if (this.goal.id) {
-          console.log(this.goal.id)
+          //console.log(this.goal.id)
           await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,
@@ -537,14 +575,19 @@ export default {
       this.closeGoalForm();
     },
     async saveReminder() {
+      //console.log(this.goal)
       if (!this.$refs.form.validate()) {
         return;
       }
-      try {
-        this.reminder.level = this.userPrefLevel
+      if (this.goal.reminders.items.length == 0 || !this.goal.reminders.items) {
         this.reminder.category = this.goal.category
+        this.reminder.level = this.userPrefLevel
+      }
+      try {
+        this.reminder.level = this.userReminderPrefLevel
         this.reminder.contentType = 'Videos'
         this.reminder.goalId = this.goal.id
+        //console.log(this.reminder)
         await this.addReminder(this.reminder);
         this.saveGoal()
 
@@ -556,7 +599,7 @@ export default {
       }
     },
     goToActivities() {
-      console.log("this works")
+      //console.log("this works")
       this.$router.push("/activities/reminders");
     },
     async update(goal) {
