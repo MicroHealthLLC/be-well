@@ -11,18 +11,19 @@ export const extendedListGoals = /* GraphQL */ `
         category
         reminders {
           items {
-            reminder {
-              id
-              category
-              level
-              frequency
-              contentType
-              time
-              createdAt
-              updatedAt
-              owner
-            }
+            id
+            category
+            goalId
+            level
+            activity
+            frequency
+            contentType
+            time
+            createdAt
+            updatedAt
+            owner
           }
+          nextToken
         }
         progress
         stepCount

@@ -57,7 +57,8 @@ export default {
     },
     async fetchGoals({ commit }) {
       try {
-        const res = await API.graphql(graphqlOperation(extendedListGoals));
+      const res = await API.graphql(graphqlOperation(extendedListGoals));
+      //  const res = await API.graphql(graphqlOperation(listGoals));
         commit("SET_GOALS", res.data.listGoals.items);
       } catch (error) {
         console.log(error);
