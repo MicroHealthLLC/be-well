@@ -1,8 +1,10 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { createReminder } from "@/graphql/mutations";
 import { updateReminder } from "@/graphql/mutations";
-import { listReminders } from "@/graphql/queries";
+import { createGoalReminders } from "@/graphql/mutations";
+// import { listReminders } from "@/graphql/queries";
 import { deleteReminder } from "@/graphql/mutations";
+import { extendedListReminders } from "@/graphql/extended_queries";
 
 export default {
   state: {
@@ -10,13 +12,20 @@ export default {
     remindersOn: false,
   },
   actions: {
-    async addReminder({ commit, dispatch }, reminder) {
+    async addReminder({ commit, dispatch }, { reminder, goalIds }) {
       commit("TOGGLE_SAVING", true);
       try {
-        await API.graphql(
+        console.log("addReminder", reminder, goalIds);
+        const res = await API.graphql(
           graphqlOperation(createReminder, { input: reminder })
         );
         dispatch("fetchReminders");
+
+        dispatch("associateGoalWithReminder", {
+          reminderId: res.id,
+          goalIds: goalIds,
+        });
+
         commit("SET_SNACKBAR", {
           show: true,
           message: "Activity Reminder Successfully Added!",
@@ -27,14 +36,47 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async updateReminderById({ commit, dispatch }, reminder) {
+    async associateGoalWithReminder({ commit, dispatch }, { reminderId, goalIds }) {
+
+      // Create join table record to associate reminder with goal
+      // we need to make multiple request if there are multiple goals are associated
+      // e.g. if user has select 2 goals to associate then we need to make
+      // 2 join table request to associated.
+      if (goalIds && goalIds.length > 0) {
+        let goalReminders = [];
+        goalIds.forEach((gid) => {
+          let goalReminder = {
+            reminderID: reminderId,
+            goalID: gid,
+          };
+          goalReminders.push(goalReminder);
+        });
+        console.log(
+          "associateGoalWithReminder",
+          reminderId, goalIds,
+          goalReminders
+        );
+        goalReminders.forEach((gr) => {
+          API.graphql(graphqlOperation(createGoalReminders, { input: gr }));
+        });
+        dispatch("fetchReminders");
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Activity Successfully associated with goal!",
+          color: "var(--mh-green)",
+        });
+      }
+    },
+    async updateReminderById({ commit, dispatch }, { reminder, goalIds }) {
       commit("TOGGLE_SAVING", true);
       try {
-        console.log("updateReminderById", reminder);
+        console.log("updateReminderById", reminder, goalIds);
+
         await API.graphql(
           graphqlOperation(updateReminder, { input: reminder })
         );
         dispatch("fetchReminders");
+        dispatch("associateGoalWithReminder",{reminderId: reminder.id, goalIds: goalIds});
         commit("SET_SNACKBAR", {
           show: true,
           message: "Activity Reminder Successfully Updated!",
@@ -60,7 +102,7 @@ export default {
     },
     async fetchReminders({ commit }) {
       try {
-        const res = await API.graphql(graphqlOperation(listReminders));
+        const res = await API.graphql(graphqlOperation(extendedListReminders));
         commit("SET_REMINDERS", res.data.listReminders.items);
       } catch (error) {
         console.log(error);

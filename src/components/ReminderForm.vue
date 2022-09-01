@@ -13,11 +13,12 @@
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
         <v-select
-          v-model="reminder.goalId"
+          v-model="goalIds"
           :items="incompleteGoals"
           item-text="title"
           item-value="id"
           label="Select Goal"
+          :multiple="true"
         ></v-select>
       </v-form>
       <v-form ref="form" v-model="valid" v-else>
@@ -78,11 +79,12 @@
           ></v-time-picker>
         </v-menu>
         <v-select
-          v-model="reminder.goalId"
+          v-model="goalIds"
           :items="incompleteGoals"
           item-text="title"
           item-value="id"
           label="Associate with Goal?"
+          :multiple="true"
         ></v-select>
       </v-form>
     </v-card-text>
@@ -108,12 +110,14 @@ export default {
     reminder: {
       type: Object,
     },
+
     // goal: {
     //   type: Object
     // },
   },
   data() {
     return {
+      goalIds: [],
       dialog: false,
       intervalId: null,
       valid: true,
@@ -162,21 +166,26 @@ export default {
       try {
         if (this.reminder.id) {
           await this.updateReminderById({
-            id: this.reminder.id,
-            category: this.reminder.category,
-            level: this.reminder.level,
-            activity: this.reminder.activity,
-            frequency: this.reminder.frequency,
-            contentType: this.reminder.contentType,
-            time: this.reminder.time,
-            goalIds: ["d3badd43-c52a-4acf-a72b-721359a42b1a"],
+            reminder: {
+              id: this.reminder.id,
+              category: this.reminder.category,
+              level: this.reminder.level,
+              activity: this.reminder.activity,
+              frequency: this.reminder.frequency,
+              contentType: this.reminder.contentType,
+              time: this.reminder.time,
+            },
+            goalIds: this.goalIds,
           });
         } else {
           this.reminder.contentType = "Videos";
           // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
-          await this.addReminder(this.reminder);
+          await this.addReminder({
+            reminder: this.reminder,
+            goalIds: this.goalIds,
+          });
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
