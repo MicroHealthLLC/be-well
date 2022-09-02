@@ -22,7 +22,7 @@ export default {
         dispatch("fetchReminders");
 
         dispatch("associateGoalWithReminder", {
-          reminderId: res.id,
+          reminderId: res.data.createReminder.id,
           goalIds: goalIds,
         });
 
