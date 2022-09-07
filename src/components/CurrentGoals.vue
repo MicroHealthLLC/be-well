@@ -9,7 +9,7 @@
             ><small>Click here to achieve your goals</small> -->
         <span class="newGoalBtn3">
           <v-tooltip max-width="200" bottom>
-            <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
+            <div :load="log(goal)" v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
             <template v-slot:activator="{ on }">
               <div v-on="on" class="activitiesIcon activitiesCount" @click="openNewReminderForm">
@@ -516,6 +516,7 @@ export default {
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
     log(e) {
+      console.log(this.incompleteGoals)
       console.log(e)
     },
     openNewReminderForm() {
