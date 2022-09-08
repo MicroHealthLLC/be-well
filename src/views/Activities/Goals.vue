@@ -12,7 +12,12 @@
       "
     >
       <div class="d-flex justify-space-between align-center">
-        <span><h2><b class="goalHeaders">MY CURRENT GOALS</b></h2></span>
+        <span><h2><b class="goalHeaders">MY CURRENT GOALS</b></h2>  
+          <v-btn
+          @click="goalComplete"  
+          color="error"
+            >GOAL COMPLETION SIMULATOR</v-btn
+          ></span>
       </div>
       <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
         <!-- <template v-slot:activator="{ on }">
@@ -269,6 +274,47 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="goalCompleteDialog" max-width="344">
+
+  <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      src="../../assets/trophy.jpg"
+      height="200px"
+    ></v-img>
+
+    <v-card-title>
+      CONGRATULATIONS!
+    </v-card-title>
+
+    <v-card-subtitle>
+     GOAL COMPLETED!
+    </v-card-subtitle>
+
+    <v-card-actions>
+      <v-btn
+        color="orange lighten-2"
+        text
+        @click="stopCon"
+      >
+        Stop
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        icon
+        @click="show = !show"
+      >
+        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+      </v-btn>
+    </v-card-actions>
+
+  </v-card>
+    
+    </v-dialog>
     <!-- <v-dialog v-model="dialog" width="750">
       <v-card :disabled="saving" :loading="saving" class="px-5">
       <v-toolbar flat>
@@ -407,6 +453,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
+
 import GoalCard from "../../components/GoalCard.vue";
 import CurrentGoals from "../../components/CurrentGoals.vue";
 
@@ -424,6 +471,8 @@ export default {
       ],
       tabs: null, 
       dialog: false,
+      show: false,
+      goalCompleteDialog: false,
       improvementGoal: true, 
       createOwnGoal: false, 
       isFlipped: false,
@@ -447,6 +496,14 @@ export default {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
     log(e) {
       console.log(e)
+    },
+    goalComplete(){
+      this.goalCompleteDialog = true
+      console.log("goal completion btn works")
+      this.$confetti.start();
+    },
+    stopCon(){
+      this.$confetti.stop();
     },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
