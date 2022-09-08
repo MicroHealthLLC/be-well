@@ -1,8 +1,11 @@
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-      <div :class="{ 'completed' : getActivityProgressValue(reminder.category, reminder.level) == 100 }" class="flip-card-front clickable fontWhite">
-        <v-tooltip v-if="reminder.goal && reminder.goal.id && getActivityProgressValue(reminder.category, reminder.level) != 100" max-width="200" bottom>
+      <div :class="{ 'completed': isCompleted }"
+        class="flip-card-front clickable fontWhite">
+        <v-tooltip
+          v-if="reminder.goal && reminder.goal.id && !isCompleted"
+          max-width="200" bottom>
           <div :load="log(reminder)">
             <span>
               {{  reminder.goal.title  }}
@@ -16,7 +19,9 @@
             </div>
           </template>
         </v-tooltip>
-        <v-tooltip v-else-if="reminder.goal && reminder.goal.id && getActivityProgressValue(reminder.category, reminder.level) == 100" max-width="200" bottom>
+        <v-tooltip
+          v-else-if="reminder.goal && reminder.goal.id && isCompleted"
+          max-width="200" bottom>
           <div :load="log(reminder)">
             <span>
               {{  reminder.goal.title  }}
@@ -45,8 +50,8 @@
           <div>Activity Completed</div>
           <template v-slot:activator="{ on }">
             <div v-on="on">
-              <span v-if="getActivityProgressValue(reminder.category, reminder.level) == 100">
-                <v-icon class="mr-1 ribbonIcon" large color="yellow darken-2" >mdi-medal</v-icon>
+              <span v-if="isCompleted">
+                <v-icon class="mr-1 ribbonIcon" large color="yellow darken-2">mdi-medal</v-icon>
               </span>
             </div>
           </template>
@@ -72,20 +77,23 @@
             <div class="col">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-progress-linear  height="10" rounded striped color="lime"
+                  <v-progress-linear height="10" rounded striped color="lime"
                     :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
                   </v-progress-linear>
-                  <v-chip color="success" v-if="getActivityProgressValue(reminder.category, reminder.level) == 100" class="centered text-black"><strong>100%</strong></v-chip>
+                  <v-chip small color="lime"
+                    v-if="isCompleted"
+                    class="centered text-black px-8"><strong>100%</strong></v-chip>
                   <!-- <v-progress-linear v-else height="10" rounded striped color="lime"
                     :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
                     <v-chip color="yellow darken-1"><strong>Completed</strong></v-chip>
                   </v-progress-linear> -->
-                 
+
                 </template>
-                <span v-if="getActivityProgressValue(reminder.category, reminder.level) != 100">{{
-                   getActivityProgressValue(reminder.category, reminder.level) ?
+                <span v-if="!isCompleted">{{
+                   isCompleted ?
                    Math.round(getActivityProgressValue(reminder.category, reminder.level)) :
-                   0}}%
+                   0
+}}%
                 </span>
               </v-tooltip>
 
@@ -97,7 +105,7 @@
             </div>
           </div>
 
-          <div class="row mt-0 px-1">
+          <div v-if="!isCompleted" class="row mt-0 px-1">
             <div class="col pb-0">
               <small class="d-block">Frequency</small>
               <span class="text-center pl-1">{{  reminder.frequency  }}</span>
@@ -146,6 +154,14 @@
               </span>
             </div>
           </div>
+          <div v-else class="row mt-2 px-1">
+            <div class="col">
+              <v-btn color="yellow darken-1">View</v-btn>
+            </div>
+            <div class="col">
+              <v-btn color="deep-orange">Reset</v-btn>
+            </div>
+          </div>
 
           <div class="d-flex align-center justify-center"></div>
         </div>
@@ -158,9 +174,11 @@
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
               {{  getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
               checkForNA(reminder.level)).length
+
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
+
               }}
             </div>
           </div>
@@ -175,9 +193,14 @@
           <div class="col">
             <h5 class="orangeLabel font-weight-bold">ACTIVITY ACTIONS</h5>
             <span class="d-block">
-              <v-btn :disabled="getActivityProgressValue(reminder.category, reminder.level) == 100" @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined small
-                title="Test Notification: Prototype Only">Test</v-btn>
-              <v-btn :disabled="getActivityProgressValue(reminder.category, reminder.level) == 100" @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small outlined>View/Edit
+              <v-btn v-if="!isCompleted" @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined small
+                title="Test Notification: Prototype Only">Test
+              </v-btn>
+              <v-btn v-else class="mr-3" color="var(--mh-blue)" small outlined>Reset</v-btn>
+              <v-btn v-if="!isCompleted"
+                @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small outlined>View/Edit
+              </v-btn>
+              <v-btn v-else class="mr-3" color="var(--mh-orange)" small outlined>View
               </v-btn>
               <v-btn @click="deleteReminder({ id: reminder.id })" color="error" outlined small>
                 <v-icon> mdi-trash-can-outline </v-icon>
@@ -221,6 +244,7 @@ export default {
       valid: true,
       goalId: "",
       goal: null,
+      isCompleted: false,
     };
   },
   computed: {
@@ -247,6 +271,7 @@ export default {
   mounted() {
     this.fetchReminders();
     this.fetchGoals();
+    this.isComplete(this.reminder.category, this.reminder.level)
   },
   methods: {
     ...mapActions([
@@ -331,6 +356,12 @@ export default {
       return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
         this.checkForNA(lev))
     },
+    isComplete(cat, lev) {
+      if (this.getActivityProgressValue(cat, lev) == 100) {
+        this.isCompleted = true
+        return true
+      }
+    }
   },
 };
 </script>
@@ -342,6 +373,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .orangeLabel {
   color: var(--mh-orange);
 }
@@ -518,7 +550,7 @@ export default {
 }
 
 .completed {
-  background-color: rgba(29, 51, 111, 0.75);
+  background-color: rgba(29, 51, 111, 0.6);
 }
 
 .enduranceColor {
