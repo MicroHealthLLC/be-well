@@ -26,6 +26,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   stepCount: Int
   dueDate: AWSDate!
   isComplete: Boolean
+  goalEnd: Boolean
   completedCount: Int
   checklist: [ChecklistItem]
 }
@@ -270,4 +271,4 @@ enum SubmissionType {
 }
 
 
-  
+   

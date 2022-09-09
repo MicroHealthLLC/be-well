@@ -214,10 +214,10 @@ export default {
       },
     },
     completeReminders() {
-      return this.reminders.length > 0 ? this.reminders.filter((r) => this.isComplete(r.category, r.level)) : ""
+      return this.reminders.length > 0 ? this.reminders.filter((r) => r.isComplete) : ""
     },
     incompleteReminders() {
-      return this.reminders.length > 0 ? this.reminders.filter((r) => !this.isComplete(r.category, r.level)) : ""
+      return this.reminders.length > 0 ? this.reminders.filter((r) => !r.isComplete) : ""
     },
      userPrefLevel() {
       // return this.reminders

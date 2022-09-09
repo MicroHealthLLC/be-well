@@ -17,6 +17,7 @@ export const getReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -57,6 +58,7 @@ export const listReminders = /* GraphQL */ `
           stepCount
           dueDate
           isComplete
+          goalEnd
           completedCount
           createdAt
           updatedAt
@@ -104,6 +106,7 @@ export const getGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -133,6 +136,7 @@ export const listGoals = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -667,6 +671,7 @@ export const remindersByLevel = /* GraphQL */ `
           stepCount
           dueDate
           isComplete
+          goalEnd
           completedCount
           createdAt
           updatedAt

@@ -17,6 +17,7 @@ export const onCreateReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -55,6 +56,7 @@ export const onUpdateReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -93,6 +95,7 @@ export const onDeleteReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -142,6 +145,7 @@ export const onCreateGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -180,6 +184,7 @@ export const onUpdateGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -218,6 +223,7 @@ export const onDeleteGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title

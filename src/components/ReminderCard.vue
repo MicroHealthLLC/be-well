@@ -142,9 +142,9 @@
             </div>
           </div>
           <div v-else class="row mt-9 ml-2">
-            <v-btn x-small class="text-blue mx-1" color="yellow darken-2">View</v-btn>
+            <v-btn x-small class="text-blue mx-1" color="yellow darken-2" @click="openReminderForm(reminder)">View</v-btn>
             <v-btn x-small class="text-blue mx-1" color="deep-orange">Reset</v-btn>
-            <v-btn x-small class="text-blue mx-1" color="red darken-1">Delete</v-btn>
+            <v-btn x-small class="text-blue mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })">Delete</v-btn>
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
