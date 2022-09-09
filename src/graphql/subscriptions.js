@@ -32,6 +32,7 @@ export const onCreateReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -69,6 +70,7 @@ export const onUpdateReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -106,6 +108,7 @@ export const onDeleteReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -128,6 +131,7 @@ export const onCreateGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -165,6 +169,7 @@ export const onUpdateGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -202,6 +207,7 @@ export const onDeleteGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner

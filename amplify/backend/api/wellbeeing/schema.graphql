@@ -13,6 +13,7 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   contentType: String!
   time: String!
   activity: String
+  isComplete: Boolean
   createdAt: AWSDateTime!
 }
 
@@ -269,4 +270,4 @@ enum SubmissionType {
 }
 
 
- 
+  

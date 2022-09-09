@@ -32,6 +32,7 @@ export const getReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -67,6 +68,7 @@ export const listReminders = /* GraphQL */ `
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner
@@ -91,6 +93,7 @@ export const getGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -124,19 +127,6 @@ export const listGoals = /* GraphQL */ `
         title
         category
         reminders {
-          items {
-            id
-            category
-            goalId
-            level
-            activity
-            frequency
-            contentType
-            time
-            createdAt
-            updatedAt
-            owner
-          }
           nextToken
         }
         progress
@@ -688,6 +678,7 @@ export const remindersByLevel = /* GraphQL */ `
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner
