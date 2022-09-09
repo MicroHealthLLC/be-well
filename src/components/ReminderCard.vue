@@ -1,7 +1,7 @@
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-      <div :class="{ 'completed': isCompleted }" class="flip-card-front clickable fontWhite">
+      <div :class="{ 'completed': reminder.isComplete }" class="flip-card-front clickable fontWhite">
         <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div :load="log(reminder)">
             <span>
@@ -10,8 +10,8 @@
           </div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
-              <span v-if="isCompleted">
-                <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
+              <span v-if="reminder.isComplete">
+                <v-icon class="mr-1 text-blue">mdi-flag-checkered</v-icon>
               </span>
               <span v-else @click="showGoals">
                 <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
@@ -34,21 +34,32 @@
           <div>Activity Completed</div>
           <template v-slot:activator="{ on }">
             <div v-on="on">
-              <span v-if="isCompleted">
+              <span v-if="reminder.isComplete">
                 <v-icon class="mr-1 trophyIcon" large color="yellow darken-2">mdi-trophy</v-icon>
               </span>
             </div>
           </template>
         </v-tooltip>
-        <div @click="isFlipped = !isFlipped">
+        <div @click="onClickCard">
           <div class="row">
             <div class="col mt-2">
               <!-- <small class="d-block">Type</small> -->
               <h3>
-                <span class="font-weight-bold text-light">
+                <span v-if="reminder.isComplete" class="font-weight-bold text-blue">
+                  <v-icon color="#1d336f" class="mr-1">{{
+                     categoryIcon(reminder.activity) || categoryIcon(reminder.category) 
+                    }}
+                  </v-icon>
+                  <span class="pt-1" v-if="reminder.activity">
+                    {{  this.capitalizeFirstLet((reminder.activity).toLowerCase())  }}</span>
+                  <span class="pt-1" v-else>
+                    {{  categoryString(reminder.category)  }}</span>
+                </span>
+                <span v-else class="font-weight-bold text-light">
                   <v-icon color="white" class="mr-1">{{
                      categoryIcon(reminder.activity) || categoryIcon(reminder.category) 
-                    }}</v-icon>
+                    }}
+                  </v-icon>
                   <span class="pt-1" v-if="reminder.activity">
                     {{  this.capitalizeFirstLet((reminder.activity).toLowerCase())  }}</span>
                   <span class="pt-1" v-else>
@@ -64,12 +75,12 @@
                   <v-progress-linear height="10" rounded striped color="lime"
                     :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
                   </v-progress-linear>
-                  <v-chip small color="lime" v-if="isCompleted" class="centered text-light px-8">
+                  <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
                   </v-chip>
                 </template>
                 <span>
-                  {{Math.round(getActivityProgressValue(reminder.category, reminder.level))}}%
+                  {{ Math.round(getActivityProgressValue(reminder.category, reminder.level)) }}%
                 </span>
               </v-tooltip>
 
@@ -81,7 +92,7 @@
             </div>
           </div>
 
-          <div v-if="!isCompleted" class="row mt-0 px-1">
+          <div v-if="!reminder.isComplete" class="row mt-0 px-1">
             <div class="col pb-0">
               <small class="d-block">Frequency</small>
               <span class="text-center pl-1">{{  reminder.frequency  }}</span>
@@ -130,33 +141,32 @@
               </span>
             </div>
           </div>
-          <div v-else class="row mt-4 pl-4">
-            <div class="col-2 pr-0">
-              <v-btn x-small class="text-light" color="yellow darken-2">View</v-btn>
-            </div>
-            <div class="col-2">
-              <v-btn x-small class="text-light" color="deep-orange">Reset</v-btn>
-            </div>
-            <div class="col lHeight pb-0">
+          <div v-else class="row mt-9 ml-2">
+            <v-btn x-small class="text-blue mx-1" color="yellow darken-2">View</v-btn>
+            <v-btn x-small class="text-blue mx-1" color="deep-orange">Reset</v-btn>
+            <v-btn x-small class="text-blue mx-1" color="red darken-1">Delete</v-btn>
+            <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
-            </div>
+            </div> -->
           </div>
           <div class="d-flex align-center justify-center"></div>
         </div>
       </div>
 
       <div class="justify-space-between px-4 flip-card-back">
-        <div class="clickable py-4 px-4" @click="isFlipped = !isFlipped">
+        <div class="clickable py-4 px-4" @click="onClickCard">
           <div class="row">
             <div class="col">
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
               {{  getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
               checkForNA(reminder.level)).length
 
+
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
+
 
               }}
             </div>
@@ -172,12 +182,12 @@
           <div class="col">
             <h5 class="orangeLabel font-weight-bold">ACTIVITY ACTIONS</h5>
             <span class="d-block">
-              <v-btn v-if="!isCompleted" @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined small
-                title="Test Notification: Prototype Only">Test
+              <v-btn v-if="!reminder.isComplete" @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined
+                small title="Test Notification: Prototype Only">Test
               </v-btn>
               <v-btn v-else class="mr-3" color="var(--mh-blue)" small outlined>Reset</v-btn>
-              <v-btn v-if="!isCompleted" @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small
-                outlined>View/Edit
+              <v-btn v-if="!reminder.isComplete" @click="openReminderForm(reminder)" class="mr-3"
+                color="var(--mh-orange)" small outlined>View/Edit
               </v-btn>
               <v-btn v-else class="mr-3" color="var(--mh-orange)" small outlined>View
               </v-btn>
@@ -224,7 +234,6 @@ export default {
       valid: true,
       goalId: "",
       goal: null,
-      isCompleted: false,
     };
   },
   computed: {
@@ -264,6 +273,9 @@ export default {
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e) {
       console.log(e);
+    },
+    onClickCard() {
+      !this.reminder.isComplete ? this.isFlipped = !this.isFlipped : this.isFlipped = false
     },
     toggleReminderFormDialog(value) {
       this.dialog = value;
@@ -333,11 +345,12 @@ export default {
     },
     isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
-        this.isCompleted = true
-        this.updateReminderById({
-          id: reminder.id,
-          isComplete: true,
-        })
+        if (!reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: true,
+          })
+        }
         return true
       }
     }
@@ -400,6 +413,10 @@ export default {
 
 .text-black {
   color: black;
+}
+
+.text-blue {
+  color: rgb(29, 51, 111) !important;
 }
 
 .activitiesCount {
@@ -529,7 +546,7 @@ export default {
 }
 
 .completed {
-  background-color: rgba(29, 51, 111, 0.6);
+  background-color: whitesmoke;
 }
 
 .enduranceColor {
