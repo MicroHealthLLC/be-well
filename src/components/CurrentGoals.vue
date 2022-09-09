@@ -244,6 +244,44 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
+      <v-dialog v-model="goalCompleteDialog" max-width="344">
+    <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      src="../assets/trophy.jpg"
+      height="200px"
+    ></v-img>
+
+    <v-card-title>
+      CONGRATULATIONS!
+    </v-card-title>
+
+    <v-card-subtitle>
+     GOAL COMPLETED!
+    </v-card-subtitle>
+
+    <v-card-actions>
+      <v-btn
+        color="orange lighten-2"
+        text
+        @click="stopCon"
+      >
+        Stop
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        icon
+        @click="show = !show"
+      >
+        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+      </v-btn>
+    </v-card-actions>
+    </v-card>    
+    </v-dialog>
     <v-dialog v-model="activityDialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
@@ -414,6 +452,7 @@ export default {
   data() {
     return {
       isFlipped: false,
+      goalCompleteDialog: false,
       activityDialog: false,
       dialog: false,
       reminder: {
@@ -516,8 +555,11 @@ export default {
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
     log(e) {
-      console.log(this.incompleteGoals)
+  
       console.log(e)
+    },
+    stopCon(){
+      this.$confetti.stop();
     },
     openNewReminderForm() {
       //console.log("this works")
@@ -549,6 +591,7 @@ export default {
       }
       try {
         if (this.goal.id) {
+          // Math.round(getGoalProgressValue(goal.reminders.items))
           //console.log(this.goal.id)
           await this.updateGoalById({
             id: this.goal.id,
@@ -635,6 +678,26 @@ export default {
       }));
     },
   },
+  mounted(){
+    if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100 && this.goal.completedCount == 0){
+          console.log(this.goal)     
+            this.updateGoalById({
+            id: this.goal.id,
+            isComplete: true,
+            completedCount: 1,           
+          });
+ 
+      }
+  },
+  watch: {
+   goal(){  
+        if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
+          console.log(this.goal.id)
+          this.$confetti.start();
+          this.goalCompleteDialog == true
+        } 
+    }
+  }
 };
 </script>
 
