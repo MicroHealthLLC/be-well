@@ -344,6 +344,10 @@ export default {
       }
       console.log(this.watchedVideos)
     },
+    getActivityProgressValue(cat, lev) {
+      return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
+        this.checkForNA(lev))
+    },
   },
   mounted() {
     this.fetchPreferences()
