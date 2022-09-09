@@ -1,11 +1,8 @@
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
-      <div :class="{ 'completed': isCompleted }"
-        class="flip-card-front clickable fontWhite">
-        <v-tooltip
-          v-if="reminder.goal && reminder.goal.id && !isCompleted"
-          max-width="200" bottom>
+      <div :class="{ 'completed': isCompleted }" class="flip-card-front clickable fontWhite">
+        <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div :load="log(reminder)">
             <span>
               {{  reminder.goal.title  }}
@@ -13,24 +10,11 @@
           </div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
-              <span @click="showGoals">
+              <span v-if="isCompleted">
                 <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
               </span>
-            </div>
-          </template>
-        </v-tooltip>
-        <v-tooltip
-          v-else-if="reminder.goal && reminder.goal.id && isCompleted"
-          max-width="200" bottom>
-          <div :load="log(reminder)">
-            <span>
-              {{  reminder.goal.title  }}
-            </span>
-          </div>
-          <template v-slot:activator="{ on }">
-            <div v-on="on" class="goalIcon activitiesCount">
-              <span>
-                <v-icon class="mr-1 text-dark">mdi-flag-checkered</v-icon>
+              <span v-else @click="showGoals">
+                <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
               </span>
             </div>
           </template>
@@ -51,7 +35,7 @@
           <template v-slot:activator="{ on }">
             <div v-on="on">
               <span v-if="isCompleted">
-                <v-icon class="mr-1 ribbonIcon" large color="yellow darken-2">mdi-medal</v-icon>
+                <v-icon class="mr-1 trophyIcon" large color="yellow darken-2">mdi-trophy</v-icon>
               </span>
             </div>
           </template>
@@ -80,20 +64,12 @@
                   <v-progress-linear height="10" rounded striped color="lime"
                     :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
                   </v-progress-linear>
-                  <v-chip small color="lime"
-                    v-if="isCompleted"
-                    class="centered text-black px-8"><strong>100%</strong></v-chip>
-                  <!-- <v-progress-linear v-else height="10" rounded striped color="lime"
-                    :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
-                    <v-chip color="yellow darken-1"><strong>Completed</strong></v-chip>
-                  </v-progress-linear> -->
-
+                  <v-chip small color="lime" v-if="isCompleted" class="centered text-light px-8">
+                    <strong>100%</strong>
+                  </v-chip>
                 </template>
-                <span v-if="!isCompleted">{{
-                   isCompleted ?
-                   Math.round(getActivityProgressValue(reminder.category, reminder.level)) :
-                   0
-}}%
+                <span>
+                  {{Math.round(getActivityProgressValue(reminder.category, reminder.level))}}%
                 </span>
               </v-tooltip>
 
@@ -154,15 +130,18 @@
               </span>
             </div>
           </div>
-          <div v-else class="row mt-2 px-1">
-            <div class="col">
-              <v-btn color="yellow darken-1">View</v-btn>
+          <div v-else class="row mt-4 pl-4">
+            <div class="col-2 pr-0">
+              <v-btn x-small class="text-light" color="yellow darken-2">View</v-btn>
             </div>
-            <div class="col">
-              <v-btn color="deep-orange">Reset</v-btn>
+            <div class="col-2">
+              <v-btn x-small class="text-light" color="deep-orange">Reset</v-btn>
+            </div>
+            <div class="col lHeight pb-0">
+              <span class="text-right">
+              </span>
             </div>
           </div>
-
           <div class="d-flex align-center justify-center"></div>
         </div>
       </div>
@@ -197,8 +176,8 @@
                 title="Test Notification: Prototype Only">Test
               </v-btn>
               <v-btn v-else class="mr-3" color="var(--mh-blue)" small outlined>Reset</v-btn>
-              <v-btn v-if="!isCompleted"
-                @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small outlined>View/Edit
+              <v-btn v-if="!isCompleted" @click="openReminderForm(reminder)" class="mr-3" color="var(--mh-orange)" small
+                outlined>View/Edit
               </v-btn>
               <v-btn v-else class="mr-3" color="var(--mh-orange)" small outlined>View
               </v-btn>
@@ -231,6 +210,7 @@ export default {
     reminder: {
       type: Object,
     },
+    showCompleted: Boolean,
     // goal: {
     //   type: Object
     // },
@@ -271,7 +251,7 @@ export default {
   mounted() {
     this.fetchReminders();
     this.fetchGoals();
-    this.isComplete(this.reminder.category, this.reminder.level)
+    this.isComplete(this.reminder)
   },
   methods: {
     ...mapActions([
@@ -284,7 +264,6 @@ export default {
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e) {
       console.log(e);
-      console.log(this.reminders)
     },
     toggleReminderFormDialog(value) {
       this.dialog = value;
@@ -352,13 +331,13 @@ export default {
         title: item.title,
       }));
     },
-    getActivityProgressValue(cat, lev) {
-      return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
-        this.checkForNA(lev))
-    },
-    isComplete(cat, lev) {
-      if (this.getActivityProgressValue(cat, lev) == 100) {
+    isComplete(reminder) {
+      if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
         this.isCompleted = true
+        this.updateReminderById({
+          id: reminder.id,
+          isComplete: true,
+        })
         return true
       }
     }
@@ -405,7 +384,7 @@ export default {
   right: 1%;
 }
 
-.ribbonIcon {
+.trophyIcon {
   position: absolute;
   top: 6%;
   right: 1%;
