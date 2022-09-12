@@ -20,6 +20,7 @@ export const createReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -35,6 +36,7 @@ export const createReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -60,6 +62,7 @@ export const updateReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -75,6 +78,7 @@ export const updateReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -100,6 +104,7 @@ export const deleteReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -115,6 +120,7 @@ export const deleteReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -140,6 +146,7 @@ export const createGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -150,6 +157,7 @@ export const createGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -180,6 +188,7 @@ export const updateGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -190,6 +199,7 @@ export const updateGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -220,6 +230,7 @@ export const deleteGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -230,6 +241,7 @@ export const deleteGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title

@@ -2,9 +2,7 @@
 <div class="bg-img">
   <div class="bg-overlay">
  <div
-      class="
-        d-sm-flex
-        justify-space-between
+      class="        
         align-center
         mt-2
         mb-2 mb-sm-2
@@ -20,11 +18,13 @@
           > -->
         </span> 
           <v-switch
+          class="align-right"
           v-model="showCompleted"
           label="Show Completed"
           color="#2f53b6"
         >
         </v-switch>
+    
       </div>
       <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
         <!-- <template v-slot:activator="{ on }">
@@ -78,9 +78,9 @@
         </div>
          </v-col>
         <v-col
-          v-for="(goal, index) in completedGoals"
+          v-for="goal in completedGoals"
           v-show="showCompleted"
-          :key="index"
+          :key="goal.id"
           cols="12"
           sm="6"
           md="4"
@@ -92,9 +92,9 @@
         </CurrentGoals>
         </v-col>
         <v-col
-          v-for="(goal, index) in incompleteGoals"
+          v-for="goal in incompleteGoals"
           v-show="!showCompleted"
-          :key="index"
+          :key="goal.id"
           cols="12"
           sm="6"
           md="4"

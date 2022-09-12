@@ -1,5 +1,5 @@
 <template>
-  <div class="flip-card">
+  <div class="flip-card" :load="log(Math.round(getGoalProgressValue(goal.reminders.items)))">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div class="flip-card-front clickable">
         <!-- <span
@@ -9,7 +9,7 @@
             ><small>Click here to achieve your goals</small> -->
         <span class="newGoalBtn3">
           <v-tooltip max-width="200" bottom>
-            <div :load="log(goal)" v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
+            <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
             <template v-slot:activator="{ on }">
               <div v-on="on" class="activitiesIcon activitiesCount" @click="openNewReminderForm">
@@ -455,6 +455,7 @@ export default {
       goalCompleteDialog: false,
       activityDialog: false,
       dialog: false,
+      show: false, 
       reminder: {
         category: "",
         level: "",
@@ -554,9 +555,8 @@ export default {
   },
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
-    log(e) {
-  
-      console.log(e)
+    log(e) {  
+     console.log(e)
     },
     stopCon(){
       this.$confetti.stop();
@@ -685,16 +685,15 @@ export default {
             id: this.goal.id,
             isComplete: true,
             completedCount: 1,           
-          });
- 
+          }); 
       }
   },
   watch: {
    goal(){  
         if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
-          console.log(this.goal.id)
+          console.log(this.goal)
           this.$confetti.start();
-          this.goalCompleteDialog == true
+          this.goalCompleteDialog = true
         } 
     }
   }

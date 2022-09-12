@@ -13,6 +13,7 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   contentType: String!
   time: String!
   activity: String
+  isComplete: Boolean
   createdAt: AWSDateTime!
 }
 
@@ -25,6 +26,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   stepCount: Int
   dueDate: AWSDate!
   isComplete: Boolean
+  goalEnd: Boolean
   completedCount: Int
   checklist: [ChecklistItem]
 }
@@ -269,4 +271,4 @@ enum SubmissionType {
 }
 
 
- 
+   
