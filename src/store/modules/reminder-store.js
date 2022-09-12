@@ -4,6 +4,7 @@ import { updateReminder } from "@/graphql/mutations";
 import { createGoalReminders } from "@/graphql/mutations";
 // import { listReminders } from "@/graphql/queries";
 import { deleteReminder } from "@/graphql/mutations";
+import { deleteGoalReminders } from "@/graphql/mutations";
 import { extendedListReminders } from "@/graphql/extended_queries";
 
 export default {
@@ -89,7 +90,16 @@ export default {
     },
     async removeReminder({ commit, dispatch }, id) {
       try {
-        await API.graphql(graphqlOperation(deleteReminder, { input: id }));
+        await API.graphql(graphqlOperation(deleteReminder, { input: id })).then(
+          (res) => {
+            let goalReminders = res.data.deleteReminder.goals.items;
+            goalReminders.map((item) => {
+              API.graphql(
+                graphqlOperation(deleteGoalReminders, { input: { id: item.id} })
+              );
+            });
+          }
+        );
         dispatch("fetchReminders");
         commit("SET_SNACKBAR", {
           show: true,

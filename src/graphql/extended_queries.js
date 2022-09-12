@@ -11,9 +11,10 @@ export const extendedListGoals = /* GraphQL */ `
         category
         reminders {
           items {
+            goalReminderId: id
             reminder {
               id
-              category              
+              category
               level
               activity
               frequency
@@ -56,6 +57,7 @@ export const extendedListReminders = /* GraphQL */ `
         category
         goals {
           items {
+            goalReminderId: id
             goal {
               id
               title
