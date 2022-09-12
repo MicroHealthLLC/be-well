@@ -2,6 +2,7 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div :class="{ 'completed': reminder.isComplete }" class="flip-card-front clickable fontWhite">
+
         <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
           <div>
             <span>
@@ -13,13 +14,14 @@
               <span v-if="reminder.isComplete">
                 <v-icon class="mr-1 text-blue">mdi-flag-checkered</v-icon>
               </span>
-              <span v-else @click="showGoals">
+              <span v-else>
                 <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
               </span>
             </div>
           </template>
         </v-tooltip>
-        <v-tooltip v-else max-width="200" bottom>
+
+        <v-tooltip v-else-if="!reminder.goal && !reminder.isComplete" max-width="200" bottom>
           <div>Add Activity to Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
@@ -30,6 +32,7 @@
             </div>
           </template>
         </v-tooltip>
+
         <v-tooltip max-width="200" top>
           <div>Activity Completed</div>
           <template v-slot:activator="{ on }">
@@ -40,6 +43,16 @@
             </div>
           </template>
         </v-tooltip>
+
+        <div>
+          <span class="levelBadge-complete" v-if="reminder.isComplete">
+            <v-chip small :color="levelColor(reminder.level)" dark>{{
+              levelTitle(reminder.level) 
+            }}
+            </v-chip>
+          </span>
+        </div>
+
         <div @click="onClickCard">
           <div class="row">
             <div class="col mt-2">
@@ -83,12 +96,6 @@
                   {{  Math.round(getActivityProgressValue(reminder.category, reminder.level))  }}%
                 </span>
               </v-tooltip>
-
-              <!-- <span>
-             <v-chip small :color="levelColor(reminder.level)" dark>{{
-            levelTitle(reminder.level)
-            }}</v-chip>
-            </span> -->
             </div>
           </div>
 
@@ -470,6 +477,11 @@ export default {
   position: absolute;
   top: 5%;
   right: 2.5%;
+}
+.levelBadge-complete {
+  position: absolute;
+  top: 8%;
+  left: 3%;
 }
 
 .smPlusSign {
