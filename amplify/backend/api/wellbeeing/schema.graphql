@@ -28,6 +28,14 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   checklist: [ChecklistItem]
 }
 
+input GoalReminderInput {
+  id: ID
+}
+
+type Mutation {
+  batchDeleteGoalReminders(goalReminders: [GoalReminderInput]): [GoalReminder]
+}
+
 type ChecklistItem {
   title: String
   isComplete: Boolean
