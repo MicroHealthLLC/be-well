@@ -12,8 +12,9 @@
         "
       >
         <div class="d-flex justify-space-between align-center">
-          <span class="text-h6 text-sm-h5"
-            ><b class="goalHeaders">MY ACTIVITIES</b></span
+          <span>
+          <h2 v-if="!showCompleted"><b class="goalHeaders">MY ACTIVITIES</b></h2>  
+          <h2 v-else><b class="goalHeaders">MY COMPLETED ACTIVITIES</b></h2>  </span
           >
           <v-switch
             v-model="remind"
