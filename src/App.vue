@@ -39,10 +39,10 @@ export default {
       const now = new Date();
       const minutes = now.getMinutes();
       const hour = now.getHours();
-      
+
       // Compare current time with each reminder
       this.filteredReminders.forEach((reminder) => {
-        // If reminder.time is true
+        if (!reminder.isComplete) {
         const time = reminder.time.split(":");
         if (time[0] == hour && time[1] == minutes) {
           console.log("Reminder found: Display Notification");
@@ -50,6 +50,7 @@ export default {
         } else {
           console.log("Reminder not found");
         }
+      }
       });
     },
     frequencyDays(frequency) {
