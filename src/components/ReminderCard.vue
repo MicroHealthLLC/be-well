@@ -155,11 +155,11 @@
             </div>
           </div>
           <div v-else class="row mt-9 ml-2">
-            <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)">View
+            <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)"><v-icon small color="white"> mdi-eye</v-icon>
             </v-btn>
-            <v-btn x-small class="text-light mx-1" color="deep-orange" @click="resetActivity(reminder)">Reset</v-btn>
+            <v-btn x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)"><v-icon small color="white"> mdi-recycle-variant</v-icon></v-btn>
             <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })">
-              Delete</v-btn>
+              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
