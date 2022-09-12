@@ -310,7 +310,8 @@ export default {
       };
     },
     categoryIcon(value) {
-      if (value) {
+      let valid = this.categories.map(t => t.value)
+      if (valid.includes(value)) {
         return (
           this.categories.find((category) => category.value == value).icon || ""
         );
