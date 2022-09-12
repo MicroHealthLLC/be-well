@@ -7,7 +7,7 @@
             @click="openNewReminderForm"       
             class="newGoalBtn"
             ><small>Click here to achieve your goals</small> -->
-        <span class="newGoalBtn3">
+        <span class="newGoalBtn3" :class="{'d-none': goal.isComplete}" >
           <v-tooltip max-width="200" bottom>
             <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
@@ -95,9 +95,9 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-progress-linear :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0" height="10" striped rounded
                     color="lime" v-bind="attrs" v-on="on"></v-progress-linear>
-                    <v-chip small color="lime" v-if="goal.isComplete" class="centered text-blue px-8">
+                    <!-- <v-chip small color="lime" v-if="goal.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
-                  </v-chip>
+                  </v-chip> -->
                 </template>
                 <span>{{ getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span>
               </v-tooltip>
@@ -317,7 +317,7 @@
             <span v-if="goal && goal.reminders.items.length > 0">
             <v-select
               v-model="reminder.category"
-              :items="filteredCategories"
+              :items="validGoalReminderOptions"
               item-text="title"
               item-value="value"
               label="Select Activity Type"
@@ -487,10 +487,18 @@ export default {
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving", "preferences"]),
+    validGoalReminderOptions(){
+      if(this.goal.reminders.items.length > 0){
+        let goalReminders = this.goal.reminders.items.map(gR => gR.category)
+         return this.filteredCategories.filter(t => !goalReminders.includes(t.value))    
+      } else return this.filteredCategories
+    },
     defaultActivity(){
       if(this.goal){
         return this.filteredCategories.filter(item => item.value == this.goal.category)[0].title
-      } else return null 
+      } else{
+        return this.filteredCategories
+      }  
     },
     userPrefLevel() {
       // return this.reminders
