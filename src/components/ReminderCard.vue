@@ -3,7 +3,7 @@
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div :class="{ 'completed': reminder.isComplete }" class="flip-card-front clickable fontWhite">
         <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
-          <div :load="log(reminder)">
+          <div>
             <span>
               {{  reminder.goal.title  }}
             </span>
@@ -80,7 +80,7 @@
                   </v-chip>
                 </template>
                 <span>
-                  {{ Math.round(getActivityProgressValue(reminder.category, reminder.level)) }}%
+                  {{  Math.round(getActivityProgressValue(reminder.category, reminder.level))  }}%
                 </span>
               </v-tooltip>
 
@@ -142,9 +142,11 @@
             </div>
           </div>
           <div v-else class="row mt-9 ml-2">
-            <v-btn x-small class="text-blue mx-1" color="yellow darken-2" @click="openReminderForm(reminder)">View</v-btn>
-            <v-btn x-small class="text-blue mx-1" color="deep-orange">Reset</v-btn>
-            <v-btn x-small class="text-blue mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })">Delete</v-btn>
+            <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)">View
+            </v-btn>
+            <v-btn x-small class="text-light mx-1" color="deep-orange" @click="resetActivity(reminder)">Reset</v-btn>
+            <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })">
+              Delete</v-btn>
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
@@ -163,9 +165,11 @@
               checkForNA(reminder.level)).length
 
 
+
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
+
 
 
               }}
@@ -342,6 +346,13 @@ export default {
         isComplete: false,
         title: item.title,
       }));
+    },
+    resetActivity(reminder) {
+      let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(reminder.category)).toLowerCase()) && v.level == this.checkForNA(reminder.level))
+      console.log(filtered)
+      /* filtered.forEach(v => {
+        this.removeWatchedVideo({ id: v.id })
+      }) */
     },
     isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {

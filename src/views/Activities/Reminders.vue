@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-img" :load="log(reminder)">
+  <div class="bg-img">
     <div class="bg-overlay">
       <div
         class="

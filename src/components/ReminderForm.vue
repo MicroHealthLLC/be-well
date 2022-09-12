@@ -148,8 +148,11 @@
       <v-btn v-if="!reminder.isComplete" @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
         >Save</v-btn
       >
-      <v-btn @click="toggleReminderFormDialog" color="secondary" outlined
+      <v-btn v-if="!reminder.isComplete" @click="toggleReminderFormDialog" color="secondary" outlined
         >Cancel</v-btn
+      >
+      <v-btn v-else @click="toggleReminderFormDialog" color="secondary" outlined
+        >Close</v-btn
       >
     </v-card-actions>
   </v-card>
