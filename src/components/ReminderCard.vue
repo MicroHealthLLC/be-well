@@ -1,3 +1,9 @@
+
+  <span :class="{ 'completed': goal.isComplete }" >
+    {{ categoryString(goal.category) }}
+    </span>   
+
+
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
@@ -275,9 +281,9 @@ export default {
       "fetchGoals",
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
-    log(e) {
-      console.log(e);
-    },
+    // log(e) {
+    //   console.log(e);
+    // },
     onClickCard() {
       !this.reminder.isComplete ? this.isFlipped = !this.isFlipped : this.isFlipped = false
     },
