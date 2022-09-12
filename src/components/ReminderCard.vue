@@ -350,9 +350,9 @@ export default {
     resetActivity(reminder) {
       let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(reminder.category)).toLowerCase()) && v.level == this.checkForNA(reminder.level))
       console.log(filtered)
-      /* filtered.forEach(v => {
+      filtered.forEach(v => {
         this.removeWatchedVideo({ id: v.id })
-      }) */
+      })
     },
     isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
@@ -366,6 +366,11 @@ export default {
       }
     }
   },
+  watch: {
+   reminder(){  
+      this.isComplete(this.reminder) 
+    }
+  }
 };
 </script>
 

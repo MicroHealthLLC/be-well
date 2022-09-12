@@ -44,7 +44,8 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title>Associated Goal</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle v-else>No Goal Set</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
