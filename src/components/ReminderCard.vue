@@ -277,7 +277,6 @@ export default {
   mounted() {
     this.fetchReminders();
     this.fetchGoals();
-    this.isComplete(this.reminder)
   },
   methods: {
     ...mapActions([
