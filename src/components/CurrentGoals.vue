@@ -1,5 +1,5 @@
 <template>
-  <div class="flip-card">
+  <div class="flip-card" :load="log(Math.round(getGoalProgressValue(goal.reminders.items)))">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div class="flip-card-front clickable">
         <!-- <span
@@ -9,7 +9,7 @@
             ><small>Click here to achieve your goals</small> -->
         <span class="newGoalBtn3">
           <v-tooltip max-width="200" bottom>
-            <div :load="log(goal)" v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
+            <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
             <template v-slot:activator="{ on }">
               <div v-on="on" class="activitiesIcon activitiesCount" @click="openNewReminderForm">
@@ -244,6 +244,44 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
+      <v-dialog v-model="goalCompleteDialog" max-width="344">
+    <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      src="../assets/trophy.jpg"
+      height="200px"
+    ></v-img>
+
+    <v-card-title>
+      CONGRATULATIONS!
+    </v-card-title>
+
+    <v-card-subtitle>
+     GOAL COMPLETED!
+    </v-card-subtitle>
+
+    <v-card-actions>
+      <v-btn
+        color="orange lighten-2"
+        text
+        @click="stopCon"
+      >
+        Stop
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        icon
+        @click="show = !show"
+      >
+        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+      </v-btn>
+    </v-card-actions>
+    </v-card>    
+    </v-dialog>
     <v-dialog v-model="activityDialog" max-width="600px">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
@@ -414,8 +452,10 @@ export default {
   data() {
     return {
       isFlipped: false,
+      goalCompleteDialog: false,
       activityDialog: false,
       dialog: false,
+      show: false, 
       reminder: {
         category: "",
         level: "",
@@ -515,9 +555,11 @@ export default {
   },
   methods: {
     ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
-    log(e) {
-      console.log(this.incompleteGoals)
-      console.log(e)
+    log(e) {  
+     console.log(e)
+    },
+    stopCon(){
+      this.$confetti.stop();
     },
     openNewReminderForm() {
       //console.log("this works")
@@ -549,6 +591,7 @@ export default {
       }
       try {
         if (this.goal.id) {
+          // Math.round(getGoalProgressValue(goal.reminders.items))
           //console.log(this.goal.id)
           await this.updateGoalById({
             id: this.goal.id,
@@ -635,6 +678,25 @@ export default {
       }));
     },
   },
+  mounted(){
+    if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100 && this.goal.completedCount == 0){
+          console.log(this.goal)     
+            this.updateGoalById({
+            id: this.goal.id,
+            isComplete: true,
+            completedCount: 1,           
+          }); 
+      }
+  },
+  watch: {
+   goal(){  
+        if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
+          console.log(this.goal)
+          this.$confetti.start();
+          this.goalCompleteDialog = true
+        } 
+    }
+  }
 };
 </script>
 

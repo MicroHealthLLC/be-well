@@ -8,9 +8,7 @@ import { TiptapVuetifyPlugin } from "tiptap-vuetify";
 import "tiptap-vuetify/dist/main.css";
 import Amplify from "aws-amplify";
 import aws_exports from "./aws-exports";
-
-Amplify.configure(aws_exports);
-
+import VueConfetti from 'vue-confetti'
 import {
   applyPolyfills,
   defineCustomElements,
@@ -20,7 +18,10 @@ applyPolyfills().then(() => {
   defineCustomElements(window);
 });
 
+
+Amplify.configure(aws_exports);
 Vue.config.productionTip = false;
+Vue.use(VueConfetti)
 Vue.use(TiptapVuetifyPlugin, {
   vuetify,
   iconsGroup: "mdi",
