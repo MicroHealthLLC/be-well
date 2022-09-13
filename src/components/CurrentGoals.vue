@@ -91,16 +91,16 @@
             <!-- Progress Bar -->
             <div class="row mt-0 px-3">
               <div class="col">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
+              <!-- <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }"> -->
                   <v-progress-linear :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0" height="10" striped rounded
-                    color="lime" v-bind="attrs" v-on="on"></v-progress-linear>
+                    color="lime"></v-progress-linear>
                     <!-- <v-chip small color="lime" v-if="goal.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
                   </v-chip> -->
-                </template>
-                <span>{{ getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span>
-              </v-tooltip>
+                <!-- </template> -->
+                <!-- <span>{{ getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0 }}%</span> -->
+              <!-- </v-tooltip> -->
               </div>
             </div>
           
