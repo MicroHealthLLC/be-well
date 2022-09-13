@@ -100,10 +100,11 @@
           required
         ></v-select> 
         <v-select
-          v-model="reminder.frequency"
-          :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
+          v-model="freqArr"
+          :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
           label="Frequency"
           :rules="[(v) => !!v || 'Frequency is required']"
+          multiple
           required
         ></v-select>
         <v-menu
@@ -179,13 +180,13 @@ export default {
       dialog: false,
       intervalId: null,
       valid: true,
+      freqArr: []
     };
   },
   mounted() {
     if (!this.reminder.id) {
        this.$refs.form.reset();
-    }
-    console.log(this.reminder)
+    }    
   },
   methods: {
     ...mapActions([
@@ -198,6 +199,9 @@ export default {
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e){
       console.log(e)
+    },
+    arrayToString(array) {
+      return array.toString()
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);    
@@ -221,6 +225,7 @@ export default {
 
        //console.log(this.reminder)
       }
+      this.reminder.frequency = this.arrayToString(this.freqArr)
 
       try {
         if (this.reminder.id) {
@@ -249,6 +254,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    displayFreq(freq) {
+      let split = freq.split(",")
+      split.sort((a, b) => {
+        let sorted = this.weekday[a] - this.weekday[b]
+        console.log(sorted)
+        return sorted;
+      })
     },
   },
   computed: {
@@ -303,6 +316,14 @@ export default {
       }
     },
   },
+  watch: {
+    reminder() {
+      if(this.reminder.frequency && this.freqArr.length == 0) {
+        let split = this.reminder.frequency.split(",")
+        split.forEach((r) => this.freqArr.push(r))
+      }
+    }
+  }
 };
 </script>
 
