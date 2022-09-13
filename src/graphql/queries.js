@@ -17,6 +17,7 @@ export const getReminder = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -32,6 +33,7 @@ export const getReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -56,6 +58,7 @@ export const listReminders = /* GraphQL */ `
           stepCount
           dueDate
           isComplete
+          goalEnd
           completedCount
           createdAt
           updatedAt
@@ -67,6 +70,7 @@ export const listReminders = /* GraphQL */ `
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner
@@ -91,6 +95,7 @@ export const getGoal = /* GraphQL */ `
           contentType
           time
           activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -101,6 +106,7 @@ export const getGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -124,25 +130,13 @@ export const listGoals = /* GraphQL */ `
         title
         category
         reminders {
-          items {
-            id
-            category
-            goalId
-            level
-            activity
-            frequency
-            contentType
-            time
-            createdAt
-            updatedAt
-            owner
-          }
           nextToken
         }
         progress
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -677,6 +671,7 @@ export const remindersByLevel = /* GraphQL */ `
           stepCount
           dueDate
           isComplete
+          goalEnd
           completedCount
           createdAt
           updatedAt
@@ -688,6 +683,7 @@ export const remindersByLevel = /* GraphQL */ `
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner

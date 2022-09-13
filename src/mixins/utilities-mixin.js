@@ -310,7 +310,8 @@ export default {
       };
     },
     categoryIcon(value) {
-      if (value) {
+      let valid = this.categories.map(t => t.value)
+      if (valid.includes(value)) {
         return (
           this.categories.find((category) => category.value == value).icon || ""
         );
@@ -336,6 +337,11 @@ export default {
         this.categories.find((category) => category.value == value).image || ""
       );
     },
+    resetActivity(reminder) {
+      let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(reminder.category)).toLowerCase()) && v.level == this.checkForNA(reminder.level))
+          console.log(filtered)
+          filtered.forEach(v => console.log(v))
+    },
     deleteWatchedVideos() {
       if (this.watchedVideos) {
         this.watchedVideos.forEach(v => {
@@ -343,6 +349,10 @@ export default {
         });
       }
       console.log(this.watchedVideos)
+    },
+    getActivityProgressValue(cat, lev) {
+      return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
+        this.checkForNA(lev))
     },
   },
   mounted() {

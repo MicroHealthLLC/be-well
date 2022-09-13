@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-img" :load="log(reminder)">
+  <div class="bg-img">
     <div class="bg-overlay">
       <div
         class="
@@ -12,21 +12,29 @@
         "
       >
         <div class="d-flex justify-space-between align-center">
-          <span class="text-h6 text-sm-h5"
-            ><b class="goalHeaders">MY ACTIVITIES</b></span
+          <span>
+          <h2 v-if="!showCompleted"><b class="goalHeaders">MY ACTIVITIES</b></h2>  
+          <h2 v-else><b class="goalHeaders">MY COMPLETED ACTIVITIES</b></h2>  </span
           >
           <v-switch
             v-model="remind"
+            label="Toggle reminders"
             @change="requestPermission"
             class="mt-1 ml-3"
             color="#2f53b6"
             hide-details
           ></v-switch>
         </div>
+        <v-switch
+          v-model="showCompleted"
+          label="Show Completed"
+          color="#2f53b6"
+        >
+        </v-switch>
       </div>
       <v-divider class="mb-4"></v-divider>
       <v-row>
-        <v-col cols="12" sm="6" md="4" lg="3">
+        <v-col v-if="!showCompleted" cols="12" sm="6" md="4" lg="3">
           <div class="newGoalCard">
             <div class="newGoalCardInner">
               <div class="newGoalDiv">
@@ -64,18 +72,31 @@
           </div>
         </v-col>
         <v-col
-          v-for="(reminder, index) in reminders"
-          :key="index"
+          v-for="(reminder, index) in completeReminders"
+          v-show="showCompleted"
+          :key="index + 'a'"
           cols="12"
           sm="6"
           md="4"
           lg="3"
           class="goalCol"
         >
-          <ReminderCard :reminder="reminder"> </ReminderCard>
-
-          <!-- ACTIVITY CARDS FOR GOALS THAT HAVE NO REMINDERS SET -->
+          <ReminderCard :reminder="reminder"></ReminderCard>
         </v-col>
+        <v-col
+          v-for="(reminder, index) in incompleteReminders"
+          v-show="!showCompleted"
+          :key="index + 'b'"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          class="goalCol"
+        >
+          <ReminderCard :reminder="reminder"></ReminderCard>
+        </v-col>
+        <!-- ACTIVITY CARDS FOR GOALS THAT HAVE NO REMINDERS SET -->
+
         <!-- <v-col
           v-for="(goal, index) in incompleteGoals"
           :key="index"        
@@ -123,6 +144,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../../mixins/utilities-mixin.js";
+import videosMixin from "../../mixins/videos-mixin";
 import ReminderCard from "../../components/ReminderCard.vue";
 import ReminderForm from "../../components/ReminderForm.vue";
 
@@ -132,10 +154,11 @@ export default {
     ReminderCard,
     ReminderForm,
   },
-  mixins: [utilitiesMixin],
+  mixins: [utilitiesMixin, videosMixin],
   data() {
     return {
       dialog: false,
+      showCompleted: false,
       intervalId: null,
       valid: true,
       reminder: {
@@ -177,6 +200,9 @@ export default {
         this.$refs.form.resetValidation();
       }
     },
+    isComplete(cat, lev) {
+      return this.getActivityProgressValue(cat, lev) == 100
+    }
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),
@@ -187,6 +213,12 @@ export default {
       set(value) {
         this.TOGGLE_REMINDERS_ON(value);
       },
+    },
+    completeReminders() {
+      return this.reminders.length > 0 ? this.reminders.filter((r) => r.isComplete) : ""
+    },
+    incompleteReminders() {
+      return this.reminders.length > 0 ? this.reminders.filter((r) => !r.isComplete) : ""
     },
      userPrefLevel() {
       // return this.reminders

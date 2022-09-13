@@ -1,7 +1,7 @@
 <template>
-  <div v-if="play">
     <!-- <VideoModal /> -->
-    <v-dialog v-model="play" width="auto" v-click-outside="goBack" overlay-opacity="0.9">
+    <div v-if="play">
+    <v-dialog v-if="play" v-model="play" width="auto" v-click-outside="goBack" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
           <iframe :src="embedVideoURL + currentVideo.videoId" width="560" height="349" frameborder="0"
@@ -223,10 +223,11 @@ export default {
     if (this.play == true) {
       this.nextVideo(this.notificationCat, this.notificationLev);
       console.log(this.currentVideo)
-      if (this.currentVideo) {
+      if (!this.isEmpty(this.currentVideo)) {
         this.addNewWatchedVideo(this.currentVideo)
       } else {
-        this.play = false;
+        console.log("false")
+        this.goBack();
       }
     }
     this.seperateVideosbyCategory();
@@ -424,6 +425,7 @@ export default {
     },*/
     addNewWatchedVideo(v) {
       this.addWatchedVideo(v)
+      this.fetchWatchedVideos()
     }, 
     checkForWatchedVideo() {
        console.log(this.currentVideo)

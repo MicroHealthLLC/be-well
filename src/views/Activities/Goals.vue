@@ -1,10 +1,8 @@
 <template>
-<div class="bg-img">
+<div class="bg-img" :load="log(watchedVideos)">
   <div class="bg-overlay">
  <div
-      class="
-        d-sm-flex
-        justify-space-between
+      class="        
         align-center
         mt-2
         mb-2 mb-sm-2
@@ -12,7 +10,18 @@
       "
     >
       <div class="d-flex justify-space-between align-center">
-        <span><h2><b class="goalHeaders">MY CURRENT GOALS</b></h2></span>
+        <span>
+          <h2 v-if="!showCompleted"><b class="goalHeaders">MY CURRENT GOALS</b></h2>  
+          <h2 v-else><b class="goalHeaders">MY COMPLETED GOALS</b></h2>      
+        </span> 
+          <v-switch
+          class="align-right"
+          v-model="showCompleted"
+          label="Show Completed"
+          color="#2f53b6"
+        >
+        </v-switch>
+    
       </div>
       <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
         <!-- <template v-slot:activator="{ on }">
@@ -39,7 +48,8 @@
     </v-card> -->
     <div>
        <v-row>
-         <v-col        
+         <v-col  
+          v-if="!showCompleted"       
           cols="12"
           sm="6"
           md="4"
@@ -54,7 +64,7 @@
         class="newGoalBtn"
         outlined
         elevation="2"
-        :disabled="!(incompleteGoals.length < 8)"      
+        :disabled="validCategories.length < 1"      
       
         ><v-icon class="checkmark"
               >mdi-flag-checkered</v-icon>SET A GOAL...</v-btn
@@ -65,8 +75,23 @@
         </div>
          </v-col>
         <v-col
-          v-for="(goal, index) in incompleteGoals"
-          :key="index"
+          v-for="goal in completedGoals"
+          v-show="showCompleted"
+          :key="goal.id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          class="goalCol"
+        >
+        <CurrentGoals :goal="goal">
+
+        </CurrentGoals>
+        </v-col>
+        <v-col
+          v-for="goal in incompleteGoals"
+          v-show="!showCompleted"
+          :key="goal.id"
           cols="12"
           sm="6"
           md="4"
@@ -79,96 +104,7 @@
         </v-col>
       </v-row>
     </div>  
-     
-     <!-- <v-expansion-panel v-for="(goal, index) in incompleteGoals" :key="index"> -->
-        <!-- <v-expansion-panel-header class="grid">
-          <div class="text-subtitle-2 clickable"> -->
-            <!-- <div>
-              <v-icon class="mr-2" color="#2f53b6">mdi-flag</v-icon
-              >{{ goal.title }}
-            </div>
-            <div class="mt-2">
-              <v-chip class="mr-2" color="#2f53b6" outlined small
-                ><v-icon class="mr-1" small>{{
-                  categoryIcon(goal.category)
-                }}</v-icon
-                >{{ categoryString(goal.category) }}</v-chip
-              >
-              <v-chip title="Due Date" color="#2f53b6" outlined small>{{
-                shortISODate(goal.dueDate)
-              }}</v-chip>
-            </div>
-          </div> -->
-          <!-- Progress Bar -->
-          <!-- <div
-            class="
-              d-flex
-              flex-column
-              d-sm-flex
-              flex-sm-row
-              align-sm-center
-              mt-3 mt-sm-0
-            "
-          > -->
-            <!-- <div class="d-flex align-center goal-progressbar">
-              <v-progress-linear
-                :value="(goal.progress / goal.stepCount) * 100"
-                color="var(--mh-green)"
-                height="20"
-                rounded
-              ></v-progress-linear>
-              <div class="text-sm-h5 font-weight-bold ml-5 mx-sm-5">
-                <span class="goal-progress-text">{{ goal.progress }}</span
-                >/{{ goal.stepCount }}
-              </div>
-            </div> -->
-          <!-- </div> -->
-        <!-- </v-expansion-panel-header> -->
-        <!-- <v-expansion-panel-content>
-          <v-checkbox
-            v-for="(item, index) in goal.checklist"
-            v-model="item.isComplete"
-            @change="update(goal)"
-            :key="index"
-            class="mt-1"
-            hide-details
-            color="var(--mh-orange)"
-          >
-            <template v-slot:label
-              ><div class="text-body-2">{{ item.title }}</div></template
-            >
-          </v-checkbox>
-          <div class="d-block d-sm-flex justify-sm-end mt-5">
-            <v-btn
-              @click="openGoalForm(goal)"
-              color="#2f53b6"
-              :block="$vuetify.breakpoint.xsOnly"
-              small
-              outlined
-              ><v-icon small left>mdi-pencil</v-icon>Edit Goal</v-btn
-            >
-          </div>
-        </v-expansion-panel-content> -->
-      <!-- </v-expansion-panel> -->
-    <!-- </div> -->
-    <!-- Completed Goals -->
-    <div v-if="completedGoals.length > 0" class="mt-15">
-      <span><h2><b class="goalHeaders">MY COMPLETED GOALS</b></h2></span>
-      <v-divider class="mb-4"></v-divider>
-      <v-row>
-        <v-col
-          v-for="(goal, index) in completedGoals"
-          :key="index"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          class="goalCol"
-        >
-          <GoalCard :goal="goal"></GoalCard>
-        </v-col>
-      </v-row>
-    </div>
+ 
 
     <!-- Dialog Form -->
     <v-dialog v-model="dialog" width="750">
@@ -191,36 +127,14 @@
             ></v-text-field> -->
             <v-select
               v-model="goal.category"
-              :items="filteredCategories"
+              :items="validCategories"
               item-text="title"
               item-value="value"
               label="I want to improve my..."
               :rules="[(v) => !!v || 'Improvement category is required']"
               required
             ></v-select>
-            <!-- <v-text-field
-              :disabled="goal.id != null || goal.id != undefined"
-              v-model.number="goal.stepCount"
-              @change="updateSteps"
-              label="Number of Goal Steps"
-              type="number"
-              min="1"
-              max="10"
-              :rules="[
-                (v) => !!v || 'Step Count is required',
-                (v) => v > 0 || 'Must be greater than 0',
-                (v) => v < 11 || 'Max Step Count is 10',
-              ]"
-              required
-            ></v-text-field> -->
-            <!-- <v-text-field
-              v-model="goal.checklist[index].title"
-              v-for="(step, index) in goal.checklist"
-              :key="index"
-              :label="`Step ${index + 1} Description`"
-              :rules="[(v) => !!v || 'Step Description is required']"
-              required
-            ></v-text-field> -->
+   
             <v-menu
               v-model="menu"
               :close-on-content-click="false"
@@ -269,135 +183,44 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- <v-dialog v-model="dialog" width="750">
-      <v-card :disabled="saving" :loading="saving" class="px-5">
-      <v-toolbar flat>
-       <template v-slot:extension>
-        <v-tabs
-          v-model="tabs"
-          fixed-tabs
-          @click="handleClick"
-        >
-          <v-tabs-slider></v-tabs-slider>
-          <v-tab
-            href="#mobile-tabs-5-1"
-          
-              >
-            <v-icon>mdi-button-pointer</v-icon>Select Improve Goal
-          </v-tab>
-        or
-          <v-tab
-            href="#mobile-tabs-5-2"
-          
-          >
-            <v-icon>mdi-pencil</v-icon>Create Your Own Goal
-          </v-tab>        
-        </v-tabs>
-        </template>
-        </v-toolbar>
-        <v-tabs-items v-model="tabs">
-          <v-tab-item :value="'mobile-tabs-5-1'">
-            <v-select
-              v-model="goal.category"
-              :items="filteredCategories"
-              item-text="title"
-              item-value="value"
-              label="I want to improve my..."
-              :rules="[(v) => !!v || 'Improvement category is required']"
-              required
-            ></v-select>
-            <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="goal.dueDate"
-                  label="I want to accomplish this goal by..."
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="[(v) => !!v || 'Date required']"
-                  required
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="goal.dueDate"
-                @input="menu = false"
-              ></v-date-picker>
-            </v-menu>
-          
-          </v-tab-item>
-          <v-tab-item :value="'mobile-tabs-5-2'">
-            <v-text-field
-              v-model="goal.title"
-              label="ex: I want to lose 5 lbs..."
-              :rules="[(v) => !!v || 'Goal title is required']"
-              required
-            ></v-text-field>
-              <v-select
-              v-model="goal.category"
-              :items="filteredCategories"
-              item-text="title"
-              item-value="value"
-              label="Focus Area"
-              :rules="[(v) => !!v || 'Focus Area is required']"
-              required
-            ></v-select>
-            <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="goal.dueDate"
-                  label="I want to accomplish this goal by..."
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="[(v) => !!v || 'Date required']"
-                  required
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="goal.dueDate"
-                @input="menu = false"
-              ></v-date-picker>
-            </v-menu>
-        </v-tab-item>
-         </v-tabs-items>
-      
-        <v-card-actions class="d-flex justify-end">
-          <v-btn
-            @click="saveGoal"
-            class="px-10 mb-3"
-            color="var(--mh-blue)"
-            depressed
-            dark
-            >Save</v-btn
-          >
-          <v-btn 
-            v-if="goal.id" 
-            color="error"
-            @click="deleteGoal({ id: goal.id })" 
-            outlined
-            ><v-icon>
-            mdi-trash-can-outline
-           </v-icon></v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
+    <v-dialog v-model="goalCompleteDialog" max-width="344">
+    <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      src="../../assets/trophy.jpg"
+      height="200px"
+    ></v-img>
+
+    <v-card-title>
+      CONGRATULATIONS!
+    </v-card-title>
+
+    <v-card-subtitle>
+     GOAL COMPLETED!
+    </v-card-subtitle>
+
+    <v-card-actions>
+      <v-btn
+        color="orange lighten-2"
+        text
+        @click="stopCon"
+      >
+        Stop
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        icon
+        @click="show = !show"
+      >
+        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+      </v-btn>
+    </v-card-actions>
+    </v-card>    
+    </v-dialog>
   </div>
   </div>
 
@@ -407,14 +230,15 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
-import GoalCard from "../../components/GoalCard.vue";
+
+// import GoalCard from "../../components/GoalCard.vue";
 import CurrentGoals from "../../components/CurrentGoals.vue";
 
 export default {
   name: "Goals",
   mixins: [dateMixin, utilitiesMixin],
   components: {
-    GoalCard,
+    // GoalCard,
     CurrentGoals,
   },
   data() {
@@ -424,6 +248,9 @@ export default {
       ],
       tabs: null, 
       dialog: false,
+      show: false,
+      showCompleted: false,
+      goalCompleteDialog: false,
       improvementGoal: true, 
       createOwnGoal: false, 
       isFlipped: false,
@@ -447,6 +274,14 @@ export default {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
     log(e) {
       console.log(e)
+    },
+    goalComplete(){
+      this.goalCompleteDialog = true
+      console.log("goal completion btn works")
+      this.$confetti.start();
+    },
+    stopCon(){
+      this.$confetti.stop();
     },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
@@ -561,7 +396,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["completedGoals", "incompleteGoals", "saving"]),
+    ...mapGetters(["completedGoals", "incompleteGoals", "saving", "goals", 'watchedVideos']),
+    validCategories(){
+      let allSavedGoals = this.goals.map(t => t.category)
+      return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
+    }
   },
   async mounted() {
     this.fetchGoals();
