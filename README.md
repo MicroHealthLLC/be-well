@@ -1,4 +1,4 @@
-# well-beeing
+# be-well
 
 ## Project setup
 
