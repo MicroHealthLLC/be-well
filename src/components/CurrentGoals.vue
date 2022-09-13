@@ -57,11 +57,27 @@
               </template>
             </v-tooltip>
             <div v-else class="dueDate">
-            <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openGoalForm(goal)"><v-icon small color="white"> mdi-eye</v-icon>
-            </v-btn>
-            <v-btn x-small class="text-light mx-1" color="green"><v-icon small color="white"> mdi-recycle-variant</v-icon></v-btn>
-            <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })">
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openGoalForm(goal)" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-eye</v-icon>
+                </v-btn>
+              </template>
+              <span>View</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="green"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
+              </template>
+              <span>Reuse</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })" v-bind="attrs" v-on="on">
               <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>

@@ -53,8 +53,8 @@
         <div>
           <span class="levelBadge-complete" v-if="reminder.isComplete">
             <v-chip small :color="levelColor(reminder.level)" dark>{{
-              levelTitle(reminder.level) 
-            }}
+               levelTitle(reminder.level) 
+              }}
             </v-chip>
           </span>
         </div>
@@ -155,11 +155,32 @@
             </div>
           </div>
           <div v-else class="row mt-9 ml-2">
-            <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)"><v-icon small color="white"> mdi-eye</v-icon>
-            </v-btn>
-            <v-btn x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)"><v-icon small color="white"> mdi-recycle-variant</v-icon></v-btn>
-            <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })">
-              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)"
+                  v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-eye</v-icon>
+                </v-btn>
+              </template>
+              <span>View</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)" v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-recycle-variant</v-icon>
+                </v-btn>
+              </template>
+              <span>Reuse</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="red darken-1"
+                  @click="deleteReminder({ id: reminder.id })" v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
+                </v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
@@ -179,9 +200,15 @@
 
 
 
+
+
+
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
+
+
+
 
 
 
@@ -379,8 +406,8 @@ export default {
     }
   },
   watch: {
-   reminder(){  
-      this.isComplete(this.reminder) 
+    reminder() {
+      this.isComplete(this.reminder)
     }
   }
 };
@@ -483,6 +510,7 @@ export default {
   top: 5%;
   right: 2.5%;
 }
+
 .levelBadge-complete {
   position: absolute;
   top: 8%;
