@@ -496,21 +496,10 @@ export default {
       let total = 0
       if (reminders) {
         reminders.forEach((r) => {
-          console.log(r)
-          let reminder = r.reminder
-          let val =
-            this.getCompletedActivities(
-              this.capitalizeFirstLet(
-                this.checkForFlex(reminder.category).toLowerCase()
-              ),
-              this.checkForNA(reminder.level)
-            ).length /
-            this.getActivities(
-              this.capitalizeFirstLet(
-                this.checkForFlex(reminder.category).toLowerCase()
-              ),
-              this.checkForNA(reminder.level)
-            ).length;
+          //console.log(r)
+          let val = this.getCompletedActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
+          this.checkForNA(r.level)).length / this.getActivities(this.capitalizeFirstLet((this.checkForFlex(r.category)).toLowerCase()),
+          this.checkForNA(r.level)).length
           total += val
         })
       return total / reminders.length * 100

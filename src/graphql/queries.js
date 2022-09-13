@@ -6,14 +6,22 @@ export const getReminder = /* GraphQL */ `
     getReminder(id: $id) {
       id
       category
-      goals {
-        items {
-          id
-          reminderID
-          goalID
-          createdAt
-          updatedAt
-          owner
+      goal {
+        id
+        title
+        category
+        reminders {
+          nextToken
+        }
+        progress
+        stepCount
+        dueDate
+        isComplete
+        goalEnd
+        completedCount
+        checklist {
+          title
+          isComplete
         }
         nextToken
       }
@@ -22,6 +30,7 @@ export const getReminder = /* GraphQL */ `
       contentType
       time
       activity
+      isComplete
       createdAt
       updatedAt
       owner
@@ -38,14 +47,26 @@ export const listReminders = /* GraphQL */ `
       items {
         id
         category
-        goals {
-          nextToken
+        goal {
+          id
+          title
+          category
+          progress
+          stepCount
+          dueDate
+          isComplete
+          goalEnd
+          completedCount
+          createdAt
+          updatedAt
+          owner
         }
         level
         frequency
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner
@@ -63,8 +84,14 @@ export const getGoal = /* GraphQL */ `
       reminders {
         items {
           id
-          reminderID
-          goalID
+          category
+          goalId
+          level
+          frequency
+          contentType
+          time
+          activity
+          isComplete
           createdAt
           updatedAt
           owner
@@ -75,6 +102,7 @@ export const getGoal = /* GraphQL */ `
       stepCount
       dueDate
       isComplete
+      goalEnd
       completedCount
       checklist {
         title
@@ -104,6 +132,7 @@ export const listGoals = /* GraphQL */ `
         stepCount
         dueDate
         isComplete
+        goalEnd
         completedCount
         checklist {
           title
@@ -721,14 +750,26 @@ export const remindersByLevel = /* GraphQL */ `
       items {
         id
         category
-        goals {
-          nextToken
+        goal {
+          id
+          title
+          category
+          progress
+          stepCount
+          dueDate
+          isComplete
+          goalEnd
+          completedCount
+          createdAt
+          updatedAt
+          owner
         }
         level
         frequency
         contentType
         time
         activity
+        isComplete
         createdAt
         updatedAt
         owner

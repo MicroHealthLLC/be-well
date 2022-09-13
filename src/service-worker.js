@@ -39,11 +39,11 @@ function categoryQuery(key) {
 
 function levelQuery(key) {
   const levels = {
-    NOVICE: "beginner-1",
-    BEGINNER: "beginner-2",
-    COMPETENT: "intermediate-1",
-    PROFICIENT: "intermediate-2",
-    EXPERT: "advanced",
+    L1: "beginner-1",
+    L2: "beginner-2",
+    L3: "intermediate-1",
+    L4: "intermediate-2",
+    L5: "advanced",
     NOT_APPLICABLE: "na",
   };
 

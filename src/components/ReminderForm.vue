@@ -1,13 +1,15 @@
 <template>
-  <v-card :disabled="saving" :loading="saving" :load="log(reminder)">
+  <v-card :disabled="saving" :loading="saving">
     <v-card-title
-      ><span v-if="reminder.id && !associatedGoal">
-        <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Edit
-        Activity</span
+      ><span v-if="reminder.id && !associatedGoal && !reminder.isComplete" >
+      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Edit Activity</span
       ><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span
-      ><span v-if="!reminder.id"
-        ><v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Add
-        Activity</span
+      ><span v-if="!reminder.id"><v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>Add Activity</span>
+      <span v-if="reminder.isComplete">
+      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
+      >mdi-yoga</v-icon>View Activity</span
       >
     </v-card-title>
     <v-card-text>
@@ -21,6 +23,63 @@
           :multiple="true"
         ></v-select>
       </v-form>
+      <v-list disabled v-else-if="reminder.isComplete">
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>Focus Area</v-list-item-title>
+            <v-list-item-subtitle>{{reminder.category}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>Frequency</v-list-item-title>
+            <v-list-item-subtitle>{{reminder.frequency}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>Time</v-list-item-title>
+            <v-list-item-subtitle>{{reminder.time}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>Associated Goal</v-list-item-title>
+            <v-list-item-subtitle v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle v-else>No Goal Set</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <!-- <v-form ref="form" v-model="valid" v-else-if="reminder.isComplete">
+         <v-select
+          v-model="reminder.category"
+          :items="reminder.category"
+          item-text="title"
+          item-value="value"
+          label="Selected Activity"
+          disabled
+        ></v-select> 
+        <v-select
+          v-model="reminder.frequency"
+          :items="reminder.frequency"
+          label="Frequency"
+          disabled
+        ></v-select>
+        <v-select
+          v-model="reminder.time"
+          :items="reminder.time"
+          label="Time"
+          disabled
+        ></v-select>
+          <v-select
+            v-model="reminder.goal.title"
+            :items="reminder.goal.title"
+            item-text="title"
+            item-value="id"
+            label="Associated with Goal"
+            disabled
+          ></v-select>  
+      </v-form> -->
       <v-form ref="form" v-model="valid" v-else>
         <!-- reminder.activity will included activity names -->
         <!-- <v-select
@@ -89,11 +148,14 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
-      <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
+      <v-btn v-if="!reminder.isComplete" @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
         >Save</v-btn
       >
-      <v-btn @click="toggleReminderFormDialog" color="secondary" outlined
+      <v-btn v-if="!reminder.isComplete" @click="toggleReminderFormDialog" color="secondary" outlined
         >Cancel</v-btn
+      >
+      <v-btn v-else @click="toggleReminderFormDialog" color="secondary" outlined
+        >Close</v-btn
       >
     </v-card-actions>
   </v-card>
@@ -160,7 +222,7 @@ export default {
           }
         });
 
-        console.log(this.reminder);
+       //console.log(this.reminder)
       }
 
       try {
@@ -182,10 +244,8 @@ export default {
           // this.reminder.category = this.activities.filter(t => t && t.title == this.reminder.activity)[0].category;
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
-          await this.addReminder({
-            reminder: this.reminder,
-            goalIds: this.goalIds,
-          });
+          //console.log(this.reminder)
+          await this.addReminder(this.reminder);
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
