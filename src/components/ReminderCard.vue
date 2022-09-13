@@ -197,21 +197,9 @@
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
               {{  getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
               checkForNA(reminder.level)).length
-
-
-
-
-
-
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
-
-
-
-
-
-
               }}
             </div>
           </div>
@@ -402,6 +390,13 @@ export default {
           })
         }
         return true
+      } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {
+        if (reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+        }
       }
     }
   },
