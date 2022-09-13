@@ -106,6 +106,7 @@
           :rules="[(v) => !!v || 'Frequency is required']"
           multiple
           required
+          dense
         ></v-select>
         <v-menu
           ref="menu"

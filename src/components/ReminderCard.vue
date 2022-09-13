@@ -1,9 +1,3 @@
-
-  <span :class="{ 'completed': goal.isComplete }" >
-    {{ categoryString(goal.category) }}
-    </span>   
-
-
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
@@ -44,20 +38,20 @@
           <template v-slot:activator="{ on }">
             <div v-on="on">
               <span v-if="reminder.isComplete">
-                <v-icon class="mr-1 trophyIcon" large color="yellow darken-2">mdi-trophy</v-icon>
+                <v-icon class="mr-1 trophyIcon" color="yellow darken-2">mdi-trophy</v-icon>
               </span>
             </div>
           </template>
         </v-tooltip>
 
-        <div>
+        <!-- <div>
           <span class="levelBadge-complete" v-if="reminder.isComplete">
             <v-chip small :color="levelColor(reminder.level)" dark>{{
                levelTitle(reminder.level) 
               }}
             </v-chip>
           </span>
-        </div>
+        </div> -->
 
         <div @click="onClickCard">
           <div class="row">
