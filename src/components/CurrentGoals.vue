@@ -258,16 +258,24 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
+          <span v-if="goal.isComplete">
+                <label class="d-block">Goal</label>
+                <span class="mb-3">{{goal.title}} </span>            
+                <label class="d-block">Focus Area</label>
+                <span class="mb-3">{{goal.category}} </span>                     
+                <label class="d-block">Due Date</label>
+                <span class="mb-3">{{goal.dueDate}}</span>
+              </span>
           <v-card-text>
             <v-form ref="goalform" v-model="valid">
-              <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required>
-              </v-text-field>
-              <v-select v-model="goal.category" :items="filteredCategories" item-text="title" item-value="value"
+              <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required :class="{ 'd-none': goal.isComplete }">
+              </v-text-field>               
+              <v-select v-model="goal.category" :items="filteredCategories" item-text="title" item-value="value" :class="{ 'd-none': goal.isComplete }"
                 label="Focus Area" :rules="[(v) => !!v || 'Improvement category is required']" required></v-select>            
-              <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+              <v-menu :class="{ 'd-none': goal.isComplete }" v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
                 offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field v-model="goal.dueDate" label="I want to accomplish this goal by..."
+                  <v-text-field :class="{ 'd-none': goal.isComplete }" v-model="goal.dueDate" label="I want to accomplish this goal by..."
                     prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
                     :rules="[(v) => !!v || 'Date required']" required></v-text-field>
                 </template>
