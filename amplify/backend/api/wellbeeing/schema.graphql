@@ -91,7 +91,7 @@ type Video
   createdAt: AWSDateTime!
 }
 
-type WatchedVideo @model @auth(rules: [{ allow: owner }]) {
+type WatchedVideo @model @auth(rules: [{ allow: owner identityClaim: "sub::username" }]) {
   id: ID!
   title: String!
   videoId: String!
@@ -271,4 +271,4 @@ enum SubmissionType {
 }
 
 
-   
+      

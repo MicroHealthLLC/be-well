@@ -257,6 +257,15 @@ export default {
           query: "favorites",
         },
       ],
+      weekdays: {
+        'Sunday': 1,
+        'Monday': 2,
+        'Tuesday': 3,
+        'Wednesday': 4,
+        'Thursday': 5,
+        'Friday': 6,
+        'Saturday': 7,
+      }
     };
   },
   methods: {
@@ -351,8 +360,10 @@ export default {
       console.log(this.watchedVideos)
     },
     getActivityProgressValue(cat, lev) {
-      return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
-        this.checkForNA(lev))
+      if (cat && lev) {
+        return this.getProgressValue(this.capitalizeFirstLet((this.checkForFlex(cat)).toLowerCase()),
+          this.checkForNA(lev))
+      }
     },
   },
   mounted() {

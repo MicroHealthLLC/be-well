@@ -54,13 +54,32 @@ export default {
       });
     },
     frequencyDays(frequency) {
-      if (frequency == "Mon/Wed/Fri") {
+      console.log(frequency)
+      let days = []
+      if (frequency.includes("Sunday")) {
+        days.push(0)
+      } if (frequency.includes("Monday")) {
+        days.push(1)
+      } if (frequency.includes("Tuesday")) {
+        days.push(2)
+      } if (frequency.includes("Wednesday")) {
+        days.push(3)
+      } if (frequency.includes("Thursday")) {
+        days.push(4)
+      } if (frequency.includes("Friday")) {
+        days.push(5)
+      } if (frequency.includes("Saturday")) {
+        days.push(6)
+      } 
+      console.log(days)
+      return days
+      /* if (frequency == "Mon/Wed/Fri") {
         return [1, 3, 5];
       } else if (frequency == "Tues/Thurs/Sat") {
         return [2, 4, 6];
       } else {
         return [0, 1, 2, 3, 4, 5, 6];
-      }
+      } */
     },
   },
   computed: {
@@ -69,8 +88,9 @@ export default {
       const now = new Date();
       const day = now.getDay();
       // Only return reminders with matching alarm day
-      return this.reminders.filter((reminder) =>
+      return this.reminders.filter((reminder) => {
         this.frequencyDays(reminder.frequency).includes(day)
+      }
       );
     },
   },
