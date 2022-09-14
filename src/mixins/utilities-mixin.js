@@ -379,20 +379,16 @@ export default {
         //console.log("Strength: L1")
         return 'L1'
       }
-      if(prefs[0].l2){
-        console.log("Strength: L2")
+      if(prefs[0].l2){       
         return 'L2'
       }
-      if(prefs[0].l3){
-        console.log("Strength: L3")
+      if(prefs[0].l3){       
         return 'L3'
       }
-      if(prefs[0].l4){
-        console.log("Strength: L4")
+      if(prefs[0].l4){      
         return 'L4'
       } 
-      if(prefs[0].l5){
-        console.log("Strength: L5")
+      if(prefs[0].l5){       
         return 'L5'
       }       
     } else if (!this.preferences){
@@ -402,24 +398,20 @@ export default {
   balanceLevel(){
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Balance')   
-      if(prefs[0].l1){
-        console.log("Balance: L1")
+      if(prefs[0].l1){       
         return 'L1'
       }
-      if(prefs[0].l2){
-        console.log("Balance: L2")
+      if(prefs[0].l2){        
         return 'L2'
       }
-      if(prefs[0].l3){
-        console.log("Balance: L3")
+      if(prefs[0].l3){        
         return 'L3'
       }
       if(prefs[0].l4){
         //console.log("Balance: L4")
         return 'L4'
       }  
-      if(prefs[0].l4){
-        console.log("Balance: L5")
+      if(prefs[0].l4){      
         return 'L5'
       }  
      } else if (!this.preferences){
@@ -431,24 +423,20 @@ export default {
       //console.log("endurance")
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Endurance')   
       //console.log(prefs)
-      if(prefs[0].l1){
-        console.log("Endurance: L1")
+      if(prefs[0].l1){      
         return 'L1'
       }
-      if(prefs[0].l2){
-        console.log("Endurance: L2")
+      if(prefs[0].l2){      
         return 'L2'
       }
-      if(prefs[0].l3){
-        console.log("Endurance: L3")
+      if(prefs[0].l3){       
         return 'L3'
       }
       if(prefs[0].l4){
         //console.log("Endurance: L4")
         return 'L4'
       }
-      if(prefs[0].l5){
-        console.log("Endurance: L5")
+      if(prefs[0].l5){      
         return 'L5'
       } 
     } else if (!this.preferences){
@@ -458,8 +446,7 @@ export default {
   nutritionLevel(){
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Nutrition')   
-      if(!prefs[0].not_interested){
-        console.log("Nutrition: I AM INTERESTED")
+      if(!prefs[0].not_interested){      
         return 'NOT_APPLICABLE'
       }
       if(prefs[0].not_interested){
@@ -477,8 +464,7 @@ export default {
         //console.log("Recovery: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
-      if(prefs[0].not_interested){
-        console.log("RECOVERY: I AM NOT INTERESTED")
+      if(prefs[0].not_interested){       
         return false
       }
     } else if (!this.preferences){
@@ -492,8 +478,7 @@ export default {
         //console.log("ERGONOMICS: I AM INTERESTED")
         return 'NOT_APPLICABLE'
       }  
-      if(prefs[0].not_interested){
-        console.log("ERGONOMICS: I AM NOT INTERESTED")
+      if(prefs[0].not_interested){      
         return false
       }
     } else if (!this.preferences){
@@ -504,23 +489,18 @@ export default {
     if (this.preferences && this.preferences[0]){
       let prefs = this.preferences[0].preference_items.filter(t => t && t.category == 'Flexibility & Mobility')   
       if(prefs[0].l1){
-        //console.log("Flexibility & Mobility: L1")
         return 'L1'
       }
       if(prefs[0].l2){
-        console.log("Flexibility & Mobility: L2")
         return 'L2'
       }
       if(prefs[0].l3){
-        console.log("Flexibility & Mobility: L3")
         return 'L3'
       }
       if(prefs[0].l4){
-        console.log("Flexibility & Mobility: L4")
         return 'L4'
       }   
       if(prefs[0].l5){
-        console.log("Flexibility & Mobility: L5")
         return 'L5'
       }  
     } else if (!this.preferences){

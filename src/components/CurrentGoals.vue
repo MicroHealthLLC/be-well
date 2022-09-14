@@ -258,14 +258,14 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
-          <span v-if="goal.isComplete">
-                <label class="d-block">Goal</label>
-                <span class="mb-3">{{goal.title}} </span>            
-                <label class="d-block">Focus Area</label>
-                <span class="mb-3">{{goal.category}} </span>                     
-                <label class="d-block">Due Date</label>
-                <span class="mb-3">{{goal.dueDate}}</span>
-              </span>
+          <span v-if="goal.isComplete" cals>
+            <label class="d-block">Goal</label>
+            <span class="mb-3">{{goal.title}} </span>            
+            <label class="d-block">Focus Area</label>
+            <span class="mb-3">{{goal.category}} </span>                     
+            <label class="d-block">Due Date</label>
+            <span class="mb-3">{{goal.dueDate}}</span>
+          </span>
           <v-card-text>
             <v-form ref="goalform" v-model="valid">
               <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required :class="{ 'd-none': goal.isComplete }">
