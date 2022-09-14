@@ -357,11 +357,12 @@
               required
             ></v-select> -->
             <v-select
-              v-model="reminder.frequency"
-              :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
+              v-model="freqArr"
+              :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
               label="Frequency"
               :rules="[(v) => !!v || 'Frequency is required']"
               required
+              multiple
             ></v-select>
             <v-menu
               ref="menu"
@@ -499,6 +500,7 @@ export default {
       valid: true,
       a_valid: true,
       menu: false,
+      freqArr: []
     };
   },
   computed: {
@@ -623,6 +625,9 @@ export default {
       this.goal = goal;
       console.log(this.goal)
     },
+    arrayToString(array) {
+      return array.toString()
+    },
     closeGoalForm() {
       this.dialog = false;
     },
@@ -664,6 +669,8 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
+      this.reminder.frequency = this.arrayToString(this.freqArr)
+
       if (this.goal.reminders.items.length == 0 || !this.goal.reminders.items) {
         this.reminder.category = this.goal.category
         this.reminder.level = this.userPrefLevel
@@ -731,18 +738,24 @@ export default {
   // },
   watch: {
    goal(){  
-        if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
-          this.updateGoalById({
-            id: this.goal.id,
-            isComplete: true,
-            completedCount: 1,           
-          }); 
-          console.log(this.goal)
-          this.$confetti.start();
-          this.goalCompleteDialog = true
-          this.confettiGoalName = this.goal.category   
-        } 
+    if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
+      this.updateGoalById({
+        id: this.goal.id,
+        isComplete: true,
+        completedCount: 1,           
+      }); 
+      console.log(this.goal)
+      this.$confetti.start();
+      this.goalCompleteDialog = true
+      this.confettiGoalName = this.goal.category   
+    } 
+  },
+  reminder() {
+    if(this.reminder.frequency && this.freqArr.length == 0) {
+      let split = this.reminder.frequency.split(",")
+      split.forEach((r) => this.freqArr.push(r))
     }
+  }
   }
 };
 </script>
