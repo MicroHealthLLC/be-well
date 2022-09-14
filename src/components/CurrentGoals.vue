@@ -379,36 +379,26 @@
               :rules="[(v) => !!v || 'Activity Type required']"
               required
             ></v-select> -->
-              <v-select
-                v-model="reminder.frequency"
-                :items="['Daily', 'Mon/Wed/Fri', 'Tues/Thurs/Sat']"
-                label="Frequency"
-                :rules="[(v) => !!v || 'Frequency is required']"
-                required
-              ></v-select>
-              <v-menu
-                ref="menu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="reminder.time"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="reminder.time"
-                    label="Schedule A Reminder"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="[(v) => !!v || 'Time is required']"
-                    required
-                  ></v-text-field>
-                </template>
-                <v-time-picker
+            <v-select
+              v-model="freqArr"
+              :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
+              label="Frequency"
+              :rules="[(v) => !!v || 'Frequency is required']"
+              required
+              multiple
+            ></v-select>
+            <v-menu
+              ref="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="reminder.time"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="reminder.time"
                   ampm-in-title
                   format="ampm"
@@ -564,6 +554,7 @@ export default {
       valid: true,
       a_valid: true,
       menu: false,
+      freqArr: []
     };
   },
   computed: {
@@ -687,6 +678,9 @@ export default {
       this.goal = goal;
       console.log(this.goal)
     },
+    arrayToString(array) {
+      return array.toString()
+    },
     closeGoalForm() {
       this.dialog = false;
     },
@@ -728,6 +722,8 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
+      this.reminder.frequency = this.arrayToString(this.freqArr)
+
       if (this.goal.reminders.items.length == 0 || !this.goal.reminders.items) {
         this.reminder.category = this.goal.category
         this.reminder.level = this.userPrefLevel
@@ -795,18 +791,24 @@ export default {
   // },
   watch: {
    goal(){  
-        if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
-          this.updateGoalById({
-            id: this.goal.id,
-            isComplete: true,
-            completedCount: 1,           
-          }); 
-          console.log(this.goal)
-          this.$confetti.start();
-          this.goalCompleteDialog = true
-          this.confettiGoalName = this.goal.category   
-        } 
+    if (Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  && this.goal.completedCount == 0){
+      this.updateGoalById({
+        id: this.goal.id,
+        isComplete: true,
+        completedCount: 1,           
+      }); 
+      console.log(this.goal)
+      this.$confetti.start();
+      this.goalCompleteDialog = true
+      this.confettiGoalName = this.goal.category   
+    } 
+  },
+  reminder() {
+    if(this.reminder.frequency && this.freqArr.length == 0) {
+      let split = this.reminder.frequency.split(",")
+      split.forEach((r) => this.freqArr.push(r))
     }
+  }
   }
 };
 </script>

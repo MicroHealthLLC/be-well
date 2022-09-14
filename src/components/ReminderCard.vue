@@ -1,9 +1,3 @@
-
-  <span :class="{ 'completed': goal.isComplete }" >
-    {{ categoryString(goal.category) }}
-    </span>   
-
-
 <template>
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
@@ -44,20 +38,20 @@
           <template v-slot:activator="{ on }">
             <div v-on="on">
               <span v-if="reminder.isComplete">
-                <v-icon class="mr-1 trophyIcon" large color="yellow darken-2">mdi-trophy</v-icon>
+                <v-icon class="mr-1 trophyIcon" color="yellow darken-2">mdi-trophy</v-icon>
               </span>
             </div>
           </template>
         </v-tooltip>
 
-        <div>
+        <!-- <div>
           <span class="levelBadge-complete" v-if="reminder.isComplete">
             <v-chip small :color="levelColor(reminder.level)" dark>{{
                levelTitle(reminder.level) 
               }}
             </v-chip>
           </span>
-        </div>
+        </div> -->
 
         <div @click="onClickCard">
           <div class="row">
@@ -108,7 +102,7 @@
           <div v-if="!reminder.isComplete" class="row mt-0 px-1">
             <div class="col pb-0">
               <small class="d-block">Frequency</small>
-              <span class="text-center pl-1">{{  reminder.frequency  }}</span>
+              <span class="text-center pl-1">{{  displayFreq(reminder.frequency)  }}</span>
             </div>
             <div class="col pb-0">
               <small class="d-block">Time</small>
@@ -197,21 +191,9 @@
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
               {{  getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
               checkForNA(reminder.level)).length
-
-
-
-
-
-
               }} of {{
                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
                checkForNA(reminder.level)).length
-
-
-
-
-
-
               }}
             </div>
           </div>
@@ -323,6 +305,62 @@ export default {
     toggleReminderFormDialog(value) {
       this.dialog = value;
     },
+    displayFreq(frequency) {
+      let split = frequency.split(",")
+        if (split.length == 7) {
+          return "Daily"
+        } else if (split.length <= 3) {
+          let newFreq = []
+          if (split.includes("Sunday")) {
+            newFreq.push("Sun")
+          }
+          if (split.includes("Monday")) {
+            newFreq.push("Mon")
+          }
+          if (split.includes("Tuesday")) {
+            newFreq.push("Tues")
+          }
+          if (split.includes("Wednesday")) {
+            newFreq.push("Weds")
+          }
+          if (split.includes("Thursday")) {
+            newFreq.push("Thurs")
+          }
+          if (split.includes("Friday")) {
+            newFreq.push("Fri")
+          }
+          if (split.includes("Saturday")) {
+            newFreq.push("Sat")
+          }
+          let joined = newFreq.join('/')
+          return joined
+        } else {
+          let newFreq = []
+          if (split.includes("Sunday")) {
+            newFreq.push("Su")
+          }
+          if (split.includes("Monday")) {
+            newFreq.push("M")
+          }
+          if (split.includes("Tuesday")) {
+            newFreq.push("Tu")
+          }
+          if (split.includes("Wednesday")) {
+            newFreq.push("W")
+          }
+          if (split.includes("Thursday")) {
+            newFreq.push("Th")
+          }
+          if (split.includes("Friday")) {
+            newFreq.push("F")
+          }
+          if (split.includes("Saturday")) {
+            newFreq.push("Sa")
+          }
+          let joined = newFreq.join('/')
+          return joined
+        }
+    },
     showGoals() {
       this.toggleReminderFormDialog(true);
       this.SET_ASSOCIATED_GOAL(true)
@@ -402,6 +440,13 @@ export default {
           })
         }
         return true
+      } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {
+        if (reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+        }
       }
     }
   },
