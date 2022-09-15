@@ -26,32 +26,32 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title> <v-icon>{{categoryIcon(reminder.category)}}</v-icon>Focus Area</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.category}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-6">{{reminder.category}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-stairs</v-icon>Level</v-list-item-title>
-            <v-list-item-subtitle>{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7">{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.frequency}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7">{{reminder.frequency}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-clock</v-icon>Time</v-list-item-title>
-            <v-list-item-subtitle >{{reminder.time}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7">{{reminder.time}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-flag-checkered</v-icon>Associated Goal</v-list-item-title>
-            <v-list-item-subtitle v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>No Goal Set</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7" v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7" v-else>No Goal Set</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -197,7 +197,9 @@ export default {
   mounted() {
     if (!this.reminder.id) {
        this.$refs.form.reset();
-    }    
+    }
+    this.freqStringToArray()
+
   },
   methods: {
     ...mapActions([
@@ -210,6 +212,10 @@ export default {
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e){
       console.log(e)
+    },
+    freqStringToArray() {
+      this.freqArr = this.reminder.frequency.split(",")
+      this.freqArr = this.displayFreq(this.freqArr)
     },
     arrayToString(array) {
       return array.toString()
@@ -267,12 +273,7 @@ export default {
       }
     },
     displayFreq(freq) {
-      let split = freq.split(",")
-      split.sort((a, b) => {
-        let sorted = this.weekday[a] - this.weekday[b]
-        console.log(sorted)
-        return sorted;
-      })
+     return freq.sort((a, b) => this.weekdays[a] - this.weekdays[b])
     },
   },
   computed: {
