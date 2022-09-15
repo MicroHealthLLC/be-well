@@ -163,7 +163,7 @@
                   <v-icon small color="white"> mdi-recycle-variant</v-icon>
                 </v-btn>
               </template>
-              <span>Reuse</span>
+              <span>Do it again!</span>
             </v-tooltip>
             <!-- <v-tooltip v-if="reminder.goal" bottom>
               <template v-slot:activator="{ on, attrs }">
