@@ -163,7 +163,7 @@
                   <v-icon small color="white"> mdi-recycle-variant</v-icon>
                 </v-btn>
               </template>
-              <span>Reuse</span>
+              <span>Do it again!</span>
             </v-tooltip>
             <!-- <v-tooltip v-if="reminder.goal" bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -449,15 +449,23 @@ export default {
       filtered.forEach(v => {
         this.removeWatchedVideo({ id: v.id })
       })
-      this.isComplete(reminder)
+      this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+
     },
     isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
         if (!reminder.isComplete) {
-          this.updateReminderById({
-            id: reminder.id,
-            isComplete: true,
-          })
+          try{
+            this.updateReminderById({
+              id: reminder.id,
+              isComplete: true,
+            })
+          } catch (err) {
+            console.log(err)
+          }
         }
         return true
       } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {
@@ -471,8 +479,13 @@ export default {
     }
   },
   watch: {
-    reminder() {
-      this.isComplete(this.reminder)
+    reminders() {
+      let rem = this.reminders.filter(r => r)
+      console.log(rem)
+      for (let i = 0; i < rem.length; i++) {
+        this.isComplete(rem[i])
+        console.log(rem[i])
+      }
     }
   }
 };

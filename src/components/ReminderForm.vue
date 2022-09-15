@@ -25,33 +25,33 @@
       <v-list disabled v-else-if="reminder.isComplete">
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Focus Area</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.category}}</v-list-item-subtitle>
+            <v-list-item-title> <v-icon>{{categoryIcon(reminder.category)}}</v-icon>Focus Area</v-list-item-title>
+            <v-list-item-subtitle class="ml-6">{{reminder.category}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Level</v-list-item-title>
-            <v-list-item-subtitle>{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-stairs</v-icon>Level</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Frequency</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.frequency}}</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{reminder.frequency}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Time</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.time}}</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-clock</v-icon>Time</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{reminder.time}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Associated Goal</v-list-item-title>
-            <v-list-item-subtitle v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>No Goal Set</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-flag-checkered</v-icon>Associated Goal</v-list-item-title>
+            <v-list-item-subtitle class="ml-7" v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7" v-else>No Goal Set</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>

@@ -1,8 +1,8 @@
 <template>
   <div class="flip-card">
-    <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped && !goal.isComplete}">
-      <div :class="{ 'completed': goal.isComplete }" class="flip-card-front clickable" :load="log(goal)" >
-        <span class="newGoalBtn3" :class="{'d-none': goal.isComplete}" >
+    <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped && !goal.isComplete }">
+      <div :class="{ 'completed': goal.isComplete }" class="flip-card-front clickable">
+        <span class="newGoalBtn3" :class="{ 'd-none': goal.isComplete }">
           <v-tooltip max-width="200" bottom>
             <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
@@ -21,40 +21,47 @@
           </v-tooltip>
         </span>
         <span class="newGoalBtn3">
-          </span>
-           <v-tooltip v-if="!goal.isComplete" max-width="200" bottom>
-              <div>Due Date</div>
-              <template v-slot:activator="{ on }">
-                <div v-on="on" class="dueDate">
-                  <v-icon color="white" small left class="mr-1" :class="{ 'text-blue': goal.isComplete }">mdi-calendar</v-icon>
-                  <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString() }}</small>
-                </div>
-              </template>
-            </v-tooltip>
-            <div v-else class="dueDate">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openGoalForm(goal)" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-eye</v-icon>
-                </v-btn>
-              </template>
-              <span>View</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
-              </template>
-              <span>Reuse</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })" v-bind="attrs" v-on="on">
-              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
-              </template>
-              <span>Delete</span>
-            </v-tooltip>          
-          </div>
-            <div @click="isFlipped = !isFlipped" class="testC">
-            <div class="row">
+        </span>
+        <v-tooltip v-if="!goal.isComplete" max-width="200" bottom>
+          <div>Due Date</div>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="dueDate">
+              <v-icon color="white" small left class="mr-1" :class="{ 'text-blue': goal.isComplete }">mdi-calendar
+              </v-icon>
+              <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString() }}</small>
+            </div>
+          </template>
+        </v-tooltip>
+        <div v-else class="dueDate">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openGoalForm(goal)" v-bind="attrs"
+                v-on="on">
+                <v-icon small color="white"> mdi-eye</v-icon>
+              </v-btn>
+            </template>
+            <span>View</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)">
+                <v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon>
+              </v-btn>
+            </template>
+            <span>Do it again!</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })"
+                v-bind="attrs" v-on="on">
+                <v-icon small color="white"> mdi-trash-can-outline </v-icon>
+              </v-btn>
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
+        </div>
+        <div @click="isFlipped = !isFlipped" class="testC">
+          <div class="row">
             <div class="col mt-2">
               <h3 class="goalTitle">
                 <v-tooltip max-width="200" bottom>
@@ -67,19 +74,23 @@
                     </div>
                   </template>
                 </v-tooltip>
-                <span :class="{ 'text-blue': goal.isComplete }" >
+                <span :class="{ 'text-blue': goal.isComplete }" v-if="goal.category === 'FLEXIBILITY_MOBILITY'">
+                  I want to improve my flexibility & mobility
+                </span>
+                <span :class="{ 'text-blue': goal.isComplete }" v-else>
                   {{ goal.title }}
                 </span>
               </h3>
             </div>
+          </div>
+          <!-- Progress Bar -->
+          <div class="row mt-0 px-3">
+            <div class="col">
+              <v-progress-linear
+                :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0"
+                height="10" striped rounded color="lime"></v-progress-linear>
             </div>
-            <!-- Progress Bar -->
-            <div class="row mt-0 px-3">
-              <div class="col">
-                   <v-progress-linear :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0" height="10" striped rounded
-                    color="lime"></v-progress-linear>
-               </div>
-            </div>         
+          </div>
         </div>
       </div>
       <div class="justify-space-between flip-card-back">
@@ -108,7 +119,7 @@
               <h5 class="orangeLabel d-flex">
                 COMPLETED
               </h5>
-            </div>          
+            </div>
           </div>
           <div class="progressWrapper">
             <div class="row mt-0">
@@ -128,156 +139,188 @@
                   <span v-for="g, i in goal.reminders.items" :key="i">
                     <h5>{{ getCompletedActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
                         checkForNA(g.level)).length
-                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()), checkForNA(g.level)).length}}</h5>
+                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
+    checkForNA(g.level)).length
+}}</h5>
                   </span>
                 </span>
               </div>
             </div>
           </div>
-        </div>    
-        <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>         
+        </div>
+        <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
       <v-dialog v-model="goalCompleteDialog" max-width="344">
-        <v-card
-          class="mx-auto"
-          max-width="344"
-        >
-        <v-img
-          src="../assets/trophy.jpg"
-          height="200px"
-        ></v-img>
-        <v-card-title>
-          CONGRATULATIONS!
-        </v-card-title>
-        <v-card-subtitle>
-        You completed your <span><b>{{confettiGoalName}}</b></span> goal!  
-        </v-card-subtitle>
-        <v-card-actions>
-          <v-tooltip bottom>
+        <v-card class="mx-auto" max-width="344">
+          <v-img src="../assets/trophy.jpg" height="200px"></v-img>
+          <v-card-title>
+            CONGRATULATIONS!
+          </v-card-title>
+          <v-card-subtitle>
+            You completed your <span><b>{{ confettiGoalName }}</b></span> goal!
+          </v-card-subtitle>
+          <v-card-actions>
+            <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-content-save</v-icon>
+                <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-content-save</v-icon>
                 </v-btn>
               </template>
               <span>Save</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
+                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)">
+                  <v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon>
+                </v-btn>
               </template>
-              <span>Reuse</span>
+              <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })" v-bind="attrs" v-on="on">
-              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
+                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })"
+                  v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
+                </v-btn>
               </template>
               <span>Delete</span>
-            </v-tooltip>          
-        </v-card-actions>
-        </v-card>    
+            </v-tooltip>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
       <v-dialog v-model="activityDialog" max-width="600px">
         <v-card :disabled="saving" :loading="saving">
-          <v-card-title
-            ><span v-if="goal && goal.reminders.items.length > 0">Add New Activity</span>
-            <span v-else >Schedule Your First Activity</span>
+          <v-card-title>
+            <span v-if="goal && goal.reminders.items.length > 0 && !goal.isComplete">Add New Activity</span>
+            <span v-else-if="!goal.isComplete">Schedule Your First Activity</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" v-model="a_valid">                    
+            <v-form ref="form" v-model="a_valid">
               <span v-if="goal && goal.reminders.items.length > 0">
-              <v-select
-                v-model="reminder.category"
-                :items="validGoalReminderOptions"
-                item-text="title"
-                item-value="value"
-                label="Select Activity Type"
-                :rules="[(v) => !!v || 'Activity Type required']"
-                required
-              ></v-select>
-            </span>
-            <span v-else class="mb-2">
-              <small class="d-block activityT">Activity Type</small>
+
+                <v-select v-model="reminder.category" :items="filteredCategories" item-text="title"
+                  item-value="value" label="Select Activity Type" :rules="[(v) => !!v || 'Activity Type required']"
+                  required></v-select>
+              </span>
+              <span v-else class="mb-2">
+                <small class="d-block activityT">Activity Type</small>
                 <span class="defaultA">{{ defaultActivity }}</span>
-            </span>
-              <v-select
-                v-model="freqArr"
+              </span>
+              <v-select v-model="freqArr"
                 :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
-                label="Frequency"
-                :rules="[(v) => !!v || 'Frequency is required']"
-                required
-                multiple
-              ></v-select>
-              <v-menu
-                ref="menu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="reminder.time"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
+                label="Frequency" :rules="[(v) => !!v || 'Frequency is required']" required multiple></v-select>
+              <v-menu ref="menu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="reminder.time"
+                transition="scale-transition" offset-y max-width="290px" min-width="290px">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="reminder.time"
-                    label="Schedule A Reminder"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="[(v) => !!v || 'Time is required']"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="reminder.time" label="Schedule A Reminder"
+                    prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs" v-on="on"
+                    :rules="[(v) => !!v || 'Time is required']" required></v-text-field>
                 </template>
-                <v-time-picker
-                  v-model="reminder.time"
-                  ampm-in-title
-                  format="ampm"
-                  @click:minute="$refs.menu.save(reminder.time)"
-                  header-color="var(--mh-blue)"
-                ></v-time-picker>
+                <v-time-picker v-model="reminder.time" ampm-in-title format="ampm"
+                  @click:minute="$refs.menu.save(reminder.time)" header-color="var(--mh-blue)"></v-time-picker>
               </v-menu>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
-              >Save</v-btn
-            >
-            <v-btn @click="activityDialog = false" color="secondary" outlined
-              >Cancel</v-btn
-            >
+            <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark>Save</v-btn>
+            <v-btn @click="activityDialog = false" color="secondary" outlined>Cancel</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialog" width="750">
+      <v-dialog v-model="dialog" width="450">
+
         <v-card :disabled="saving" :loading="saving">
           <v-card-title class="text-right pt-2 pb-0">
-            <v-btn @click="closeGoalForm" fab depressed x-small outlined>
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <v-icon small @click="closeGoalForm">mdi-close</v-icon>
           </v-card-title>
-          <v-card-text>
+
+          <v-list v-if="goal.isComplete" disabled>
+            <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon class="mr-1">mdi-flag-checkered</v-icon>Goal
+                </v-list-item-title>
+                <v-list-item-subtitle class="ml-7">{{ goal.title }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon>{{ categoryIcon(goal.category) }}</v-icon>Focus Area
+                </v-list-item-title>
+                <v-list-item-subtitle class="ml-6">{{ goal.category }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <!-- <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon class="mr-1">mdi-stairs</v-icon>Level
+                </v-list-item-title>
+                <v-list-item-subtitle class="ml-7">{{ this.levelToString(reminder.level) }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item> -->
+            <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon class="mr-1">mdi-calendar</v-icon>Due Date
+                </v-list-item-title>
+                <v-list-item-subtitle class="ml-7">{{ goal.dueDate }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <!-- <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-icon class="mr-1">mdi-clock</v-icon>Time
+                </v-list-item-title>
+                <v-list-item-subtitle class="ml-7">{{ reminder.time }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item> -->
+            
+          </v-list>
+
+          <!-- <v-card-text>
+            <span class="p-4" v-if="goal.isComplete" cals>
+              <div>
+                <v-icon class="mr-1">mdi-flag-checkered</v-icon>
+                <h4 class="d-inline">Goal</h4>
+              </div>
+              <p class="pr-2">{{ goal.title }} </p>
+              <div class="mt-3">
+                <v-icon>{{ categoryIcon(goal.category) }}</v-icon>
+                <h4 class="d-inline">Focus Area</h4>
+              </div>
+              <p>{{ goal.category }}</p>
+              <div class="mt-3">
+                <v-icon class="mr-1">mdi-calendar</v-icon>
+                <h4 class="d-inline">Due Date</h4>
+              </div>
+              <p>{{ goal.dueDate }}</p>
+            </span>
             <v-form ref="goalform" v-model="valid">
-              <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required>
+              <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required
+                :class="{ 'd-none': goal.isComplete }">
               </v-text-field>
               <v-select v-model="goal.category" :items="filteredCategories" item-text="title" item-value="value"
-                label="Focus Area" :rules="[(v) => !!v || 'Improvement category is required']" required></v-select>            
-              <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                offset-y min-width="auto">
+                :class="{ 'd-none': goal.isComplete }" label="Focus Area"
+                :rules="[(v) => !!v || 'Improvement category is required']" required></v-select>
+              <v-menu :class="{ 'd-none': goal.isComplete }" v-model="menu" :close-on-content-click="false"
+                :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field v-model="goal.dueDate" label="I want to accomplish this goal by..."
-                    prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
-                    :rules="[(v) => !!v || 'Date required']" required></v-text-field>
+                  <v-text-field :class="{ 'd-none': goal.isComplete }" v-model="goal.dueDate"
+                    label="I want to accomplish this goal by..." prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                    v-on="on" :rules="[(v) => !!v || 'Date required']" required></v-text-field>
                 </template>
                 <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
               </v-menu>
             </v-form>
-          </v-card-text>
+          </v-card-text> -->
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark>Save</v-btn>
-            <v-btn v-if="goal.id" color="error" @click="deleteGoal({ id: goal.id })" outlined>
+            <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark disabled
+              :class="{ 'd-none': goal.isComplete }">Saved</v-btn>
+            <v-btn v-if="goal.id" :class="{ 'd-none': goal.isComplete }" color="error"
+              @click="deleteGoal({ id: goal.id })" outlined>
               <v-icon>
                 mdi-trash-can-outline
               </v-icon>
@@ -307,8 +350,8 @@ export default {
       confettiGoalName: '',
       activityDialog: false,
       dialog: false,
-      show: false, 
-      reuse: false, 
+      show: false,
+      reuse: false,
       reminder: {
         category: "",
         level: "",
@@ -325,18 +368,18 @@ export default {
   },
   computed: {
     ...mapGetters(["incompleteGoals", "reminders", "saving", "preferences"]),
-    validGoalReminderOptions(){
-      if(this.goal.reminders.items.length > 0){
+    validGoalReminderOptions() {
+      if (this.goal.reminders.items.length > 0) {
         let goalReminders = this.goal.reminders.items.map(gR => gR.category)
-         return this.filteredCategories.filter(t => !goalReminders.includes(t.value))    
+        return this.filteredCategories.filter(t => !goalReminders.includes(t.value))
       } else return this.filteredCategories
     },
-    defaultActivity(){
-      if(this.goal){
+    defaultActivity() {
+      if (this.goal) {
         return this.filteredCategories.filter(item => item.value == this.goal.category)[0].title
-      } else{
+      } else {
         return this.filteredCategories
-      }  
+      }
     },
     userPrefLevel() {
       // return this.reminders
@@ -416,13 +459,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders"]),
-    log(e) {  
-     console.log(e)
-    },
-    stopCon(){
+    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders", 'fetchGoals']),
+    // log(e) {  
+    //  console.log(e)
+    // },
+    stopCon() {
       this.$confetti.stop();
     },
+
     openNewReminderForm() {
       //console.log("this works")
       this.resetForm();
@@ -451,17 +495,23 @@ export default {
     closeGoalForm() {
       this.dialog = false;
     },
-    async reuseGoal() {
-      this.reuse = true
-      try {
-          await this.updateGoalById({
-            id: this.goal.id,
-            isComplete: false,
-            completedCount: 0,          
-          });        
-      } catch (error) {
-        console.log(error);
+    async reuseGoal(goalReminders) {
+      for (let i = 0; i < goalReminders.length; i++) {
+        // console.log(items[i]);
+        let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(goalReminders[i].category)).toLowerCase()) && v.level == this.checkForNA(goalReminders[i].level))
+        console.log(filtered)
+        filtered.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        })
       }
+      //  this.reuse = true
+      this.updateGoalById({
+        id: this.goal.id,
+        isComplete: false,
+        completedCount: 0,
+      });
+      this.fetchReminders()
+
     },
     async saveGoal() {
       if (!this.activityDialog && !this.$refs.goalform.validate()) {
@@ -477,7 +527,7 @@ export default {
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
-            checklist: this.goal.checklist,           
+            checklist: this.goal.checklist,
           });
         } else {
           // console.log(this.goal)
@@ -525,6 +575,7 @@ export default {
       //console.log("this works")
       this.$router.push("/activities/reminders");
     },
+
     async update(goal) {
       let updatedProgress = goal.checklist.reduce(
         (accumulator, item) =>
@@ -558,36 +609,33 @@ export default {
     },
   },
   watch: {
-   goal(){  
-        if (
-         Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100  &&
-         this.goal.completedCount == 0 &&
-         this.reuse == false
-         ){
-          this.updateGoalById({
-            id: this.goal.id,
-            isComplete: true,
-            completedCount: 1,           
-          }); 
-          console.log(this.goal)
-          this.$confetti.start();
-          setTimeout(() => { this.$confetti.stop()}, 3500),
-          this.goalCompleteDialog = true
-          this.confettiGoalName = this.goal.category   
-        } 
+    goal() {
+      if (
+        Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100 &&
+        this.goal.completedCount == 0) {
+        this.goalCompleteDialog = true
+        this.confettiGoalName = this.goal.category
+        this.updateGoalById({
+          id: this.goal.id,
+          isComplete: true,
+          completedCount: 1,
+        });
+        console.log(this.goal)
+        this.$confetti.start();
+        setTimeout(() => { this.$confetti.stop() }, 3500)
+      }
     },
-   reminder() {
-    if(this.reminder.frequency && this.freqArr.length == 0) {
-      let split = this.reminder.frequency.split(",")
-      split.forEach((r) => this.freqArr.push(r))
+    reminder() {
+      if (this.reminder.frequency && this.freqArr.length == 0) {
+        let split = this.reminder.frequency.split(",")
+        split.forEach((r) => this.freqArr.push(r))
+      }
     }
-   }
   }
 };
 </script>
 
 <style scoped>
-
 .progressWrapper {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -758,6 +806,7 @@ export default {
 .completed {
   background-color: whitesmoke;
 }
+
 .text-blue {
   color: rgb(29, 51, 111) !important;
 }
@@ -799,23 +848,28 @@ export default {
 .orangeLabel {
   color: var(--mh-orange)
 }
+
 .testC {
   height: 100%;
 }
+
 .addActivityBtn {
   position: absolute;
   top: 30%;
   left: 10%;
   cursor: pointer;
 }
-.activityT{
+
+.activityT {
   color: #1976d2 !important;
   /* font-size:16px */
 }
-.defaultA{
-  font-size:16px;
+
+.defaultA {
+  font-size: 16px;
   color: rgba(0, 0, 0, 0.87)
 }
+
 .centered {
   position: absolute;
   top: 35%;
