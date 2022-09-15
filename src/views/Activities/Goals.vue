@@ -1,5 +1,5 @@
 <template>
-<div class="bg-img" :load="log(watchedVideos)">
+<div class="bg-img" >
   <div class="bg-overlay">
  <div
       class="        
@@ -183,44 +183,45 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="goalCompleteDialog" max-width="344">
-    <v-card
-    class="mx-auto"
-    max-width="344"
-  >
-    <v-img
-      src="../../assets/trophy.jpg"
-      height="200px"
-    ></v-img>
-
-    <v-card-title>
-      CONGRATULATIONS!
-    </v-card-title>
-
-    <v-card-subtitle>
-     GOAL COMPLETED!
-    </v-card-subtitle>
-
-    <v-card-actions>
-      <v-btn
-        color="orange lighten-2"
-        text
-        @click="stopCon"
-      >
-        Stop
-      </v-btn>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        icon
-        @click="show = !show"
-      >
-        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-      </v-btn>
-    </v-card-actions>
-    </v-card>    
-    </v-dialog>
+      <v-dialog v-model="goalCompleteDialog" max-width="344">
+        <v-card
+          class="mx-auto"
+          max-width="344"
+        >
+        <v-img
+          src="../../assets/trophy.jpg"
+          height="200px"
+        ></v-img>
+        <v-card-title>
+          CONGRATULATIONS!
+        </v-card-title>
+        <v-card-subtitle>
+        You completed your <span><b>{{confettiGoalName}}</b></span> goal!  
+        </v-card-subtitle>
+        <v-card-actions>
+          <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-content-save</v-icon>
+                </v-btn>
+              </template>
+              <span>Save</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
+              </template>
+              <span>Do it again!</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })" v-bind="attrs" v-on="on">
+              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>          
+        </v-card-actions>
+        </v-card>    
+      </v-dialog>
   </div>
   </div>
 
@@ -228,15 +229,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import dateMixin from "../../mixins/date-mixin";
 import utilitiesMixin from "../../mixins/utilities-mixin";
-
-// import GoalCard from "../../components/GoalCard.vue";
+import videosMixin from "../../mixins/videos-mixin";
 import CurrentGoals from "../../components/CurrentGoals.vue";
 
 export default {
   name: "Goals",
-  mixins: [dateMixin, utilitiesMixin],
+  mixins: [utilitiesMixin, videosMixin],
   components: {
     // GoalCard,
     CurrentGoals,
@@ -251,6 +250,7 @@ export default {
       show: false,
       showCompleted: false,
       goalCompleteDialog: false,
+      confettiGoalName: '',
       improvementGoal: true, 
       createOwnGoal: false, 
       isFlipped: false,
@@ -272,9 +272,9 @@ export default {
   },
   methods: {
     ...mapActions(["addGoal", "fetchGoals", "removeGoal", "updateGoalById"]),
-    log(e) {
-      console.log(e)
-    },
+    // log(e) {
+    //   console.log(e)
+    // },
     goalComplete(){
       this.goalCompleteDialog = true
       console.log("goal completion btn works")
@@ -405,6 +405,28 @@ export default {
   async mounted() {
     this.fetchGoals();
   },
+  watch: {
+   goals(){  
+    let gReminders = this.goals.filter(t => t && t.reminders.items.length > 0)     
+    console.log(gReminders)
+      for (let i = 0; i < gReminders.length; i++) {
+        if (Math.round(this.getGoalProgressValue(gReminders[i].reminders.items)) == 100  &&
+          gReminders[i].completedCount == 0){
+          this.goalCompleteDialog = true
+          this.confettiGoalName = gReminders[i].category 
+          this.updateGoalById({
+            id: gReminders[i].id,
+            isComplete: true,
+            completedCount: 1,           
+          }); 
+          console.log(gReminders[i])
+          this.$confetti.start();
+          setTimeout(() => { this.$confetti.stop()}, 3500)         
+        } 
+     }
+
+   }
+  }
 };
 </script>
 
