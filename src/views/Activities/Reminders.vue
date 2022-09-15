@@ -174,6 +174,7 @@ export default {
     ...mapActions([
       "removeReminder",
       "fetchReminders",
+      "updateReminderById"
     ]),
     ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON", "SET_ASSOCIATED_GOAL"]),
     log(e) {
@@ -200,9 +201,28 @@ export default {
         this.$refs.form.resetValidation();
       }
     },
-    isComplete(cat, lev) {
-      return this.getActivityProgressValue(cat, lev) == 100
+    isComplete(reminder) {
+      //console.log(reminder)
+      if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
+        if (!reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: true,
+          })
+        }
+        return true
+      } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {
+        if (reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+        }
+      }
     }
+    /* isComplete(cat, lev) {
+      return this.getActivityProgressValue(cat, lev) == 100
+    } */
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),
@@ -269,13 +289,19 @@ export default {
         return "";
       }
     },
+    
   },
   mounted() {
     this.fetchReminders();
   },
   watch: {
-    reminder() {
-      this.fetchReminders();
+    reminders() {
+      let rem = this.reminders.filter(r => r)
+      console.log(rem)
+      for (let i = 0; i < rem.length; i++) {
+        this.isComplete(rem[i])
+        console.log(rem[i])
+      }
     }
   }
 };
