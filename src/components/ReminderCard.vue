@@ -88,9 +88,9 @@
                   <v-progress-linear height="10" rounded striped color="lime"
                     :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
                   </v-progress-linear>
-                  <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
+                  <!-- <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
-                  </v-chip>
+                  </v-chip> -->
                 </template>
                 <span>
                   {{  Math.round(getActivityProgressValue(reminder.category, reminder.level))  }}%
@@ -151,22 +151,29 @@
           <div v-else class="row mt-9 ml-2">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)"
-                  v-bind="attrs" v-on="on">
+                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)" v-bind="attrs" v-on="on">
                   <v-icon small color="white"> mdi-eye</v-icon>
                 </v-btn>
               </template>
               <span>View</span>
             </v-tooltip>
-            <v-tooltip bottom>
+            <v-tooltip v-if="!reminder.goal" bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)" v-bind="attrs" v-on="on">
+                <v-btn  x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)" v-bind="attrs" v-on="on">
                   <v-icon small color="white"> mdi-recycle-variant</v-icon>
                 </v-btn>
               </template>
               <span>Reuse</span>
             </v-tooltip>
-            <v-tooltip bottom>
+            <!-- <v-tooltip v-if="reminder.goal" bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" disabled x-small class="text-light mx-1" color="green">
+                  <v-icon small color="white"> mdi-recycle-variant</v-icon>
+                </v-btn>
+              </template>
+              <span>Disabled</span>
+            </v-tooltip> -->
+            <v-tooltip bottom v-if="!reminder.goal">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn x-small class="text-light mx-1" color="red darken-1"
                   @click="deleteReminder({ id: reminder.id })" v-bind="attrs" v-on="on">
@@ -175,6 +182,15 @@
               </template>
               <span>Delete</span>
             </v-tooltip>
+            <!-- <v-tooltip bottom v-if="reminder.goal">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn disabled x-small class="text-light mx-1" color="red darken-1"
+                  @click="deleteReminder({ id: reminder.id })" v-bind="attrs" v-on="on">
+                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
+                </v-btn>
+              </template>
+              <span>Disabled</span>
+            </v-tooltip> -->
             <!-- <div class="col lHeight pb-0">
               <span class="text-right">
               </span>
@@ -256,7 +272,7 @@ export default {
       isFlipped: false,
       dialog: false,
       goalSelect: false,
-      intervalId: null,
+      intervalId: 60000,
       valid: true,
       goalId: "",
       goal: null,
@@ -309,6 +325,8 @@ export default {
       let split = frequency.split(",")
         if (split.length == 7) {
           return "Daily"
+        } else if (split.length == 1) {
+          return split[0]
         } else if (split.length <= 3) {
           let newFreq = []
           if (split.includes("Sunday")) {
@@ -318,13 +336,13 @@ export default {
             newFreq.push("Mon")
           }
           if (split.includes("Tuesday")) {
-            newFreq.push("Tues")
+            newFreq.push("Tue")
           }
           if (split.includes("Wednesday")) {
-            newFreq.push("Weds")
+            newFreq.push("Wed")
           }
           if (split.includes("Thursday")) {
-            newFreq.push("Thurs")
+            newFreq.push("Thur")
           }
           if (split.includes("Friday")) {
             newFreq.push("Fri")
@@ -388,9 +406,7 @@ export default {
             ? "error"
             : "primary";
     },
-
     goToActivities() {
-      console.log("this works");
       this.$router.push("/activities/reminders");
     },
     async update(goal) {
@@ -430,6 +446,7 @@ export default {
       filtered.forEach(v => {
         this.removeWatchedVideo({ id: v.id })
       })
+      this.isComplete(reminder)
     },
     isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {

@@ -159,7 +159,7 @@ export default {
     return {
       dialog: false,
       showCompleted: false,
-      intervalId: null,
+      intervalId: 60000,
       valid: true,
       reminder: {
         category: "",
@@ -273,6 +273,11 @@ export default {
   mounted() {
     this.fetchReminders();
   },
+  watch: {
+    reminder() {
+      this.fetchReminders();
+    }
+  }
 };
 </script>
 

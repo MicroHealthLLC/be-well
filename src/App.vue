@@ -39,7 +39,6 @@ export default {
       const now = new Date();
       const minutes = now.getMinutes();
       const hour = now.getHours();
-
       // Compare current time with each reminder
       this.filteredReminders.forEach((reminder) => {
         if (!reminder.isComplete) {
@@ -54,7 +53,7 @@ export default {
       });
     },
     frequencyDays(frequency) {
-      console.log(frequency)
+      //console.log(frequency)
       let days = []
       if (frequency.includes("Sunday")) {
         days.push(0)
@@ -71,7 +70,7 @@ export default {
       } if (frequency.includes("Saturday")) {
         days.push(6)
       } 
-      console.log(days)
+      //console.log(days)
       return days
       /* if (frequency == "Mon/Wed/Fri") {
         return [1, 3, 5];
@@ -88,10 +87,7 @@ export default {
       const now = new Date();
       const day = now.getDay();
       // Only return reminders with matching alarm day
-      return this.reminders.filter((reminder) => {
-        this.frequencyDays(reminder.frequency).includes(day)
-      }
-      );
+      return this.reminders.filter((reminder) => this.frequencyDays(reminder.frequency).includes(day));
     },
   },
   async mounted() {
