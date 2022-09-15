@@ -449,16 +449,23 @@ export default {
       filtered.forEach(v => {
         this.removeWatchedVideo({ id: v.id })
       })
-      this.isComplete(reminder)
+      this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+
     },
     isComplete(reminder) {
-      //console.log(reminder)
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
         if (!reminder.isComplete) {
-          this.updateReminderById({
-            id: reminder.id,
-            isComplete: true,
-          })
+          try{
+            this.updateReminderById({
+              id: reminder.id,
+              isComplete: true,
+            })
+          } catch (err) {
+            console.log(err)
+          }
         }
         return true
       } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {

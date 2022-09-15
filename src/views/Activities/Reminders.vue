@@ -294,16 +294,6 @@ export default {
   mounted() {
     this.fetchReminders();
   },
-  watch: {
-    reminders() {
-      let rem = this.reminders.filter(r => r)
-      console.log(rem)
-      for (let i = 0; i < rem.length; i++) {
-        this.isComplete(rem[i])
-        console.log(rem[i])
-      }
-    }
-  }
 };
 </script>
 
