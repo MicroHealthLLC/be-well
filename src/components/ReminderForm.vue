@@ -31,6 +31,12 @@
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
+            <v-list-item-title>Level</v-list-item-title>
+            <v-list-item-subtitle>{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
             <v-list-item-title>Frequency</v-list-item-title>
             <v-list-item-subtitle>{{reminder.frequency}}</v-list-item-subtitle>
           </v-list-item-content>
@@ -100,13 +106,13 @@
           required
         ></v-select> 
         <v-select
+          class="selectDays"
           v-model="freqArr"
           :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
           label="Frequency"
           :rules="[(v) => !!v || 'Frequency is required']"
           multiple
           required
-          dense
         ></v-select>
         <v-menu
           ref="menu"
@@ -147,7 +153,10 @@
           ></v-select>  
       </v-form>
     </v-card-text>
+
     <v-card-actions class="d-flex justify-end">
+      <v-list-item-subtitle v-if="reminder.goal && reminder.isComplete">See attached goal to reuse this activity</v-list-item-subtitle>
+
       <v-btn v-if="!reminder.isComplete" @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
         >Save</v-btn
       >
@@ -164,10 +173,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
+import videosMixin from "../mixins/videos-mixin";
 
 export default {
   name: "ReminderForm",
-  mixins: [utilitiesMixin],
+  mixins: [utilitiesMixin, videosMixin],
   props: {
     reminder: {
       type: Object,
@@ -179,7 +189,7 @@ export default {
   data() {
     return {
       dialog: false,
-      intervalId: null,
+      intervalId: 60000,
       valid: true,
       freqArr: []
     };
@@ -328,4 +338,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+  .selectDays {
+    max-height: 450px !important;
+  }
+  .v-menu__content{
+    max-height: 450px !important;
+  }
+</style>
