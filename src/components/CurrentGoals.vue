@@ -126,9 +126,9 @@
                 <!-- The follwoing two span can be replaced once activities are ready to save progress -->
                 <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
                   <span v-for="g, i in goal.reminders.items" :key="i">
-                    <h5>{{ getCompletedActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
-                        checkForNA(g.level)).length
-                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()), checkForNA(g.level)).length}}</h5>
+                    <h5>{{ getCompletedActivities(capitalizeFirstLet((checkForFlex(g.reminder.category)).toLowerCase()),
+                        checkForNA(g.reminder.level)).length
+                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.reminder.category)).toLowerCase()), checkForNA(g.reminder.level)).length}}</h5>
                   </span>
                 </span>
               </div>

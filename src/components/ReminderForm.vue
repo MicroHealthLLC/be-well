@@ -251,7 +251,7 @@ export default {
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
           //console.log(this.reminder)
-          await this.addReminder(this.reminder);
+          await this.addReminder({reminder: this.reminder, goalIds: this.goalIds});
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();
