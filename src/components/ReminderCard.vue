@@ -323,6 +323,9 @@ export default {
     },
     displayFreq(frequency) {
       let split = frequency.split(",")
+      if (split[0] == "") {
+        split.shift()
+      }
         if (split.length == 7) {
           return "Daily"
         } else if (split.length == 1) {

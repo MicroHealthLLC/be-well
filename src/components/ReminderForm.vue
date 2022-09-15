@@ -197,7 +197,9 @@ export default {
   mounted() {
     if (!this.reminder.id) {
        this.$refs.form.reset();
-    }    
+    }
+    this.freqStringToArray()
+
   },
   methods: {
     ...mapActions([
@@ -210,6 +212,10 @@ export default {
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e){
       console.log(e)
+    },
+    freqStringToArray() {
+      this.freqArr = this.reminder.frequency.split(",")
+      this.freqArr = this.displayFreq(this.freqArr)
     },
     arrayToString(array) {
       return array.toString()
@@ -267,12 +273,7 @@ export default {
       }
     },
     displayFreq(freq) {
-      let split = freq.split(",")
-      split.sort((a, b) => {
-        let sorted = this.weekday[a] - this.weekday[b]
-        console.log(sorted)
-        return sorted;
-      })
+     return freq.sort((a, b) => this.weekdays[a] - this.weekdays[b])
     },
   },
   computed: {
