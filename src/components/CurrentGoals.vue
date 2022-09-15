@@ -176,7 +176,7 @@
                   <v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon>
                 </v-btn>
               </template>
-              <span>Reuse</span>
+              <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -199,7 +199,8 @@
           <v-card-text>
             <v-form ref="form" v-model="a_valid">
               <span v-if="goal && goal.reminders.items.length > 0">
-                <v-select v-model="reminder.category" :items="validGoalReminderOptions" item-text="title"
+
+                <v-select v-model="reminder.category" :items="filteredCategories" item-text="title"
                   item-value="value" label="Select Activity Type" :rules="[(v) => !!v || 'Activity Type required']"
                   required></v-select>
               </span>
