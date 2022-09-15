@@ -169,7 +169,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
               </template>
-              <span>Reuse</span>
+              <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -192,7 +192,7 @@
               <span v-if="goal && goal.reminders.items.length > 0">
               <v-select
                 v-model="reminder.category"
-                :items="validGoalReminderOptions"
+                :items="filteredCategories"
                 item-text="title"
                 item-value="value"
                 label="Select Activity Type"

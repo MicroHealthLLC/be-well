@@ -199,22 +199,22 @@
         You completed your <span><b>{{confettiGoalName}}</b></span> goal!  
         </v-card-subtitle>
         <v-card-actions>
-          <v-tooltip bottom>
+          <!-- <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-content-save</v-icon>
                 </v-btn>
               </template>
               <span>Save</span>
-            </v-tooltip>
+            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
+                <v-btn x-small class="text-light mx-1" color="green" v-if="confettiGoal" @click="reuseGoal(confettiGoal.reminders.items)"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
               </template>
               <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })" v-bind="attrs" v-on="on">
+                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: confettiGoal.id })" v-bind="attrs" v-on="on">
               <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
               </template>
               <span>Delete</span>
@@ -251,6 +251,7 @@ export default {
       showCompleted: false,
       goalCompleteDialog: false,
       confettiGoalName: '',
+      confettiGoal: null, 
       improvementGoal: true, 
       createOwnGoal: false, 
       isFlipped: false,
@@ -283,6 +284,22 @@ export default {
     stopCon(){
       this.$confetti.stop();
     },
+    async reuseGoal(goalReminders) {
+      console.log(goalReminders)
+      for (let i = 0; i < goalReminders.length; i++) {
+          // console.log(items[i]);
+          let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(goalReminders[i].category)).toLowerCase()) && v.level == this.checkForNA(goalReminders[i].level))
+          console.log(filtered)
+          filtered.forEach(v => {
+            this.removeWatchedVideo({ id: v.id })
+      })
+      this.updateGoalById({
+        id: this.confettiGoal.id,
+        isComplete: false,
+        completedCount: 0,          
+      });   
+      }
+     },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
         return;
@@ -414,6 +431,7 @@ export default {
           gReminders[i].completedCount == 0){
           this.goalCompleteDialog = true
           this.confettiGoalName = gReminders[i].category 
+          this.confettiGoal = gReminders[i]
           this.updateGoalById({
             id: gReminders[i].id,
             isComplete: true,
@@ -424,7 +442,6 @@ export default {
           setTimeout(() => { this.$confetti.stop()}, 3500)         
         } 
      }
-
    }
   }
 };
