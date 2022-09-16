@@ -280,7 +280,7 @@
             
           </v-list>
 
-          <!-- <v-card-text>
+          <!-- 
             <span class="p-4" v-if="goal.isComplete" cals>
               <div>
                 <v-icon class="mr-1">mdi-flag-checkered</v-icon>
@@ -297,7 +297,8 @@
                 <h4 class="d-inline">Due Date</h4>
               </div>
               <p>{{ goal.dueDate }}</p>
-            </span>
+            </span> -->
+            <v-card-text>
             <v-form ref="goalform" v-model="valid">
               <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required
                 :class="{ 'd-none': goal.isComplete }">
@@ -315,7 +316,7 @@
                 <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
               </v-menu>
             </v-form>
-          </v-card-text> -->
+          </v-card-text>
           <v-card-actions class="d-flex justify-end">
             <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark disabled
               :class="{ 'd-none': goal.isComplete }">Saved</v-btn>
