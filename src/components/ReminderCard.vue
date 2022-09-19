@@ -31,7 +31,7 @@
                   <v-list-item-title>
                     <v-icon class="mr-1">mdi-calendar</v-icon>Due Date
                   </v-list-item-title>
-                  <v-list-item-subtitle class="ml-7">{{ reminder.goal.dueDate }}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="ml-7">{{new Date(reminder.goal.dueDate).toLocaleDateString() }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
