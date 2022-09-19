@@ -26,27 +26,33 @@
       <v-list disabled v-else-if="reminder.isComplete">
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Focus Area</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.category}}</v-list-item-subtitle>
+            <v-list-item-title> <v-icon>{{categoryIcon(reminder.category)}}</v-icon>Focus Area</v-list-item-title>
+            <v-list-item-subtitle class="ml-6">{{reminder.category}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Frequency</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.frequency}}</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-stairs</v-icon>Level</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Time</v-list-item-title>
-            <v-list-item-subtitle>{{reminder.time}}</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{removeComma(reminder.frequency)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Associated Goal</v-list-item-title>
-            <v-list-item-subtitle v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
-            <v-list-item-subtitle v-else>No Goal Set</v-list-item-subtitle>
+            <v-list-item-title><v-icon class="mr-1">mdi-clock</v-icon>Time</v-list-item-title>
+            <v-list-item-subtitle class="ml-7">{{reminder.time}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title><v-icon class="mr-1">mdi-flag-checkered</v-icon>Associated Goal</v-list-item-title>
+            <v-list-item-subtitle class="ml-7" v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7" v-else>No Goal Set</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -101,13 +107,13 @@
           required
         ></v-select>
         <v-select
+          class="selectDays"
           v-model="freqArr"
           :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
           label="Frequency"
           :rules="[(v) => !!v || 'Frequency is required']"
           multiple
           required
-          dense
         ></v-select>
         <v-menu
           ref="menu"
@@ -149,7 +155,10 @@
         ></v-select>
       </v-form>
     </v-card-text>
+
     <v-card-actions class="d-flex justify-end">
+      <v-list-item-subtitle v-if="reminder.goal && reminder.isComplete">See attached goal to reuse this activity</v-list-item-subtitle>
+
       <v-btn v-if="!reminder.isComplete" @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
         >Save</v-btn
       >
@@ -166,10 +175,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
+import videosMixin from "../mixins/videos-mixin";
 
 export default {
   name: "ReminderForm",
-  mixins: [utilitiesMixin],
+  mixins: [utilitiesMixin, videosMixin],
   props: {
     reminder: {
       type: Object,
@@ -183,7 +193,7 @@ export default {
     return {
       goalIds: [],
       dialog: false,
-      intervalId: null,
+      intervalId: 60000,
       valid: true,
       freqArr: []
     };
@@ -191,7 +201,9 @@ export default {
   mounted() {
     if (!this.reminder.id) {
        this.$refs.form.reset();
-    }    
+    }
+    this.freqStringToArray()
+
   },
   methods: {
     ...mapActions([
@@ -205,8 +217,17 @@ export default {
     log(e) {
       console.log(e);
     },
+    freqStringToArray() {
+      this.freqArr = this.reminder.frequency.split(",")
+      this.freqArr = this.displayFreq(this.freqArr)
+    },
     arrayToString(array) {
-      return array.toString()
+       return array.toString()
+    },
+    removeComma(string) {
+      if (string.charAt(0) == ",") {
+        return string.substring(1)
+      }
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);
@@ -262,12 +283,7 @@ export default {
       }
     },
     displayFreq(freq) {
-      let split = freq.split(",")
-      split.sort((a, b) => {
-        let sorted = this.weekday[a] - this.weekday[b]
-        console.log(sorted)
-        return sorted;
-      })
+     return freq.sort((a, b) => this.weekdays[a] - this.weekdays[b])
     },
   },
   computed: {
@@ -333,4 +349,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+  .selectDays {
+    max-height: 450px !important;
+  }
+  .v-menu__content{
+    max-height: 450px !important;
+  }
+</style>

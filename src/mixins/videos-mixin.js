@@ -522,7 +522,9 @@ export default {
         case "L5":
           return "Expert";
         case "na":
-          return "";  
+          return "";
+        case "NOT_APPLICABLE":
+          return "N/A"    
       }
     },
     filterToLevel(filter) {

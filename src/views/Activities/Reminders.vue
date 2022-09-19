@@ -159,7 +159,7 @@ export default {
     return {
       dialog: false,
       showCompleted: false,
-      intervalId: null,
+      intervalId: 60000,
       valid: true,
       reminder: {
         category: "",
@@ -174,6 +174,7 @@ export default {
     ...mapActions([
       "removeReminder",
       "fetchReminders",
+      "updateReminderById"
     ]),
     ...mapMutations(["SET_SNACKBAR", "TOGGLE_REMINDERS_ON", "SET_ASSOCIATED_GOAL"]),
     log(e) {
@@ -200,9 +201,28 @@ export default {
         this.$refs.form.resetValidation();
       }
     },
-    isComplete(cat, lev) {
-      return this.getActivityProgressValue(cat, lev) == 100
+    isComplete(reminder) {
+      //console.log(reminder)
+      if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
+        if (!reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: true,
+          })
+        }
+        return true
+      } else if (this.getActivityProgressValue(reminder.category, reminder.level) != 100) {
+        if (reminder.isComplete) {
+          this.updateReminderById({
+            id: reminder.id,
+            isComplete: false,
+          })
+        }
+      }
     }
+    /* isComplete(cat, lev) {
+      return this.getActivityProgressValue(cat, lev) == 100
+    } */
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),
@@ -269,6 +289,7 @@ export default {
         return "";
       }
     },
+    
   },
   mounted() {
     this.fetchReminders();
