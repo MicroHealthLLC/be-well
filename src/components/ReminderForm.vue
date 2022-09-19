@@ -38,7 +38,7 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
-            <v-list-item-subtitle class="ml-7">{{reminder.frequency}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="ml-7">{{removeComma(reminder.frequency)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
@@ -218,7 +218,12 @@ export default {
       this.freqArr = this.displayFreq(this.freqArr)
     },
     arrayToString(array) {
-      return array.toString()
+       return array.toString()
+    },
+    removeComma(string) {
+      if (string.charAt(0) == ",") {
+        return string.substring(1)
+      }
     },
     toggleReminderFormDialog() {
       this.$emit("toggleReminderFormDialog", false);    

@@ -3,8 +3,8 @@
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div :class="{ 'completed': reminder.isComplete }" class="flip-card-front clickable fontWhite">
 
-        <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" :nudge-right="6" offset-x
-          open-on-hover>
+        <v-menu v-model="menu" :nudge-width="200" :nudge-right="6" offset-x
+          open-on-hover origin="center center" transition="scale-transition">
           <template v-slot:activator="{ on, attrs }">
             <div v-if="reminder.goal && reminder.goal.id" v-bind="attrs" v-on="on" class="goalIcon activitiesCount">
               <span v-if="reminder.isComplete">
@@ -24,14 +24,6 @@
                     <v-icon class="mr-1">mdi-flag-checkered</v-icon>Goal
                   </v-list-item-title>
                   <v-list-item-subtitle class="ml-7">{{ reminder.goal.title }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <v-icon>{{ categoryIcon(reminder.goal.category) }}</v-icon>Focus Area
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="ml-6">{{ reminder.goal.category }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item two-line>
