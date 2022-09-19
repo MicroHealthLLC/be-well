@@ -3,10 +3,13 @@
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped }">
       <div :class="{ 'completed': reminder.isComplete }" class="flip-card-front clickable fontWhite">
 
-        <v-menu v-model="menu" :nudge-width="200" :nudge-right="6" offset-x
+        <!-- <v-menu v-model="menu" :nudge-width="200" :nudge-right="6" offset-x
           open-on-hover origin="center center" transition="scale-transition">
-          <template v-slot:activator="{ on, attrs }">
-            <div v-if="reminder.goal && reminder.goal.id" v-bind="attrs" v-on="on" class="goalIcon activitiesCount">
+          <template v-slot:activator="{ on, attrs }"> -->
+        <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+          {{ reminder.goal.title }}
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="goalIcon activitiesCount">
               <span v-if="reminder.isComplete">
                 <v-icon class="mr-1 text-blue">mdi-flag-checkered</v-icon>
               </span>
@@ -15,6 +18,8 @@
               </span>
             </div>
           </template>
+        </v-tooltip>
+        <!-- </template>
 
           <v-card>
             <v-list>
@@ -35,9 +40,8 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-
           </v-card>
-        </v-menu>
+        </v-menu> -->
 
         <v-tooltip v-if="!reminder.goal && !reminder.isComplete" max-width="200" bottom>
           <div>Add Activity to Goal</div>
