@@ -767,7 +767,7 @@ export default {
 
 .flip-card {
   /* background-color: transparent; */
-  height: 150px;
+  height: 130px !important; 
 
   perspective: 1000px;
   /* Remove this if you don't want the 3D effect */
