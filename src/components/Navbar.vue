@@ -40,9 +40,9 @@
             <v-tab to="/activities/articles"
           ><v-icon class="mr-1">mdi-web</v-icon>Resources</v-tab
         >
-        <v-tab to="/health"
+        <!-- <v-tab to="/health"
           ><v-icon class="mr-1">mdi-heart-pulse</v-icon>Health</v-tab
-        >
+        > -->
         <v-tab to="/events"
           ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
         >
@@ -86,7 +86,15 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/activities" link>
+          <v-list-item to="/activities/goals" link>
+            <v-list-item-icon>
+              <v-icon>mdi-flag-checkered</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Goals</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/activities/reminders" link>
             <v-list-item-icon>
               <v-icon>mdi-yoga</v-icon>
             </v-list-item-icon>
@@ -94,22 +102,30 @@
               <v-list-item-title>Activities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/health" link>
+          <v-list-item to="/activities/videos" link>
+            <v-list-item-icon>
+              <v-icon>mdi-youtube</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Videos</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <!-- <v-list-item to="/health" link>
             <v-list-item-icon>
               <v-icon>mdi-heart-pulse</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Health</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/events" link>
+          </v-list-item> -->
+          <!-- <v-list-item to="/events" link>
             <v-list-item-icon>
               <v-icon>mdi-calendar</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Events</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>
+          </v-list-item> -->
         </v-list-item-group>
       </v-list>
       <template v-slot:append>

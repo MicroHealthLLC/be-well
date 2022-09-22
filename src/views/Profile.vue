@@ -1,33 +1,28 @@
 <template>
   <v-row>
     <v-col class="col-12"><span class="text-h6 text-sm-h5">My Profile</span>
-
       <v-divider class="mb-4"></v-divider>
-
       <v-card>
         <v-tabs :vertical="$vuetify.breakpoint.smAndUp">
           <v-tab>
             <v-icon left> mdi-lock </v-icon>
             Account
           </v-tab>
-
           <v-tab>
             <v-icon left> mdi-account </v-icon>
             Personal
           </v-tab>
-
           <v-tab>
             <v-icon left> mdi-account-star</v-icon>
             Preferences
           </v-tab>
-
-
-
           <v-tab-item>
             <v-card class="pl-5 pr-5 pb-5" flat>
               <v-alert v-model="hasError" class="mt-2" type="error" dismissible>{{ error }}</v-alert>
               <v-card-title class="pb-0">Change Password</v-card-title>
+
               <v-divider></v-divider>
+
               <v-card-text>
                 <v-form ref="changepasswordform">
                   <v-text-field v-model="oldPassword" label="Old Password" type="password"
@@ -56,7 +51,6 @@
             </v-card>
           </v-tab-item>
 
-
           <v-tab-item>
             <v-card class="pl-5 pr-5 pb-5" flat>
               <v-card-title class="pb-0">Details</v-card-title>
@@ -76,7 +70,6 @@
               </v-card-text>
               <v-btn @click="deleteWatchedVideos()">Reset Watched Videos</v-btn>
               <v-card-actions class="d-flex justify-end">
-
                 <v-btn @click="editProfile" class="px-10" color="primary" :block="$vuetify.breakpoint.xsOnly"
                   :loading="saving" :disabled="saving">Save</v-btn>
               </v-card-actions>
@@ -89,7 +82,6 @@
               <v-divider></v-divider>
               <v-card-text>
                 <template>
-
                   <v-data-table disable-sort v-if="preferences && preferences[0] && preferences[0].preference_items"
                     :headers="headers" :items="preferences[0].preference_items" class="elevation-1">
                     <template v-slot:[`item.l1`]="{ item }">
@@ -133,8 +125,8 @@
                         @click="nIToggle(preferences[0].preference_items.indexOf(item), item.not_interested)"
                         color="success"></v-checkbox>
                     </template>
-
                   </v-data-table>
+
                   <v-data-table disable-sort v-else :headers="headers" :items="tablePreferences.preference_items"
                     class="elevation-1">
                     <template v-slot:[`item.l1`]="{ item }">
@@ -187,7 +179,6 @@
               </v-card-actions>
             </v-card>
           </v-tab-item>
-
         </v-tabs>
       </v-card>
     </v-col>
