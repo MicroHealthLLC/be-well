@@ -1,5 +1,6 @@
 <template>
   <v-card :disabled="saving" :loading="saving">
+    <!-- Quick Test -->
     <v-card-title
       ><span v-if="reminder.id && !associatedGoal && !reminder.isComplete" >
       <v-icon color="var(--mh-green)" class="mr-1 mb-1"
