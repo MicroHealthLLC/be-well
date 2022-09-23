@@ -22,6 +22,7 @@
 </template>
 
 <script>
+//import { Auth } from "aws-amplify";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
@@ -91,6 +92,13 @@ export default {
     },
   },
   async mounted() {
+    /* if (await Auth.currentSession()) {
+      const idToken = await (await Auth.currentSession()).getIdToken()
+      const accessToken = await (await Auth.currentSession()).getAccessToken()
+      //const creds = await (await Auth.currentCredentials())
+
+      console.log(idToken, accessToken)
+    } */
     await this.fetchCurrentUser();
     if (this.user) {
       this.fetchReminders();
