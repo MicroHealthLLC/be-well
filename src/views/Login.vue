@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <div></div>
+  <!-- <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
         <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
@@ -51,6 +52,15 @@
               block
               >Login</v-btn
             >
+            <v-btn
+              color="var(--mh-orange)"
+              @click="fedSignIn"
+              :loading="loading"
+              :disabled="loading"
+              :dark="!loading"
+              block
+              >SSO</v-btn
+            >
             <p class="mt-4">
               No account? <router-link to="/signup">Create Account</router-link>
             </p>
@@ -58,11 +68,12 @@
         </v-card>
       </div>
     </v-col>
-  </v-row>
+  </v-row> -->
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+//import { mapActions, mapGetters } from "vuex";
+import { Auth } from "aws-amplify";
 
 export default {
   name: "Login",
@@ -77,7 +88,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["login"]),
+    /* ...mapActions(["login"]),
     async userLogin() {
       if (!this.$refs.form.validate()) {
         return;
@@ -94,10 +105,16 @@ export default {
         this.hasError = true;
         this.error = error.message;
       }
-    },
+    }, */
+    fedSignIn() {
+      Auth.federatedSignIn()
+    }
+  },
+  mounted() {
+    this.fedSignIn()
   },
   computed: {
-    ...mapGetters(["loading"]),
+    //...mapGetters(["loading"]),
   },
 };
 </script>

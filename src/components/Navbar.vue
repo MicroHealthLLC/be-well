@@ -59,8 +59,8 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title>Signed in as</v-list-item-title>
-              <v-list-item-subtitle>{{
-                user.attributes.email
+              <v-list-item-subtitle :load="log(user)">{{
+               user.attributes.email
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -150,6 +150,9 @@ export default {
       await this.logout();
       this.$router.push("/login");
     },
+    log(e) {
+      console.log(e)
+    }
   },
   computed: {
     ...mapGetters(["user"]),
