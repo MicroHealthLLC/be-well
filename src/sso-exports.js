@@ -1,17 +1,19 @@
-let baseURL = "https://sandbox.d1i1dumyzwv0r6.amplifyapp.com/"
+let baseURL = "https://beta.d1i1dumyzwv0r6.amplifyapp.com/"
+let graphQLEndpoint = "https://ljertf3kdrghnnu37weavbpf5u.appsync-api.us-east-1.amazonaws.com/graphql"
 
 if (process.env.NODE_ENV == "development") {
     baseURL = "http://localhost:8080/"
+    graphQLEndpoint = "http://100.74.60.127:20002/graphql"
 }
 
 const awsmobile = {
     "aws_project_region": "us-east-1",
     "aws_cognito_identity_pool_id": "us-east-1:954b13cc-6ce6-4a13-9b78-924e31738325",
     "aws_cognito_region": "us-east-1",
-    "aws_user_pools_id": "us-east-1_wVdpCj57S",
-    "aws_user_pools_web_client_id": "1qmcaphes51fe8m92t43mbr2vk",
+    "aws_user_pools_id": "us-east-1_LFKE2NdwM",
+    "aws_user_pools_web_client_id": "2ldpgbq78qlq1cpphht9d8k57q",
     "oauth": {
-      domain: "be-well-beta.auth.us-east-1.amazoncognito.com",
+      domain: "beta-be-well.auth.us-east-1.amazoncognito.com",
       scope: ["email", "openid", "phone", "aws.cognito.signin.user.admin"],
       redirectSignIn: `${baseURL}`,
       redirectSignOut: `${baseURL}`,
@@ -36,7 +38,7 @@ const awsmobile = {
     "aws_cognito_verification_mechanisms": [
         "PHONE_NUMBER"
     ],
-    "aws_appsync_graphqlEndpoint": "https://uwctn5rkj5hajem4qwphxctfje.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_graphqlEndpoint": `${graphQLEndpoint}`,
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_appsync_dangerously_connect_to_http_endpoint_for_testing": true,

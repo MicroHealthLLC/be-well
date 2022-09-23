@@ -309,7 +309,7 @@ export default {
       } else {
         await this.addPreferences(this.tablePreferences)
         //  console.log(this.tablePreferences)
-        console.log("this is new" + this.tablePreferences)
+        console.log(this.tablePreferences)
       }
       // console.log(this.tablePreferences)
       // console.log(this.preferences[0])
