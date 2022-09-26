@@ -1,4 +1,4 @@
-import Auth from "@aws-amplify/auth";
+import { Auth } from "@aws-amplify/auth";
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
@@ -284,7 +284,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
     next("/not-authorized");
-  } else if (requiresAuth && !currentUserInfo) {
+  } else if (requiresAuth && Object.keys(currentUserInfo).length == 0) {
     next("/login");
   } else {
     next();
