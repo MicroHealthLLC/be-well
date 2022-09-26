@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar v-if="user" />
+    <Navbar v-if="user"/>
     <!-- Main Content -->
     <v-main class="main-wrapper" app>
       <WelcomeBanner v-if="$route.name == 'Home'" />
@@ -19,6 +19,7 @@
       </template>
     </v-snackbar>
   </v-app>
+  
 </template>
 
 <script>
