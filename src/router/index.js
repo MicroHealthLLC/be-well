@@ -284,6 +284,8 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && requiresEditor && !isEditor && currentUserInfo) {
     next("/not-authorized");
+  } else if (requiresAuth && !currentUserInfo) {
+    next("/login");
   } else if (requiresAuth && Object.keys(currentUserInfo).length == 0) {
     next("/login");
   } else {
