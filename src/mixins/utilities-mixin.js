@@ -575,7 +575,7 @@ export default {
   watch: {
     preferences(){  
       if(!this.preferences && !this.preferences[0]){
-        ("Add default preferences works")
+        console.log("Add default preferences works")
         this.addPreferences(this.defaultPreferences)
       }     
     }
