@@ -1,7 +1,59 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {
+    return {  
+      defaultPreferences: {
+        preference_items: [
+          {
+            category: "Balance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Endurance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Flexibility & Mobility",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Strength",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Nutrition",
+            not_interested: false,
+          },
+          {
+            category: "Recovery",
+            not_interested: false,
+          },
+          {
+            category: "Ergonomics",
+            not_interested: false,
+          },
+        ],
+      },
       categories: [
         {
           title: "",
@@ -269,7 +321,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo"]),
+    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo" , "addPreferences"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -520,4 +572,12 @@ export default {
     },
   
   },
+  watch: {
+    preferences(){  
+      if(!this.preferences && !this.preferences[0]){
+        ("Add default preferences works")
+        this.addPreferences(this.defaultPreferences)
+      }     
+    }
+   }
 };
