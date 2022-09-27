@@ -32,9 +32,65 @@ import utilitiesMixin from "./mixins/utilities-mixin";
 export default {
   components: { Navbar, WelcomeBanner },
   name: "App",
+  data(){
+    return {
+      defaultPreferences: {
+        preference_items: [
+          {
+            category: "Balance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Endurance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Flexibility & Mobility",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Strength",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Nutrition",
+            not_interested: false,
+          },
+          {
+            category: "Recovery",
+            not_interested: false,
+          },
+          {
+            category: "Ergonomics",
+            not_interested: false,
+          },
+        ],
+      },
+    }
+  },
   mixins: [utilitiesMixin],
   methods: {
-    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences"]),
+    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences", "addPreferences"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
     checkReminders() {
       // Get current time for check
@@ -117,6 +173,12 @@ export default {
         this.intervalId = null;
       }
     },
+    preferences(){  
+      if(!this.preferences[0]){
+        console.log("Add default preferences works")
+        this.addPreferences(this.defaultPreferences)
+      }     
+    }
   },
 };
 </script>
