@@ -1,59 +1,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {  
-      defaultPreferences: {
-        preference_items: [
-          {
-            category: "Balance",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Endurance",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Flexibility & Mobility",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Strength",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Nutrition",
-            not_interested: false,
-          },
-          {
-            category: "Recovery",
-            not_interested: false,
-          },
-          {
-            category: "Ergonomics",
-            not_interested: false,
-          },
-        ],
-      },
+    return {     
       categories: [
         {
           title: "",
