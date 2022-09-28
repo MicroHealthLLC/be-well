@@ -86,7 +86,7 @@
           <!-- Progress Bar -->
           <div class="row mt-0 px-3">
             <div class="col">
-              <v-progress-linear
+              <v-progress-linear v-if="!goal.isComplete"
                 :value="getGoalProgressValue(goal.reminders.items) ? Math.round(getGoalProgressValue(goal.reminders.items)) : 0"
                 height="10" striped rounded color="lime"></v-progress-linear>
             </div>
