@@ -245,22 +245,24 @@
                 <v-list-item-subtitle class="ml-7">{{ goal.title }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item two-line>
+            <!-- <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title>
                   <v-icon>{{ categoryIcon(goal.category) }}</v-icon>Focus Area
                 </v-list-item-title>
                 <v-list-item-subtitle class="ml-6">{{ goal.category }}</v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item>
-            <!-- <v-list-item two-line>
+            </v-list-item> -->
+            <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title>
-                  <v-icon class="mr-1">mdi-stairs</v-icon>Level
+                  <v-icon class="mr-1">mdi-yoga</v-icon>Activities
                 </v-list-item-title>
-                <v-list-item-subtitle class="ml-7">{{ this.levelToString(reminder.level) }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-for="r in goal.reminders.items" class="ml-7" :key="r.id">
+                  <v-icon>{{ categoryIcon(r.category) }}</v-icon>{{ r.category }} <v-chip class="mb-1" small text-color="white" :color="levelToColor(r.level)">{{levelToString(r.level)}}</v-chip>
+                </v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item> -->
+            </v-list-item>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title>
