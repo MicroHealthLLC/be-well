@@ -152,45 +152,7 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
-      <v-dialog v-model="goalCompleteDialog" max-width="344">
-        <v-card class="mx-auto" max-width="344">
-          <v-img src="../assets/trophy.jpg" height="200px"></v-img>
-          <v-card-title>
-            CONGRATULATIONS!
-          </v-card-title>
-          <v-card-subtitle>
-            You completed your <span><b>{{ confettiGoalName }}</b></span> goal!
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-content-save</v-icon>
-                </v-btn>
-              </template>
-              <span>Save</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="reuseGoal(goal.reminders.items)">
-                  <v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon>
-                </v-btn>
-              </template>
-              <span>Do it again!</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: goal.id })"
-                  v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
-                </v-btn>
-              </template>
-              <span>Delete</span>
-            </v-tooltip>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="activityDialog" max-width="600px">
+     <v-dialog v-model="activityDialog" max-width="600px">
         <v-card :disabled="saving" :loading="saving">
           <v-card-title>
             <span v-if="goal && goal.reminders.items.length > 0 && !goal.isComplete">Add New Activity</span>
@@ -609,23 +571,7 @@ export default {
       }));
     },
   },
-  watch: {
-    goal() {
-      if (
-        Math.round(this.getGoalProgressValue(this.goal.reminders.items)) == 100 &&
-        this.goal.completedCount == 0) {
-        this.goalCompleteDialog = true
-        this.confettiGoalName = this.goal.category
-        this.updateGoalById({
-          id: this.goal.id,
-          isComplete: true,
-          completedCount: 1,
-        });
-        console.log(this.goal)
-        this.$confetti.start();
-        setTimeout(() => { this.$confetti.stop() }, 3500)
-      }
-    },
+  watch: { 
     reminder() {
       if (this.reminder.frequency && this.freqArr.length == 0) {
         let split = this.reminder.frequency.split(",")
