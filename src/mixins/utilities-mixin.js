@@ -1,59 +1,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {  
-      defaultPreferences: {
-        preference_items: [
-          {
-            category: "Balance",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Endurance",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Flexibility & Mobility",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Strength",
-            l1: true,
-            l2: false,
-            l3: false,
-            l4: false,
-            l5: false,
-            not_interested: false,
-          },
-          {
-            category: "Nutrition",
-            not_interested: false,
-          },
-          {
-            category: "Recovery",
-            not_interested: false,
-          },
-          {
-            category: "Ergonomics",
-            not_interested: false,
-          },
-        ],
-      },
+    return {     
       categories: [
         {
           title: "",
@@ -442,10 +390,11 @@ export default {
       } 
       if(prefs[0].l5){       
         return 'L5'
-      }       
-    } else if (!this.preferences){
-      return 'L1'
-   }
+      } 
+     }
+    if (!this.preferences[0]){
+      return 'L1'     
+    }
   },
   balanceLevel(){
     if (this.preferences && this.preferences[0]){
@@ -466,7 +415,8 @@ export default {
       if(prefs[0].l4){      
         return 'L5'
       }  
-     } else if (!this.preferences){
+     }
+    if (!this.preferences[0]){
       return 'L1'
    }
   },
@@ -491,7 +441,8 @@ export default {
       if(prefs[0].l5){      
         return 'L5'
       } 
-    } else if (!this.preferences){
+    }
+    if (!this.preferences[0]){
       return 'L1'
    }
   },
@@ -505,7 +456,8 @@ export default {
         //console.log("Nutrition: I AM NOT INTERESTED")
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -519,7 +471,8 @@ export default {
       if(prefs[0].not_interested){       
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -533,7 +486,8 @@ export default {
       if(prefs[0].not_interested){      
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -555,7 +509,8 @@ export default {
       if(prefs[0].l5){
         return 'L5'
       }  
-    } else if (!this.preferences){
+     }
+     if (!this.preferences[0]){
       return 'L1'
    }
    },   
@@ -572,12 +527,4 @@ export default {
     },
   
   },
-  watch: {
-    preferences(){  
-      if(!this.preferences && !this.preferences[0]){
-        ("Add default preferences works")
-        this.addPreferences(this.defaultPreferences)
-      }     
-    }
-   }
 };

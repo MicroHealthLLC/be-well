@@ -135,7 +135,7 @@
                     </template>
 
                   </v-data-table>
-                  <!-- <v-data-table disable-sort v-else :headers="headers" :items="tablePreferences.preference_items"
+                  <v-data-table disable-sort v-else :headers="headers" :items="tablePreferences.preference_items"
                     class="elevation-1">
                     <template v-slot:[`item.l1`]="{ item }">
                       <v-checkbox
@@ -178,7 +178,7 @@
                         @click="nIToggle(tablePreferences.preference_items.indexOf(item), item.not_interested)"
                         color="success"></v-checkbox>
                     </template>
-                  </v-data-table> -->
+                  </v-data-table>
                 </template>
               </v-card-text>
               <v-card-actions class="d-flex justify-end">
