@@ -35,7 +35,7 @@
             <v-list-item-subtitle class="ml-7">{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item two-line>
+        <v-list-item v-if="reminder.frequency" two-line>
           <v-list-item-content>
             <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
             <v-list-item-subtitle class="ml-7">{{removeComma(reminder.frequency)}}</v-list-item-subtitle>
@@ -223,6 +223,8 @@ export default {
     removeComma(string) {
       if (string.charAt(0) == ",") {
         return string.substring(1)
+      } else {
+        return string
       }
     },
     toggleReminderFormDialog() {

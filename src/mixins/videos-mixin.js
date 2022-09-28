@@ -575,6 +575,8 @@ export default {
           return "var(--mh-orange)";
         case "L5":
           return "error";
+        case "NOT_APPLICABLE":
+          return "#1976d2"
       }
     },
   },

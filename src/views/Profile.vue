@@ -74,7 +74,7 @@
                   </v-menu>
                 </v-form>
               </v-card-text>
-              <v-btn @click="deleteWatchedVideos()">Reset Watched Videos</v-btn>
+              <!-- <v-btn @click="deleteWatchedVideos()">Reset Watched Videos</v-btn> -->
               <v-card-actions class="d-flex justify-end">
 
                 <v-btn @click="editProfile" class="px-10" color="primary" :block="$vuetify.breakpoint.xsOnly"
