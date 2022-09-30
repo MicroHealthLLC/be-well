@@ -20,32 +20,13 @@
           label="Show Completed"
           color="#2f53b6"
         >
-        </v-switch>
-    
+        </v-switch>    
       </div>
       <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
-        <!-- <template v-slot:activator="{ on }">
-          <div v-on="on">
-            <v-btn
-            
-              >Add New</v-btn
-            >
-          </div>
-        </template> -->
         <div class="text-center">Active Goals maximum has been met</div>
       </v-tooltip>
-
     </div>
     <v-divider class="mb-4"></v-divider>
-    <!-- Goals Table -->
-    <!-- <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
-      <div class="d-flex text-center flex-column">
-        <div class="mt-4">
-          <v-icon color="grey" x-large>mdi-flag</v-icon>
-          <p class="placeholder-text">You currently have no Goals set</p>
-        </div>
-      </div>
-    </v-card> -->
     <div>
        <v-row>
          <v-col  
@@ -84,9 +65,7 @@
           lg="3"
           class="goalCol"
         >
-        <CurrentGoals :goal="goal">
-
-        </CurrentGoals>
+        <CurrentGoals :goal="goal" />   
         </v-col>
         <v-col
           v-for="goal in incompleteGoals"
@@ -98,91 +77,88 @@
           lg="3"
           class="goalCol"
         >
-        <CurrentGoals :goal="goal">
-
-        </CurrentGoals>
+        <CurrentGoals :goal="goal" />
         </v-col>
       </v-row>
     </div>  
- 
-
-    <!-- Dialog Form -->
-    <v-dialog v-model="dialog" width="750">
-      <v-card :disabled="saving" :loading="saving">
-        <v-card-title class="text-right pt-2 pb-0" 
-          >
-          <!-- <span v-if="goal.id">Edit Goal</span><span v-else><h2><b class="goalHeaders">Set A Goal...</b></h2></span>
-          <v-spacer></v-spacer> -->
-          <v-btn  @click="closeGoalForm" fab depressed x-small outlined
-            ><v-icon>mdi-close</v-icon></v-btn
-          >
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="goalform" v-model="valid">
-            <!-- <v-text-field
-              v-model="goal.title"
-              label="My Goal is..."
-              :rules="[(v) => !!v || 'Goal title is required']"
-              required
-            ></v-text-field> -->
-            <v-select
-              v-model="goal.category"
-              :items="validCategories"
-              item-text="title"
-              item-value="value"
-              label="I want to improve my..."
-              :rules="[(v) => !!v || 'Improvement category is required']"
-              required
-            ></v-select>
-   
-            <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+     <!-- Dialog Form -->
+      <v-dialog v-model="dialog" width="750">
+        <v-card :disabled="saving" :loading="saving">
+          <v-card-title class="text-right pt-2 pb-0" 
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
+            <!-- <span v-if="goal.id">Edit Goal</span><span v-else><h2><b class="goalHeaders">Set A Goal...</b></h2></span>
+            <v-spacer></v-spacer> -->
+            <v-btn  @click="closeGoalForm" fab depressed x-small outlined
+              ><v-icon>mdi-close</v-icon></v-btn
+            >
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="goalform" v-model="valid">
+              <!-- <v-text-field
+                v-model="goal.title"
+                label="My Goal is..."
+                :rules="[(v) => !!v || 'Goal title is required']"
+                required
+              ></v-text-field> -->
+              <v-select
+                v-model="goal.category"
+                :items="validCategories"
+                item-text="title"
+                item-value="value"
+                label="I want to improve my..."
+                :rules="[(v) => !!v || 'Improvement category is required']"
+                required
+              ></v-select>
+    
+              <v-menu
+                v-model="menu"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="goal.dueDate"
+                    label="I want to accomplish this goal by..."
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    :rules="[(v) => !!v || 'Date required']"
+                    required
+                  ></v-text-field>
+                </template>
+                <v-date-picker
                   v-model="goal.dueDate"
-                  label="I want to accomplish this goal by..."
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="[(v) => !!v || 'Date required']"
-                  required
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="goal.dueDate"
-                @input="menu = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-form>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-end">
-          <v-btn
-            @click="saveGoal"
-            class="px-10"
-            color="var(--mh-blue)"
-            depressed
-            dark
-            >Save</v-btn
-          >
-          <v-btn 
-            v-if="goal.id" 
-            color="error"
-            @click="deleteGoal({ id: goal.id })" 
-            outlined
-            ><v-icon>
-            mdi-trash-can-outline
-           </v-icon></v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+                  @input="menu = false"
+                ></v-date-picker>
+              </v-menu>
+            </v-form>
+          </v-card-text>
+          <v-card-actions class="d-flex justify-end">
+            <v-btn
+              @click="saveGoal"
+              class="px-10"
+              color="var(--mh-blue)"
+              depressed
+              dark
+              >Save</v-btn
+            >
+            <v-btn 
+              v-if="goal.id" 
+              color="error"
+              @click="deleteGoal({ id: goal.id })" 
+              outlined
+              ><v-icon>
+              mdi-trash-can-outline
+            </v-icon></v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+       <!-- Confetti Dialog Form -->
       <v-dialog v-model="goalCompleteDialog" max-width="344">
         <v-card
           class="mx-auto"

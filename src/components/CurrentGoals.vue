@@ -207,15 +207,7 @@
                 <v-list-item-subtitle class="ml-7">{{ goal.title }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <!-- <v-list-item two-line>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-icon>{{ categoryIcon(goal.category) }}</v-icon>Focus Area
-                </v-list-item-title>
-                <v-list-item-subtitle class="ml-6">{{ goal.category }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item> -->
-            <v-list-item two-line>
+                  <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title>
                   <v-icon class="mr-1">mdi-yoga</v-icon>Activities
@@ -232,36 +224,9 @@
                 </v-list-item-title>
                 <v-list-item-subtitle class="ml-7">{{ goal.dueDate }}</v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item>
-            <!-- <v-list-item two-line>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-icon class="mr-1">mdi-clock</v-icon>Time
-                </v-list-item-title>
-                <v-list-item-subtitle class="ml-7">{{ reminder.time }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item> -->
-            
+            </v-list-item>                
           </v-list>
-
-          <!-- 
-            <span class="p-4" v-if="goal.isComplete" cals>
-              <div>
-                <v-icon class="mr-1">mdi-flag-checkered</v-icon>
-                <h4 class="d-inline">Goal</h4>
-              </div>
-              <p class="pr-2">{{ goal.title }} </p>
-              <div class="mt-3">
-                <v-icon>{{ categoryIcon(goal.category) }}</v-icon>
-                <h4 class="d-inline">Focus Area</h4>
-              </div>
-              <p>{{ goal.category }}</p>
-              <div class="mt-3">
-                <v-icon class="mr-1">mdi-calendar</v-icon>
-                <h4 class="d-inline">Due Date</h4>
-              </div>
-              <p>{{ goal.dueDate }}</p>
-            </span> -->
+       
             <v-card-text>
             <v-form ref="goalform" v-model="valid">
               <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required
@@ -282,7 +247,7 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark disabled
+            <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark 
               :class="{ 'd-none': goal.isComplete }">Saved</v-btn>
             <v-btn v-if="goal.id" :class="{ 'd-none': goal.isComplete }" color="error"
               @click="deleteGoal({ id: goal.id })" outlined>

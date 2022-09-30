@@ -160,7 +160,6 @@ export default {
     if (this.user) {
       this.fetchReminders();
       this.fetchPreferences();
-      console.log(this.preferences)
     }
     this.TOGGLE_REMINDERS_ON(true);
   },
