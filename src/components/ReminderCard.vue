@@ -43,7 +43,7 @@
           </v-card>
         </v-menu> -->
 
-        <v-tooltip v-if="!reminder.goal && !reminder.isComplete" max-width="200" bottom>
+        <v-tooltip v-if="!reminder.goal && !reminder.isComplete && !isFlipped" max-width="200" bottom>
           <div>Add Activity to Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
@@ -82,7 +82,7 @@
               <h3>
                 <span v-if="reminder.isComplete" class="font-weight-bold text-blue">
                   <v-icon color="#1d336f" class="mr-1">{{
-                      categoryIcon(reminder.activity) || categoryIcon(reminder.category)
+                  categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
                   <span class="pt-1" v-if="reminder.activity">
@@ -92,7 +92,7 @@
                 </span>
                 <span v-else class="font-weight-bold text-light">
                   <v-icon color="white" class="mr-1">{{
-                      categoryIcon(reminder.activity) || categoryIcon(reminder.category)
+                  categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
                   <span class="pt-1" v-if="reminder.activity">
@@ -105,19 +105,12 @@
           </div>
           <div class="row mt-0 px-3">
             <div class="col">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-progress-linear height="10" rounded striped color="lime"
-                    :value="getActivityProgressValue(reminder.category, reminder.level)" v-bind="attrs" v-on="on">
-                  </v-progress-linear>
-                  <!-- <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
+              <v-progress-linear height="10" rounded striped color="lime"
+                :value="getActivityProgressValue(reminder.category, reminder.level)">
+              </v-progress-linear>
+              <!-- <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
                   </v-chip> -->
-                </template>
-                <span>
-                  {{ Math.round(getActivityProgressValue(reminder.category, reminder.level)) }}%
-                </span>
-              </v-tooltip>
             </div>
           </div>
 
@@ -229,53 +222,51 @@
           <div class="row">
             <div class="col">
               <h5 class="orangeLabel d-flex">ACTIVITY PROGRESS</h5>
-              {{ getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
-                  checkForNA(reminder.level)).length
-              }} of {{
-    getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
-      checkForNA(reminder.level)).length
-}}
+              <span>
+                {{ getCompletedActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
+                checkForNA(reminder.level)).length
+                }} of {{
+                getActivities(capitalizeFirstLet((checkForFlex(reminder.category)).toLowerCase()),
+                checkForNA(reminder.level)).length
+                }}
+              </span>
             </div>
           </div>
           <span class="levelBadge">
             <v-chip small :color="levelColor(reminder.level)" dark>{{
-                levelTitle(reminder.level)
+            levelTitle(reminder.level)
             }}</v-chip>
           </span>
         </div>
 
-        <div class="row activityActions">
-          <div class="col">
-            <h5 class="orangeLabel font-weight-bold">ACTIVITY ACTIONS</h5>
-            <span class="d-block">
-              <v-tooltip bottom v-if="!reminder.goal">
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" v-bind="attrs" v-on="on">mdi-timer-play-outline</v-icon>
-              </template>
-              <span>Start Activity</span>
-            </v-tooltip>
-            <v-tooltip bottom v-if="!reminder.goal">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn @click="openReminderForm(reminder)" class="mr-3"
-                color="var(--mh-green)" small v-bind="attrs" v-on="on"><v-icon> mdi-square-edit-outline </v-icon>
-              </v-btn>
-              </template>
-              <span>Edit</span>
-            </v-tooltip>
-            <v-tooltip bottom v-if="!reminder.goal">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn @click="deleteReminder({ id: reminder.id })" color="error" small v-bind="attrs" v-on="on">
-                <v-icon> mdi-trash-can-outline </v-icon>
-              </v-btn>
-              </template>
-              <span>Delete</span>
-            </v-tooltip>
-              
-            </span>
-          </div>
-        </div>
+
+        <span class="cardBtns d-inline-flex">
+          <v-tooltip bottom v-if="!reminder.goal">
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon @click="notify(reminder)" class="mr-2" color="var(--mh-blue)" v-bind="attrs" v-on="on">
+                mdi-timer-play-outline</v-icon>
+            </template>
+            <span>Start Activity</span>
+          </v-tooltip>
+          <v-tooltip bottom v-if="!reminder.goal">
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon @click="openReminderForm(reminder)" class="mr-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
+                mdi-square-edit-outline</v-icon>
+            </template>
+            <span>Edit</span>
+          </v-tooltip>
+          <v-tooltip bottom v-if="!reminder.goal">
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon @click="deleteReminder({ id: reminder.id })" color="error" v-bind="attrs" v-on="on">
+                mdi-trash-can-outline</v-icon>
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
+
+        </span>
       </div>
     </div>
+
     <v-dialog v-model="dialog" max-width="600px">
       <ReminderForm :reminder="reminder" @toggleReminderFormDialog="toggleReminderFormDialog"></ReminderForm>
     </v-dialog>
@@ -562,7 +553,7 @@ export default {
 .goalIcon {
   position: absolute;
   bottom: 12%;
-  right: 1%;
+  right: 2%;
 }
 
 .trophyIcon {
@@ -607,6 +598,13 @@ export default {
   transform: translateY(-50%);
 }
 
+.cardBtns {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  cursor: pointer;
+}
+
 .lHeight {
   line-height: 3.5;
 }
@@ -620,8 +618,8 @@ export default {
 
 .levelBadge {
   position: absolute;
-  top: 5%;
-  right: 2.5%;
+  top: 12%;
+  right: 5%;
 }
 
 .levelBadge-complete {

@@ -69,7 +69,7 @@
                   <template v-slot:activator="{ on }">
                     <div v-on="on" class="d-inline">
                       <v-icon color="white" :class="{ 'text-blue': goal.isComplete }">{{
-                          categoryIcon(goal.category)
+                      categoryIcon(goal.category)
                       }}</v-icon>
                     </div>
                   </template>
@@ -95,27 +95,28 @@
       </div>
       <div class="justify-space-between flip-card-back">
 
-      <span class="cardBtns d-inline-flex">
-        <v-tooltip max-width="200" bottom>
-          <div>Edit</div>
-          <template v-slot:activator="{ on }">
-                <div v-on="on">           
-                    <v-icon @click="openGoalForm(goal)"  color="var(--mh-green)" class="mr-1">mdi-square-edit-outline</v-icon>            
-                </div>
-              </template>
-          </v-tooltip>  
+        <span class="cardBtns d-inline-flex">
           <v-tooltip max-width="200" bottom>
-          <div>Delete</div>
-          <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <span >
-                    <v-icon @click="openGoalForm(goal)" color="error">mdi-trash-can-outline</v-icon>                
-                  </span>
-                </div>
-              </template>
-          </v-tooltip>  
-      </span>   
-        <span class="addActivityBtn" >
+            <div>Edit</div>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-icon @click="openGoalForm(goal)" color="var(--mh-green)" class="mr-1">mdi-square-edit-outline
+                </v-icon>
+              </div>
+            </template>
+          </v-tooltip>
+          <v-tooltip max-width="200" bottom>
+            <div>Delete</div>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <span>
+                  <v-icon @click="openGoalForm(goal)" color="error">mdi-trash-can-outline</v-icon>
+                </span>
+              </div>
+            </template>
+          </v-tooltip>
+        </span>
+        <span class="addActivityBtn">
           <v-tooltip max-width="200" bottom>
             <div>Add Activity</div>
             <template v-slot:activator="{ on }">
@@ -128,7 +129,7 @@
             </template>
           </v-tooltip>
         </span>
-        <div class="clickable py-4 px-4">    
+        <div class="clickable py-4 px-4">
           <div class="row" @click="isFlipped = !isFlipped">
             <div class="col">
               <h5 class="orangeLabel d-flex">
@@ -158,10 +159,10 @@
                 <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
                   <span v-for="g, i in goal.reminders.items" :key="i">
                     <h5>{{ getCompletedActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
-                        checkForNA(g.level)).length
+                    checkForNA(g.level)).length
                     }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
-    checkForNA(g.level)).length
-}}</h5>
+                      checkForNA(g.level)).length
+                      }}</h5>
                   </span>
                 </span>
               </div>
@@ -172,10 +173,10 @@
           <div class="text-center">Active Goals maximum has been met</div>
         </v-tooltip>
       </div>
-     <v-dialog v-model="activityDialog" max-width="600px">
+      <v-dialog v-model="activityDialog" max-width="600px">
         <v-card :disabled="saving" :loading="saving">
-          <v-card-title >
-            
+          <v-card-title>
+
             <span v-if="goal && goal.reminders.items.length > 0 && !goal.isComplete">Add New Activity</span>
             <span v-else-if="!goal.isComplete">Schedule Your First Activity</span>
           </v-card-title>
@@ -183,9 +184,8 @@
             <v-form ref="form" v-model="a_valid">
               <span v-if="goal && goal.reminders.items.length > 0">
 
-                <v-select v-model="reminder.category" :items="filteredCategories" item-text="title"
-                  item-value="value" label="Select Activity Type" :rules="[(v) => !!v || 'Activity Type required']"
-                  required></v-select>
+                <v-select v-model="reminder.category" :items="filteredCategories" item-text="title" item-value="value"
+                  label="Select Activity Type" :rules="[(v) => !!v || 'Activity Type required']" required></v-select>
               </span>
               <span v-else class="mb-2">
                 <small class="d-block activityT">Activity Type</small>
@@ -207,16 +207,28 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveReminder" class="px-6" color="var(--mh-blue)" dark>Save</v-btn>
-            <v-btn @click="activityDialog = false" color="secondary" outlined>Cancel</v-btn>
+            <v-tooltip max-width="200" bottom>
+              <div>Save</div>
+              <template v-slot:activator="{ on }" >
+                <v-btn @click="saveReminder" v-on="on" class="px-5 mr-2" color="var(--mh-blue)" dark>
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip max-width="200" bottom>
+            <div>Cancel</div>
+            <template v-slot:activator="{ on }">
+              <v-btn @click="activityDialog = false" v-on="on" color="secondary" outlined>
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </template>
+            </v-tooltip>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog v-model="dialog" width="450">
-
         <v-card :disabled="saving" :loading="saving">
-          <v-card-title class="text-right pt-2 pb-0">
-            <v-icon small @click="closeGoalForm">mdi-close</v-icon>
+          <v-card-title class="text-right pt-4">
           </v-card-title>
 
           <v-list v-if="goal.isComplete" disabled>
@@ -228,13 +240,14 @@
                 <v-list-item-subtitle class="ml-7">{{ goal.title }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-                  <v-list-item two-line>
+            <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-title>
                   <v-icon class="mr-1">mdi-yoga</v-icon>Activities
                 </v-list-item-title>
                 <v-list-item-subtitle v-for="r in goal.reminders.items" class="ml-7" :key="r.id">
-                  <v-icon>{{ categoryIcon(r.category) }}</v-icon>{{ r.category }} <v-chip class="mb-1" small text-color="white" :color="levelToColor(r.level)">{{levelToString(r.level)}}</v-chip>
+                  <v-icon>{{ categoryIcon(r.category) }}</v-icon>{{ r.category }} <v-chip class="mb-1" small
+                    text-color="white" :color="levelToColor(r.level)">{{levelToString(r.level)}}</v-chip>
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -245,10 +258,10 @@
                 </v-list-item-title>
                 <v-list-item-subtitle class="ml-7">{{ goal.dueDate }}</v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item>                
+            </v-list-item>
           </v-list>
-       
-            <v-card-text>
+
+          <v-card-text v-if="!goal.isComplete">
             <v-form ref="goalform" v-model="valid">
               <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required
                 :class="{ 'd-none': goal.isComplete }">
@@ -268,9 +281,25 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
-            <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark 
-              :class="{ 'd-none': goal.isComplete }">Save</v-btn>
-           
+            <v-tooltip max-width="200" bottom>
+              <div>Save</div>
+              <template v-slot:activator="{ on }" >
+                <v-btn @click="saveGoal" v-on="on" class="px-5 mr-2" color="var(--mh-blue)" depressed dark
+              :class="{ 'd-none': goal.isComplete }">
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip max-width="200" bottom>
+            <div v-if="!goal.isComplete">Cancel</div>
+            <div v-if="goal.isComplete">Close</div>
+            <template v-slot:activator="{ on }">
+              <v-btn @click="closeGoalForm" v-on="on" color="secondary" outlined>
+              <v-icon v-if="!goal.isComplete">mdi-cancel</v-icon>
+              <v-icon v-if="goal.isComplete">mdi-close</v-icon>
+            </v-btn>
+            </template>
+            </v-tooltip>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -554,8 +583,8 @@ export default {
       }));
     },
   },
-  
-  watch: { 
+
+  watch: {
     reminder() {
       if (this.reminder.frequency && this.freqArr.length == 0) {
         let split = this.reminder.frequency.split(",")
@@ -697,7 +726,7 @@ export default {
 
 .flip-card {
   /* background-color: transparent; */
-  height: 130px !important; 
+  height: 130px !important;
 
   perspective: 1000px;
   /* Remove this if you don't want the 3D effect */
@@ -790,6 +819,7 @@ export default {
   left: 10%;
   cursor: pointer;
 }
+
 .cardBtns {
   position: absolute;
   bottom: 5%;
