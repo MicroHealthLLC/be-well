@@ -2,7 +2,7 @@
   <div class="flip-card">
     <div class="flip-card-inner" :class="{ 'is-flipped': isFlipped && !goal.isComplete }">
       <div :class="{ 'completed': goal.isComplete }" class="flip-card-front clickable">
-        <span class="newGoalBtn3" :class="{ 'd-none': goal.isComplete }">
+        <span class="newGoalBtn3" :class="{ 'd-none': goal.isComplete }" v-if="!isFlipped">
           <v-tooltip max-width="200" bottom>
             <div v-if="goal && goal.reminders.items.length > 0">Add Activity</div>
             <div v-else>Schedule Your 1st Activity</div>
@@ -94,7 +94,28 @@
         </div>
       </div>
       <div class="justify-space-between flip-card-back">
-        <span class="addActivityBtn">
+
+      <span class="cardBtns d-inline-flex">
+        <v-tooltip max-width="200" bottom>
+          <div>Edit</div>
+          <template v-slot:activator="{ on }">
+                <div v-on="on">           
+                    <v-icon @click="openGoalForm(goal)"  color="var(--mh-green)" class="mr-1">mdi-square-edit-outline</v-icon>            
+                </div>
+              </template>
+          </v-tooltip>  
+          <v-tooltip max-width="200" bottom>
+          <div>Delete</div>
+          <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <span >
+                    <v-icon @click="openGoalForm(goal)" color="error">mdi-trash-can-outline</v-icon>                
+                  </span>
+                </div>
+              </template>
+          </v-tooltip>  
+      </span>   
+        <span class="addActivityBtn" >
           <v-tooltip max-width="200" bottom>
             <div>Add Activity</div>
             <template v-slot:activator="{ on }">
@@ -107,8 +128,7 @@
             </template>
           </v-tooltip>
         </span>
-        <div class="clickable py-4 px-4">
-          <v-icon class="editBtn" @click="openGoalForm(goal)" right>mdi-square-edit-outline</v-icon>
+        <div class="clickable py-4 px-4">    
           <div class="row" @click="isFlipped = !isFlipped">
             <div class="col">
               <h5 class="orangeLabel d-flex">
@@ -154,7 +174,8 @@
       </div>
      <v-dialog v-model="activityDialog" max-width="600px">
         <v-card :disabled="saving" :loading="saving">
-          <v-card-title>
+          <v-card-title >
+            
             <span v-if="goal && goal.reminders.items.length > 0 && !goal.isComplete">Add New Activity</span>
             <span v-else-if="!goal.isComplete">Schedule Your First Activity</span>
           </v-card-title>
@@ -248,13 +269,8 @@
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
             <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark 
-              :class="{ 'd-none': goal.isComplete }">Saved</v-btn>
-            <v-btn v-if="goal.id" :class="{ 'd-none': goal.isComplete }" color="error"
-              @click="deleteGoal({ id: goal.id })" outlined>
-              <v-icon>
-                mdi-trash-can-outline
-              </v-icon>
-            </v-btn>
+              :class="{ 'd-none': goal.isComplete }">Save</v-btn>
+           
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -538,13 +554,14 @@ export default {
       }));
     },
   },
+  
   watch: { 
     reminder() {
       if (this.reminder.frequency && this.freqArr.length == 0) {
         let split = this.reminder.frequency.split(",")
         split.forEach((r) => this.freqArr.push(r))
       }
-    }
+    },
   }
 };
 </script>
@@ -771,6 +788,12 @@ export default {
   position: absolute;
   top: 30%;
   left: 10%;
+  cursor: pointer;
+}
+.cardBtns {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
   cursor: pointer;
 }
 
