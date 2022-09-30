@@ -116,7 +116,7 @@
             </template>
           </v-tooltip>
         </span>
-        <span class="addActivityBtn">
+        <!-- <span class="addActivityBtn">
           <v-tooltip max-width="200" bottom>
             <div>Add Activity</div>
             <template v-slot:activator="{ on }">
@@ -128,7 +128,7 @@
               </div>
             </template>
           </v-tooltip>
-        </span>
+        </span> -->
         <div class="clickable py-4 px-4">
           <div class="row" @click="isFlipped = !isFlipped">
             <div class="col">
@@ -210,7 +210,7 @@
             <v-tooltip max-width="200" bottom>
               <div>Save</div>
               <template v-slot:activator="{ on }" >
-                <v-btn @click="saveReminder" v-on="on" class="px-5 mr-2" color="var(--mh-blue)" dark>
+                <v-btn small @click="saveReminder" v-on="on" class="px-4 mr-2" color="var(--mh-blue)" dark>
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </template>
@@ -218,7 +218,7 @@
             <v-tooltip max-width="200" bottom>
             <div>Cancel</div>
             <template v-slot:activator="{ on }">
-              <v-btn @click="activityDialog = false" v-on="on" color="secondary" outlined>
+              <v-btn small @click="activityDialog = false" v-on="on" color="secondary" outlined>
                 <v-icon>mdi-cancel</v-icon>
               </v-btn>
             </template>
@@ -288,7 +288,12 @@
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
                     <span :class="{ 'crossOut': activity.id == crossedOutActivity }" >{{activity.category}}</span>
                     <span class="float-right">
-                      <v-icon @click="deleteReminder({ id: activity.id })" color="error" small>mdi-trash-can-outline</v-icon>
+                      <v-tooltip max-width="200" left>
+                           <div>Delete Goal Activity</div>
+                           <template v-slot:activator="{ on }" >
+                            <v-icon @click="deleteReminder({ id: activity.id })" v-on="on" color="error" small>mdi-trash-can-outline</v-icon>
+                        </template>
+                      </v-tooltip>                   
                     </span>             
                  </li>
                 </ul>
@@ -302,7 +307,7 @@
             <v-tooltip max-width="200" bottom>
               <div>Save</div>
               <template v-slot:activator="{ on }" >
-                <v-btn @click="saveGoal" v-on="on" class="px-5 mr-2" color="var(--mh-blue)" depressed dark
+                <v-btn small @click="saveGoal" v-on="on" class="px-2 mr-2" color="var(--mh-blue)" depressed dark
               :class="{ 'd-none': goal.isComplete }">
               <v-icon>mdi-content-save</v-icon>
             </v-btn>
@@ -312,9 +317,9 @@
             <div v-if="!goal.isComplete">Cancel</div>
             <div v-if="goal.isComplete">Close</div>
             <template v-slot:activator="{ on }">
-              <v-btn @click="closeGoalForm" v-on="on" color="secondary" outlined>
-              <v-icon v-if="!goal.isComplete">mdi-cancel</v-icon>
-              <v-icon v-if="goal.isComplete">mdi-close</v-icon>
+              <v-btn class="px-2" small @click="closeGoalForm" v-on="on" color="secondary" outlined>
+              <v-icon small v-if="!goal.isComplete">mdi-cancel</v-icon>
+              <v-icon small v-if="goal.isComplete">mdi-close</v-icon>
             </v-btn>
             </template>
             </v-tooltip>

@@ -124,7 +124,7 @@
       <v-tooltip max-width="200" bottom>
         <div>Save</div>
         <template v-slot:activator="{ on }">
-      <v-btn v-if="!reminder.isComplete" @click="saveReminder" v-on="on" class="px-5 mr-2" color="var(--mh-blue)" dark>
+      <v-btn small v-if="!reminder.isComplete" @click="saveReminder" v-on="on" class="px-3 mr-2" color="var(--mh-blue)" dark>
         <v-icon>mdi-content-save</v-icon>
       </v-btn>
       </template>
@@ -133,11 +133,11 @@
         <div v-if="!reminder.isComplete">Cancel</div>
         <div v-if="reminder.isComplete">Close</div>
         <template v-slot:activator="{ on }">
-          <v-btn v-if="!reminder.isComplete" v-on="on" @click="toggleReminderFormDialog" color="secondary" outlined>
+          <v-btn small v-if="!reminder.isComplete" v-on="on" @click="toggleReminderFormDialog" color="secondary" outlined>
             <v-icon>mdi-cancel</v-icon>
           </v-btn>
-          <v-btn v-else @click="toggleReminderFormDialog" v-on="on" color="secondary" outlined>
-            <v-icon>mdi-close</v-icon>
+          <v-btn small v-else @click="toggleReminderFormDialog" v-on="on" color="secondary" outlined>
+            <v-icon small>mdi-close</v-icon>
           </v-btn>
         </template>
       </v-tooltip>
