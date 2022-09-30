@@ -248,18 +248,29 @@
           <div class="col">
             <h5 class="orangeLabel font-weight-bold">ACTIVITY ACTIONS</h5>
             <span class="d-block">
-              <v-btn v-if="!reminder.isComplete" @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" outlined
-                small title="Test Notification: Prototype Only">Test
+              <v-tooltip bottom v-if="!reminder.goal">
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon @click="notify(reminder)" class="mr-3" color="var(--mh-blue)" v-bind="attrs" v-on="on">mdi-timer-play-outline</v-icon>
+              </template>
+              <span>Start Activity</span>
+            </v-tooltip>
+            <v-tooltip bottom v-if="!reminder.goal">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn @click="openReminderForm(reminder)" class="mr-3"
+                color="var(--mh-green)" small v-bind="attrs" v-on="on"><v-icon> mdi-square-edit-outline </v-icon>
               </v-btn>
-              <v-btn v-else class="mr-3" color="var(--mh-blue)" small outlined>Reset</v-btn>
-              <v-btn v-if="!reminder.isComplete" @click="openReminderForm(reminder)" class="mr-3"
-                color="var(--mh-orange)" small outlined>View/Edit
-              </v-btn>
-              <v-btn v-else class="mr-3" color="var(--mh-orange)" small outlined>View
-              </v-btn>
-              <v-btn @click="deleteReminder({ id: reminder.id })" color="error" outlined small>
+              </template>
+              <span>Edit</span>
+            </v-tooltip>
+            <v-tooltip bottom v-if="!reminder.goal">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn @click="deleteReminder({ id: reminder.id })" color="error" small v-bind="attrs" v-on="on">
                 <v-icon> mdi-trash-can-outline </v-icon>
               </v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+              
             </span>
           </div>
         </div>
