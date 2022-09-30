@@ -274,13 +274,13 @@
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
                     <span :class="{ 'crossOut': activity.id == crossedOutActivity }" >{{activity.category}}</span>
                     <span class="float-right">
-                      <v-icon @click="removeGoalActivity(activity)" color="error" small>mdi-trash-can-outline</v-icon>
+                      <v-icon @click="deleteReminder({ id: activity.id })" color="error" small>mdi-trash-can-outline</v-icon>
                     </span>             
                  </li>
                 </ul>
                 </span>
                 <span v-else>
-                None
+              <p>You have no activities tied to this goal.</p> 
                 </span>
               </div>
           </v-card-text>
@@ -424,7 +424,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["updateGoalById", "addGoal", "removeGoal", "addReminder", "fetchReminders", 'fetchGoals']),
+    ...mapActions([
+      "updateGoalById", 
+      "addGoal", 
+      "removeGoal", 
+      'deleteReminder',
+      "removeReminder", 
+      "addReminder", 
+      "fetchReminders", 
+      'fetchGoals']),
     // log(e) {  
     //  console.log(e)
     // },
@@ -493,9 +501,7 @@ export default {
         return;
       }
       try {
-        if (this.goal.id) {
-          // Math.round(getGoalProgressValue(goal.reminders.items))
-          //console.log(this.goal.id)
+        if (this.goal.id) {  
           await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,
@@ -503,7 +509,7 @@ export default {
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
             checklist: this.goal.checklist,
-          });
+          });      
         } else {
           // console.log(this.goal)
           await this.addGoal(this.goal);
@@ -512,6 +518,10 @@ export default {
         console.log(error);
       }
       this.closeGoalForm();
+    },
+    async deleteReminder(id) {
+      await this.removeReminder(id);
+      await this.updateGoalById({ id: this.goal.id }); 
     },
     async deleteGoal(id) {
       try {
