@@ -159,9 +159,8 @@
                   <span v-for="g, i in goal.reminders.items" :key="i">
                     <h5>{{ getCompletedActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
                         checkForNA(g.level)).length
-                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()),
-    checkForNA(g.level)).length
-}}</h5>
+                    }} of {{ getActivities(capitalizeFirstLet((checkForFlex(g.category)).toLowerCase()), checkForNA(g.level)).length }}
+                    </h5>
                   </span>
                 </span>
               </div>
@@ -249,7 +248,7 @@
           </v-list>
        
             <v-card-text>
-            <v-form ref="goalform" v-model="valid">
+            <v-form ref="goalform" v-model="valid">            
               <v-text-field v-model="goal.title" label="Goal" :rules="[(v) => !!v || 'Goal is required']" required
                 :class="{ 'd-none': goal.isComplete }">
               </v-text-field>
@@ -264,8 +263,26 @@
                     v-on="on" :rules="[(v) => !!v || 'Date required']" required></v-text-field>
                 </template>
                 <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
-              </v-menu>
+              </v-menu>             
             </v-form>
+             <div :class="{ 'd-none': goal.isComplete }" class="mt-2">
+               <label>Goal Activities</label>
+               <span v-if="goal.reminders.items.length > 0">
+              
+                <ul v-for="activity in goal.reminders.items" :key="activity.id" style="list-style: none" class="pl-0">
+                 <li>                
+                   <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
+                    <span :class="{ 'crossOut': activity.id == crossedOutActivity }" >{{activity.category}}</span>
+                    <span class="float-right">
+                      <v-icon @click="removeGoalActivity(activity)" color="error" small>mdi-trash-can-outline</v-icon>
+                    </span>             
+                 </li>
+                </ul>
+                </span>
+                <span v-else>
+                None
+                </span>
+              </div>
           </v-card-text>
           <v-card-actions class="d-flex justify-end">
             <v-btn @click="saveGoal" class="px-10" color="var(--mh-blue)" depressed dark 
@@ -292,6 +309,8 @@ export default {
   data() {
     return {
       isFlipped: false,
+      crossOut: false, 
+      crossedOutActivity: null, 
       goalCompleteDialog: false,
       confettiGoalName: '',
       activityDialog: false,
@@ -412,7 +431,17 @@ export default {
     stopCon() {
       this.$confetti.stop();
     },
-
+    removeGoalActivity(activity){
+      let arr = []
+      if (activity){
+        arr.push(activity.id)
+      }    
+      for (let i = 0; i < arr.length; i++) {
+        this.crossedOutActivity = arr[i]
+          console.log(arr)
+          console.log(arr[i])
+      }     
+    },
     openNewReminderForm() {
       //console.log("this works")
       this.resetForm();
@@ -553,8 +582,7 @@ export default {
         title: item.title,
       }));
     },
-  },
-  
+  },  
   watch: { 
     reminder() {
       if (this.reminder.frequency && this.freqArr.length == 0) {
@@ -813,4 +841,9 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.crossOut{
+  text-decoration: line-through;
+}
+
 </style>
