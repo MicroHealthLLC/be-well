@@ -194,12 +194,28 @@ export default {
       if (this.$refs.form) {       
         this.$refs.form.resetValidation();
       }
+      this.fetchReminders()
+      this.reminder = {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      }
     },
     toggleReminderFormDialog(value){
       this.dialog = value;
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
+      this.reminder = {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      }
+      this.fetchReminders()
     },
     isComplete(reminder) {
       //console.log(reminder)

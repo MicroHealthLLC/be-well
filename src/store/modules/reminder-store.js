@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { createReminder } from "@/graphql/mutations";
 import { updateReminder } from "@/graphql/mutations";
-import { listReminders } from "@/graphql/queries";
+import { listReminders, getReminder } from "@/graphql/queries";
 import { deleteReminder } from "@/graphql/mutations";
 
 export default {
@@ -66,6 +66,14 @@ export default {
         console.log(error);
       }
     },
+    async fetchReminder(id) {
+      try {
+        const res = await API.graphql(graphqlOperation(getReminder, { input: id }));
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
   mutations: {
     SET_REMINDERS: (state, reminders) => (state.reminders = reminders),

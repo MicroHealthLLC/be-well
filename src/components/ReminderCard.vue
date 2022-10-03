@@ -85,9 +85,8 @@
                   categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
-                  <span class="pt-1" v-if="reminder.activity">
-                    {{ this.capitalizeFirstLet((reminder.activity).toLowerCase()) }}</span>
-                  <span class="pt-1" v-else>
+                  
+                  <span class="pt-1">
                     {{ categoryString(reminder.category) }}</span>
                 </span>
                 <span v-else class="font-weight-bold text-light">
@@ -95,9 +94,8 @@
                   categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
-                  <span class="pt-1" v-if="reminder.activity">
-                    {{ this.capitalizeFirstLet((reminder.activity).toLowerCase()) }}</span>
-                  <span class="pt-1" v-else>
+
+                  <span class="pt-1">
                     {{ categoryString(reminder.category) }}</span>
                 </span>
               </h3>
@@ -336,6 +334,7 @@ export default {
       "fetchReminders",
       "removeReminder",
       "fetchGoals",
+      "fetchReminder"
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     // log(e) {
@@ -346,6 +345,11 @@ export default {
     },
     toggleReminderFormDialog(value) {
       this.dialog = value;
+    },
+    getReminder(reminderId) {
+      let reminder = this.reminders.filter((r) => r.id == reminderId)
+      console.log(reminder)
+      return reminder
     },
     displayFreq(frequency) {
       let split = frequency.split(",")
@@ -416,7 +420,9 @@ export default {
     },
     openReminderForm(reminder) {
       // this.reminder = reminder;
+      this.fetchReminders();
       this.toggleReminderFormDialog(true);
+      //this.getReminder(reminder.id)
       console.log("reminder", reminder);
       this.SET_ASSOCIATED_GOAL(false);
     },
@@ -507,10 +513,10 @@ export default {
   watch: {
     reminders() {
       let rem = this.reminders.filter(r => r)
-      console.log(rem)
+      //console.log(rem)
       for (let i = 0; i < rem.length; i++) {
         this.isComplete(rem[i])
-        console.log(rem[i])
+        //console.log(rem[i])
       }
     }
   }

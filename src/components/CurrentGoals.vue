@@ -487,9 +487,12 @@ export default {
     },
     openNewReminderForm() {
       //console.log("this works")
+      
+      this.fetchReminders()
       this.resetForm();
       this.activityDialog = true;
       if (this.$refs.form) {
+        this.$refs.form.reset()
         this.$refs.form.resetValidation();
       }
     },
@@ -503,6 +506,7 @@ export default {
       };
     },
     openGoalForm(goal) {
+      this.fetchGoals()
       this.dialog = true;
       this.goal = goal;
       console.log(this.goal)
@@ -512,6 +516,7 @@ export default {
     },
     closeGoalForm() {
       this.dialog = false;
+      this.fetchGoals()
     },
     async reuseGoal(goalReminders) {
       for (let i = 0; i < goalReminders.length; i++) {
