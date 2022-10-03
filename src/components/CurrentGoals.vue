@@ -110,7 +110,7 @@
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <span>
-                  <v-icon @click="openGoalForm(goal)" color="error">mdi-trash-can-outline</v-icon>
+                  <v-icon @click="deleteGoal({ id: goal.id })" color="error">mdi-trash-can-outline</v-icon>
                 </span>
               </div>
             </template>
