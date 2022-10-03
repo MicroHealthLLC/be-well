@@ -37,7 +37,7 @@
         <v-tab to="/activities/videos"
           ><v-icon class="mr-1">mdi-youtube</v-icon>Videos</v-tab
         >
-            <v-tab to="/activities/articles"
+            <!-- <v-tab to="/activities/articles"
           ><v-icon class="mr-1">mdi-web</v-icon>Resources</v-tab
         >
         <v-tab to="/health"
@@ -45,7 +45,7 @@
         >
         <v-tab to="/events"
           ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
-        >
+        > -->
       
       </v-tabs>
       <!-- User Dropdown Menu -->
