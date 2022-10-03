@@ -6,10 +6,10 @@
         <!-- <v-menu v-model="menu" :nudge-width="200" :nudge-right="6" offset-x
           open-on-hover origin="center center" transition="scale-transition">
           <template v-slot:activator="{ on, attrs }"> -->
-        <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+        <v-tooltip v-if="reminder.goal && reminder.goal.id && !isFlipped" max-width="200" bottom>
           {{ reminder.goal.title }}
           <template v-slot:activator="{ on }">
-            <div v-if="!isFlipped" v-on="on" class="goalIcon activitiesCount">
+            <div v-on="on" class="goalIcon activitiesCount">
               <span v-if="reminder.isComplete">
                 <v-icon class="mr-1 text-blue">mdi-flag-checkered</v-icon>
               </span>
