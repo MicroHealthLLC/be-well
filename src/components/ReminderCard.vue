@@ -241,21 +241,21 @@
 
 
         <span class="cardBtns d-inline-flex">
-          <v-tooltip bottom v-if="!reminder.goal">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-icon @click="notify(reminder)" class="mr-2" color="var(--mh-blue)" v-bind="attrs" v-on="on">
                 mdi-timer-play-outline</v-icon>
             </template>
             <span>Start Activity</span>
           </v-tooltip>
-          <v-tooltip bottom v-if="!reminder.goal">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-icon @click="openReminderForm(reminder)" class="mr-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
                 mdi-square-edit-outline</v-icon>
             </template>
             <span>Edit</span>
           </v-tooltip>
-          <v-tooltip bottom v-if="!reminder.goal">
+          <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-icon @click="deleteReminder({ id: reminder.id })" color="error" v-bind="attrs" v-on="on">
                 mdi-trash-can-outline</v-icon>
