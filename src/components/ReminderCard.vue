@@ -130,7 +130,7 @@
               </span>
             </div>
           </div>
-          <div v-else class="row mt-9 ml-4">
+          <div v-else class="row mt-10 ml-4">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                   <v-icon @click="openReminderForm(reminder)"
