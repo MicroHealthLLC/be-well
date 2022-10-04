@@ -28,7 +28,7 @@
             <div v-on="on" class="dueDate">
               <v-icon color="white" small left class="mr-1" :class="{ 'text-blue': goal.isComplete }">mdi-calendar
               </v-icon>
-              <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString() }}</small>
+              <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString('en-US', {timeZone: 'UTC'}) }}</small>
             </div>
           </template>
         </v-tooltip>
