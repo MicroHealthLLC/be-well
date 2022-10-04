@@ -28,7 +28,7 @@
             <div v-on="on" class="dueDate">
               <v-icon color="white" small left class="mr-1" :class="{ 'text-blue': goal.isComplete }">mdi-calendar
               </v-icon>
-              <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString() }}</small>
+              <small :class="{ 'text-blue': goal.isComplete }">{{ new Date(goal.dueDate).toLocaleDateString('en-US', {timeZone: 'UTC'}) }}</small>
             </div>
           </template>
         </v-tooltip>
@@ -563,9 +563,12 @@ export default {
     },
     openNewReminderForm() {
       //console.log("this works")
+      
+      this.fetchReminders()
       this.resetForm();
       this.activityDialog = true;
       if (this.$refs.form) {
+        this.$refs.form.reset()
         this.$refs.form.resetValidation();
       }
     },
@@ -580,6 +583,7 @@ export default {
     },
     openGoalForm(goal) {
       this.goalActs  = [];
+      this.fetchGoals()
       this.dialog = true;
       this.goal = goal;
       console.log(this.goal)
@@ -590,6 +594,7 @@ export default {
     closeGoalForm() {
       this.goalActs = []
       this.dialog = false;
+      this.fetchGoals()
     },
     async reuseGoal(goalReminders) {
       for (let i = 0; i < goalReminders.length; i++) {

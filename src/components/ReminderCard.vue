@@ -6,7 +6,7 @@
         <!-- <v-menu v-model="menu" :nudge-width="200" :nudge-right="6" offset-x
           open-on-hover origin="center center" transition="scale-transition">
           <template v-slot:activator="{ on, attrs }"> -->
-        <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
+        <v-tooltip v-if="reminder.goal && reminder.goal.id && !isFlipped" max-width="200" bottom>
           {{ reminder.goal.title }}
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
@@ -85,9 +85,8 @@
                   categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
-                  <span class="pt-1" v-if="reminder.activity">
-                    {{ this.capitalizeFirstLet((reminder.activity).toLowerCase()) }}</span>
-                  <span class="pt-1" v-else>
+                  
+                  <span class="pt-1">
                     {{ categoryString(reminder.category) }}</span>
                 </span>
                 <span v-else class="font-weight-bold text-light">
@@ -95,9 +94,8 @@
                   categoryIcon(reminder.activity) || categoryIcon(reminder.category)
                   }}
                   </v-icon>
-                  <span class="pt-1" v-if="reminder.activity">
-                    {{ this.capitalizeFirstLet((reminder.activity).toLowerCase()) }}</span>
-                  <span class="pt-1" v-else>
+
+                  <span class="pt-1">
                     {{ categoryString(reminder.category) }}</span>
                 </span>
               </h3>
@@ -240,28 +238,28 @@
         </div>
 
 
-        <span class="cardBtns d-inline-flex">
-          <v-tooltip bottom>
+        <span class="mt-4 d-flex justify-start">
+          <div><v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon @click="notify(reminder)" class="mr-2" color="var(--mh-blue)" v-bind="attrs" v-on="on">
-                mdi-timer-play-outline</v-icon>
-            </template>
-            <span>Start Activity</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon @click="openReminderForm(reminder)" class="mr-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
+              <v-icon @click="openReminderForm(reminder)" class="mx-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
                 mdi-square-edit-outline</v-icon>
             </template>
             <span>Edit</span>
-          </v-tooltip>
-          <v-tooltip bottom>
+          </v-tooltip></div>
+          <div><v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon @click="notify(reminder)" color="var(--mh-blue)" v-bind="attrs" v-on="on">
+                mdi-timer-play-outline</v-icon>
+            </template>
+            <span>Start Activity</span>
+          </v-tooltip></div>
+          <div class="ml-auto"><v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-icon @click="deleteReminder({ id: reminder.id })" color="error" v-bind="attrs" v-on="on">
                 mdi-trash-can-outline</v-icon>
             </template>
             <span>Delete</span>
-          </v-tooltip>
+          </v-tooltip></div>
 
         </span>
       </div>
@@ -336,6 +334,7 @@ export default {
       "fetchReminders",
       "removeReminder",
       "fetchGoals",
+      "fetchReminder"
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     // log(e) {
@@ -346,6 +345,11 @@ export default {
     },
     toggleReminderFormDialog(value) {
       this.dialog = value;
+    },
+    getReminder(reminderId) {
+      let reminder = this.reminders.filter((r) => r.id == reminderId)
+      console.log(reminder)
+      return reminder
     },
     displayFreq(frequency) {
       let split = frequency.split(",")
@@ -416,7 +420,9 @@ export default {
     },
     openReminderForm(reminder) {
       // this.reminder = reminder;
+      this.fetchReminders();
       this.toggleReminderFormDialog(true);
+      //this.getReminder(reminder.id)
       console.log("reminder", reminder);
       this.SET_ASSOCIATED_GOAL(false);
     },
@@ -507,10 +513,10 @@ export default {
   watch: {
     reminders() {
       let rem = this.reminders.filter(r => r)
-      // console.log(rem)
+      //console.log(rem)
       for (let i = 0; i < rem.length; i++) {
         this.isComplete(rem[i])
-        // console.log(rem[i])
+        //console.log(rem[i])
       }
     }
   }

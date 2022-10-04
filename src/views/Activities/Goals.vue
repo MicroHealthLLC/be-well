@@ -79,7 +79,7 @@
             <v-tooltip max-width="200" bottom>
               <div>Save</div>
               <template v-slot:activator="{ on }" >
-                <v-btn @click="saveGoal" class="px-5 mr-2" v-on="on" color="var(--mh-blue)" depressed dark>
+                <v-btn @click="saveGoal" class="px-2 mr-2" v-on="on" color="var(--mh-blue)" depressed dark small>
               <v-icon>mdi-content-save</v-icon>
             </v-btn>
               </template>
@@ -87,7 +87,7 @@
             <v-tooltip max-width="200" bottom>
             <div>Cancel</div>
             <template v-slot:activator="{ on }">
-              <v-btn @click="closeGoalForm" v-on="on" depressed outlined>
+              <v-btn @click="closeGoalForm" v-on="on" depressed outlined small>
               <v-icon>mdi-cancel</v-icon>
             </v-btn>
             </template>
