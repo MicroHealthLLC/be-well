@@ -238,28 +238,28 @@
         </div>
 
 
-        <span class="cardBtns d-inline-flex">
-          <v-tooltip bottom>
+        <span class="mt-4 d-flex justify-start">
+          <div><v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon @click="notify(reminder)" class="mr-2" color="var(--mh-blue)" v-bind="attrs" v-on="on">
-                mdi-timer-play-outline</v-icon>
-            </template>
-            <span>Start Activity</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon @click="openReminderForm(reminder)" class="mr-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
+              <v-icon @click="openReminderForm(reminder)" class="mx-1" color="var(--mh-green)" v-bind="attrs" v-on="on">
                 mdi-square-edit-outline</v-icon>
             </template>
             <span>Edit</span>
-          </v-tooltip>
-          <v-tooltip bottom>
+          </v-tooltip></div>
+          <div><v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon @click="notify(reminder)" color="var(--mh-blue)" v-bind="attrs" v-on="on">
+                mdi-timer-play-outline</v-icon>
+            </template>
+            <span>Start Activity</span>
+          </v-tooltip></div>
+          <div class="ml-auto"><v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-icon @click="deleteReminder({ id: reminder.id })" color="error" v-bind="attrs" v-on="on">
                 mdi-trash-can-outline</v-icon>
             </template>
             <span>Delete</span>
-          </v-tooltip>
+          </v-tooltip></div>
 
         </span>
       </div>
