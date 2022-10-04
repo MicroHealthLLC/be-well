@@ -18,7 +18,7 @@
           >
           <v-switch
             v-model="remind"
-            label="Toggle reminders"
+            :label="`Notifications ${remind ? 'On' : 'Off'}`"
             @change="requestPermission"
             class="mt-1 ml-3"
             color="#2f53b6"
