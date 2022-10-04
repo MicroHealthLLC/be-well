@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <v-chip rounded class="helpLink px-4"><v-icon >mdi-file-question-outline</v-icon></v-chip> -->
     <v-app-bar fixed app>
       <!-- Hamburger Menu -->
       <v-app-bar-nav-icon
@@ -48,6 +49,7 @@
         > -->
       
       </v-tabs>
+      
       <!-- User Dropdown Menu -->
       <v-menu v-if="!$vuetify.breakpoint.xsOnly" offset-y>
         <template v-slot:activator="{ on, attrs }">
@@ -166,5 +168,10 @@ a.v-tab {
 }
 .hidden-block {
   width: 48px;
+}
+.helpLink {
+  position: fixed;
+  left: 1%;
+  bottom: 4%;
 }
 </style>
