@@ -105,7 +105,7 @@
           <v-card-subtitle>
             You completed your <span><b>{{confettiGoalName}}</b></span> goal!
           </v-card-subtitle>
-          <v-card-actions>
+          <v-card-actions class="jCSB">
             <!-- <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-content-save</v-icon>
@@ -114,20 +114,14 @@
               <span>Save</span>
             </v-tooltip> -->
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" v-if="confettiGoal"
-                  @click="reuseGoal(confettiGoal.reminders.items)">
-                  <v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon>
-                </v-btn>
+              <template v-slot:activator="{ on, attrs }">                      
+                 <v-icon @click="reuseGoal(confettiGoal.reminders.items)" color="green" v-bind="attrs" v-on="on"  v-if="confettiGoal"> mdi-recycle-variant</v-icon>    
               </template>
               <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: confettiGoal.id })"
-                  v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
-                </v-btn>
+              <template v-slot:activator="{ on, attrs }">              
+                  <v-icon  v-bind="attrs" v-on="on" color="error" @click="deleteGoal({ id: confettiGoal.id })"> mdi-trash-can-outline </v-icon>             
               </template>
               <span>Delete</span>
             </v-tooltip>
@@ -521,5 +515,8 @@ export default {
   height: 100%;
   padding: 20px;
   border-radius: .25rem;
+}
+.jCSB{
+  justify-content: space-between !important;
 }
 </style>
