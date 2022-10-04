@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <v-chip rounded class="helpLink px-4"><v-icon >mdi-file-question-outline</v-icon></v-chip> -->
     <v-app-bar fixed app>
       <!-- Hamburger Menu -->
       <v-app-bar-nav-icon
@@ -48,6 +49,7 @@
         > -->
       
       </v-tabs>
+      
       <!-- User Dropdown Menu -->
       <v-menu v-if="!$vuetify.breakpoint.xsOnly" offset-y>
         <template v-slot:activator="{ on, attrs }">
@@ -86,7 +88,15 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/activities" link>
+          <v-list-item to="/activities/goals" link>
+            <v-list-item-icon>
+              <v-icon>mdi-flag-checkered</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Goals</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/activities/reminders" link>
             <v-list-item-icon>
               <v-icon>mdi-yoga</v-icon>
             </v-list-item-icon>
@@ -94,20 +104,12 @@
               <v-list-item-title>Activities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/health" link>
-            <v-list-item-icon>
-              <v-icon>mdi-heart-pulse</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Health</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item to="/events" link>
             <v-list-item-icon>
-              <v-icon>mdi-calendar</v-icon>
+              <v-icon>mdi-youtube</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Events</v-list-item-title>
+              <v-list-item-title>Videos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -166,5 +168,10 @@ a.v-tab {
 }
 .hidden-block {
   width: 48px;
+}
+.helpLink {
+  position: fixed;
+  left: 1%;
+  bottom: 4%;
 }
 </style>

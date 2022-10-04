@@ -103,8 +103,11 @@
           </div>
           <div class="row mt-0 px-3">
             <div class="col">
-              <v-progress-linear height="10" rounded striped color="lime"
+              <v-progress-linear v-if="!reminder.isComplete" height="10" rounded striped color="lime"
                 :value="getActivityProgressValue(reminder.category, reminder.level)">
+              </v-progress-linear>
+              <v-progress-linear v-else height="10" rounded striped color="lime"
+                :value="getActivityProgressValue(reminder.category, reminder.level)" hidden>
               </v-progress-linear>
               <!-- <v-chip small color="lime" v-if="reminder.isComplete" class="centered text-blue px-8">
                     <strong>100%</strong>
@@ -124,94 +127,33 @@
             <div class="col lHeight pb-0">
               <!-- <small class="d-block">Type</small> -->
               <span class="text-right">
-                <!-- <v-tooltip v-if="reminder.goal && reminder.goal.id" max-width="200" bottom>
-          <div>
-            <span>
-             {{ reminder.goal.title }}
-          </span></div>
-          <template v-slot:activator="{ on }">
-            <div v-on="on" >
-              <span @click="showGoals">
-              <v-icon class="mr-1 text-light">mdi-flag-checkered</v-icon>
-              </span>
-            </div>
-          </template>
-        </v-tooltip>
-        <v-tooltip v-else max-width="200" bottom>
-          <div>Add Activity to Goal</div>
-          <template v-slot:activator="{ on }">
-            <div v-on="on">
-            <span @click="showGoals">
-             <v-icon class="text-dark" 
-                >mdi-flag-checkered</v-icon
-              >
-              <v-icon class="text-dark smPlusSign"
-                >mdi-plus</v-icon
-              >
-            </span>
-            </div>
-          </template>
-        </v-tooltip> -->
-                <!-- <span v-if="reminder.contentType == 'Articles'">
-                 <v-icon class="mr-1" color="white">mdi-file-document-outline</v-icon>
-              </span>
-              <span v-else>
-                <v-icon class="mr-1" color="white">mdi-youtube</v-icon>
-               </span> -->
               </span>
             </div>
           </div>
-          <div v-else class="row mt-9 ml-2">
+          <div v-else class="row mt-9 ml-4">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="yellow darken-3" @click="openReminderForm(reminder)"
-                  v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-eye</v-icon>
-                </v-btn>
+                  <v-icon @click="openReminderForm(reminder)"
+                  v-bind="attrs" v-on="on" color="yellow darken-3"> mdi-eye-outline</v-icon>
               </template>
               <span>View</span>
             </v-tooltip>
             <v-tooltip v-if="!reminder.goal" bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" @click="resetActivity(reminder)" v-bind="attrs"
-                  v-on="on">
-                  <v-icon small color="white"> mdi-recycle-variant</v-icon>
-                </v-btn>
+                  <v-icon @click="resetActivity(reminder)" v-bind="attrs"
+                  v-on="on" color="green" class="ml-2"> mdi-recycle-variant</v-icon>
               </template>
               <span>Do it again!</span>
             </v-tooltip>
-            <!-- <v-tooltip v-if="reminder.goal" bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" disabled x-small class="text-light mx-1" color="green">
-                  <v-icon small color="white"> mdi-recycle-variant</v-icon>
-                </v-btn>
-              </template>
-              <span>Disabled</span>
-            </v-tooltip> -->
             <v-tooltip bottom v-if="!reminder.goal">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteReminder({ id: reminder.id })"
-                  v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
-                </v-btn>
+                  <v-icon class="ml-auto mr-6" @click="deleteReminder({ id: reminder.id })"
+                  v-bind="attrs" v-on="on" color="red darken-1"> mdi-trash-can-outline </v-icon>
               </template>
               <span>Delete</span>
             </v-tooltip>
-            <!-- <v-tooltip bottom v-if="reminder.goal">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn disabled x-small class="text-light mx-1" color="red darken-1"
-                  @click="deleteReminder({ id: reminder.id })" v-bind="attrs" v-on="on">
-                  <v-icon small color="white"> mdi-trash-can-outline </v-icon>
-                </v-btn>
-              </template>
-              <span>Disabled</span>
-            </v-tooltip> -->
-            <!-- <div class="col lHeight pb-0">
-              <span class="text-right">
-              </span>
-            </div> -->
           </div>
-          <div class="d-flex align-center justify-center"></div>
+          <!-- <div class="d-flex align-center justify-center"></div> -->
         </div>
       </div>
 
@@ -255,7 +197,7 @@
           </v-tooltip></div>
           <div class="ml-auto"><v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon @click="deleteReminder({ id: reminder.id })" color="error" v-bind="attrs" v-on="on">
+              <v-icon @click="deleteReminder({ id: reminder.id })" color="red darken-1" v-bind="attrs" v-on="on">
                 mdi-trash-can-outline</v-icon>
             </template>
             <span>Delete</span>
