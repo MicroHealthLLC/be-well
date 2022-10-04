@@ -507,10 +507,10 @@ export default {
   watch: {
     reminders() {
       let rem = this.reminders.filter(r => r)
-      console.log(rem)
+      // console.log(rem)
       for (let i = 0; i < rem.length; i++) {
         this.isComplete(rem[i])
-        console.log(rem[i])
+        // console.log(rem[i])
       }
     }
   }

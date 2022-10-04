@@ -150,7 +150,13 @@
                 <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
                   <span v-for="item, i in goal.reminders.items" :key="i">
                     <h5 v-if="item.activity">{{ item.activity }}</h5>
-                    <h5 v-else>{{ item.category }}</h5>
+                    <v-tooltip max-width="200" left v-else>
+                   <div>{{displayFreq(item.frequency) }} | Time: {{item.time}}</div>   
+                      <template v-slot:activator="{ on }" >
+                      <span v-on="on">  <h5>{{item.category}}</h5> </span>
+                      </template>
+                    </v-tooltip>                  
+              
                   </span>
                 </span>
                 <span v-else>
@@ -290,7 +296,7 @@
               
                     <span :class="{ 'crossOut': goalActs.length > 0 && goalActs[i] == activity.id }">
                       <v-tooltip max-width="200" left>
-                        <div>{{activity.frequency}}</div>
+                        <div>{{displayFreq(activity.frequency)}} | Time: {{ activity.time}}</div>
                       <template v-slot:activator="{ on }" >
                       <span v-on="on">{{activity.category}} </span>
                       </template>
@@ -300,7 +306,8 @@
                       <v-tooltip max-width="200" left>
                            <div>Remove Activity</div>
                            <template v-slot:activator="{ on }" >
-                            <v-btn outlined @click="removeGoalActivity(activity)" v-on="on" x-small>Remove</v-btn>
+                            <v-btn outlined @click="removeGoalActivity(activity)" v-on="on" x-small >Remove</v-btn>
+                            <!-- <v-btn outlined v-on="on" x-small @click="undoGoalActRemoval(activity)" v-else>Undo</v-btn> -->
                         </template>
                       </v-tooltip>                   
                     </span>             
@@ -357,7 +364,6 @@ export default {
       goalActs: [],
       isFlipped: false,
       crossOut: false, 
-      crossedOutActivity: null, 
       goalCompleteDialog: false,
       confettiGoalName: '',
       activityDialog: false,
@@ -473,6 +479,7 @@ export default {
   methods: {
     ...mapActions([
       "updateGoalById", 
+      "updateReminderById",
       "addGoal", 
       "removeGoal", 
       'deleteReminder',
@@ -484,14 +491,75 @@ export default {
     log(e) {  
      console.log(e)
     },
+    displayFreq(frequency) {
+      let split = frequency.split(",")
+      if (split[0] == "") {
+        split.shift()
+      }
+      if (split.length == 7) {
+        return "Daily"
+      } else if (split.length == 1) {
+        return split[0]
+      } else if (split.length <= 3) {
+        let newFreq = []
+        if (split.includes("Sunday")) {
+          newFreq.push("Sun")
+        }
+        if (split.includes("Monday")) {
+          newFreq.push("Mon")
+        }
+        if (split.includes("Tuesday")) {
+          newFreq.push("Tue")
+        }
+        if (split.includes("Wednesday")) {
+          newFreq.push("Wed")
+        }
+        if (split.includes("Thursday")) {
+          newFreq.push("Thur")
+        }
+        if (split.includes("Friday")) {
+          newFreq.push("Fri")
+        }
+        if (split.includes("Saturday")) {
+          newFreq.push("Sat")
+        }
+        let joined = newFreq.join('/')
+        return joined
+      } else {
+        let newFreq = []
+        if (split.includes("Sunday")) {
+          newFreq.push("Su")
+        }
+        if (split.includes("Monday")) {
+          newFreq.push("M")
+        }
+        if (split.includes("Tuesday")) {
+          newFreq.push("Tu")
+        }
+        if (split.includes("Wednesday")) {
+          newFreq.push("W")
+        }
+        if (split.includes("Thursday")) {
+          newFreq.push("Th")
+        }
+        if (split.includes("Friday")) {
+          newFreq.push("F")
+        }
+        if (split.includes("Saturday")) {
+          newFreq.push("Sa")
+        }
+        let joined = newFreq.join('/')
+        return joined
+      }
+    },
     stopCon() {
       this.$confetti.stop();
     },
-    removeGoalActivity(activity){
-      console.log(activity)
-      this.crossedOutActivity = activity.id 
-      this.goalActs.push(activity.id)
-
+    removeGoalActivity(activity){   
+     this.goalActs.push(activity.id) 
+    },
+    undoGoalActRemoval(activity){
+      this.goalActs = this.goalActs.filter(t => t !== activity.id)
     },
     openNewReminderForm() {
       //console.log("this works")
@@ -511,6 +579,7 @@ export default {
       };
     },
     openGoalForm(goal) {
+      this.goalActs  = [];
       this.dialog = true;
       this.goal = goal;
       console.log(this.goal)
@@ -519,6 +588,7 @@ export default {
       return array.toString()
     },
     closeGoalForm() {
+      this.goalActs = []
       this.dialog = false;
     },
     async reuseGoal(goalReminders) {
@@ -540,25 +610,33 @@ export default {
 
     },
     async saveGoal() {
-      if (!this.activityDialog && !this.$refs.goalform.validate()) {
+      if (!this.activityDialog && !this.$refs.goalform.validate()) {       
         return;
       }
       try {
         if (this.goal.id) {  
           if(this.goalActs.length > 0){
+              let goalActsArray = this.goal.reminders.items.filter(t => this.goalActs.includes(t.id))
+              console.log(goalActsArray)
+              await this.updateGoalById({
+              id: this.goal.id,
+              title: this.goal.title,
+              category: this.goal.category,
+              dueDate: this.goal.dueDate,
+              });  
 
-            await this.updateGoalById({
+              for (let i = 0; i < goalActsArray.length; i++) {
+                await this.updateReminderById({
+                id: goalActsArray[i].id,           
+                goalId: null,
+              });
+             }   
+             this.fetchGoals();  
+             this.goalActs = [];   
+          } else {         
+            this.updateGoalById({
             id: this.goal.id,
-            title: this.goal.title,
-            category: this.goal.category,
-            dueDate: this.goal.dueDate,
-
-          });  
-
-          } else {
-            await this.updateGoalById({
-            id: this.goal.id,
-            title: this.goal.title,
+            title: this.goal.title,  
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
@@ -655,6 +733,11 @@ export default {
         split.forEach((r) => this.freqArr.push(r))
       }
     },
+    goalActs(){
+      if (this.goalActs.length > 0) {
+        return this.goalAct
+      }
+    }
   }
 };
 </script>
