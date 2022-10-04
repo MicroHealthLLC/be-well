@@ -104,13 +104,15 @@
                 </v-icon>
               </div>
             </template>
-          </v-tooltip>
+          </v-tooltip>         
+        </span>
+        <span class="cardBtns2 d-inline-flex">    
           <v-tooltip max-width="200" bottom>
             <div>Delete</div>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <span>
-                  <v-icon @click="openGoalForm(goal)" color="error">mdi-trash-can-outline</v-icon>
+                  <v-icon @click="deleteGoal({ id: goal.id })" color="error">mdi-trash-can-outline</v-icon>
                 </span>
               </div>
             </template>
@@ -148,7 +150,13 @@
                 <span v-if="goal.reminders.items && goal.reminders.items.length > 0">
                   <span v-for="item, i in goal.reminders.items" :key="i">
                     <h5 v-if="item.activity">{{ item.activity }}</h5>
-                    <h5 v-else>{{ item.category }}</h5>
+                    <v-tooltip max-width="200" left v-else>
+                   <div>{{displayFreq(item.frequency) }} | Time: {{item.time}}</div>   
+                      <template v-slot:activator="{ on }" >
+                      <span v-on="on">  <h5>{{item.category}}</h5> </span>
+                      </template>
+                    </v-tooltip>                  
+              
                   </span>
                 </span>
                 <span v-else>
@@ -279,19 +287,27 @@
                 <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
               </v-menu>             
             </v-form>
-             <div :class="{ 'd-none': goal.isComplete }" class="mt-2">
+             <div :class="{ 'd-none': goal.isComplete }" class="mt-2" >
                <label>Goal Activities</label>
-               <span v-if="goal.reminders.items.length > 0">
-              
-                <ul v-for="activity in goal.reminders.items" :key="activity.id" style="list-style: none" class="pl-0">
-                 <li>                
+               <span v-if="goal.reminders.items.length > 0">              
+                <ul v-for="activity, i in goal.reminders.items" :key="i" style="list-style: none" class="pl-0">
+                 <li class="mb-1" :load="log(goalActs)">                
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
-                    <span :class="{ 'crossOut': activity.id == crossedOutActivity }" >{{activity.category}}</span>
+              
+                    <span :class="{ 'crossOut': goalActs.length > 0 && goalActs[i] == activity.id }">
+                      <v-tooltip max-width="200" left>
+                        <div>{{displayFreq(activity.frequency)}} | Time: {{ activity.time}}</div>
+                      <template v-slot:activator="{ on }" >
+                      <span v-on="on">{{activity.category}} </span>
+                      </template>
+                    </v-tooltip>
+                    </span>
                     <span class="float-right">
                       <v-tooltip max-width="200" left>
-                           <div>Delete Goal Activity</div>
+                           <div>Remove Activity</div>
                            <template v-slot:activator="{ on }" >
-                            <v-icon @click="deleteReminder({ id: activity.id })" v-on="on" color="error" small>mdi-trash-can-outline</v-icon>
+                            <v-btn outlined @click="removeGoalActivity(activity)" v-on="on" x-small >Remove</v-btn>
+                            <!-- <v-btn outlined v-on="on" x-small @click="undoGoalActRemoval(activity)" v-else>Undo</v-btn> -->
                         </template>
                       </v-tooltip>                   
                     </span>             
@@ -330,7 +346,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
 import videosMixin from "../mixins/videos-mixin";
 
@@ -343,9 +359,11 @@ export default {
   },
   data() {
     return {
+      count: 0,
+      ejgs: false, 
+      goalActs: [],
       isFlipped: false,
       crossOut: false, 
-      crossedOutActivity: null, 
       goalCompleteDialog: false,
       confettiGoalName: '',
       activityDialog: false,
@@ -373,7 +391,7 @@ export default {
         let goalReminders = this.goal.reminders.items.map(gR => gR.category)
         return this.filteredCategories.filter(t => !goalReminders.includes(t.value))
       } else return this.filteredCategories
-    },
+    }, 
     defaultActivity() {
       if (this.goal) {
         return this.filteredCategories.filter(item => item.value == this.goal.category)[0].title
@@ -461,6 +479,7 @@ export default {
   methods: {
     ...mapActions([
       "updateGoalById", 
+      "updateReminderById",
       "addGoal", 
       "removeGoal", 
       'deleteReminder',
@@ -468,22 +487,79 @@ export default {
       "addReminder", 
       "fetchReminders", 
       'fetchGoals']),
-    // log(e) {  
-    //  console.log(e)
-    // },
+      ...mapMutations([""]),
+    log(e) {  
+     console.log(e)
+    },
+    displayFreq(frequency) {
+      let split = frequency.split(",")
+      if (split[0] == "") {
+        split.shift()
+      }
+      if (split.length == 7) {
+        return "Daily"
+      } else if (split.length == 1) {
+        return split[0]
+      } else if (split.length <= 3) {
+        let newFreq = []
+        if (split.includes("Sunday")) {
+          newFreq.push("Sun")
+        }
+        if (split.includes("Monday")) {
+          newFreq.push("Mon")
+        }
+        if (split.includes("Tuesday")) {
+          newFreq.push("Tue")
+        }
+        if (split.includes("Wednesday")) {
+          newFreq.push("Wed")
+        }
+        if (split.includes("Thursday")) {
+          newFreq.push("Thur")
+        }
+        if (split.includes("Friday")) {
+          newFreq.push("Fri")
+        }
+        if (split.includes("Saturday")) {
+          newFreq.push("Sat")
+        }
+        let joined = newFreq.join('/')
+        return joined
+      } else {
+        let newFreq = []
+        if (split.includes("Sunday")) {
+          newFreq.push("Su")
+        }
+        if (split.includes("Monday")) {
+          newFreq.push("M")
+        }
+        if (split.includes("Tuesday")) {
+          newFreq.push("Tu")
+        }
+        if (split.includes("Wednesday")) {
+          newFreq.push("W")
+        }
+        if (split.includes("Thursday")) {
+          newFreq.push("Th")
+        }
+        if (split.includes("Friday")) {
+          newFreq.push("F")
+        }
+        if (split.includes("Saturday")) {
+          newFreq.push("Sa")
+        }
+        let joined = newFreq.join('/')
+        return joined
+      }
+    },
     stopCon() {
       this.$confetti.stop();
     },
-    removeGoalActivity(activity){
-      let arr = []
-      if (activity){
-        arr.push(activity.id)
-      }    
-      for (let i = 0; i < arr.length; i++) {
-        this.crossedOutActivity = arr[i]
-          console.log(arr)
-          console.log(arr[i])
-      }     
+    removeGoalActivity(activity){   
+     this.goalActs.push(activity.id) 
+    },
+    undoGoalActRemoval(activity){
+      this.goalActs = this.goalActs.filter(t => t !== activity.id)
     },
     openNewReminderForm() {
       //console.log("this works")
@@ -506,6 +582,7 @@ export default {
       };
     },
     openGoalForm(goal) {
+      this.goalActs  = [];
       this.fetchGoals()
       this.dialog = true;
       this.goal = goal;
@@ -515,6 +592,7 @@ export default {
       return array.toString()
     },
     closeGoalForm() {
+      this.goalActs = []
       this.dialog = false;
       this.fetchGoals()
     },
@@ -537,19 +615,39 @@ export default {
 
     },
     async saveGoal() {
-      if (!this.activityDialog && !this.$refs.goalform.validate()) {
+      if (!this.activityDialog && !this.$refs.goalform.validate()) {       
         return;
       }
       try {
         if (this.goal.id) {  
-          await this.updateGoalById({
+          if(this.goalActs.length > 0){
+              let goalActsArray = this.goal.reminders.items.filter(t => this.goalActs.includes(t.id))
+              console.log(goalActsArray)
+              await this.updateGoalById({
+              id: this.goal.id,
+              title: this.goal.title,
+              category: this.goal.category,
+              dueDate: this.goal.dueDate,
+              });  
+
+              for (let i = 0; i < goalActsArray.length; i++) {
+                await this.updateReminderById({
+                id: goalActsArray[i].id,           
+                goalId: null,
+              });
+             }   
+             this.fetchGoals();  
+             this.goalActs = [];   
+          } else {         
+            this.updateGoalById({
             id: this.goal.id,
-            title: this.goal.title,
+            title: this.goal.title,  
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
             checklist: this.goal.checklist,
-          });      
+          });  
+          }        
         } else {
           // console.log(this.goal)
           await this.addGoal(this.goal);
@@ -640,6 +738,11 @@ export default {
         split.forEach((r) => this.freqArr.push(r))
       }
     },
+    goalActs(){
+      if (this.goalActs.length > 0) {
+        return this.goalAct
+      }
+    }
   }
 };
 </script>
@@ -872,9 +975,16 @@ export default {
 .cardBtns {
   position: absolute;
   bottom: 5%;
-  left: 5%;
+  left: 3.5%;
   cursor: pointer;
 }
+.cardBtns2 {
+  position: absolute;
+  bottom: 5%;
+  right: 3.5%;
+  cursor: pointer;
+}
+
 
 .activityT {
   color: #1976d2 !important;
