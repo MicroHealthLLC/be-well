@@ -34,7 +34,7 @@
       </div>
       <v-divider class="mb-4"></v-divider>
       <v-row>
-        <v-col v-if="!showCompleted" cols="12" sm="6" md="4" lg="3">
+        <v-col v-if="!showCompleted" cols="12" xs="2" sm="3" md="4" lg="4" xl="3">
           <div class="newGoalCard">
             <div class="newGoalCardInner">
               <div class="newGoalDiv">
@@ -75,10 +75,7 @@
           v-for="(reminder, index) in completeReminders"
           v-show="showCompleted"
           :key="index + 'a'"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
+          cols="12" xs="2" sm="3" md="4" lg="4" xl="3"
           class="goalCol"
         >
           <ReminderCard :reminder="reminder"></ReminderCard>
@@ -87,10 +84,7 @@
           v-for="(reminder, index) in incompleteReminders"
           v-show="!showCompleted"
           :key="index + 'b'"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
+          cols="12" xs="2" sm="3" md="4" lg="4" xl="3"
           class="goalCol"
         >
           <ReminderCard :reminder="reminder"></ReminderCard>
@@ -330,6 +324,11 @@ export default {
   display: block;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+@media only screen and (max-width: 960px) {
+  .newGoalBtn {
+    font-size: small;
+  }
 }
 .newGoalCard {
   height: 130px;

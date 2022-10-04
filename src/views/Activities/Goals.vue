@@ -22,7 +22,7 @@
       <v-divider class="mb-4"></v-divider>
       <div>
         <v-row>
-          <v-col v-if="!showCompleted" cols="12" sm="6" md="4" lg="3">
+          <v-col v-if="!showCompleted" cols="12" xs="2" sm="3" md="4" lg="4" xl="3">
             <div class="newGoalCard">
               <div class="newGoalCardInner">
                 <div class="newGoalDiv">
@@ -31,16 +31,15 @@
                     <v-icon class="checkmark">mdi-flag-checkered</v-icon>SET A GOAL...
                   </v-btn>
                 </div>
-
               </div>
             </div>
           </v-col>
-          <v-col v-for="goal in completedGoals" v-show="showCompleted" :key="goal.id" cols="12" sm="6" md="4" lg="3"
-            class="goalCol">
+          <v-col v-for="goal in completedGoals" v-show="showCompleted" :key="goal.id" cols="12" xs="2" sm="3" md="4"
+            lg="4" xl="3" class="goalCol">
             <CurrentGoals :goal="goal" />
           </v-col>
-          <v-col v-for="goal in incompleteGoals" v-show="!showCompleted" :key="goal.id" cols="12" sm="6" md="4" lg="3"
-            class="goalCol">
+          <v-col v-for="goal in incompleteGoals" v-show="!showCompleted" :key="goal.id" cols="12" xs="2" sm="3" md="4"
+            lg="4" xl="3" class="goalCol">
             <CurrentGoals :goal="goal" />
           </v-col>
         </v-row>
@@ -78,19 +77,19 @@
           <v-card-actions class="d-flex justify-end">
             <v-tooltip max-width="200" bottom>
               <div>Save</div>
-              <template v-slot:activator="{ on }" >
+              <template v-slot:activator="{ on }">
                 <v-btn @click="saveGoal" class="px-2 mr-2" v-on="on" color="var(--mh-blue)" depressed dark small>
-              <v-icon>mdi-content-save</v-icon>
-            </v-btn>
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
               </template>
             </v-tooltip>
             <v-tooltip max-width="200" bottom>
-            <div>Cancel</div>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="closeGoalForm" v-on="on" depressed outlined small>
-              <v-icon>mdi-cancel</v-icon>
-            </v-btn>
-            </template>
+              <div>Cancel</div>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="closeGoalForm" v-on="on" depressed outlined small>
+                  <v-icon>mdi-cancel</v-icon>
+                </v-btn>
+              </template>
             </v-tooltip>
           </v-card-actions>
         </v-card>
@@ -423,7 +422,7 @@ export default {
   grid-template-columns: 1fr 2fr auto;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -437,7 +436,7 @@ export default {
     grid-row-start: 3;
     grid-column: 1 / 1;
   }
-}
+} */
 
 .goal-progress-text {
   color: gray;

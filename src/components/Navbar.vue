@@ -86,7 +86,15 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/activities" link>
+          <v-list-item to="/activities/goals" link>
+            <v-list-item-icon>
+              <v-icon>mdi-flag-checkered</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Goals</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/activities/reminders" link>
             <v-list-item-icon>
               <v-icon>mdi-yoga</v-icon>
             </v-list-item-icon>
@@ -94,20 +102,12 @@
               <v-list-item-title>Activities</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/health" link>
-            <v-list-item-icon>
-              <v-icon>mdi-heart-pulse</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Health</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item to="/events" link>
             <v-list-item-icon>
-              <v-icon>mdi-calendar</v-icon>
+              <v-icon>mdi-youtube</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Events</v-list-item-title>
+              <v-list-item-title>Videos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
