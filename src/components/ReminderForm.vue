@@ -1,8 +1,11 @@
 <template>
   <v-card :disabled="saving" :loading="saving">
-    <v-card-title><span v-if="reminder.id && !associatedGoal && !reminder.isComplete">
+    <v-card-title>
+      <span v-if="reminder.id && !associatedGoal && !reminder.isComplete">
         <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Edit Activity
-      </span><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span><span v-if="!reminder.id">
+      </span>
+      <span v-if="associatedGoal && reminder.id">Add Goal to Activity</span>
+      <span v-if="!reminder.id">
         <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Add Activity
       </span>
       <span v-if="reminder.isComplete">
@@ -124,16 +127,18 @@
       <v-tooltip max-width="200" bottom>
         <div>Save</div>
         <template v-slot:activator="{ on }">
-      <v-btn small v-if="!reminder.isComplete" @click="saveReminder" v-on="on" class="px-3 mr-2" color="var(--mh-blue)" dark>
-        <v-icon>mdi-content-save</v-icon>
-      </v-btn>
-      </template>
+          <v-btn small v-if="!reminder.isComplete" @click="saveReminder" v-on="on" class="px-3 mr-2"
+            color="var(--mh-blue)" dark>
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </template>
       </v-tooltip>
       <v-tooltip max-width="200" bottom>
         <div v-if="!reminder.isComplete">Cancel</div>
         <div v-if="reminder.isComplete">Close</div>
         <template v-slot:activator="{ on }">
-          <v-btn small v-if="!reminder.isComplete" v-on="on" @click="toggleReminderFormDialog" color="secondary" outlined>
+          <v-btn small v-if="!reminder.isComplete" v-on="on" @click="toggleReminderFormDialog" color="secondary"
+            outlined>
             <v-icon>mdi-cancel</v-icon>
           </v-btn>
           <v-btn small v-else @click="toggleReminderFormDialog" v-on="on" color="secondary" outlined>
@@ -167,15 +172,15 @@ export default {
       dialog: false,
       intervalId: 60000,
       valid: true,
-      freqArr: []
+      freqArr: [],
     };
   },
   mounted() {
     if (!this.reminder.id) {
       this.$refs.form.reset();
     }
+    console.log(this.reminders)
     this.freqStringToArray()
-
   },
   methods: {
     ...mapActions([
@@ -208,10 +213,12 @@ export default {
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
+      this.fetchReminders();
+      this.freqStringToArray()
       // this.SET_ASSOCIATED_GOAL(false)
     },
+    
     async saveReminder() {
-
       if (!this.$refs.form.validate()) {
         return;
       }
@@ -222,7 +229,6 @@ export default {
             delete obj[key];
           }
         });
-
         //console.log(this.reminder)
       }
       this.reminder.frequency = this.arrayToString(this.freqArr)
@@ -260,7 +266,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "saving", "associatedGoal"]),
+    ...mapGetters(["incompleteGoals", "saving", "associatedGoal", "reminders"]),
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.reminder.category) {
