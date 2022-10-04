@@ -104,7 +104,9 @@
                 </v-icon>
               </div>
             </template>
-          </v-tooltip>
+          </v-tooltip>         
+        </span>
+        <span class="cardBtns2 d-inline-flex">    
           <v-tooltip max-width="200" bottom>
             <div>Delete</div>
             <template v-slot:activator="{ on }">
@@ -279,19 +281,26 @@
                 <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
               </v-menu>             
             </v-form>
-             <div :class="{ 'd-none': goal.isComplete }" class="mt-2">
+             <div :class="{ 'd-none': goal.isComplete }" class="mt-2" >
                <label>Goal Activities</label>
-               <span v-if="goal.reminders.items.length > 0">
-              
-                <ul v-for="activity in goal.reminders.items" :key="activity.id" style="list-style: none" class="pl-0">
-                 <li>                
+               <span v-if="goal.reminders.items.length > 0">              
+                <ul v-for="activity, i in goal.reminders.items" :key="i" style="list-style: none" class="pl-0">
+                 <li class="mb-1" :load="log(goalActs)">                
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
-                    <span :class="{ 'crossOut': activity.id == crossedOutActivity }" >{{activity.category}}</span>
+              
+                    <span :class="{ 'crossOut': goalActs.length > 0 && goalActs[i] == activity.id }">
+                      <v-tooltip max-width="200" left>
+                        <div>{{activity.frequency}}</div>
+                      <template v-slot:activator="{ on }" >
+                      <span v-on="on">{{activity.category}} </span>
+                      </template>
+                    </v-tooltip>
+                    </span>
                     <span class="float-right">
                       <v-tooltip max-width="200" left>
-                           <div>Delete Goal Activity</div>
+                           <div>Remove Activity</div>
                            <template v-slot:activator="{ on }" >
-                            <v-icon @click="deleteReminder({ id: activity.id })" v-on="on" color="error" small>mdi-trash-can-outline</v-icon>
+                            <v-btn outlined @click="removeGoalActivity(activity)" v-on="on" x-small>Remove</v-btn>
                         </template>
                       </v-tooltip>                   
                     </span>             
@@ -330,7 +339,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import utilitiesMixin from "../mixins/utilities-mixin";
 import videosMixin from "../mixins/videos-mixin";
 
@@ -343,6 +352,9 @@ export default {
   },
   data() {
     return {
+      count: 0,
+      ejgs: false, 
+      goalActs: [],
       isFlipped: false,
       crossOut: false, 
       crossedOutActivity: null, 
@@ -373,7 +385,7 @@ export default {
         let goalReminders = this.goal.reminders.items.map(gR => gR.category)
         return this.filteredCategories.filter(t => !goalReminders.includes(t.value))
       } else return this.filteredCategories
-    },
+    }, 
     defaultActivity() {
       if (this.goal) {
         return this.filteredCategories.filter(item => item.value == this.goal.category)[0].title
@@ -468,22 +480,18 @@ export default {
       "addReminder", 
       "fetchReminders", 
       'fetchGoals']),
-    // log(e) {  
-    //  console.log(e)
-    // },
+      ...mapMutations([""]),
+    log(e) {  
+     console.log(e)
+    },
     stopCon() {
       this.$confetti.stop();
     },
     removeGoalActivity(activity){
-      let arr = []
-      if (activity){
-        arr.push(activity.id)
-      }    
-      for (let i = 0; i < arr.length; i++) {
-        this.crossedOutActivity = arr[i]
-          console.log(arr)
-          console.log(arr[i])
-      }     
+      console.log(activity)
+      this.crossedOutActivity = activity.id 
+      this.goalActs.push(activity.id)
+
     },
     openNewReminderForm() {
       //console.log("this works")
@@ -537,14 +545,26 @@ export default {
       }
       try {
         if (this.goal.id) {  
-          await this.updateGoalById({
+          if(this.goalActs.length > 0){
+
+            await this.updateGoalById({
+            id: this.goal.id,
+            title: this.goal.title,
+            category: this.goal.category,
+            dueDate: this.goal.dueDate,
+
+          });  
+
+          } else {
+            await this.updateGoalById({
             id: this.goal.id,
             title: this.goal.title,
             category: this.goal.category,
             dueDate: this.goal.dueDate,
             progress: this.goal.progress,
             checklist: this.goal.checklist,
-          });      
+          });  
+          }        
         } else {
           // console.log(this.goal)
           await this.addGoal(this.goal);
@@ -867,9 +887,16 @@ export default {
 .cardBtns {
   position: absolute;
   bottom: 5%;
-  left: 5%;
+  left: 3.5%;
   cursor: pointer;
 }
+.cardBtns2 {
+  position: absolute;
+  bottom: 5%;
+  right: 3.5%;
+  cursor: pointer;
+}
+
 
 .activityT {
   color: #1976d2 !important;
