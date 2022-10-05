@@ -320,8 +320,9 @@ export default {
   computed: {
     ...mapGetters(["completedGoals", "incompleteGoals", "saving", "goals", 'watchedVideos']),
     validCategories() {
-      let allSavedGoals = this.goals.map(t => t.category)
-      return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
+      return this.filteredCategories
+      // let allSavedGoals = this.goals.filter(t => !t.isComplete).map(t => t.category)
+      // return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
     }
   },
   async mounted() {

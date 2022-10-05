@@ -104,9 +104,7 @@ export default {
         if (time[0] == hour && time[1] == minutes) {
           console.log("Reminder found: Display Notification");
           this.notify(reminder);
-        } else {
-          console.log("Reminder not found");
-        }
+        } 
       }
       });
     },
