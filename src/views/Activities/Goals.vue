@@ -330,7 +330,7 @@ export default {
       return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
     }
   },
-  async mounted() {
+  mounted() {
     this.fetchGoals();
   },
   watch: {

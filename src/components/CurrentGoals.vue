@@ -291,7 +291,7 @@
                <label>Goal Activities</label>
                <span v-if="goal.reminders.items.length > 0">              
                 <ul v-for="activity, i in goal.reminders.items" :key="i" style="list-style: none" class="pl-0">
-                 <li class="mb-1" :load="log(goalActs)">                
+                 <li class="mb-1">                
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
               
                     <span :class="{ 'crossOut': goalActs.length > 0 && goalActs[i] == activity.id }">

@@ -205,9 +205,6 @@ export default {
         }
       }
     }
-    /* isComplete(cat, lev) {
-      return this.getActivityProgressValue(cat, lev) == 100
-    } */
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),
@@ -219,6 +216,27 @@ export default {
         this.TOGGLE_REMINDERS_ON(value);
       },
     },
+    /* checkForComplete() {
+      this.reminders.forEach(r => {
+        if (this.getActivityProgressValue(r.category, r.level) == 100) {
+          if (!r.isComplete) {
+            this.updateReminderById({
+              id: r.id,
+              isComplete: true,
+            })
+          }
+        }
+        else if (this.getActivityProgressValue(r.category, r.level) != 100) {
+          if (r.isComplete) {
+            this.updateReminderById({
+              id: r.id,
+              isComplete: false,
+            })
+          }
+        }
+      })
+      return ""
+    }, */
     completeReminders() {
       return this.reminders.length > 0 ? this.reminders.filter((r) => r.isComplete) : ""
     },
@@ -279,6 +297,16 @@ export default {
   mounted() {
     this.fetchReminders();
   },
+  watch: {
+    reminders() {
+      let rem = this.reminders.filter(r => r)
+      //console.log(rem)
+      for (let i = 0; i < rem.length; i++) {
+        this.isComplete(rem[i])
+        //console.log(rem[i])
+      }
+    }
+  }
 };
 </script>
 
