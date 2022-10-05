@@ -291,7 +291,7 @@
                <label>Goal Activities</label>
                <span v-if="goal.reminders.items.length > 0">              
                 <ul v-for="activity, i in goal.reminders.items" :key="i" style="list-style: none" class="pl-0">
-                 <li class="mb-1" :load="log(goalActs)">                
+                 <li class="mb-1">                
                    <v-icon>{{ categoryIcon(activity.category) }}</v-icon> 
               
                     <span :class="{ 'crossOut': goalActs.length > 0 && goalActs[i] == activity.id }">
@@ -304,10 +304,26 @@
                     </span>
                     <span class="float-right">
                       <v-tooltip max-width="200" left>
-                           <div>Remove Activity</div>
-                           <template v-slot:activator="{ on }" >
-                            <v-btn outlined @click="removeGoalActivity(activity)" v-on="on" x-small >Remove</v-btn>
-                            <!-- <v-btn outlined v-on="on" x-small @click="undoGoalActRemoval(activity)" v-else>Undo</v-btn> -->
+                        <div>Remove Activity</div>
+                        <template v-slot:activator="{ on }" >
+                        <!-- <v-btn 
+                          color="green"
+                          @click="undoRemove(activity.id)"        
+                          outlined                          
+                          v-on="on" x-small 
+                          v-if="goalActs.length > 0 && goalActs[i] == activity.id" >Undo</v-btn>
+                        <v-btn
+                          color="error"                        
+                          outlined     
+                          @click="removeGoalActivity(activity.id)"                         
+                          x-small 
+                          v-else>Remove</v-btn>                  -->
+                          <v-btn   
+                          v-on="on"                                           
+                          outlined     
+                          @click="removeGoalActivity(activity.id)"                         
+                          x-small 
+                          >Remove</v-btn> 
                         </template>
                       </v-tooltip>
                     </span>
@@ -488,9 +504,9 @@ export default {
       "fetchReminders",
       'fetchGoals']),
       ...mapMutations([""]),
-    log(e) {  
-     console.log(e)
-    },
+    // log(e) {  
+    //  console.log(e)
+    // },
     displayFreq(frequency) {
       let split = frequency.split(",")
       if (split[0] == "") {
@@ -555,11 +571,13 @@ export default {
     stopCon() {
       this.$confetti.stop();
     },
-    removeGoalActivity(activity){   
-     this.goalActs.push(activity.id) 
+    removeGoalActivity(id){   
+     this.goalActs.push(id) 
+     console.log(this.goalActs)
     },
-    undoGoalActRemoval(activity){
-      this.goalActs = this.goalActs.filter(t => t !== activity.id)
+    //Not used.  Need to fix logic.  Will be useful to toggle between Remove and Undo buttons.
+    undoRemove(id){
+      this.goalActs = this.goalActs.filter(t => t !== id)
     },
     openNewReminderForm() {
       //console.log("this works")
