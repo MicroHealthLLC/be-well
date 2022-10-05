@@ -1,6 +1,6 @@
 <template>
-    <!-- <VideoModal /> -->
-    <div v-if="play">
+  <!-- <VideoModal /> -->
+  <div v-if="play">
     <v-dialog v-if="play" v-model="play" width="auto" v-click-outside="goBack" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
@@ -35,7 +35,7 @@
 
         <v-card-subtitle class="d-flex justify-space-between align-start flex-nowrap">
           <v-chip v-if="currentVideo.level != 'na'" :color="levelToColor(currentVideo.level)">{{
-              levelToString(currentVideo.level)
+          levelToString(currentVideo.level)
           }}
           </v-chip>
         </v-card-subtitle>
@@ -123,9 +123,10 @@
                 (v) => urlCheck(v) || 'Not a valid URL',
               ]" required validate-on-blur></v-text-field>
             <v-select v-model="newVideo.category" :items="filteredCategories" item-text="title" item-value="value"
-              label="Category" :rules="[(v) => !!v || 'Category is required']" required></v-select>
-            <v-select v-model="newVideo.level" :items="filteredLevels" item-text="title" item-value="value"
-              label="Level" :rules="[(v) => !!v || 'Level is required']" required></v-select>
+              label="Focus Area" :rules="[(v) => !!v || 'Focus Area is required']" required></v-select>
+            <v-select v-model="newVideo.level" :items="checkCatforLevel(newVideo)"
+              item-text="title" item-value="value" label="Level" :rules="[(v) => !!v || 'Level is required']" required>
+            </v-select>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -281,7 +282,7 @@ export default {
       this.nutritionVids = nut;
 
     },
-    
+
     goBack() {
       this.play = false;
       this.$router.push("/activities/videos");
@@ -290,7 +291,13 @@ export default {
     log(e) {
       console.log(e);
     },
-    
+    checkCatforLevel(video) {
+      console.log(video)
+      console.log(this.filteredLevels)
+      if (["RECOVERY", "ERGONOMICS", "NUTRITION"].includes(video.category)) {
+        return this.filteredLevels.filter((v) => v.value == "NOT_APPLICABLE")
+      } else return this.filteredLevels.filter((v) => v.value != "NOT_APPLICABLE")
+    },
     getVideoNum(category, level, video) {
       console.log(category);
       console.log(video);
@@ -426,10 +433,10 @@ export default {
     addNewWatchedVideo(v) {
       this.addWatchedVideo(v)
       this.fetchWatchedVideos()
-    }, 
+    },
     checkForWatchedVideo() {
-       console.log(this.currentVideo)
-       console.log(this.watchedVideos)
+      console.log(this.currentVideo)
+      console.log(this.watchedVideos)
       /*let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
       console.log(matched)
       if (matched) {

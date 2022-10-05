@@ -429,7 +429,7 @@ export default {
       })
 
     },
-    isComplete(reminder) {
+    /* isComplete(reminder) {
       if (this.getActivityProgressValue(reminder.category, reminder.level) == 100) {
         if (!reminder.isComplete) {
           try {
@@ -450,17 +450,17 @@ export default {
           })
         }
       }
-    }
+    } */
   },
   watch: {
-    reminders() {
+    /* reminders() {
       let rem = this.reminders.filter(r => r)
       //console.log(rem)
       for (let i = 0; i < rem.length; i++) {
         this.isComplete(rem[i])
         //console.log(rem[i])
       }
-    }
+    } */
   }
 };
 </script>

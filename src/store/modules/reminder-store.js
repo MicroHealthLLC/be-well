@@ -30,16 +30,18 @@ export default {
     async updateReminderById({ commit, dispatch }, reminder) {
       commit("TOGGLE_SAVING", true);
       try {
-        console.log("updateReminderById", reminder);
+        //console.log("updateReminderById", reminder);
         await API.graphql(
           graphqlOperation(updateReminder, { input: reminder })
         );
         dispatch("fetchReminders");
+        if (reminder){
         commit("SET_SNACKBAR", {
           show: true,
           message: "Activity Reminder Successfully Updated!",
           color: "var(--mh-green)",
         });
+      }
       } catch (error) {
         console.log(error);
       }
