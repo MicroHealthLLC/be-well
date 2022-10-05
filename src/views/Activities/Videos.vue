@@ -124,14 +124,29 @@
               ]" required validate-on-blur></v-text-field>
             <v-select v-model="newVideo.category" :items="filteredCategories" item-text="title" item-value="value"
               label="Focus Area" :rules="[(v) => !!v || 'Focus Area is required']" required></v-select>
-            <v-select v-model="newVideo.level" :items="checkCatforLevel(newVideo)"
-              item-text="title" item-value="value" label="Level" :rules="[(v) => !!v || 'Level is required']" required>
+            <v-select v-model="newVideo.level" :items="checkCatforLevel(newVideo)" item-text="title" item-value="value"
+              label="Level" :rules="[(v) => !!v || 'Level is required']" required>
             </v-select>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark>Submit</v-btn>
-          <v-btn @click="dialog = false" color="secondary" outlined>Cancel</v-btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn small @click="addNewVideo" class="px-2 mr-2" color="var(--mh-blue)" dark v-bind="attrs" v-on="on">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>Add</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn small @click="dialog = false" color="secondary" outlined v-bind="attrs" v-on="on">
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </template>
+            <span>Cancel</span>
+          </v-tooltip>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
