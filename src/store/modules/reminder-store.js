@@ -35,13 +35,11 @@ export default {
           graphqlOperation(updateReminder, { input: reminder })
         );
         dispatch("fetchReminders");
-        if (reminder){
-        commit("SET_SNACKBAR", {
+        /* commit("SET_SNACKBAR", {
           show: true,
           message: "Activity Reminder Successfully Updated!",
           color: "var(--mh-green)",
-        });
-      }
+        }); */
       } catch (error) {
         console.log(error);
       }
