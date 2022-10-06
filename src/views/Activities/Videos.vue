@@ -486,8 +486,16 @@ export default {
       };
     },
     urlCheck(url) {
-      return url ? url.includes("youtube.com") || url.includes("youtu.be") : "";
+      return this.matchYoutubeUrl(url) ? url.includes("youtube.com") || url.includes("youtu.be") : "";
     },
+    matchYoutubeUrl(url) {
+      var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+      if(url.match(p)){
+          return url.match(p)[1];
+      }
+      return false;
+    },
+    
     extractResourceId(url) {
       let regExp =
         /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;
