@@ -14,7 +14,7 @@
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
-        <v-select v-model="reminder.goalId" :items="incompleteGoals" item-text="title" item-value="id"
+        <v-select v-model="reminder.goalId" :items="[...incompleteGoals, 'None']" item-text="title" item-value="id"
           label="Select Goal"></v-select>
       </v-form>
       <v-list disabled v-else-if="reminder.isComplete">
@@ -115,7 +115,7 @@
           <v-time-picker v-model="reminder.time" format="ampm" ampm-in-title
             @click:minute="$refs.menu.save(reminder.time)" header-color="var(--mh-blue)"></v-time-picker>
         </v-menu>
-        <v-select v-model="reminder.goalId" :items="incompleteGoals" item-text="title" item-value="id"
+        <v-select v-model="reminder.goalId" :items="[...incompleteGoals, 'None']" item-text="title" item-value="id"
           label="Associate with Goal?"></v-select>
       </v-form>
     </v-card-text>
@@ -217,7 +217,7 @@ export default {
       this.freqStringToArray()
       // this.SET_ASSOCIATED_GOAL(false)
     },
-    
+
     async saveReminder() {
       if (!this.$refs.form.validate()) {
         return;

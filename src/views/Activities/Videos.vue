@@ -307,8 +307,8 @@ export default {
       console.log(e);
     },
     checkCatforLevel(video) {
-      console.log(video)
-      console.log(this.filteredLevels)
+      //console.log(video)
+      //console.log(this.filteredLevels)
       if (["RECOVERY", "ERGONOMICS", "NUTRITION"].includes(video.category)) {
         return this.filteredLevels.filter((v) => v.value == "NOT_APPLICABLE")
       } else return this.filteredLevels.filter((v) => v.value != "NOT_APPLICABLE")
@@ -461,18 +461,21 @@ export default {
       }  */
     },
     openDialog() {
+      //console.log(this.newVideo)
       this.resetForm();
-      this.selectedCategory == 0
+      /* this.selectedCategory == 0
         ? (this.newVideo.category = "BALANCE")
         : (this.newVideo.category =
           this.categories[this.selectedCategory].value);
       this.selectedFilter == 0
         ? (this.newVideo.level = "L1")
-        : (this.newVideo.level = this.levels[this.selectedFilter].value);
+        : (this.newVideo.level = this.levels[this.selectedFilter].value); */
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
+        this.$refs.videoform.reset()
       }
+      console.log(this.newVideo)
     },
     resetForm() {
       this.urlInput = "";
@@ -483,7 +486,7 @@ export default {
       };
     },
     urlCheck(url) {
-      return url.includes("youtube.com") || url.includes("youtu.be");
+      return url ? url.includes("youtube.com") || url.includes("youtu.be") : "";
     },
     extractResourceId(url) {
       let regExp =

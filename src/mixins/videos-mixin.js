@@ -563,7 +563,7 @@ export default {
       return level == "NOT_APPLICABLE" ? "na" : level
     },
     checkForFlex(category) {
-      return category == "FLEXIBILITY_MOBILITY" ? "FLEXIBILITY-MOBILITY" : category
+      return category && category == "FLEXIBILITY_MOBILITY" ? "FLEXIBILITY-MOBILITY" : category
     },
     levelToColor(level) {
       switch (level) {
