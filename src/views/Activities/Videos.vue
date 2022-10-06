@@ -461,7 +461,7 @@ export default {
       }  */
     },
     openDialog() {
-      console.log(this.newVideo)
+      //console.log(this.newVideo)
       this.resetForm();
       /* this.selectedCategory == 0
         ? (this.newVideo.category = "BALANCE")
