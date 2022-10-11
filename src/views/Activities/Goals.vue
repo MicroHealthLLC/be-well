@@ -39,7 +39,7 @@
             <CurrentGoals :goal="goal" />
           </v-col>
           <v-col v-for="goal in incompleteGoals" v-show="!showCompleted" :key="goal.id" cols="12" xs="2" sm="3" md="4"
-            lg="4" xl="3" class="goalCol">
+            lg="4" xl="3" class="goalCol" :class="{ 'goalColZindex': goal.reminders.items.length > 4}">
             <CurrentGoals :goal="goal" />
           </v-col>
         </v-row>
@@ -360,6 +360,9 @@ export default {
   justify-content: right;
 }
 
+.goalColZindex{
+ z-index:3;
+}
 .newGoalDiv {
   height: 100%;
 }
