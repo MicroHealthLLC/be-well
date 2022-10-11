@@ -117,20 +117,8 @@
             </template>
           </v-tooltip>
         </span>
-        <!-- <span class="addActivityBtn">
-          <v-tooltip max-width="200" bottom>
-            <div>Add Activity</div>
-            <template v-slot:activator="{ on }">
-              <div v-on="on">
-                <span @click="openNewReminderForm" v-if="goal.reminders.items && goal.reminders.items.length < 1">
-                  <v-icon small>mdi-plus</v-icon>
-                  <v-icon>mdi-yoga</v-icon>
-                </span>
-              </div>
-            </template>
-          </v-tooltip>
-        </span> -->
-        <div class="clickable py-4 px-4">
+       
+        <div class="clickable goalActivitiesWrapper pt-1 px-4" >
           <div class="row" @click="isFlipped = !isFlipped">
             <div class="col">
               <h5 class="orangeLabel d-flex">
@@ -767,7 +755,7 @@ export default {
 
 <style scoped>
 .progressWrapper {
-  overflow-y: scroll;
+  overflow-y: hidden;;
   overflow-x: hidden;
 }
 
@@ -893,11 +881,13 @@ export default {
   right: 7px;
   top: 7px;
 }
+.goalActivitiesWrapper{
+ padding-bottom: 25px;
+}
 
 .flip-card {
   /* background-color: transparent; */
-  height: 130px !important;
-
+  min-height: 130px !important;
   perspective: 1000px;
   /* Remove this if you don't want the 3D effect */
 }
@@ -921,7 +911,7 @@ export default {
 .flip-card-back {
   position: absolute;
   width: 100%;
-  height: 100%;
+  min-height: 130px;
   overflow-y: hidden;
   overflow-x: hidden !important;
   background-color: rgba(29, 51, 111, 0.75);
@@ -951,6 +941,7 @@ export default {
   color: var(--mh-blue);
   background-color: white;
   transform: rotateY(180deg);
+  z-index: 10 !important;
 }
 
 .fade-enter-active,
@@ -992,13 +983,13 @@ export default {
 
 .cardBtns {
   position: absolute;
-  bottom: 5%;
+  bottom: 3%;
   left: 3.5%;
   cursor: pointer;
 }
 .cardBtns2 {
   position: absolute;
-  bottom: 5%;
+  bottom: 3%;
   right: 3.5%;
   cursor: pointer;
 }
