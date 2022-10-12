@@ -6,6 +6,7 @@ import { createGoalReminders } from "@/graphql/mutations";
 import { deleteReminder } from "@/graphql/mutations";
 import { deleteGoalReminders } from "@/graphql/mutations";
 import { extendedListReminders } from "@/graphql/extended_queries";
+import axios from "axios";
 
 export default {
   state: {
@@ -44,29 +45,90 @@ export default {
       // e.g. if user has select 2 goals to associate then we need to make
       // 2 join table request to associated.
       if (goalIds && goalIds.length > 0) {
-        let goalReminders = [];
-        goalIds.forEach((gid) => {
-          let goalReminder = {
-            reminderID: reminderId,
-            goalID: gid,
-          };
-          goalReminders.push(goalReminder);
-        });
-        console.log(
-          "associateGoalWithReminder",
-          reminderId, goalIds,
-          goalReminders
-        );
-        goalReminders.forEach((gr) => {
-          API.graphql(graphqlOperation(createGoalReminders, { input: gr }));
-        });
-        dispatch("fetchReminders");
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Activity Successfully associated with goal!",
-          color: "var(--mh-green)",
-        });
+
+        await axios({
+          method: "GET",
+          url: "https://f7ta76pehhv6ytuv5qewxrcame0zxdef.lambda-url.us-east-1.on.aws/",
+          headers: { 'content-type': 'application/json', 'Accept': 'application/json' },
+          params: {      
+            "goalReminder": {
+              "goalIDs": goalIds,
+              "reminderID": reminderId
+            }
+          },
+        }).then((res) => {
+          let goalReminders = res.data.goalReminders
+          console.log(
+            "associateGoalWithReminder",
+            reminderId, goalIds,
+            goalReminders
+          );
+          if(goalReminders.length > 0){
+            goalReminders.forEach((gr) => {
+              API.graphql(graphqlOperation(createGoalReminders, { input: gr }));
+            });
+            dispatch("fetchReminders");
+            commit("SET_SNACKBAR", {
+              show: true,
+              message: "Activity Successfully associated with goal!",
+              color: "var(--mh-green)",
+            });
+          }
+        }).catch((error) => {
+          if (error.response) {
+            commit("SET_SNACKBAR", {
+              show: true,
+              message: error.response.data.message,
+              color: "red",
+            });
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log('associateGoalWithReminder',error.response);
+            console.log('associateGoalWithReminder',error.response.status);
+            console.log('associateGoalWithReminder',error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log('associateGoalWithReminder',error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('associateGoalWithReminder', error.message);
+          }
+       });
+
       }
+
+      // Create join table record to associate reminder with goal
+      // we need to make multiple request if there are multiple goals are associated
+      // e.g. if user has select 2 goals to associate then we need to make
+      // 2 join table request to associated.
+      // if (goalIds && goalIds.length > 0) {
+      //   let goalReminders = [];
+      //   goalIds.forEach((gid) => {
+      //     let goalReminder = {
+      //       reminderID: reminderId,
+      //       goalID: gid,
+      //     };
+      //     goalReminders.push(goalReminder);
+      //   });
+      //   console.log(
+      //     "associateGoalWithReminder",
+      //     reminderId, goalIds,
+      //     goalReminders
+      //   );
+      //   goalReminders.forEach((gr) => {
+      //     API.graphql(graphqlOperation(createGoalReminders, { input: gr }));
+      //   });
+      //   dispatch("fetchReminders");
+      //   commit("SET_SNACKBAR", {
+      //     show: true,
+      //     message: "Activity Successfully associated with goal!",
+      //     color: "var(--mh-green)",
+      //   });
+      // }
+
+
     },
     async updateReminderById({ commit, dispatch }, { reminder, goalIds }) {
       commit("TOGGLE_SAVING", true);
