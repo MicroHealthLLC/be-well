@@ -3,7 +3,7 @@ import { createReminder } from "@/graphql/mutations";
 import { updateReminder } from "@/graphql/mutations";
 import { createGoalReminders } from "@/graphql/mutations";
 // import { listReminders } from "@/graphql/queries";
-import { listReminders, getReminder } from "@/graphql/queries";
+import { getReminder } from "@/graphql/queries";
 import { deleteReminder } from "@/graphql/mutations";
 import { deleteGoalReminders } from "@/graphql/mutations";
 import { extendedListReminders } from "@/graphql/extended_queries";
