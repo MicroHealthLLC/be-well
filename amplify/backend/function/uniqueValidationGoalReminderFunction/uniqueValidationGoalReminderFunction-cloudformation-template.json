@@ -2,10 +2,15 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
-    "env": {
-      "Type": "String"
+    "CloudWatchRule": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": " Schedule Expression"
     },
     "deploymentBucketName": {
+      "Type": "String"
+    },
+    "env": {
       "Type": "String"
     },
     "s3Key": {
@@ -30,16 +35,24 @@
         "aws:asset:property": "Code"
       },
       "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
         "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Trigger9c40585d",
+            "uniqueValidationGoalReminderFunction",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Trigger9c40585d",
+                  "uniqueValidationGoalReminderFunction",
                   "-",
                   {
                     "Ref": "env"
@@ -53,6 +66,9 @@
           "Variables": {
             "ENV": {
               "Ref": "env"
+            },
+            "REGION": {
+              "Ref": "AWS::Region"
             }
           }
         },
@@ -63,15 +79,8 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "Timeout": 25,
-        "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
-        }
+        "Layers": [],
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -80,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Trigger9c40585dLambdaRole9c40585d",
+            "bewellLambdaRole24d31853",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Trigger9c40585dLambdaRole9c40585d",
+                  "bewellLambdaRole24d31853",
                   "-",
                   {
                     "Ref": "env"

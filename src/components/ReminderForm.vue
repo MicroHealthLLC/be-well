@@ -14,8 +14,14 @@
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
-        <v-select v-model="reminder.goalId" :items="[...incompleteGoals, 'None']" item-text="title" item-value="id"
-          label="Select Goal"></v-select>
+        <v-select
+          v-model="goalIds"
+          :items="incompleteGoals"
+          item-text="title"
+          item-value="id"
+          label="Select Goal"
+          :multiple="true"
+        ></v-select>
       </v-form>
       <v-list disabled v-else-if="reminder.isComplete">
         <v-list-item two-line>
@@ -112,11 +118,22 @@
             <v-text-field v-model="reminder.time" label="Schedule A Reminder" prepend-icon="mdi-clock-time-four-outline"
               readonly v-bind="attrs" v-on="on" :rules="[(v) => !!v || 'Time is required']" required></v-text-field>
           </template>
-          <v-time-picker v-model="reminder.time" format="ampm" ampm-in-title
-            @click:minute="$refs.menu.save(reminder.time)" header-color="var(--mh-blue)"></v-time-picker>
+          <v-time-picker
+            v-model="reminder.time"
+            format="ampm"
+            ampm-in-title
+            @click:minute="$refs.menu.save(reminder.time)"
+            header-color="var(--mh-blue)"
+          ></v-time-picker>
         </v-menu>
-        <v-select v-model="reminder.goalId" :items="[...incompleteGoals, 'None']" item-text="title" item-value="id"
-          label="Associate with Goal?"></v-select>
+        <v-select
+          v-model="goalIds"
+          :items="incompleteGoals"
+          item-text="title"
+          item-value="id"
+          label="Associate with Goal?"
+          :multiple="true"
+        ></v-select>
       </v-form>
     </v-card-text>
 
@@ -163,12 +180,14 @@ export default {
     reminder: {
       type: Object,
     },
+
     // goal: {
     //   type: Object
     // },
   },
   data() {
     return {
+      goalIds: [],
       dialog: false,
       intervalId: 60000,
       valid: true,
@@ -192,7 +211,7 @@ export default {
     ]),
     ...mapMutations(["SET_ASSOCIATED_GOAL"]),
     log(e) {
-      console.log(e)
+      console.log(e);
     },
     freqStringToArray() {
       this.freqArr = this.reminder.frequency.split(",")
@@ -217,7 +236,6 @@ export default {
       this.freqStringToArray()
       // this.SET_ASSOCIATED_GOAL(false)
     },
-
     async saveReminder() {
       if (!this.$refs.form.validate()) {
         return;
@@ -236,14 +254,16 @@ export default {
       try {
         if (this.reminder.id) {
           await this.updateReminderById({
-            id: this.reminder.id,
-            category: this.reminder.category,
-            level: this.reminder.level,
-            activity: this.reminder.activity,
-            frequency: this.reminder.frequency,
-            contentType: this.reminder.contentType,
-            time: this.reminder.time,
-            goalId: this.reminder.goalId,
+            reminder: {
+              id: this.reminder.id,
+              category: this.reminder.category,
+              level: this.reminder.level,
+              activity: this.reminder.activity,
+              frequency: this.reminder.frequency,
+              contentType: this.reminder.contentType,
+              time: this.reminder.time,
+            },
+            goalIds: this.goalIds,
           });
         } else {
           this.reminder.contentType = "Videos";
@@ -251,7 +271,7 @@ export default {
           this.reminder.level = this.userPrefLevel;
           // Call Vuex action to add reminder
           //console.log(this.reminder)
-          await this.addReminder(this.reminder);
+          await this.addReminder({reminder: this.reminder, goalIds: this.goalIds});
         }
         // Close form and reset form values
         this.toggleReminderFormDialog();

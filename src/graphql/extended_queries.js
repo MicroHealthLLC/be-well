@@ -11,17 +11,19 @@ export const extendedListGoals = /* GraphQL */ `
         category
         reminders {
           items {
-            id
-            category
-            goalId
-            level
-            activity
-            frequency
-            contentType
-            time
-            createdAt
-            updatedAt
-            owner
+            goalReminderId: id
+            reminder {
+              id
+              category
+              level
+              activity
+              frequency
+              contentType
+              time
+              createdAt
+              updatedAt
+              owner
+            }
           }
           nextToken
         }
@@ -34,6 +36,53 @@ export const extendedListGoals = /* GraphQL */ `
           title
           isComplete
         }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+export const extendedListReminders = /* GraphQL */ `
+  query ListReminders(
+    $filter: ModelReminderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReminders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        category
+        goals {
+          items {
+            goalReminderId: id
+            goal {
+              id
+              title
+              category
+              progress
+              stepCount
+              dueDate
+              isComplete
+              completedCount
+              checklist {
+                title
+                isComplete
+              }
+              createdAt
+              updatedAt
+              owner
+            }
+          }
+          nextToken
+        }
+        level
+        frequency
+        contentType
+        time
+        activity
         createdAt
         updatedAt
         owner

@@ -3,6 +3,8 @@ import { createGoal } from "@/graphql/mutations";
 import { updateGoal } from "@/graphql/mutations";
 import { deleteGoal } from "@/graphql/mutations";
 import { extendedListGoals } from "@/graphql/extended_queries";
+import { deleteGoalReminders } from "@/graphql/mutations";
+
 // import { getGoal } from "@/graphql/queries";
 // import { listGoals } from "@/graphql/queries";
 // import awsconfig from "@/aws-exports";
@@ -44,7 +46,18 @@ export default {
     },
     async removeGoal({ commit, dispatch }, id) {
       try {
-        await API.graphql(graphqlOperation(deleteGoal, { input: id }));
+        await API.graphql(graphqlOperation(deleteGoal, { input: id })).then(
+          (res) => {
+            let goalReminders = res.data.deleteGoal.reminders.items;
+            goalReminders.map((item) => {
+              API.graphql(
+                graphqlOperation(deleteGoalReminders, {
+                  input: { id: item.id },
+                })
+              );
+            });
+          }
+        );
         dispatch("fetchGoals");
         commit("SET_SNACKBAR", {
           show: true,
