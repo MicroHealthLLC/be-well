@@ -74,7 +74,7 @@
                   </v-menu>
                 </v-form>
               </v-card-text>
-              <v-btn @click="deleteWatchedVideos()">Reset Watched Videos</v-btn>
+              <!-- <v-btn @click="deleteWatchedVideos()">Reset Watched Videos</v-btn> -->
               <v-card-actions class="d-flex justify-end">
 
                 <v-btn @click="editProfile" class="px-10" color="primary" :block="$vuetify.breakpoint.xsOnly"
@@ -291,12 +291,7 @@ export default {
       "addPreferenceItems",
       "updatePreferencesById"
     ]),
-    // editPreferences(){
-    //   this.isEditing = true;
-    // },
-    // log(e){
-    //   console.log(e)
-    // },
+
     async savePreferences() {
       if (this.preferences && this.preferences[0] && this.preferences[0].id) {
         console.log(this.preferences[0].id, "update")
@@ -309,7 +304,7 @@ export default {
       } else {
         await this.addPreferences(this.tablePreferences)
         //  console.log(this.tablePreferences)
-        console.log("this is new" + this.tablePreferences)
+        console.log(this.tablePreferences)
       }
       // console.log(this.tablePreferences)
       // console.log(this.preferences[0])

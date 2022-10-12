@@ -1,58 +1,43 @@
 <template>
   <div class="bg-img">
     <div class="bg-overlay">
-      <div
-        class="
+      <div class="
           d-sm-flex
           justify-space-between
           align-center
           mt-2
           mb-2 mb-sm-2
           mt-sm-4
-        "
-      >
-        <div class="d-flex justify-space-between align-center">
+        ">
+        <div>
           <span>
-          <h2 v-if="!showCompleted"><b class="goalHeaders">MY ACTIVITIES</b></h2>  
-          <h2 v-else><b class="goalHeaders">MY COMPLETED ACTIVITIES</b></h2>  </span
-          >
-          <v-switch
-            v-model="remind"
-            label="Toggle reminders"
-            @change="requestPermission"
-            class="mt-1 ml-3"
-            color="#2f53b6"
-            hide-details
-          ></v-switch>
+            <h2 v-if="!showCompleted"><b class="goalHeaders">MY ACTIVITIES</b></h2>
+            <h2 v-else><b class="goalHeaders">MY COMPLETED ACTIVITIES</b></h2>
+          </span>
         </div>
-        <v-switch
-          v-model="showCompleted"
-          label="Show Completed"
-          color="#2f53b6"
-        >
-        </v-switch>
+        <div class="d-flex justify-end">
+          <v-switch v-model="remind" label="Notifications On" @change="requestPermission" color="#2f53b6" hide-details class="mr-5">
+          </v-switch>
+          <v-switch v-model="showCompleted" label="Show Completed" color="#2f53b6">
+          </v-switch>
+        </div>
       </div>
       <v-divider class="mb-4"></v-divider>
       <v-row>
-        <v-col v-if="!showCompleted" cols="12" sm="6" md="4" lg="3">
+        <v-col v-if="!showCompleted" cols="12" xs="2" sm="3" md="4" lg="4" xl="3">
           <div class="newGoalCard">
             <div class="newGoalCardInner">
               <div class="newGoalDiv">
-                <v-btn
-                  @click="openNewReminderForm"
-                  class="newGoalBtn"
-                  outlined
-                  elevation="2"
-                  :disabled="!(reminders.length < 8)"
-                  :block="$vuetify.breakpoint.xsOnly"
-                  ><v-icon class="checkmark">mdi-yoga</v-icon>CREATE AN
-                  ACTIVITY...</v-btn
-                >
+                <v-btn @click="openNewReminderForm" class="newGoalBtn" outlined elevation="2"
+                  :disabled="!(reminders.length < 8)" :block="$vuetify.breakpoint.xsOnly">
+                  <v-icon class="checkmark">mdi-yoga</v-icon>CREATE AN
+                  ACTIVITY...
+                </v-btn>
               </div>
               <v-dialog v-model="dialog" max-width="600px">
                 <ReminderForm :reminder="reminder" @toggleReminderFormDialog="toggleReminderFormDialog"></ReminderForm>
               </v-dialog>
-          <!-- <v-tooltip max-width="200" bottom>
+              <!-- <v-tooltip max-width="200" bottom>
           <div>Create New Activity for Goal</div>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="goalIcon activitiesCount">
@@ -71,28 +56,12 @@
             </div>
           </div>
         </v-col>
-        <v-col
-          v-for="(reminder, index) in completeReminders"
-          v-show="showCompleted"
-          :key="index + 'a'"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          class="goalCol"
-        >
+        <v-col v-for="(reminder, index) in completeReminders" v-show="showCompleted" :key="index + 'a'" cols="12" xs="2"
+          sm="3" md="4" lg="4" xl="3" class="goalCol">
           <ReminderCard :reminder="reminder"></ReminderCard>
         </v-col>
-        <v-col
-          v-for="(reminder, index) in incompleteReminders"
-          v-show="!showCompleted"
-          :key="index + 'b'"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          class="goalCol"
-        >
+        <v-col v-for="(reminder, index) in incompleteReminders" v-show="!showCompleted" :key="index + 'b'" cols="12"
+          xs="2" sm="3" md="4" lg="4" xl="3" class="goalCol">
           <ReminderCard :reminder="reminder"></ReminderCard>
         </v-col>
         <!-- ACTIVITY CARDS FOR GOALS THAT HAVE NO REMINDERS SET -->
@@ -189,17 +158,33 @@ export default {
       }
     },
     openNewReminderForm() {
-      this.SET_ASSOCIATED_GOAL(false)     
+      this.SET_ASSOCIATED_GOAL(false)
       this.toggleReminderFormDialog(true)
-      if (this.$refs.form) {       
+      if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
+      this.fetchReminders()
+      this.reminder = {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      }
     },
-    toggleReminderFormDialog(value){
+    toggleReminderFormDialog(value) {
       this.dialog = value;
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
+      this.reminder = {
+        category: "",
+        level: this.userPrefLevel,
+        frequency: "",
+        contentType: "",
+        time: null,
+      }
+      this.fetchReminders()
     },
     isComplete(reminder) {
       //console.log(reminder)
@@ -220,9 +205,6 @@ export default {
         }
       }
     }
-    /* isComplete(cat, lev) {
-      return this.getActivityProgressValue(cat, lev) == 100
-    } */
   },
   computed: {
     ...mapGetters(["reminders", "remindersOn", "saving", "incompleteGoals"]),
@@ -234,13 +216,34 @@ export default {
         this.TOGGLE_REMINDERS_ON(value);
       },
     },
+    /* checkForComplete() {
+      this.reminders.forEach(r => {
+        if (this.getActivityProgressValue(r.category, r.level) == 100) {
+          if (!r.isComplete) {
+            this.updateReminderById({
+              id: r.id,
+              isComplete: true,
+            })
+          }
+        }
+        else if (this.getActivityProgressValue(r.category, r.level) != 100) {
+          if (r.isComplete) {
+            this.updateReminderById({
+              id: r.id,
+              isComplete: false,
+            })
+          }
+        }
+      })
+      return ""
+    }, */
     completeReminders() {
       return this.reminders.length > 0 ? this.reminders.filter((r) => r.isComplete) : ""
     },
     incompleteReminders() {
       return this.reminders.length > 0 ? this.reminders.filter((r) => !r.isComplete) : ""
     },
-     userPrefLevel() {
+    userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.reminder.category) {
         let strength = this.preferences[0].preference_items.map(
@@ -289,11 +292,21 @@ export default {
         return "";
       }
     },
-    
+
   },
   mounted() {
     this.fetchReminders();
   },
+  watch: {
+    reminders() {
+      let rem = this.reminders.filter(r => r)
+      //console.log(rem)
+      for (let i = 0; i < rem.length; i++) {
+        this.isComplete(rem[i])
+        //console.log(rem[i])
+      }
+    }
+  }
 };
 </script>
 
@@ -304,9 +317,11 @@ export default {
 .text-right {
   justify-content: right;
 }
+
 .newGoalDiv {
   height: 100%;
 }
+
 .newGoalBtn {
   color: white !important;
   top: 50%;
@@ -315,16 +330,26 @@ export default {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+
+@media only screen and (max-width: 960px) {
+  .newGoalBtn {
+    font-size: small;
+  }
+}
+
 .newGoalCard {
   height: 130px;
   /* background-color: rgba(29,	51,	111,0.85); */
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
+
 .newGoalCardInner {
   width: 100%;
   height: 100%;
   background-color: rgba(29, 51, 111, 0.5);
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden;
+  /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
@@ -334,7 +359,8 @@ export default {
 .flip-card {
   background-color: transparent;
   height: 150px;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
 
 /* This container is needed to position the front and back side */
@@ -357,7 +383,8 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden;
+  /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
@@ -376,25 +403,30 @@ export default {
   color: white;
   transform: rotateY(180deg);
 }
+
 .smPlusSign {
   font-size: 85%;
 }
+
 .goalHeaders {
   color: var(--mh-blue);
 }
+
 ::v-deep .text-start:first-child {
   font-weight: 600;
 }
+
 ::v-deep tr:hover {
   cursor: pointer;
 }
+
 ::v-deep tr.v-data-table__empty-wrapper {
   margin: auto;
 }
+
 .bg-img {
   /* padding: 20px; */
-  background: url(../../assets/running_morning.jpg) no-repeat center center
-    fixed;
+  background: url(../../assets/running_morning.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -405,6 +437,7 @@ export default {
   height: 100%;
   border-radius: 0.25rem;
 }
+
 .bg-overlay {
   background-color: rgba(255, 255, 255, 0.6) !important;
   min-height: 80vh;
@@ -414,21 +447,27 @@ export default {
   padding: 20px;
   border-radius: 0.25rem;
 }
+
 .goalCol {
-  overflow-y: hidden !important; /* Hide vertical scrollbar */
+  overflow-y: hidden !important;
+  /* Hide vertical scrollbar */
   overflow-x: hidden !important;
 }
+
 .goalIcon {
   position: absolute;
   bottom: 10%;
   right: 1%;
 }
+
 .activitiesCount {
   transition: all 0.2s ease-in-out;
 }
+
 .activitiesCount:hover {
   transform: scale(1.2);
 }
+
 .text-dark {
   color: #072f94;
 }

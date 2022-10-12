@@ -1,205 +1,111 @@
 <template>
-<div class="bg-img" >
-  <div class="bg-overlay">
- <div
-      class="        
+  <div class="bg-img">
+    <div class="bg-overlay">
+      <div class="        
         align-center
         mt-2
         mb-2 mb-sm-2
         mt-sm-4
-      "
-    >
-      <div class="d-flex justify-space-between align-center">
-        <span>
-          <h2 v-if="!showCompleted"><b class="goalHeaders">MY CURRENT GOALS</b></h2>  
-          <h2 v-else><b class="goalHeaders">MY COMPLETED GOALS</b></h2>      
-        </span> 
-          <v-switch
-          class="align-right"
-          v-model="showCompleted"
-          label="Show Completed"
-          color="#2f53b6"
-        >
-        </v-switch>
-    
+      ">
+        <div class="d-flex justify-space-between align-center">
+          <span>
+            <h2 v-if="!showCompleted"><b class="goalHeaders">MY CURRENT GOALS</b></h2>
+            <h2 v-else><b class="goalHeaders">MY COMPLETED GOALS</b></h2>
+          </span>
+          <v-switch class="align-right" v-model="showCompleted" label="Show Completed" color="#2f53b6">
+          </v-switch>
+        </div>
+        <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
+          <div class="text-center">Active Goals maximum has been met</div>
+        </v-tooltip>
       </div>
-      <v-tooltip :disabled="incompleteGoals.length < 5" max-width="200" bottom>
-        <!-- <template v-slot:activator="{ on }">
-          <div v-on="on">
-            <v-btn
-            
-              >Add New</v-btn
-            >
-          </div>
-        </template> -->
-        <div class="text-center">Active Goals maximum has been met</div>
-      </v-tooltip>
-
-    </div>
-    <v-divider class="mb-4"></v-divider>
-    <!-- Goals Table -->
-    <!-- <v-card v-if="incompleteGoals.length == 0" class="pa-4 mb-4">
-      <div class="d-flex text-center flex-column">
-        <div class="mt-4">
-          <v-icon color="grey" x-large>mdi-flag</v-icon>
-          <p class="placeholder-text">You currently have no Goals set</p>
-        </div>
+      <v-divider class="mb-4"></v-divider>
+      <div>
+        <v-row>
+          <v-col v-if="!showCompleted" cols="12" xs="2" sm="3" md="4" lg="4" xl="3">
+            <div class="newGoalCard">
+              <div class="newGoalCardInner">
+                <div class="newGoalDiv">
+                  <v-btn @click="openNewGoalForm" class="newGoalBtn" outlined elevation="2"
+                    :disabled="validCategories.length < 1">
+                    <v-icon class="checkmark">mdi-flag-checkered</v-icon>SET A GOAL...
+                  </v-btn>
+                </div>
+              </div>
+            </div>
+          </v-col>
+          <v-col v-for="goal in completedGoals" v-show="showCompleted" :key="goal.id" cols="12" xs="2" sm="3" md="4"
+            lg="4" xl="3" class="goalCol">
+            <CurrentGoals :goal="goal" />
+          </v-col>
+          <v-col v-for="goal in incompleteGoals" v-show="!showCompleted" :key="goal.id" cols="12" xs="2" sm="3" md="4"
+            lg="4" xl="3" class="goalCol" :class="{ 'goalColZindex': goal.reminders.items.length > 4}">
+            <CurrentGoals :goal="goal" />
+          </v-col>
+        </v-row>
       </div>
-    </v-card> -->
-    <div>
-       <v-row>
-         <v-col  
-          v-if="!showCompleted"       
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
-        <div class="newGoalCard">
-        <div class="newGoalCardInner"
-        >
-        <div class="newGoalDiv">
-        <v-btn
-        @click="openNewGoalForm"             
-        class="newGoalBtn"
-        outlined
-        elevation="2"
-        :disabled="validCategories.length < 1"      
-      
-        ><v-icon class="checkmark"
-              >mdi-flag-checkered</v-icon>SET A GOAL...</v-btn
-            >
-        </div>
-       
-        </div>
-        </div>
-         </v-col>
-        <v-col
-          v-for="goal in completedGoals"
-          v-show="showCompleted"
-          :key="goal.id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          class="goalCol"
-        >
-        <CurrentGoals :goal="goal">
+      <!-- Dialog Form -->
+      <v-dialog v-model="dialog" width="650">
+        <v-card :disabled="saving" :loading="saving">
+          <v-card-title class="text-right pt-2 pb-0">
+            <!-- <span v-if="goal.id">Edit Goal</span><span v-else><h2><b class="goalHeaders">Set A Goal...</b></h2></span>
+            <v-spacer></v-spacer> -->
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="goalform" v-model="valid">
+              <!-- <v-text-field
+                v-model="goal.title"
+                label="My Goal is..."
+                :rules="[(v) => !!v || 'Goal title is required']"
+                required
+              ></v-text-field> -->
+              <v-select v-model="goal.category" :items="validCategories" item-text="title" item-value="value"
+                label="I want to improve my..." :rules="[(v) => !!v || 'Improvement category is required']" required>
+              </v-select>
 
-        </CurrentGoals>
-        </v-col>
-        <v-col
-          v-for="goal in incompleteGoals"
-          v-show="!showCompleted"
-          :key="goal.id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          class="goalCol"
-        >
-        <CurrentGoals :goal="goal">
-
-        </CurrentGoals>
-        </v-col>
-      </v-row>
-    </div>  
- 
-
-    <!-- Dialog Form -->
-    <v-dialog v-model="dialog" width="750">
-      <v-card :disabled="saving" :loading="saving">
-        <v-card-title class="text-right pt-2 pb-0" 
-          >
-          <!-- <span v-if="goal.id">Edit Goal</span><span v-else><h2><b class="goalHeaders">Set A Goal...</b></h2></span>
-          <v-spacer></v-spacer> -->
-          <v-btn  @click="closeGoalForm" fab depressed x-small outlined
-            ><v-icon>mdi-close</v-icon></v-btn
-          >
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="goalform" v-model="valid">
-            <!-- <v-text-field
-              v-model="goal.title"
-              label="My Goal is..."
-              :rules="[(v) => !!v || 'Goal title is required']"
-              required
-            ></v-text-field> -->
-            <v-select
-              v-model="goal.category"
-              :items="validCategories"
-              item-text="title"
-              item-value="value"
-              label="I want to improve my..."
-              :rules="[(v) => !!v || 'Improvement category is required']"
-              required
-            ></v-select>
-   
-            <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="goal.dueDate"
-                  label="I want to accomplish this goal by..."
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="[(v) => !!v || 'Date required']"
-                  required
-                ></v-text-field>
+              <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+                offset-y min-width="auto">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field v-model="goal.dueDate" label="I want to accomplish this goal by..."
+                    prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
+                    :rules="[(v) => !!v || 'Date required']" required></v-text-field>
+                </template>
+                <v-date-picker v-model="goal.dueDate" @input="menu = false"></v-date-picker>
+              </v-menu>
+            </v-form>
+          </v-card-text>
+          <v-card-actions class="d-flex justify-end">
+            <v-tooltip max-width="200" bottom>
+              <div>Save</div>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="saveGoal" class="px-2 mr-2" v-on="on" color="var(--mh-blue)" depressed dark small>
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
               </template>
-              <v-date-picker
-                v-model="goal.dueDate"
-                @input="menu = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-form>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-end">
-          <v-btn
-            @click="saveGoal"
-            class="px-10"
-            color="var(--mh-blue)"
-            depressed
-            dark
-            >Save</v-btn
-          >
-          <v-btn 
-            v-if="goal.id" 
-            color="error"
-            @click="deleteGoal({ id: goal.id })" 
-            outlined
-            ><v-icon>
-            mdi-trash-can-outline
-           </v-icon></v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+            </v-tooltip>
+            <v-tooltip max-width="200" bottom>
+              <div>Cancel</div>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="closeGoalForm" v-on="on" depressed outlined small>
+                  <v-icon>mdi-cancel</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- Confetti Dialog Form -->
       <v-dialog v-model="goalCompleteDialog" max-width="344">
-        <v-card
-          class="mx-auto"
-          max-width="344"
-        >
-        <v-img
-          src="../../assets/trophy.jpg"
-          height="200px"
-        ></v-img>
-        <v-card-title>
-          CONGRATULATIONS!
-        </v-card-title>
-        <v-card-subtitle>
-        You completed your <span><b>{{confettiGoalName}}</b></span> goal!  
-        </v-card-subtitle>
-        <v-card-actions>
-          <!-- <v-tooltip bottom>
+        <v-card class="mx-auto" max-width="344">
+          <v-img src="../../assets/trophy.jpg" height="200px"></v-img>
+          <v-card-title>
+            CONGRATULATIONS!
+          </v-card-title>
+          <v-card-subtitle>
+            You completed your <span><b>{{confettiGoalName}}</b></span> goal!
+          </v-card-subtitle>
+          <v-card-actions class="jCSB">
+            <!-- <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn x-small class="text-light mx-1" color="blue" v-bind="attrs" v-on="on"><v-icon small color="white"> mdi-content-save</v-icon>
                 </v-btn>
@@ -207,22 +113,21 @@
               <span>Save</span>
             </v-tooltip> -->
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="green" v-if="confettiGoal" @click="reuseGoal(confettiGoal.reminders.items)"><v-icon small color="white" v-bind="attrs" v-on="on"> mdi-recycle-variant</v-icon></v-btn>
+              <template v-slot:activator="{ on, attrs }">                      
+                 <v-icon @click="reuseGoal(confettiGoal.reminders.items)" color="green" v-bind="attrs" v-on="on"  v-if="confettiGoal"> mdi-recycle-variant</v-icon>    
               </template>
               <span>Do it again!</span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn x-small class="text-light mx-1" color="red darken-1" @click="deleteGoal({ id: confettiGoal.id })" v-bind="attrs" v-on="on">
-              <v-icon small color="white"> mdi-trash-can-outline </v-icon></v-btn>
+              <template v-slot:activator="{ on, attrs }">              
+                  <v-icon  v-bind="attrs" v-on="on" color="error" @click="deleteGoal({ id: confettiGoal.id })"> mdi-trash-can-outline </v-icon>             
               </template>
               <span>Delete</span>
-            </v-tooltip>          
-        </v-card-actions>
-        </v-card>    
+            </v-tooltip>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
-  </div>
+    </div>
   </div>
 
 </template>
@@ -243,21 +148,21 @@ export default {
   data() {
     return {
       goalFormTabs: [
-          'Select Improve Goal', 'Create Your Own Goal'
+        'Select Improve Goal', 'Create Your Own Goal'
       ],
-      tabs: null, 
+      tabs: null,
       dialog: false,
       show: false,
       showCompleted: false,
       goalCompleteDialog: false,
       confettiGoalName: '',
-      confettiGoal: null, 
-      improvementGoal: true, 
-      createOwnGoal: false, 
+      confettiGoal: null,
+      improvementGoal: true,
+      createOwnGoal: false,
       isFlipped: false,
       valid: true,
       menu: false,
-      category:'',
+      category: '',
       goal: {
         id: 0,
         title: "",
@@ -276,30 +181,30 @@ export default {
     // log(e) {
     //   console.log(e)
     // },
-    goalComplete(){
+    goalComplete() {
       this.goalCompleteDialog = true
       console.log("goal completion btn works")
       this.$confetti.start();
     },
-    stopCon(){
+    stopCon() {
       this.$confetti.stop();
     },
     async reuseGoal(goalReminders) {
       console.log(goalReminders)
       for (let i = 0; i < goalReminders.length; i++) {
-          // console.log(items[i]);
-          let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(goalReminders[i].category)).toLowerCase()) && v.level == this.checkForNA(goalReminders[i].level))
-          console.log(filtered)
-          filtered.forEach(v => {
-            this.removeWatchedVideo({ id: v.id })
-      })
-      this.updateGoalById({
-        id: this.confettiGoal.id,
-        isComplete: false,
-        completedCount: 0,          
-      });   
+        // console.log(items[i]);
+        let filtered = this.watchedVideos.filter(v => v.category == this.capitalizeFirstLet((this.checkForFlex(goalReminders[i].category)).toLowerCase()) && v.level == this.checkForNA(goalReminders[i].level))
+        console.log(filtered)
+        filtered.forEach(v => {
+          this.removeWatchedVideo({ id: v.id })
+        })
+        this.updateGoalById({
+          id: this.confettiGoal.id,
+          isComplete: false,
+          completedCount: 0,
+        });
       }
-     },
+    },
     async saveGoal() {
       if (!this.$refs.goalform.validate()) {
         return;
@@ -316,10 +221,10 @@ export default {
             checklist: this.goal.checklist,
           });
         } else {
-            console.log(this.goal)
-            if(this.improvementGoal){
-              this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
-            }       
+          console.log(this.goal)
+          if (this.improvementGoal) {
+            this.goal.title = "I want to improve my " + this.goal.category.toLowerCase()
+          }
           // console.log(this.goal)
           await this.addGoal(this.goal);
         }
@@ -336,17 +241,17 @@ export default {
       }
       this.closeGoalForm();
     },
-    improveGoalToggle(){
+    improveGoalToggle() {
       this.createOwnGoal = !this.createOwnGoal
       this.improvementGoal = true
       console.log("default Goal Toggle")
     },
-    createGoalToggle(){
+    createGoalToggle() {
       this.improvementGoal = !this.improvementGoal
       this.createOwnGoal = true
       console.log("create Goal Toggle")
     },
-    handleClick(e){
+    handleClick(e) {
       console.log(e)
     },
     openNewGoalForm() {
@@ -355,7 +260,7 @@ export default {
         this.$refs.goalform.resetValidation();
       }
       this.category = this.goal.category.toUpperCase()
-      this.goal = {       
+      this.goal = {
         category: "",
         dueDate: "",
         progress: 0,
@@ -414,67 +319,76 @@ export default {
   },
   computed: {
     ...mapGetters(["completedGoals", "incompleteGoals", "saving", "goals", 'watchedVideos']),
-    validCategories(){
-      let allSavedGoals = this.goals.map(t => t.category)
-      return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
+    validCategories() {
+      return this.filteredCategories
+      // let allSavedGoals = this.goals.filter(t => !t.isComplete).map(t => t.category)
+      // return this.filteredCategories.filter(fC => !allSavedGoals.includes(fC.value))
     }
   },
-  async mounted() {
+  mounted() {
     this.fetchGoals();
   },
   watch: {
-   goals(){  
-    let gReminders = this.goals.filter(t => t && t.reminders.items.length > 0)     
-    console.log(gReminders)
+    goals() {
+      let gReminders = this.goals.filter(t => t && t.reminders.items.length > 0)
+      console.log(gReminders)
       for (let i = 0; i < gReminders.length; i++) {
-        if (Math.round(this.getGoalProgressValue(gReminders[i].reminders.items)) == 100  &&
-          gReminders[i].completedCount == 0){
+        if (Math.round(this.getGoalProgressValue(gReminders[i].reminders.items)) == 100 &&
+          gReminders[i].completedCount == 0) {
           this.goalCompleteDialog = true
-          this.confettiGoalName = gReminders[i].category 
+          this.confettiGoalName = gReminders[i].category
           this.confettiGoal = gReminders[i]
           this.updateGoalById({
             id: gReminders[i].id,
             isComplete: true,
-            completedCount: 1,           
-          }); 
+            completedCount: 1,
+          });
           console.log(gReminders[i])
           this.$confetti.start();
-          setTimeout(() => { this.$confetti.stop()}, 3500)         
-        } 
-     }
-   }
+          setTimeout(() => { this.$confetti.stop() }, 3500)
+        }
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
-
 /* .goalCol { transition: all .2s ease-in-out; }
 .goalCol:hover { transform: scale(1.02); } */
-.text-right{
+.text-right {
   justify-content: right;
 }
-.newGoalDiv{
-  height:100%;  
+
+.goalColZindex{
+ z-index:3;
 }
-.newGoalBtn{
-  color: white !important; 
+.newGoalDiv {
+  height: 100%;
+}
+
+.newGoalBtn {
+  color: white !important;
   top: 50%;
-  margin:0 auto;
-  display:block;
+  margin: 0 auto;
+  display: block;
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%); 
+  transform: translateY(-50%);
 }
+
 .newGoalCard {
-  height: 150px;
- /* background-color: rgba(29,	51,	111,0.85); */
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  height: 130px;
+  /* background-color: rgba(29,	51,	111,0.85); */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
-.newGoalCardInner{ 
+
+.newGoalCardInner {
   width: 100%;
   height: 100%;
-  background-color: rgba(29,	51,	111,0.40);
-  -webkit-backface-visibility: hidden; /* Safari */
+  background-color: rgba(29, 51, 111, 0.40);
+  -webkit-backface-visibility: hidden;
+  /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
@@ -482,52 +396,63 @@ export default {
 }
 
 
-.goalHeaders{
- color: var(--mh-blue); 
+.goalHeaders {
+  color: var(--mh-blue);
 }
-.pic{
+
+.pic {
   /* background: url('../../assets/goals.jpg'); */
   background-size: 400px;
   background-repeat: no-repeat;
 }
-.pagePic{
-  background: url('../../assets/goals.jpg');   
+
+.pagePic {
+  background: url('../../assets/goals.jpg');
   background-size: 200px;
   width: 200px;
   border-radius: 50%;
   background-repeat: no-repeat;
   height: 150px;
 }
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 2fr auto;
 }
-@media (max-width: 600px) {
+
+/* @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
   }
+
   .grid div:first-child {
     grid-column: 1 / 1;
     grid-row-start: 2;
   }
+
   .grid div:nth-child(2) {
     grid-row-start: 3;
     grid-column: 1 / 1;
   }
-}
+} */
+
 .goal-progress-text {
   color: gray;
 }
+
 .goal-progressbar {
   width: 100%;
 }
+
 .placeholder-text {
   color: rgba(0, 0, 0, 0.38);
 }
+
 .flip-card {
   background-color: transparent;
   height: 150px;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
 }
 
 /* This container is needed to position the front and back side */
@@ -550,7 +475,8 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden;
+  /* Safari */
   backface-visibility: hidden;
   border-radius: 4px;
   box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
@@ -570,9 +496,9 @@ export default {
   transform: rotateY(180deg);
 }
 
-.bg-img{
+.bg-img {
   /* padding: 20px; */
-  background: url(../../assets/goals.jpg) no-repeat center center fixed; 
+  background: url(../../assets/goals.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -582,9 +508,10 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: .25rem;
-}  
-.bg-overlay{
-  background-color: rgba(255, 255, 255,0.6) !important;
+}
+
+.bg-overlay {
+  background-color: rgba(255, 255, 255, 0.6) !important;
   min-height: 80vh;
   min-width: 1024px;
   width: 100%;
@@ -592,5 +519,7 @@ export default {
   padding: 20px;
   border-radius: .25rem;
 }
-
+.jCSB{
+  justify-content: space-between !important;
+}
 </style>

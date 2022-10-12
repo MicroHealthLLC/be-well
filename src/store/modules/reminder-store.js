@@ -3,6 +3,7 @@ import { createReminder } from "@/graphql/mutations";
 import { updateReminder } from "@/graphql/mutations";
 import { createGoalReminders } from "@/graphql/mutations";
 // import { listReminders } from "@/graphql/queries";
+import { listReminders, getReminder } from "@/graphql/queries";
 import { deleteReminder } from "@/graphql/mutations";
 import { deleteGoalReminders } from "@/graphql/mutations";
 import { extendedListReminders } from "@/graphql/extended_queries";
@@ -133,8 +134,7 @@ export default {
     async updateReminderById({ commit, dispatch }, { reminder, goalIds }) {
       commit("TOGGLE_SAVING", true);
       try {
-        console.log("updateReminderById", reminder, goalIds);
-
+        //console.log("updateReminderById", reminder);
         await API.graphql(
           graphqlOperation(updateReminder, { input: reminder })
         );
@@ -180,6 +180,14 @@ export default {
         console.log(error);
       }
     },
+    async fetchReminder(id) {
+      try {
+        const res = await API.graphql(graphqlOperation(getReminder, { input: id }));
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
   mutations: {
     SET_REMINDERS: (state, reminders) => (state.reminders = reminders),

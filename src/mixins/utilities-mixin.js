@@ -1,7 +1,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {
+    return {     
       categories: [
         {
           title: "",
@@ -269,7 +269,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo"]),
+    ...mapActions(["fetchPreferences", "fetchWatchedVideos", "removeWatchedVideo" , "addPreferences"]),
     async notify(activity) {
       console.log(activity)
       const reg = await navigator.serviceWorker.getRegistration();
@@ -390,10 +390,11 @@ export default {
       } 
       if(prefs[0].l5){       
         return 'L5'
-      }       
-    } else if (!this.preferences){
-      return 'L1'
-   }
+      } 
+     }
+    if (!this.preferences[0]){
+      return 'L1'     
+    }
   },
   balanceLevel(){
     if (this.preferences && this.preferences[0]){
@@ -414,7 +415,8 @@ export default {
       if(prefs[0].l4){      
         return 'L5'
       }  
-     } else if (!this.preferences){
+     }
+    if (!this.preferences[0]){
       return 'L1'
    }
   },
@@ -439,7 +441,8 @@ export default {
       if(prefs[0].l5){      
         return 'L5'
       } 
-    } else if (!this.preferences){
+    }
+    if (!this.preferences[0]){
       return 'L1'
    }
   },
@@ -453,7 +456,8 @@ export default {
         //console.log("Nutrition: I AM NOT INTERESTED")
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -467,7 +471,8 @@ export default {
       if(prefs[0].not_interested){       
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -481,7 +486,8 @@ export default {
       if(prefs[0].not_interested){      
         return false
       }
-    } else if (!this.preferences){
+    } 
+    if (!this.preferences[0]){
       return 'NOT_APPLICABLE'
    }
   },
@@ -503,7 +509,8 @@ export default {
       if(prefs[0].l5){
         return 'L5'
       }  
-    } else if (!this.preferences){
+     }
+     if (!this.preferences[0]){
       return 'L1'
    }
    },   

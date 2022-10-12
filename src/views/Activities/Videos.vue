@@ -1,6 +1,6 @@
 <template>
-    <!-- <VideoModal /> -->
-    <div v-if="play">
+  <!-- <VideoModal /> -->
+  <div v-if="play">
     <v-dialog v-if="play" v-model="play" width="auto" v-click-outside="goBack" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
@@ -35,7 +35,7 @@
 
         <v-card-subtitle class="d-flex justify-space-between align-start flex-nowrap">
           <v-chip v-if="currentVideo.level != 'na'" :color="levelToColor(currentVideo.level)">{{
-              levelToString(currentVideo.level)
+          levelToString(currentVideo.level)
           }}
           </v-chip>
         </v-card-subtitle>
@@ -123,14 +123,30 @@
                 (v) => urlCheck(v) || 'Not a valid URL',
               ]" required validate-on-blur></v-text-field>
             <v-select v-model="newVideo.category" :items="filteredCategories" item-text="title" item-value="value"
-              label="Category" :rules="[(v) => !!v || 'Category is required']" required></v-select>
-            <v-select v-model="newVideo.level" :items="filteredLevels" item-text="title" item-value="value"
-              label="Level" :rules="[(v) => !!v || 'Level is required']" required></v-select>
+              label="Focus Area" :rules="[(v) => !!v || 'Focus Area is required']" required></v-select>
+            <v-select v-model="newVideo.level" :items="checkCatforLevel(newVideo)" item-text="title" item-value="value"
+              label="Level" :rules="[(v) => !!v || 'Level is required']" required>
+            </v-select>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
-          <v-btn @click="addNewVideo" class="px-6" color="var(--mh-blue)" dark>Submit</v-btn>
-          <v-btn @click="dialog = false" color="secondary" outlined>Cancel</v-btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn small @click="addNewVideo" class="px-2 mr-2" color="var(--mh-blue)" dark v-bind="attrs" v-on="on">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>Add</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn small @click="dialog = false" color="secondary" outlined v-bind="attrs" v-on="on">
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </template>
+            <span>Cancel</span>
+          </v-tooltip>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -281,7 +297,7 @@ export default {
       this.nutritionVids = nut;
 
     },
-    
+
     goBack() {
       this.play = false;
       this.$router.push("/activities/videos");
@@ -290,7 +306,13 @@ export default {
     log(e) {
       console.log(e);
     },
-    
+    checkCatforLevel(video) {
+      //console.log(video)
+      //console.log(this.filteredLevels)
+      if (["RECOVERY", "ERGONOMICS", "NUTRITION"].includes(video.category)) {
+        return this.filteredLevels.filter((v) => v.value == "NOT_APPLICABLE")
+      } else return this.filteredLevels.filter((v) => v.value != "NOT_APPLICABLE")
+    },
     getVideoNum(category, level, video) {
       console.log(category);
       console.log(video);
@@ -426,10 +448,10 @@ export default {
     addNewWatchedVideo(v) {
       this.addWatchedVideo(v)
       this.fetchWatchedVideos()
-    }, 
+    },
     checkForWatchedVideo() {
-       console.log(this.currentVideo)
-       console.log(this.watchedVideos)
+      console.log(this.currentVideo)
+      console.log(this.watchedVideos)
       /*let matched = this.watchedVideos.filter((v) => v.videoId == this.currentVideo.videoId)
       console.log(matched)
       if (matched) {
@@ -439,18 +461,21 @@ export default {
       }  */
     },
     openDialog() {
+      //console.log(this.newVideo)
       this.resetForm();
-      this.selectedCategory == 0
+      /* this.selectedCategory == 0
         ? (this.newVideo.category = "BALANCE")
         : (this.newVideo.category =
           this.categories[this.selectedCategory].value);
       this.selectedFilter == 0
         ? (this.newVideo.level = "L1")
-        : (this.newVideo.level = this.levels[this.selectedFilter].value);
+        : (this.newVideo.level = this.levels[this.selectedFilter].value); */
       this.dialog = true;
       if (this.$refs.videoform) {
         this.$refs.videoform.resetValidation();
+        this.$refs.videoform.reset()
       }
+      console.log(this.newVideo)
     },
     resetForm() {
       this.urlInput = "";
@@ -461,8 +486,16 @@ export default {
       };
     },
     urlCheck(url) {
-      return url.includes("youtube.com") || url.includes("youtu.be");
+      return this.matchYoutubeUrl(url) ? url.includes("youtube.com") || url.includes("youtu.be") : "";
     },
+    matchYoutubeUrl(url) {
+      var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+      if(url.match(p)){
+          return url.match(p)[1];
+      }
+      return false;
+    },
+    
     extractResourceId(url) {
       let regExp =
         /(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)/i;

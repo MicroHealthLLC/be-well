@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar v-if="user" />
+    <Navbar v-if="user"/>
     <!-- Main Content -->
     <v-main class="main-wrapper" app>
       <WelcomeBanner v-if="$route.name == 'Home'" />
@@ -19,9 +19,11 @@
       </template>
     </v-snackbar>
   </v-app>
+  
 </template>
 
 <script>
+//import { Auth } from "aws-amplify";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Navbar from "./components/Navbar.vue";
 import WelcomeBanner from "./components/WelcomeBanner.vue";
@@ -30,9 +32,65 @@ import utilitiesMixin from "./mixins/utilities-mixin";
 export default {
   components: { Navbar, WelcomeBanner },
   name: "App",
+  data(){
+    return {
+      defaultPreferences: {
+        preference_items: [
+          {
+            category: "Balance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Endurance",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Flexibility & Mobility",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Strength",
+            l1: true,
+            l2: false,
+            l3: false,
+            l4: false,
+            l5: false,
+            not_interested: false,
+          },
+          {
+            category: "Nutrition",
+            not_interested: false,
+          },
+          {
+            category: "Recovery",
+            not_interested: false,
+          },
+          {
+            category: "Ergonomics",
+            not_interested: false,
+          },
+        ],
+      },
+    }
+  },
   mixins: [utilitiesMixin],
   methods: {
-    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences"]),
+    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences", "addPreferences"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
     checkReminders() {
       // Get current time for check
@@ -46,9 +104,7 @@ export default {
         if (time[0] == hour && time[1] == minutes) {
           console.log("Reminder found: Display Notification");
           this.notify(reminder);
-        } else {
-          console.log("Reminder not found");
-        }
+        } 
       }
       });
     },
@@ -91,11 +147,17 @@ export default {
     },
   },
   async mounted() {
+    /* if (await Auth.currentSession()) {
+      const idToken = await (await Auth.currentSession()).getIdToken()
+      const accessToken = await (await Auth.currentSession()).getAccessToken()
+      //const creds = await (await Auth.currentCredentials())
+
+      console.log(idToken, accessToken)
+    } */
     await this.fetchCurrentUser();
     if (this.user) {
       this.fetchReminders();
       this.fetchPreferences();
-      console.log(this.preferences)
     }
     this.TOGGLE_REMINDERS_ON(true);
   },
@@ -108,6 +170,12 @@ export default {
         this.intervalId = null;
       }
     },
+    preferences(){  
+      if(!this.preferences[0]){
+        console.log("Add default preferences works")
+        this.addPreferences(this.defaultPreferences)
+      }     
+    }
   },
 };
 </script>

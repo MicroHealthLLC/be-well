@@ -10,26 +10,28 @@
     </div>
 
     <v-card-title class="video-title text-body-1 font-weight-bold"><span class="clamp-two-lines">{{
-        video.snippet.title
+    video.snippet.title
     }}</span>
     </v-card-title>
     <v-divider></v-divider>
     <div class="d-flex flex-row justify-space-between">
-    <v-card-subtitle class="font-weight-bold">{{ video.snippet.channelTitle }}</v-card-subtitle>
-    <v-card-subtitle>Views: 100</v-card-subtitle>
+      <v-card-subtitle class="font-weight-bold">{{ video.snippet.channelTitle }}</v-card-subtitle>
+      <!-- <v-card-subtitle>Views: 100</v-card-subtitle> -->
     </div>
     <v-card-text>
       <span class="clamp-two-lines">{{ video.snippet.description }}</span>
     </v-card-text>
     <v-card-actions class="align-end">
-      <v-btn @click="playVideo(video.resourceId)" text color="primary">Play<v-icon class="ml-1" large color="primary">mdi-youtube</v-icon></v-btn>
+      <v-btn @click="playVideo(video.resourceId)" text color="primary">Play<v-icon class="ml-1" large color="primary">
+          mdi-youtube</v-icon>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn v-if="showDeleteBtn" @click="openDeleteDialog" icon>
-        <v-icon>mdi-delete</v-icon>
+        <v-icon>mdi-trash-can-outline</v-icon>
       </v-btn>
     </v-card-actions>
     <!-- Play Video Modal -->
-    <v-dialog v-model="play"  width="auto" overlay-opacity="0.9">
+    <v-dialog v-model="play" width="auto" overlay-opacity="0.9">
       <v-card width="1200">
         <div class="video-container">
           <iframe :src="embedVideoURL" width="560" height="349" frameborder="0" allowfullscreen></iframe>
@@ -53,15 +55,31 @@
       </v-card>
     </v-dialog>
     <!-- Delete Video Dialog -->
-    <v-dialog v-model="deleteDialog" width="50%">
+    <v-dialog v-model="deleteDialog" width="40%">
       <v-card>
         <v-card-title>Delete Video?</v-card-title>
         <v-card-text>Are you sure you want to delete
           <strong>{{ video.snippet.title }}</strong>?
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn @click="deleteDialog = false" color="secondary" small outlined>Cancel</v-btn>
-          <v-btn @click="removeVideo" class="px-5" color="var(--mh-blue)" small dark>Delete</v-btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn @click="removeVideo" class="px-2 mr-2" color="var(--mh-blue)" small dark v-bind="attrs" v-on="on">
+                <v-icon>mdi-trash-can-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn @click="deleteDialog = false" color="secondary" small outlined v-bind="attrs" v-on="on">
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </template>
+            <span>Cancel</span>
+          </v-tooltip>
+
+
         </v-card-actions>
       </v-card>
     </v-dialog>

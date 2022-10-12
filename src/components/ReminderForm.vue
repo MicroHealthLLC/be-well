@@ -1,16 +1,16 @@
 <template>
   <v-card :disabled="saving" :loading="saving">
-    <v-card-title
-      ><span v-if="reminder.id && !associatedGoal && !reminder.isComplete" >
-      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
-      >mdi-yoga</v-icon>Edit Activity</span
-      ><span v-if="associatedGoal && reminder.id">Add Goal to Activity</span
-      ><span v-if="!reminder.id"><v-icon color="var(--mh-green)" class="mr-1 mb-1"
-      >mdi-yoga</v-icon>Add Activity</span>
+    <v-card-title>
+      <span v-if="reminder.id && !associatedGoal && !reminder.isComplete">
+        <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Edit Activity
+      </span>
+      <span v-if="associatedGoal && reminder.id">Add Goal to Activity</span>
+      <span v-if="!reminder.id">
+        <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>Add Activity
+      </span>
       <span v-if="reminder.isComplete">
-      <v-icon color="var(--mh-green)" class="mr-1 mb-1"
-      >mdi-yoga</v-icon>View Activity</span
-      >
+        <v-icon color="var(--mh-green)" class="mr-1 mb-1">mdi-yoga</v-icon>View Activity
+      </span>
     </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="valid" v-if="associatedGoal">
@@ -26,31 +26,41 @@
       <v-list disabled v-else-if="reminder.isComplete">
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title> <v-icon>{{categoryIcon(reminder.category)}}</v-icon>Focus Area</v-list-item-title>
+            <v-list-item-title>
+              <v-icon>{{categoryIcon(reminder.category)}}</v-icon>Focus Area
+            </v-list-item-title>
             <v-list-item-subtitle class="ml-6">{{reminder.category}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title><v-icon class="mr-1">mdi-stairs</v-icon>Level</v-list-item-title>
+            <v-list-item-title>
+              <v-icon class="mr-1">mdi-stairs</v-icon>Level
+            </v-list-item-title>
             <v-list-item-subtitle class="ml-7">{{this.levelToString(reminder.level)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item two-line>
+        <v-list-item v-if="reminder.frequency" two-line>
           <v-list-item-content>
-            <v-list-item-title><v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency</v-list-item-title>
+            <v-list-item-title>
+              <v-icon class="mr-1">mdi-calendar-clock-outline</v-icon>Frequency
+            </v-list-item-title>
             <v-list-item-subtitle class="ml-7">{{removeComma(reminder.frequency)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title><v-icon class="mr-1">mdi-clock</v-icon>Time</v-list-item-title>
+            <v-list-item-title>
+              <v-icon class="mr-1">mdi-clock</v-icon>Time
+            </v-list-item-title>
             <v-list-item-subtitle class="ml-7">{{reminder.time}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title><v-icon class="mr-1">mdi-flag-checkered</v-icon>Associated Goal</v-list-item-title>
+            <v-list-item-title>
+              <v-icon class="mr-1">mdi-flag-checkered</v-icon>Associated Goal
+            </v-list-item-title>
             <v-list-item-subtitle class="ml-7" v-if="reminder.goal">{{reminder.goal.title}}</v-list-item-subtitle>
             <v-list-item-subtitle class="ml-7" v-else>No Goal Set</v-list-item-subtitle>
           </v-list-item-content>
@@ -97,45 +107,16 @@
           :rules="[(v) => !!v || 'Activity is required']"
           required
         ></v-select> -->
-        <v-select
-          v-model="reminder.category"
-          :items="filteredCategories"
-          item-text="title"
-          item-value="value"
-          label="Select Activity"
-          :rules="[(v) => !!v || 'Activity is required']"
-          required
-        ></v-select>
-        <v-select
-          class="selectDays"
-          v-model="freqArr"
-          :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
-          label="Frequency"
-          :rules="[(v) => !!v || 'Frequency is required']"
-          multiple
-          required
-        ></v-select>
-        <v-menu
-          ref="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          :return-value.sync="reminder.time"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
-        >
+        <v-select v-model="reminder.category" :items="filteredCategories" item-text="title" item-value="value"
+          label="Select Activity" :rules="[(v) => !!v || 'Activity is required']" required></v-select>
+        <v-select class="selectDays" v-model="freqArr"
+          :items="['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']" label="Frequency"
+          :rules="[(v) => !!v || 'Frequency is required']" multiple required></v-select>
+        <v-menu ref="menu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="reminder.time"
+          transition="scale-transition" offset-y max-width="290px" min-width="290px">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="reminder.time"
-              label="Schedule A Reminder"
-              prepend-icon="mdi-clock-time-four-outline"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              :rules="[(v) => !!v || 'Time is required']"
-              required
-            ></v-text-field>
+            <v-text-field v-model="reminder.time" label="Schedule A Reminder" prepend-icon="mdi-clock-time-four-outline"
+              readonly v-bind="attrs" v-on="on" :rules="[(v) => !!v || 'Time is required']" required></v-text-field>
           </template>
           <v-time-picker
             v-model="reminder.time"
@@ -157,17 +138,32 @@
     </v-card-text>
 
     <v-card-actions class="d-flex justify-end">
-      <v-list-item-subtitle v-if="reminder.goal && reminder.isComplete">See attached goal to reuse this activity</v-list-item-subtitle>
+      <v-list-item-subtitle v-if="reminder.goal && reminder.isComplete">See attached goal to reuse this activity
+      </v-list-item-subtitle>
 
-      <v-btn v-if="!reminder.isComplete" @click="saveReminder" class="px-6" color="var(--mh-blue)" dark
-        >Save</v-btn
-      >
-      <v-btn v-if="!reminder.isComplete" @click="toggleReminderFormDialog" color="secondary" outlined
-        >Cancel</v-btn
-      >
-      <v-btn v-else @click="toggleReminderFormDialog" color="secondary" outlined
-        >Close</v-btn
-      >
+      <v-tooltip max-width="200" bottom>
+        <div>Save</div>
+        <template v-slot:activator="{ on }">
+          <v-btn small v-if="!reminder.isComplete" @click="saveReminder" v-on="on" class="px-3 mr-2"
+            color="var(--mh-blue)" dark>
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </template>
+      </v-tooltip>
+      <v-tooltip max-width="200" bottom>
+        <div v-if="!reminder.isComplete">Cancel</div>
+        <div v-if="reminder.isComplete">Close</div>
+        <template v-slot:activator="{ on }">
+          <v-btn small v-if="!reminder.isComplete" v-on="on" @click="toggleReminderFormDialog" color="secondary"
+            outlined>
+            <v-icon>mdi-cancel</v-icon>
+          </v-btn>
+          <v-btn small v-else @click="toggleReminderFormDialog" v-on="on" color="secondary" outlined>
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-tooltip>
+
     </v-card-actions>
   </v-card>
 </template>
@@ -195,15 +191,15 @@ export default {
       dialog: false,
       intervalId: 60000,
       valid: true,
-      freqArr: []
+      freqArr: [],
     };
   },
   mounted() {
     if (!this.reminder.id) {
-       this.$refs.form.reset();
+      this.$refs.form.reset();
     }
+    console.log(this.reminders)
     this.freqStringToArray()
-
   },
   methods: {
     ...mapActions([
@@ -222,11 +218,13 @@ export default {
       this.freqArr = this.displayFreq(this.freqArr)
     },
     arrayToString(array) {
-       return array.toString()
+      return array.toString()
     },
     removeComma(string) {
       if (string.charAt(0) == ",") {
         return string.substring(1)
+      } else {
+        return string
       }
     },
     toggleReminderFormDialog() {
@@ -234,6 +232,8 @@ export default {
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
+      this.fetchReminders();
+      this.freqStringToArray()
       // this.SET_ASSOCIATED_GOAL(false)
     },
     async saveReminder() {
@@ -241,14 +241,13 @@ export default {
         return;
       }
       if (!this.reminder.goalId) {
-        let obj = this.reminder;
-        Object.keys(obj).forEach((key) => {
+        let obj = this.reminder
+        Object.keys(obj).forEach(key => {
           if (obj[key] === null) {
             delete obj[key];
           }
         });
-
-       //console.log(this.reminder)
+        //console.log(this.reminder)
       }
       this.reminder.frequency = this.arrayToString(this.freqArr)
 
@@ -283,11 +282,11 @@ export default {
       }
     },
     displayFreq(freq) {
-     return freq.sort((a, b) => this.weekdays[a] - this.weekdays[b])
+      return freq.sort((a, b) => this.weekdays[a] - this.weekdays[b])
     },
   },
   computed: {
-    ...mapGetters(["incompleteGoals", "saving", "associatedGoal"]),
+    ...mapGetters(["incompleteGoals", "saving", "associatedGoal", "reminders"]),
     userPrefLevel() {
       // return this.reminders
       if (this.preferences && this.preferences[0] && this.reminder.category) {
@@ -340,7 +339,7 @@ export default {
   },
   watch: {
     reminder() {
-      if(this.reminder.frequency && this.freqArr.length == 0) {
+      if (this.reminder.frequency && this.freqArr.length == 0) {
         let split = this.reminder.frequency.split(",")
         split.forEach((r) => this.freqArr.push(r))
       }
@@ -350,10 +349,11 @@ export default {
 </script>
 
 <style>
-  .selectDays {
-    max-height: 450px !important;
-  }
-  .v-menu__content{
-    max-height: 450px !important;
-  }
+.selectDays {
+  max-height: 450px !important;
+}
+
+.v-menu__content {
+  max-height: 450px !important;
+}
 </style>
