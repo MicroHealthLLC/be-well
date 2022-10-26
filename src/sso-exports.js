@@ -1,4 +1,4 @@
-let baseURL = "https://beta.d1i1dumyzwv0r6.amplifyapp.com/"
+let baseURL = "https://beta-bewell.microhealthllc.com/"
 let graphQLEndpoint = "https://ljertf3kdrghnnu37weavbpf5u.appsync-api.us-east-1.amazonaws.com/graphql"
 
 if (process.env.NODE_ENV == "development") {
