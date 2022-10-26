@@ -14,7 +14,7 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_LFKE2NdwM",
     "aws_user_pools_web_client_id": "2ldpgbq78qlq1cpphht9d8k57q",
     "oauth": {
-      domain: "beta-be-well.auth.us-east-1.amazoncognito.com",
+      domain: "beta-be-well.microhealthllc.com",
       scope: ["email", "openid", "phone", "aws.cognito.signin.user.admin"],
       redirectSignIn: `${baseURL}`,
       redirectSignOut: `${baseURL}`,
