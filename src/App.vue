@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar v-if="user"/>
-    <!-- Main Content -->
+    <!-- Main Content Content -->
     <v-main class="main-wrapper" app>
       <WelcomeBanner v-if="$route.name == 'Home'" />
       <!-- Router Container -->
