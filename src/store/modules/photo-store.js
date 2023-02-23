@@ -12,6 +12,7 @@ export default {
   actions: {
     async addPhoto({ commit, dispatch }, photo) {
       commit("TOGGLE_SAVING", true);
+      console.log(photo);
       try {
         await API.graphql(
           graphqlOperation(createPhoto, { input: photo })

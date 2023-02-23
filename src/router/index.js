@@ -122,6 +122,15 @@ const routes = [
           ),
         meta: { requiresAuth: true },
       },
+      {
+        path: "photos",
+        name: "Photos",
+        component: () =>
+          import(
+            /* webpackChunkName: "photos" */ "../views/Activities/Photos.vue"
+          ),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
