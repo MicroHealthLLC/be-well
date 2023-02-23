@@ -79,6 +79,37 @@ export const listReminders = /* GraphQL */ `
     }
   }
 `;
+export const getPhoto = /* GraphQL */ `
+  query GetPhoto($id: ID!) {
+    getPhoto(id: $id) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPhotos = /* GraphQL */ `
+  query ListPhotos(
+    $filter: ModelPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        image
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getGoal = /* GraphQL */ `
   query GetGoal($id: ID!) {
     getGoal(id: $id) {

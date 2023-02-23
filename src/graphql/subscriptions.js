@@ -2,8 +2,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateReminder = /* GraphQL */ `
-  subscription OnCreateReminder($owner: String) {
-    onCreateReminder(owner: $owner) {
+  subscription OnCreateReminder(
+    $filter: ModelSubscriptionReminderFilterInput
+    $owner: String
+  ) {
+    onCreateReminder(filter: $filter, owner: $owner) {
       id
       category
       goal {
@@ -41,8 +44,11 @@ export const onCreateReminder = /* GraphQL */ `
   }
 `;
 export const onUpdateReminder = /* GraphQL */ `
-  subscription OnUpdateReminder($owner: String) {
-    onUpdateReminder(owner: $owner) {
+  subscription OnUpdateReminder(
+    $filter: ModelSubscriptionReminderFilterInput
+    $owner: String
+  ) {
+    onUpdateReminder(filter: $filter, owner: $owner) {
       id
       category
       goal {
@@ -80,8 +86,11 @@ export const onUpdateReminder = /* GraphQL */ `
   }
 `;
 export const onDeleteReminder = /* GraphQL */ `
-  subscription OnDeleteReminder($owner: String) {
-    onDeleteReminder(owner: $owner) {
+  subscription OnDeleteReminder(
+    $filter: ModelSubscriptionReminderFilterInput
+    $owner: String
+  ) {
+    onDeleteReminder(filter: $filter, owner: $owner) {
       id
       category
       goal {
@@ -118,9 +127,57 @@ export const onDeleteReminder = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePhoto = /* GraphQL */ `
+  subscription OnCreatePhoto(
+    $filter: ModelSubscriptionPhotoFilterInput
+    $owner: String
+  ) {
+    onCreatePhoto(filter: $filter, owner: $owner) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePhoto = /* GraphQL */ `
+  subscription OnUpdatePhoto(
+    $filter: ModelSubscriptionPhotoFilterInput
+    $owner: String
+  ) {
+    onUpdatePhoto(filter: $filter, owner: $owner) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePhoto = /* GraphQL */ `
+  subscription OnDeletePhoto(
+    $filter: ModelSubscriptionPhotoFilterInput
+    $owner: String
+  ) {
+    onDeletePhoto(filter: $filter, owner: $owner) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateGoal = /* GraphQL */ `
-  subscription OnCreateGoal($owner: String) {
-    onCreateGoal(owner: $owner) {
+  subscription OnCreateGoal(
+    $filter: ModelSubscriptionGoalFilterInput
+    $owner: String
+  ) {
+    onCreateGoal(filter: $filter, owner: $owner) {
       id
       title
       category
@@ -158,8 +215,11 @@ export const onCreateGoal = /* GraphQL */ `
   }
 `;
 export const onUpdateGoal = /* GraphQL */ `
-  subscription OnUpdateGoal($owner: String) {
-    onUpdateGoal(owner: $owner) {
+  subscription OnUpdateGoal(
+    $filter: ModelSubscriptionGoalFilterInput
+    $owner: String
+  ) {
+    onUpdateGoal(filter: $filter, owner: $owner) {
       id
       title
       category
@@ -197,8 +257,11 @@ export const onUpdateGoal = /* GraphQL */ `
   }
 `;
 export const onDeleteGoal = /* GraphQL */ `
-  subscription OnDeleteGoal($owner: String) {
-    onDeleteGoal(owner: $owner) {
+  subscription OnDeleteGoal(
+    $filter: ModelSubscriptionGoalFilterInput
+    $owner: String
+  ) {
+    onDeleteGoal(filter: $filter, owner: $owner) {
       id
       title
       category
@@ -236,8 +299,8 @@ export const onDeleteGoal = /* GraphQL */ `
   }
 `;
 export const onCreateArticle = /* GraphQL */ `
-  subscription OnCreateArticle {
-    onCreateArticle {
+  subscription OnCreateArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onCreateArticle(filter: $filter) {
       id
       author
       lastEditedBy
@@ -253,8 +316,8 @@ export const onCreateArticle = /* GraphQL */ `
   }
 `;
 export const onUpdateArticle = /* GraphQL */ `
-  subscription OnUpdateArticle {
-    onUpdateArticle {
+  subscription OnUpdateArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onUpdateArticle(filter: $filter) {
       id
       author
       lastEditedBy
@@ -270,8 +333,8 @@ export const onUpdateArticle = /* GraphQL */ `
   }
 `;
 export const onDeleteArticle = /* GraphQL */ `
-  subscription OnDeleteArticle {
-    onDeleteArticle {
+  subscription OnDeleteArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onDeleteArticle(filter: $filter) {
       id
       author
       lastEditedBy
@@ -287,8 +350,8 @@ export const onDeleteArticle = /* GraphQL */ `
   }
 `;
 export const onCreateVideo = /* GraphQL */ `
-  subscription OnCreateVideo {
-    onCreateVideo {
+  subscription OnCreateVideo($filter: ModelSubscriptionVideoFilterInput) {
+    onCreateVideo(filter: $filter) {
       id
       resourceId
       level
@@ -299,8 +362,8 @@ export const onCreateVideo = /* GraphQL */ `
   }
 `;
 export const onUpdateVideo = /* GraphQL */ `
-  subscription OnUpdateVideo {
-    onUpdateVideo {
+  subscription OnUpdateVideo($filter: ModelSubscriptionVideoFilterInput) {
+    onUpdateVideo(filter: $filter) {
       id
       resourceId
       level
@@ -311,8 +374,8 @@ export const onUpdateVideo = /* GraphQL */ `
   }
 `;
 export const onDeleteVideo = /* GraphQL */ `
-  subscription OnDeleteVideo {
-    onDeleteVideo {
+  subscription OnDeleteVideo($filter: ModelSubscriptionVideoFilterInput) {
+    onDeleteVideo(filter: $filter) {
       id
       resourceId
       level
@@ -323,8 +386,11 @@ export const onDeleteVideo = /* GraphQL */ `
   }
 `;
 export const onCreateWatchedVideo = /* GraphQL */ `
-  subscription OnCreateWatchedVideo($owner: String) {
-    onCreateWatchedVideo(owner: $owner) {
+  subscription OnCreateWatchedVideo(
+    $filter: ModelSubscriptionWatchedVideoFilterInput
+    $owner: String
+  ) {
+    onCreateWatchedVideo(filter: $filter, owner: $owner) {
       id
       title
       videoId
@@ -338,8 +404,11 @@ export const onCreateWatchedVideo = /* GraphQL */ `
   }
 `;
 export const onUpdateWatchedVideo = /* GraphQL */ `
-  subscription OnUpdateWatchedVideo($owner: String) {
-    onUpdateWatchedVideo(owner: $owner) {
+  subscription OnUpdateWatchedVideo(
+    $filter: ModelSubscriptionWatchedVideoFilterInput
+    $owner: String
+  ) {
+    onUpdateWatchedVideo(filter: $filter, owner: $owner) {
       id
       title
       videoId
@@ -353,8 +422,11 @@ export const onUpdateWatchedVideo = /* GraphQL */ `
   }
 `;
 export const onDeleteWatchedVideo = /* GraphQL */ `
-  subscription OnDeleteWatchedVideo($owner: String) {
-    onDeleteWatchedVideo(owner: $owner) {
+  subscription OnDeleteWatchedVideo(
+    $filter: ModelSubscriptionWatchedVideoFilterInput
+    $owner: String
+  ) {
+    onDeleteWatchedVideo(filter: $filter, owner: $owner) {
       id
       title
       videoId
@@ -368,8 +440,11 @@ export const onDeleteWatchedVideo = /* GraphQL */ `
   }
 `;
 export const onCreateFavoriteArticle = /* GraphQL */ `
-  subscription OnCreateFavoriteArticle($owner: String) {
-    onCreateFavoriteArticle(owner: $owner) {
+  subscription OnCreateFavoriteArticle(
+    $filter: ModelSubscriptionFavoriteArticleFilterInput
+    $owner: String
+  ) {
+    onCreateFavoriteArticle(filter: $filter, owner: $owner) {
       id
       articleId
       category
@@ -394,8 +469,11 @@ export const onCreateFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onUpdateFavoriteArticle = /* GraphQL */ `
-  subscription OnUpdateFavoriteArticle($owner: String) {
-    onUpdateFavoriteArticle(owner: $owner) {
+  subscription OnUpdateFavoriteArticle(
+    $filter: ModelSubscriptionFavoriteArticleFilterInput
+    $owner: String
+  ) {
+    onUpdateFavoriteArticle(filter: $filter, owner: $owner) {
       id
       articleId
       category
@@ -420,8 +498,11 @@ export const onUpdateFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onDeleteFavoriteArticle = /* GraphQL */ `
-  subscription OnDeleteFavoriteArticle($owner: String) {
-    onDeleteFavoriteArticle(owner: $owner) {
+  subscription OnDeleteFavoriteArticle(
+    $filter: ModelSubscriptionFavoriteArticleFilterInput
+    $owner: String
+  ) {
+    onDeleteFavoriteArticle(filter: $filter, owner: $owner) {
       id
       articleId
       category
@@ -446,8 +527,11 @@ export const onDeleteFavoriteArticle = /* GraphQL */ `
   }
 `;
 export const onCreateFavoriteVideo = /* GraphQL */ `
-  subscription OnCreateFavoriteVideo($owner: String) {
-    onCreateFavoriteVideo(owner: $owner) {
+  subscription OnCreateFavoriteVideo(
+    $filter: ModelSubscriptionFavoriteVideoFilterInput
+    $owner: String
+  ) {
+    onCreateFavoriteVideo(filter: $filter, owner: $owner) {
       id
       videoId
       category
@@ -467,8 +551,11 @@ export const onCreateFavoriteVideo = /* GraphQL */ `
   }
 `;
 export const onUpdateFavoriteVideo = /* GraphQL */ `
-  subscription OnUpdateFavoriteVideo($owner: String) {
-    onUpdateFavoriteVideo(owner: $owner) {
+  subscription OnUpdateFavoriteVideo(
+    $filter: ModelSubscriptionFavoriteVideoFilterInput
+    $owner: String
+  ) {
+    onUpdateFavoriteVideo(filter: $filter, owner: $owner) {
       id
       videoId
       category
@@ -488,8 +575,11 @@ export const onUpdateFavoriteVideo = /* GraphQL */ `
   }
 `;
 export const onDeleteFavoriteVideo = /* GraphQL */ `
-  subscription OnDeleteFavoriteVideo($owner: String) {
-    onDeleteFavoriteVideo(owner: $owner) {
+  subscription OnDeleteFavoriteVideo(
+    $filter: ModelSubscriptionFavoriteVideoFilterInput
+    $owner: String
+  ) {
+    onDeleteFavoriteVideo(filter: $filter, owner: $owner) {
       id
       videoId
       category
@@ -509,8 +599,11 @@ export const onDeleteFavoriteVideo = /* GraphQL */ `
   }
 `;
 export const onCreatePreferences = /* GraphQL */ `
-  subscription OnCreatePreferences($owner: String) {
-    onCreatePreferences(owner: $owner) {
+  subscription OnCreatePreferences(
+    $filter: ModelSubscriptionPreferencesFilterInput
+    $owner: String
+  ) {
+    onCreatePreferences(filter: $filter, owner: $owner) {
       id
       preference_items {
         category
@@ -528,8 +621,11 @@ export const onCreatePreferences = /* GraphQL */ `
   }
 `;
 export const onUpdatePreferences = /* GraphQL */ `
-  subscription OnUpdatePreferences($owner: String) {
-    onUpdatePreferences(owner: $owner) {
+  subscription OnUpdatePreferences(
+    $filter: ModelSubscriptionPreferencesFilterInput
+    $owner: String
+  ) {
+    onUpdatePreferences(filter: $filter, owner: $owner) {
       id
       preference_items {
         category
@@ -547,8 +643,11 @@ export const onUpdatePreferences = /* GraphQL */ `
   }
 `;
 export const onDeletePreferences = /* GraphQL */ `
-  subscription OnDeletePreferences($owner: String) {
-    onDeletePreferences(owner: $owner) {
+  subscription OnDeletePreferences(
+    $filter: ModelSubscriptionPreferencesFilterInput
+    $owner: String
+  ) {
+    onDeletePreferences(filter: $filter, owner: $owner) {
       id
       preference_items {
         category
@@ -566,8 +665,8 @@ export const onDeletePreferences = /* GraphQL */ `
   }
 `;
 export const onCreateEvent = /* GraphQL */ `
-  subscription OnCreateEvent {
-    onCreateEvent {
+  subscription OnCreateEvent($filter: ModelSubscriptionEventFilterInput) {
+    onCreateEvent(filter: $filter) {
       id
       hostName
       hostEmail
@@ -592,8 +691,8 @@ export const onCreateEvent = /* GraphQL */ `
   }
 `;
 export const onUpdateEvent = /* GraphQL */ `
-  subscription OnUpdateEvent {
-    onUpdateEvent {
+  subscription OnUpdateEvent($filter: ModelSubscriptionEventFilterInput) {
+    onUpdateEvent(filter: $filter) {
       id
       hostName
       hostEmail
@@ -618,8 +717,8 @@ export const onUpdateEvent = /* GraphQL */ `
   }
 `;
 export const onDeleteEvent = /* GraphQL */ `
-  subscription OnDeleteEvent {
-    onDeleteEvent {
+  subscription OnDeleteEvent($filter: ModelSubscriptionEventFilterInput) {
+    onDeleteEvent(filter: $filter) {
       id
       hostName
       hostEmail
@@ -644,8 +743,10 @@ export const onDeleteEvent = /* GraphQL */ `
   }
 `;
 export const onCreateCompetition = /* GraphQL */ `
-  subscription OnCreateCompetition {
-    onCreateCompetition {
+  subscription OnCreateCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onCreateCompetition(filter: $filter) {
       id
       hostName
       hostEmail
@@ -695,8 +796,10 @@ export const onCreateCompetition = /* GraphQL */ `
   }
 `;
 export const onUpdateCompetition = /* GraphQL */ `
-  subscription OnUpdateCompetition {
-    onUpdateCompetition {
+  subscription OnUpdateCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onUpdateCompetition(filter: $filter) {
       id
       hostName
       hostEmail
@@ -746,8 +849,10 @@ export const onUpdateCompetition = /* GraphQL */ `
   }
 `;
 export const onDeleteCompetition = /* GraphQL */ `
-  subscription OnDeleteCompetition {
-    onDeleteCompetition {
+  subscription OnDeleteCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onDeleteCompetition(filter: $filter) {
       id
       hostName
       hostEmail
@@ -797,8 +902,10 @@ export const onDeleteCompetition = /* GraphQL */ `
   }
 `;
 export const onCreateCompetitor = /* GraphQL */ `
-  subscription OnCreateCompetitor {
-    onCreateCompetitor {
+  subscription OnCreateCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onCreateCompetitor(filter: $filter) {
       id
       competitionId
       userId
@@ -812,8 +919,10 @@ export const onCreateCompetitor = /* GraphQL */ `
   }
 `;
 export const onUpdateCompetitor = /* GraphQL */ `
-  subscription OnUpdateCompetitor {
-    onUpdateCompetitor {
+  subscription OnUpdateCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onUpdateCompetitor(filter: $filter) {
       id
       competitionId
       userId
@@ -827,8 +936,10 @@ export const onUpdateCompetitor = /* GraphQL */ `
   }
 `;
 export const onDeleteCompetitor = /* GraphQL */ `
-  subscription OnDeleteCompetitor {
-    onDeleteCompetitor {
+  subscription OnDeleteCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onDeleteCompetitor(filter: $filter) {
       id
       competitionId
       userId
@@ -842,8 +953,10 @@ export const onDeleteCompetitor = /* GraphQL */ `
   }
 `;
 export const onCreateCompetitionSubmission = /* GraphQL */ `
-  subscription OnCreateCompetitionSubmission {
-    onCreateCompetitionSubmission {
+  subscription OnCreateCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onCreateCompetitionSubmission(filter: $filter) {
       id
       competitionId
       competitorId
@@ -860,8 +973,10 @@ export const onCreateCompetitionSubmission = /* GraphQL */ `
   }
 `;
 export const onUpdateCompetitionSubmission = /* GraphQL */ `
-  subscription OnUpdateCompetitionSubmission {
-    onUpdateCompetitionSubmission {
+  subscription OnUpdateCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onUpdateCompetitionSubmission(filter: $filter) {
       id
       competitionId
       competitorId
@@ -878,8 +993,10 @@ export const onUpdateCompetitionSubmission = /* GraphQL */ `
   }
 `;
 export const onDeleteCompetitionSubmission = /* GraphQL */ `
-  subscription OnDeleteCompetitionSubmission {
-    onDeleteCompetitionSubmission {
+  subscription OnDeleteCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onDeleteCompetitionSubmission(filter: $filter) {
       id
       competitionId
       competitorId
