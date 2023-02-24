@@ -17,6 +17,12 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   createdAt: AWSDateTime!
 }
 
+type Photo @model @auth (rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  image: String
+}
+
 type Goal @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   title: String!
@@ -271,4 +277,4 @@ enum SubmissionType {
 }
 
 
-       
+             

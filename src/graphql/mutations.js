@@ -127,6 +127,51 @@ export const deleteReminder = /* GraphQL */ `
     }
   }
 `;
+export const createPhoto = /* GraphQL */ `
+  mutation CreatePhoto(
+    $input: CreatePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    createPhoto(input: $input, condition: $condition) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePhoto = /* GraphQL */ `
+  mutation UpdatePhoto(
+    $input: UpdatePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    updatePhoto(input: $input, condition: $condition) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePhoto = /* GraphQL */ `
+  mutation DeletePhoto(
+    $input: DeletePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    deletePhoto(input: $input, condition: $condition) {
+      id
+      title
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createGoal = /* GraphQL */ `
   mutation CreateGoal(
     $input: CreateGoalInput!
