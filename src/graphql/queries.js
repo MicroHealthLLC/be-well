@@ -84,7 +84,7 @@ export const getPhoto = /* GraphQL */ `
     getPhoto(id: $id) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner
@@ -101,7 +101,7 @@ export const listPhotos = /* GraphQL */ `
       items {
         id
         title
-        image
+        description
         createdAt
         updatedAt
         owner

@@ -135,7 +135,7 @@ export const createPhoto = /* GraphQL */ `
     createPhoto(input: $input, condition: $condition) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner
@@ -150,7 +150,7 @@ export const updatePhoto = /* GraphQL */ `
     updatePhoto(input: $input, condition: $condition) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner
@@ -165,7 +165,7 @@ export const deletePhoto = /* GraphQL */ `
     deletePhoto(input: $input, condition: $condition) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner

@@ -135,7 +135,7 @@ export const onCreatePhoto = /* GraphQL */ `
     onCreatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner
@@ -150,7 +150,7 @@ export const onUpdatePhoto = /* GraphQL */ `
     onUpdatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner
@@ -165,7 +165,7 @@ export const onDeletePhoto = /* GraphQL */ `
     onDeletePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
+      description
       createdAt
       updatedAt
       owner

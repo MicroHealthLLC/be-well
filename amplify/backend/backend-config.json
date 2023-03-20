@@ -68,6 +68,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_S3Trigger9c40585d_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger9c40585d"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger9c40585d_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger9c40585d"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

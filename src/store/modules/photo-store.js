@@ -8,6 +8,7 @@ export default {
   state: {
     photos: [],
     photosOn: false,
+    photo: {},
   },
   actions: {
     async addPhoto({ commit, dispatch }, photo) {
@@ -36,11 +37,11 @@ export default {
           graphqlOperation(updatePhoto, { input: photo })
         );
         dispatch("fetchPhotos");
-        /* commit("SET_SNACKBAR", {
+        commit("SET_SNACKBAR", {
           show: true,
           message: "Activity Photo Successfully Updated!",
           color: "var(--mh-green)",
-        }); */
+        });
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +53,7 @@ export default {
         dispatch("fetchPhotos");
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Activity Photo Removed",
+          message: "Photo Removed",
           color: "var(--mh-orange)",
         });
       } catch (error) {
@@ -67,10 +68,10 @@ export default {
         console.log(error);
       }
     },
-    async fetchPhoto(id) {
+    async fetchPhoto({ commit }, id) {
       try {
-        const res = await API.graphql(graphqlOperation(getPhoto, { input: id }));
-        console.log(res.data)
+        const res = await API.graphql(graphqlOperation(getPhoto, { id: id }));
+        commit("SET_PHOTO", res.data.getPhoto);
       } catch (error) {
         console.log(error)
       }
@@ -78,10 +79,10 @@ export default {
   },
   mutations: {
     SET_PHOTOS: (state, photos) => (state.photos = photos),
-    TOGGLE_PHOTOS_ON: (state, on) => (state.photosOn = on),
+    SET_PHOTO: (state, photo) => (state.photo = photo),
   },
   getters: {
     photos: (state) => state.photos,
-    photosOn: (state) => state.photosOn,
+    photo: (state) => state.photo,
   },
 };
