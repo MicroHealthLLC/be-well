@@ -185,7 +185,7 @@
               sort-desc
               no-data-text="No one has signed up yet"
             >
-              <template #item.fullName="{ item }"
+              <template #[`item.fullName`]="{ item }"
                 >{{ item.firstName }} {{ item.lastName }}</template
               >
               <template v-slot:top
@@ -595,10 +595,10 @@ export default {
   grid-template-columns: 1.95fr 1.05fr;
   column-gap: 2rem;
 }
-.description,
+/* .description,
 .rsvp {
-  /* grid-column: 1 / span 2; */
-}
+   grid-column: 1 / span 2; 
+} */
 .break-word {
   word-break: break-word;
 }

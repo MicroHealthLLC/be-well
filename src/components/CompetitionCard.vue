@@ -26,16 +26,63 @@
         <div class="text-caption mb-2">
           Hosted by: {{ competition.hostName }}
         </div>
+        <!-- beginning of chips -->
         <div class="mb-2">
           <v-chip class="mr-2" color="primary" small outlined
             ><v-icon small left>mdi-office-building</v-icon
             >Company Clash</v-chip
           >
+          <v-chip 
+            v-if="this.competition.isPrivate"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-lock</v-icon>Private
+          </v-chip>
+          <v-chip 
+            v-if="!this.competition.isPrivate"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-lock-open-variant</v-icon>Public
+          </v-chip>
+          <v-chip 
+            v-if="this.competition.isAnonymous"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-incognito</v-icon>Anonymous
+          </v-chip>
+          <v-chip 
+            v-if="this.competition.groupParticipation"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-human-queue</v-icon>Group
+          </v-chip>
+          <v-chip 
+            v-if="!this.competition.groupParticipation"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-human</v-icon>Individual
+          </v-chip>
           <v-chip color="primary" small outlined>{{
             fullDate(competition.startDate)
           }}</v-chip>
         </div></v-card-subtitle
       >
+      <!-- end of chips -->
       <v-card-text
         ><div class="clamp-text">{{ competition.description }}</div>
       </v-card-text>

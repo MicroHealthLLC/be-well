@@ -513,6 +513,9 @@ export const getCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      isPrivate
+      isAnonymous
+      groupParticipation
       description
       rules
       startDate
@@ -569,6 +572,9 @@ export const listCompetitions = /* GraphQL */ `
         hostName
         hostEmail
         title
+        isPrivate
+        isAnonymous
+        groupParticipation
         description
         rules
         startDate

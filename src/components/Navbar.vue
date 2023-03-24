@@ -29,6 +29,9 @@
         <v-tabs-slider color="var(--mh-green)"></v-tabs-slider>
         <!-- <v-tab to="/home"><v-icon class="mr-1">mdi-home</v-icon>Home</v-tab> -->
       
+        <v-tab to="/events/competitions"
+          ><v-icon class="mr-1">mdi-medal</v-icon>Competitions</v-tab
+        >
          <v-tab to="/activities/goals"
           ><v-icon class="mr-1">mdi-flag-checkered</v-icon>Goals</v-tab
         >
@@ -46,10 +49,10 @@
         >
         <v-tab to="/health"
           ><v-icon class="mr-1">mdi-heart-pulse</v-icon>Health</v-tab
-        >
-        <v-tab to="/events"
+        >-->
+        <!-- <v-tab to="/events"
           ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
-        > -->
+        >  -->
       
       </v-tabs>
       

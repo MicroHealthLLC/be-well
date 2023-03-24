@@ -751,6 +751,9 @@ export const onCreateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      isPrivate
+      isAnonymous
+      groupParticipation
       description
       rules
       startDate
@@ -804,6 +807,9 @@ export const onUpdateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      isPrivate
+      isAnonymous
+      groupParticipation
       description
       rules
       startDate
@@ -857,6 +863,9 @@ export const onDeleteCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      isPrivate
+      isAnonymous
+      groupParticipation
       description
       rules
       startDate

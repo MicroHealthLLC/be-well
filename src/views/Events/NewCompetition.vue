@@ -44,6 +44,9 @@ export default {
       image: null,
       description: "",
       rules: "",
+      isPrivate: false,
+      isAnonymous: false,
+      groupParticipation: false,
       timeZone: "EST",
     });
   },

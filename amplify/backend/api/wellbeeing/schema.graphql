@@ -183,6 +183,9 @@ type Competition
   hostName: String!
   hostEmail: AWSEmail!
   title: String!
+  isPrivate: Boolean! 
+  isAnonymous: Boolean! 
+  groupParticipation: Boolean!
   description: String!
   rules: String
   startDate: AWSDate!

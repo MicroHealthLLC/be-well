@@ -28,6 +28,7 @@
             required
             validate-on-blur
           ></v-text-field>
+
           <!-- Start Date Picker -->
           <v-menu
             v-model="startDateMenu"
@@ -219,6 +220,23 @@
             :rules="[(v) => !!v || 'Rules is required']"
             required
           ></v-textarea>
+        </div>
+        <div class="d-flex justify-space-around">
+          <v-switch
+            v-model="competition.isPrivate"
+            class="isPrivate"
+            label="Private"
+          ></v-switch>
+          <v-switch
+            v-model="competition.isAnonymous"
+            class="isAnonymous"
+            label="Anonymous"
+          ></v-switch>
+          <v-switch
+            v-model="competition.groupParticipation"
+            class="groupParticipation"
+            label="Group Participation"
+          ></v-switch>
         </div>
       </v-form>
     </v-card-text>
