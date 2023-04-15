@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-space-between mb-2 align-center">
-      <div class="text-h6 text-sm-h5">New Competition</div>
+      <div class="text-h6 text-sm-h5">New Campaign</div>
       <v-btn
         to="/events/competitions"
         exact-path
@@ -9,7 +9,7 @@
         dark
         outlined
         small
-        ><v-icon>mdi-arrow-left</v-icon>Competitions</v-btn
+        ><v-icon>mdi-arrow-left</v-icon>Campaigns</v-btn
       >
     </div>
     <v-divider class="mb-4"></v-divider>
@@ -35,6 +35,7 @@ export default {
   mounted() {
     this.SET_COMPETITION({
       title: "",
+      campaignType: "",
       hostName: "",
       hostEmail: "",
       startDate: "",
@@ -45,9 +46,9 @@ export default {
       description: "",
       rules: "",
       isPrivate: false,
-      isAnonymous: false,
+      // isAnonymous: false,
       groupParticipation: false,
-      timeZone: "EST",
+      timeZone: "",
     });
   },
   watch: {

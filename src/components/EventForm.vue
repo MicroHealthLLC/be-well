@@ -260,7 +260,7 @@ export default {
       formValid: true,
       deleteDialog: false,
       timeZone: 3,
-      timeZones: ["PST", "MST", "CST", "EST"],
+      timeZones: ["PST", "MST", "CST", "EST", "EDT"],
     };
   },
   methods: {

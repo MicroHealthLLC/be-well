@@ -11,7 +11,7 @@
           dark
           outlined
           small
-          ><v-icon>mdi-arrow-left</v-icon>Competitions</v-btn
+          ><v-icon>mdi-arrow-left</v-icon>Campaigns</v-btn
         >
         <v-btn
           v-if="isEditor"
@@ -24,7 +24,7 @@
       </div>
       <v-card class="px-0" flat color="#f0f3f7">
         <v-chip color="var(--mh-blue)" dark class="category-chip" x-small label
-          >COMPETITION</v-chip
+          >CAMPAIGN</v-chip
         >
         <v-card-title class="px-0 pt-0 text-h4 break-word">{{
           competition.title
@@ -203,10 +203,10 @@
             class="px-5"
             color="var(--mh-blue)"
             dark
-            >Join Competition<v-icon right>mdi-plus</v-icon></v-btn
+            >Join Campaign<v-icon right>mdi-plus</v-icon></v-btn
           >
           <v-btn v-else @click="leaveCompetition" outlined
-            >Withdraw from Competition</v-btn
+            >Withdraw from Campaign</v-btn
           >
         </v-card-actions>
       </v-card>

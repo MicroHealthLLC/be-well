@@ -17,10 +17,9 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
   createdAt: AWSDateTime!
 }
 
-type Photo @model @auth(rules: [{ allow: owner }]) {
+type Photo @model @auth (rules: [{ allow: owner }]) {
   id: ID!
   title: String!
-  description: String
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
@@ -158,7 +157,7 @@ type Event
   date: AWSDate!
   startTime: String!
   endTime: String!
-  timeZone: TimeZone
+  timeZone: String!
   participants: [Participant]
   link: String
   image: String
@@ -183,16 +182,18 @@ type Competition
   hostName: String!
   hostEmail: AWSEmail!
   title: String!
+  campaignType: String!
   isPrivate: Boolean! 
-  isAnonymous: Boolean! 
+  # isAnonymous: Boolean! 
   groupParticipation: Boolean!
+  category: String!
   description: String!
-  rules: String
+  rules: String!
   startDate: AWSDate!
   endDate: AWSDate!
   startTime: String!
   endTime: String!
-  timeZone: TimeZone
+  timeZone: TimeZone!
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
   submissions: [CompetitionSubmission]
     @hasMany(indexName: "bySubmission", fields: ["id"])
@@ -272,6 +273,7 @@ enum TimeZone {
   MST
   CST
   EST
+  EDT
 }
 
 enum SubmissionType {
@@ -280,4 +282,4 @@ enum SubmissionType {
 }
 
 
-              
+                

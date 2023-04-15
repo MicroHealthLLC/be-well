@@ -6,6 +6,9 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import { TiptapVuetifyPlugin } from "tiptap-vuetify";
 import "tiptap-vuetify/dist/main.css";
+import ElementUI from 'element-ui';
+// import moment from 'moment-timezone';
+import 'element-ui/lib/theme-chalk/index.css';
 import { Amplify } from "aws-amplify";
 import sso_config from "./sso-exports"
 //import aws_exports from "./aws-exports";
@@ -27,6 +30,8 @@ Vue.use(TiptapVuetifyPlugin, {
   vuetify,
   iconsGroup: "mdi",
 });
+
+Vue.use(ElementUI);
 
 new Vue({
   router,

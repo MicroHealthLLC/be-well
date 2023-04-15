@@ -84,7 +84,6 @@ export const getPhoto = /* GraphQL */ `
     getPhoto(id: $id) {
       id
       title
-      description
       createdAt
       updatedAt
       owner
@@ -101,7 +100,6 @@ export const listPhotos = /* GraphQL */ `
       items {
         id
         title
-        description
         createdAt
         updatedAt
         owner
@@ -513,9 +511,10 @@ export const getCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
       isPrivate
-      isAnonymous
       groupParticipation
+      category
       description
       rules
       startDate
@@ -572,9 +571,10 @@ export const listCompetitions = /* GraphQL */ `
         hostName
         hostEmail
         title
+        campaignType
         isPrivate
-        isAnonymous
         groupParticipation
+        category
         description
         rules
         startDate

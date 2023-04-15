@@ -135,7 +135,6 @@ export const onCreatePhoto = /* GraphQL */ `
     onCreatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      description
       createdAt
       updatedAt
       owner
@@ -150,7 +149,6 @@ export const onUpdatePhoto = /* GraphQL */ `
     onUpdatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      description
       createdAt
       updatedAt
       owner
@@ -165,7 +163,6 @@ export const onDeletePhoto = /* GraphQL */ `
     onDeletePhoto(filter: $filter, owner: $owner) {
       id
       title
-      description
       createdAt
       updatedAt
       owner
@@ -751,9 +748,10 @@ export const onCreateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
       isPrivate
-      isAnonymous
       groupParticipation
+      category
       description
       rules
       startDate
@@ -807,9 +805,10 @@ export const onUpdateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
       isPrivate
-      isAnonymous
       groupParticipation
+      category
       description
       rules
       startDate
@@ -863,9 +862,10 @@ export const onDeleteCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
       isPrivate
-      isAnonymous
       groupParticipation
+      category
       description
       rules
       startDate
