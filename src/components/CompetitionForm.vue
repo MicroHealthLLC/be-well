@@ -324,11 +324,11 @@ export default {
   methods: {
     ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
     async showTime() {
-      if (this.competition.startTime.length == 8) {
+      if (this.competition.startTime && this.competition.startTime.length == 8) {
         document.getElementsByName("start time")[0].value="";
         document.getElementsByName("start time")[0].placeholder=this.competition.startTime;
       }
-      if (this.competition.endTime.length == 8) {
+      if (this.competition.endTime && this.competition.endTime.length == 8) {
         document.getElementsByName("end time")[0].value="";
         document.getElementsByName("end time")[0].placeholder=this.competition.endTime;
       }
