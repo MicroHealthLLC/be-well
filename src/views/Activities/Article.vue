@@ -185,12 +185,12 @@ export default {
   font-size: 16px;
   line-height: 1.75;
 }
-::v-deep .article-body ul p,
-::v-deep .article-body ol p {
+:deep .article-body ul p,
+:deep .article-body ol p {
   margin: 0 !important;
 }
-::v-deep .article-body ul,
-::v-deep .article-body ol {
+:deep .article-body ul,
+:deep .article-body ol {
   margin-left: 25px !important;
 }
 .article-body >>> ul,

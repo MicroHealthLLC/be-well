@@ -29,6 +29,9 @@
         <v-tabs-slider color="var(--mh-green)"></v-tabs-slider>
         <!-- <v-tab to="/home"><v-icon class="mr-1">mdi-home</v-icon>Home</v-tab> -->
       
+        <v-tab to="/events/competitions"
+          ><v-icon class="mr-1">mdi-medal</v-icon>Campaigns</v-tab
+        >
          <v-tab to="/activities/goals"
           ><v-icon class="mr-1">mdi-flag-checkered</v-icon>Goals</v-tab
         >
@@ -38,18 +41,18 @@
         <v-tab to="/activities/videos"
           ><v-icon class="mr-1">mdi-youtube</v-icon>Videos</v-tab
         >
-        <v-tab to="/activities/photos"
+        <!-- <v-tab to="/activities/photos"
           ><v-icon class="mr-1">mdi-image</v-icon>Photos</v-tab
-        >
+        > -->
             <!-- <v-tab to="/activities/articles"
           ><v-icon class="mr-1">mdi-web</v-icon>Resources</v-tab
         >
         <v-tab to="/health"
           ><v-icon class="mr-1">mdi-heart-pulse</v-icon>Health</v-tab
-        >
-        <v-tab to="/events"
+        >-->
+        <!-- <v-tab to="/events"
           ><v-icon class="mr-1">mdi-calendar</v-icon>Events</v-tab
-        > -->
+        >  -->
       
       </v-tabs>
       

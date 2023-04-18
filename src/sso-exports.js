@@ -4,7 +4,7 @@ let graphQLEndpoint = "https://ljertf3kdrghnnu37weavbpf5u.appsync-api.us-east-1.
 if (process.env.NODE_ENV == "development") {
     console.log(process.env)
     baseURL = "http://localhost:8080/"
-    //graphQLEndpoint = process.env.VUE_APP_GRAPHQL_ENDPOINT
+    graphQLEndpoint = process.env.VUE_APP_GRAPHQL_ENDPOINT
 }
 
 const awsmobile = {

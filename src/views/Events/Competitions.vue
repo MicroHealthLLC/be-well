@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="text-h6 text-sm-h5 mt-2 mb-2 mt-sm-4">Competitions</div>
+    <div class="text-h6 text-sm-h5 mt-2 mb-2 mt-sm-4">Campaigns</div>
     <v-divider class="mb-4"></v-divider>
 
     <CompetitionCard
-      v-for="(competition, index) in competitions"
-      :key="index"
+      v-for="competition in sortedCompetitions"
+      :key="competition.id"
       :competition="competition"
     />
     <!-- Editor Button -->
@@ -33,6 +33,13 @@ export default {
   },
   computed: {
     ...mapGetters(["competitions", "isEditor"]),
+    sortedCompetitions() {
+      let competitions = this.competitions 
+      competitions.sort((a,b) => { 
+        return new Date(a.startDate) - new Date(b.startDate); //sort list by ascending startDate
+      })
+      return competitions //return the sorted list
+    }
   },
   methods: {
     ...mapActions(["fetchCompetitions"]),

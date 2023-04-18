@@ -20,7 +20,6 @@ type Reminder @model @auth(rules: [{ allow: owner }]) {
 type Photo @model @auth (rules: [{ allow: owner }]) {
   id: ID!
   title: String!
-  image: String
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
@@ -46,7 +45,7 @@ type Article
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -76,7 +75,7 @@ type Video
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -145,7 +144,7 @@ type Event
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read, update] }
     ]
   ) {
@@ -158,7 +157,7 @@ type Event
   date: AWSDate!
   startTime: String!
   endTime: String!
-  timeZone: TimeZone
+  timeZone: String!
   participants: [Participant]
   link: String
   image: String
@@ -175,21 +174,27 @@ type Competition
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
-      { allow: private, operations: [read] }
+      { allow: groups, groups: ["Editors"] },
+      { allow: private, operations: [read] },
+      { allow: public, operations: [read] }
     ]
   ) {
   id: ID!
   hostName: String!
   hostEmail: AWSEmail!
   title: String!
+  campaignType: String!
+  isPrivate: Boolean! 
+  # isAnonymous: Boolean! 
+  groupParticipation: Boolean!
+  category: String!
   description: String!
-  rules: String
+  rules: String!
   startDate: AWSDate!
   endDate: AWSDate!
   startTime: String!
   endTime: String!
-  timeZone: TimeZone
+  timeZone: TimeZone!
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
   submissions: [CompetitionSubmission]
     @hasMany(indexName: "bySubmission", fields: ["id"])
@@ -200,8 +205,8 @@ type Competitor
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
-      { allow: owner, operations: [create, delete] }
+      { allow: groups, groups: ["Editors"] },
+      { allow: owner, operations: [create, delete] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -221,8 +226,8 @@ type CompetitionSubmission
         allow: groups
         groups: ["Editors"]
         operations: [create, read, update, delete]
-      }
-      { allow: owner, operations: [create, delete] }
+      },
+      { allow: owner, operations: [create, delete] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -269,6 +274,7 @@ enum TimeZone {
   MST
   CST
   EST
+  EDT
 }
 
 enum SubmissionType {
@@ -277,4 +283,4 @@ enum SubmissionType {
 }
 
 
-             
+                  

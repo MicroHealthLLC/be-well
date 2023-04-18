@@ -135,7 +135,6 @@ export const onCreatePhoto = /* GraphQL */ `
     onCreatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -150,7 +149,6 @@ export const onUpdatePhoto = /* GraphQL */ `
     onUpdatePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -165,7 +163,6 @@ export const onDeletePhoto = /* GraphQL */ `
     onDeletePhoto(filter: $filter, owner: $owner) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -742,165 +739,6 @@ export const onDeleteEvent = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCompetition = /* GraphQL */ `
-  subscription OnCreateCompetition(
-    $filter: ModelSubscriptionCompetitionFilterInput
-  ) {
-    onCreateCompetition(filter: $filter) {
-      id
-      hostName
-      hostEmail
-      title
-      description
-      rules
-      startDate
-      endDate
-      startTime
-      endTime
-      timeZone
-      competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCompetition = /* GraphQL */ `
-  subscription OnUpdateCompetition(
-    $filter: ModelSubscriptionCompetitionFilterInput
-  ) {
-    onUpdateCompetition(filter: $filter) {
-      id
-      hostName
-      hostEmail
-      title
-      description
-      rules
-      startDate
-      endDate
-      startTime
-      endTime
-      timeZone
-      competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCompetition = /* GraphQL */ `
-  subscription OnDeleteCompetition(
-    $filter: ModelSubscriptionCompetitionFilterInput
-  ) {
-    onDeleteCompetition(filter: $filter) {
-      id
-      hostName
-      hostEmail
-      title
-      description
-      rules
-      startDate
-      endDate
-      startTime
-      endTime
-      timeZone
-      competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateCompetitor = /* GraphQL */ `
   subscription OnCreateCompetitor(
     $filter: ModelSubscriptionCompetitorFilterInput
@@ -1009,6 +847,177 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
       type
       updatedAt
       owner
+    }
+  }
+`;
+export const onCreateCompetition = /* GraphQL */ `
+  subscription OnCreateCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onCreateCompetition(filter: $filter) {
+      id
+      hostName
+      hostEmail
+      title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCompetition = /* GraphQL */ `
+  subscription OnUpdateCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onUpdateCompetition(filter: $filter) {
+      id
+      hostName
+      hostEmail
+      title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCompetition = /* GraphQL */ `
+  subscription OnDeleteCompetition(
+    $filter: ModelSubscriptionCompetitionFilterInput
+  ) {
+    onDeleteCompetition(filter: $filter) {
+      id
+      hostName
+      hostEmail
+      title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          isApproved
+          type
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
     }
   }
 `;

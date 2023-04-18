@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <!-- Navbar -->
-      <v-btn-toggle
+      <!-- <v-btn-toggle
         v-if="navVisible"
         class="nav-btns"
         color="var(--mh-green)"
@@ -14,7 +14,7 @@
         <v-btn class="px-5" active-class="btn-route" to="/events/competitions"
           >Competitions</v-btn
         >
-      </v-btn-toggle>
+      </v-btn-toggle> -->
       <router-view></router-view>
     </v-col>
   </v-row>

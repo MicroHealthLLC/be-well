@@ -62,46 +62,46 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .tiptap-vuetify-editor__content {
+:deep .tiptap-vuetify-editor__content {
   background-color: #f0f0f0;
   max-height: 65vh;
   overflow-y: scroll;
 }
-::v-deep h1 {
+:deep h1 {
   font-size: 2rem !important;
   font-weight: 400;
   line-height: 2.5rem;
   letter-spacing: 0.0073529412em !important;
   font-family: "Roboto", sans-serif !important;
 }
-::v-deep h2 {
+:deep h2 {
   font-size: 1.5rem !important;
   font-weight: 500;
   letter-spacing: normal;
   font-family: "Roboto", sans-serif !important;
 }
-::v-deep h3 {
+:deep h3 {
   font-size: 1.25rem !important;
   font-weight: 500;
   letter-spacing: 0.0125em !important;
   font-family: "Roboto", sans-serif !important;
 }
-::v-deep .tiptap-vuetify-editor__content ul p,
-::v-deep .tiptap-vuetify-editor__content ol p {
+:deep .tiptap-vuetify-editor__content ul p,
+:deep .tiptap-vuetify-editor__content ol p {
   margin: 0 !important;
 }
-::v-deep .tiptap-vuetify-editor__content ul,
-::v-deep .tiptap-vuetify-editor__content ol {
+:deep .tiptap-vuetify-editor__content ul,
+:deep .tiptap-vuetify-editor__content ol {
   margin-left: 25px !important;
 }
-::v-deep .tiptap-vuetify-editor__content p {
+:deep .tiptap-vuetify-editor__content p {
   font-size: 16px;
   line-height: 1.75;
 }
-::v-deep .theme--light.v-sheet--outlined {
+:deep .theme--light.v-sheet--outlined {
   border-color: #969696;
 }
-::v-deep blockquote {
+:deep blockquote {
   border-left: 0.25em solid var(--mh-green);
 }
 </style>

@@ -86,7 +86,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
-::v-deep .v-card__title {
+:deep .v-card__title {
   word-break: unset;
   font-size: 16px;
 }

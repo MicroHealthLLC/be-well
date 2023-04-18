@@ -135,7 +135,6 @@ export const createPhoto = /* GraphQL */ `
     createPhoto(input: $input, condition: $condition) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -150,7 +149,6 @@ export const updatePhoto = /* GraphQL */ `
     updatePhoto(input: $input, condition: $condition) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -165,7 +163,6 @@ export const deletePhoto = /* GraphQL */ `
     deletePhoto(input: $input, condition: $condition) {
       id
       title
-      image
       createdAt
       updatedAt
       owner
@@ -779,6 +776,10 @@ export const createCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
       description
       rules
       startDate
@@ -833,6 +834,10 @@ export const updateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
       description
       rules
       startDate
@@ -887,6 +892,10 @@ export const deleteCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      category
       description
       rules
       startDate
