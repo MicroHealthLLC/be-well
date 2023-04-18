@@ -126,6 +126,7 @@
           <div class="time">
             <v-icon>mdi-clock-time-four-outline</v-icon>
             <vue-timepicker
+              hide-clear-button
               input-width="9.5em"
               placeholder="Start Time"
               format="hh:mm A"
@@ -140,6 +141,7 @@
 
             <!-- End Time Picker -->
             <vue-timepicker
+              hide-clear-button
               input-width="10em"
               class="v-text-field"
               name="end time"
@@ -328,9 +330,15 @@ export default {
         document.getElementsByName("start time")[0].value="";
         document.getElementsByName("start time")[0].placeholder=this.competition.startTime;
       }
+      else {
+        document.getElementsByName("start time")[0].placeholder="Start Time";
+      }
       if (this.competition.endTime && this.competition.endTime.length == 8) {
         document.getElementsByName("end time")[0].value="";
         document.getElementsByName("end time")[0].placeholder=this.competition.endTime;
+      }
+      else {
+        document.getElementsByName("end time")[0].placeholder="End Time";
       }
     },
     async addNewCompetition() {
