@@ -45,7 +45,7 @@ type Article
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -75,7 +75,7 @@ type Video
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -144,7 +144,7 @@ type Event
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
+      { allow: groups, groups: ["Editors"] },
       { allow: private, operations: [read, update] }
     ]
   ) {
@@ -174,8 +174,9 @@ type Competition
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
-      { allow: private, operations: [read] }
+      { allow: groups, groups: ["Editors"] },
+      { allow: private, operations: [read] },
+      { allow: public, operations: [read] }
     ]
   ) {
   id: ID!
@@ -204,8 +205,8 @@ type Competitor
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Editors"] }
-      { allow: owner, operations: [create, delete] }
+      { allow: groups, groups: ["Editors"] },
+      { allow: owner, operations: [create, delete] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -225,8 +226,8 @@ type CompetitionSubmission
         allow: groups
         groups: ["Editors"]
         operations: [create, read, update, delete]
-      }
-      { allow: owner, operations: [create, delete] }
+      },
+      { allow: owner, operations: [create, delete] },
       { allow: private, operations: [read] }
     ]
   ) {
@@ -282,4 +283,4 @@ enum SubmissionType {
 }
 
 
-                
+                  

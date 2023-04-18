@@ -739,6 +739,117 @@ export const onDeleteEvent = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCompetitor = /* GraphQL */ `
+  subscription OnCreateCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onCreateCompetitor(filter: $filter) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCompetitor = /* GraphQL */ `
+  subscription OnUpdateCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onUpdateCompetitor(filter: $filter) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCompetitor = /* GraphQL */ `
+  subscription OnDeleteCompetitor(
+    $filter: ModelSubscriptionCompetitorFilterInput
+  ) {
+    onDeleteCompetitor(filter: $filter) {
+      id
+      competitionId
+      userId
+      firstName
+      lastName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateCompetitionSubmission = /* GraphQL */ `
+  subscription OnCreateCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onCreateCompetitionSubmission(filter: $filter) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCompetitionSubmission = /* GraphQL */ `
+  subscription OnUpdateCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onUpdateCompetitionSubmission(filter: $filter) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCompetitionSubmission = /* GraphQL */ `
+  subscription OnDeleteCompetitionSubmission(
+    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
+  ) {
+    onDeleteCompetitionSubmission(filter: $filter) {
+      id
+      competitionId
+      competitorId
+      userId
+      s3Key
+      description
+      submittedBy
+      createdAt
+      isApproved
+      type
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateCompetition = /* GraphQL */ `
   subscription OnCreateCompetition(
     $filter: ModelSubscriptionCompetitionFilterInput
@@ -907,117 +1018,6 @@ export const onDeleteCompetition = /* GraphQL */ `
       image
       createdAt
       updatedAt
-    }
-  }
-`;
-export const onCreateCompetitor = /* GraphQL */ `
-  subscription OnCreateCompetitor(
-    $filter: ModelSubscriptionCompetitorFilterInput
-  ) {
-    onCreateCompetitor(filter: $filter) {
-      id
-      competitionId
-      userId
-      firstName
-      lastName
-      score
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateCompetitor = /* GraphQL */ `
-  subscription OnUpdateCompetitor(
-    $filter: ModelSubscriptionCompetitorFilterInput
-  ) {
-    onUpdateCompetitor(filter: $filter) {
-      id
-      competitionId
-      userId
-      firstName
-      lastName
-      score
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteCompetitor = /* GraphQL */ `
-  subscription OnDeleteCompetitor(
-    $filter: ModelSubscriptionCompetitorFilterInput
-  ) {
-    onDeleteCompetitor(filter: $filter) {
-      id
-      competitionId
-      userId
-      firstName
-      lastName
-      score
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateCompetitionSubmission = /* GraphQL */ `
-  subscription OnCreateCompetitionSubmission(
-    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
-  ) {
-    onCreateCompetitionSubmission(filter: $filter) {
-      id
-      competitionId
-      competitorId
-      userId
-      s3Key
-      description
-      submittedBy
-      createdAt
-      isApproved
-      type
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateCompetitionSubmission = /* GraphQL */ `
-  subscription OnUpdateCompetitionSubmission(
-    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
-  ) {
-    onUpdateCompetitionSubmission(filter: $filter) {
-      id
-      competitionId
-      competitorId
-      userId
-      s3Key
-      description
-      submittedBy
-      createdAt
-      isApproved
-      type
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteCompetitionSubmission = /* GraphQL */ `
-  subscription OnDeleteCompetitionSubmission(
-    $filter: ModelSubscriptionCompetitionSubmissionFilterInput
-  ) {
-    onDeleteCompetitionSubmission(filter: $filter) {
-      id
-      competitionId
-      competitorId
-      userId
-      s3Key
-      description
-      submittedBy
-      createdAt
-      isApproved
-      type
-      updatedAt
-      owner
     }
   }
 `;
