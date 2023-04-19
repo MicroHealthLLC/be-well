@@ -22,7 +22,7 @@
         ></v-switch>
       </div>
       <v-form ref="competitionform" v-model="formValid">
-        <div class="form-fields mt-5">
+        <div class="form-fields mt-10">
           <div class="row" style="grid-column: 1 / span 2;">
             <div class="col-9">
               <!-- <div class="title-type"> -->
@@ -126,14 +126,14 @@
           <div class="time">
             <v-icon>mdi-clock-time-four-outline</v-icon>
             <vue-timepicker
-              hide-clear-button
+              
               input-width="9.5em"
               placeholder="Start Time"
               format="hh:mm A"
               class="v-text-field"
               name="start time"
-              v-model="startTimeString"
-              @change=updateStartTime()
+              v-model="competition.startTime"
+
               
               required
             >
@@ -141,14 +141,13 @@
 
             <!-- End Time Picker -->
             <vue-timepicker
-              hide-clear-button
+             
               input-width="10em"
               class="v-text-field"
               name="end time"
               placeholder="End Time"
               format="hh:mm A"
-              v-model="endTimeString"
-              @change=updateEndTime()
+              v-model="competition.endTime"
               :rules="[(v) => !!v || 'End Time is required']"
               required
             >
@@ -322,25 +321,32 @@ export default {
     selectedTimeZone() {
       return this.timeZones[this.timeZone];
     },
+    // convertedStartTime() {
+    //   return JSON.stringify(competition.endTime)
+    // },
+    // convertedEndTime() {
+    //   this.competition.endTime = this.endTimeString;
+    //   return this.competition.endTime;
+    // }
   },
   methods: {
     ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
-    async showTime() {
-      if (this.competition.startTime && this.competition.startTime.length == 8) {
-        document.getElementsByName("start time")[0].value="";
-        document.getElementsByName("start time")[0].placeholder=this.competition.startTime;
-      }
-      else {
-        document.getElementsByName("start time")[0].placeholder="Start Time";
-      }
-      if (this.competition.endTime && this.competition.endTime.length == 8) {
-        document.getElementsByName("end time")[0].value="";
-        document.getElementsByName("end time")[0].placeholder=this.competition.endTime;
-      }
-      else {
-        document.getElementsByName("end time")[0].placeholder="End Time";
-      }
-    },
+    // async showTime() {
+    //   if (this.competition.startTime && this.competition.startTime.length == 8) {
+    //     // document.getElementsByName("start time")[0].value="";
+    //     document.getElementsByName("start time")[0].placeholder=this.competition.startTime;
+    //   }
+    //   else {
+    //     document.getElementsByName("start time")[0].placeholder="Start Time";
+    //   }
+    //   if (this.competition.endTime && this.competition.endTime.length == 8) {
+    //     // document.getElementsByName("end time")[0].value="";
+    //     document.getElementsByName("end time")[0].placeholder=this.competition.endTime;
+    //   }
+    //   else {
+    //     document.getElementsByName("end time")[0].placeholder="End Time";
+    //   }
+    // },
     async addNewCompetition() {
       if (!this.$refs.competitionform.validate() || (this.startTimeString.length != 8 || this.endTimeString.length != 8)) {
         return;
@@ -372,24 +378,24 @@ export default {
     updateTimeZone() {
       this.competition.timeZone = this.selectedTimeZone;
     },
-    updateStartTime() {
-      if(!this.competition.startTime) //if startTime is currently empty, replace with startTimeString
-        this.competition.startTime = this.startTimeString;
-      //if startTime already has a time and startTimeString is not empty, then it is an update
-      else if(this.competition.startTime && this.startTimeString) 
-        this.competition.startTime = this.startTimeString;
-      else //if startTime already has a time and startTimeString is empty, do nothing
-        return;
-    },
-    updateEndTime() {
-      if(!this.competition.endTime) //if endTime is currently empty, replace with endTimeString
-        this.competition.endTime = this.endTimeString;
-      //if endTime already has a time and endTimeString is not empty, then it is an update
-      else if(this.competition.endTime && this.endTimeString)
-        this.competition.endTime = this.endTimeString;
-      else //if endTime already has a time and endTimeString is empty, do nothing
-        return;
-    },
+    // updateStartTime() {
+    //   if(!this.competition.startTime) //if startTime is currently empty, replace with startTimeString
+    //     this.competition.startTime = this.startTimeString;
+    //   //if startTime already has a time and startTimeString is not empty, then it is an update
+    //   else if(this.competition.startTime && this.startTimeString) 
+    //     this.competition.startTime = this.startTimeString;
+    //   else //if startTime already has a time and startTimeString is empty, do nothing
+    //     return;
+    // },
+    // updateEndTime() {
+    //   if(!this.competition.endTime) //if endTime is currently empty, replace with endTimeString
+    //     this.competition.endTime = this.endTimeString;
+    //   //if endTime already has a time and endTimeString is not empty, then it is an update
+    //   else if(this.competition.endTime && this.endTimeString)
+    //     this.competition.endTime = this.endTimeString;
+    //   else //if endTime already has a time and endTimeString is empty, do nothing
+    //     return;
+    // },
   },
   watch: {
     competition() {
@@ -398,15 +404,20 @@ export default {
       }
       this.timeZone = this.timeZones.findIndex(
         (zone) => zone == this.competition.timeZone
-      );
+      )
+      if (this.competition.startTime) {
+        this.competition.startTime = JSON.stringify(this.competition.startTime)
+      }
+      if (this.competition.endTime) {
+        this.competition.endTime = JSON.stringify(this.competition.endTime)
+      }
     },
   },
   mounted() {
     this.$refs.competitionform.resetValidation();
-    this.showTime()
   },
   updated() {
-    this.showTime()
+    // this.showTime()
   }
 };
 </script>
