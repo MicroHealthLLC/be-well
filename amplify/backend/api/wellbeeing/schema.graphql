@@ -239,7 +239,7 @@ type CompetitionSubmission
   description: String
   submittedBy: String
   createdAt: AWSDateTime!
-  isApproved: Boolean @default(value: "false")
+  isApproved: Boolean @default(value: "true")
   type: SubmissionType
 }
 
