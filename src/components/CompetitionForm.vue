@@ -21,34 +21,32 @@
           label="Group Participation"
         ></v-switch>
       </div>
+
       <v-form ref="competitionform" v-model="formValid">
         <div class="form-fields mt-10">
-          <div class="row" style="grid-column: 1 / span 2;">
+          <div class="row" style="grid-column: 1 / span 2">
             <div class="col-9">
-              <!-- <div class="title-type"> -->
-                <v-text-field
-                  v-model="competition.title"
-                  class="title"
-                  label="Title"
-                  :rules="[(v) => !!v || 'Title is required']"
-                  required
-                ></v-text-field>
-              <!-- </div> -->
+              <v-text-field
+                v-model="competition.title"
+                class="title"
+                label="Title"
+                :rules="[(v) => !!v || 'Title is required']"
+                required
+              ></v-text-field>
             </div>
 
             <div class="col-3">
-              <!-- <div class="title-type"> -->
-                <v-select
-                  :items="campaignTypes"
-                  label="Campaign Type"
-                  class="campaignType"
-                  v-model="competition.campaignType"
-                  :rules="[(v) => !!v || 'Campaign Type is required']"
-                  required
-                ></v-select>
-              <!-- </div> -->
+              <v-select
+                :items="campaignTypes"
+                label="Campaign Type"
+                class="campaignType"
+                v-model="competition.campaignType"
+                :rules="[(v) => !!v || 'Campaign Type is required']"
+                required
+              ></v-select>
             </div>
           </div>
+
           <v-text-field
             v-model="competition.hostName"
             label="Host Name"
@@ -126,25 +124,22 @@
           <div class="time">
             <v-icon>mdi-clock-time-four-outline</v-icon>
             <vue-timepicker
-              
-              input-width="9.5em"
+              :minute-interval="15"
+              input-width="10em"
               placeholder="Start Time"
               format="hh:mm A"
               class="v-text-field"
-              name="start time"
               v-model="competition.startTime"
-
-              
+              :rules="[(v) => !!v || 'Start Time is required']"
               required
             >
             </vue-timepicker>
 
             <!-- End Time Picker -->
             <vue-timepicker
-             
+              :minute-interval="15"
               input-width="10em"
               class="v-text-field"
-              name="end time"
               placeholder="End Time"
               format="hh:mm A"
               v-model="competition.endTime"
@@ -152,6 +147,7 @@
               required
             >
             </vue-timepicker>
+
             <!-- Time Zone Picker -->
             <v-select
               :items="timeZones"
@@ -279,9 +275,6 @@ export default {
       formValid: true,
       startDateMenu: false,
       endDateMenu: false,
-      startTimeMenu: false,
-      endTimeMenu: false,
-      // timeZone: 3,
       timeZones: ["CST", "EST", "MST", "PST"],
       campaignTypes: [
         "Awareness",
@@ -302,8 +295,8 @@ export default {
         "Weight Loss",
         "Miscellaneous",
       ],
-      startTimeString: '',
-      endTimeString: ''
+      startTimeString: "",
+      endTimeString: "",
     };
   },
   computed: {
@@ -321,45 +314,30 @@ export default {
     selectedTimeZone() {
       return this.timeZones[this.timeZone];
     },
-    // convertedStartTime() {
-    //   return JSON.stringify(competition.endTime)
-    // },
-    // convertedEndTime() {
-    //   this.competition.endTime = this.endTimeString;
-    //   return this.competition.endTime;
-    // }
   },
   methods: {
     ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
-    // async showTime() {
-    //   if (this.competition.startTime && this.competition.startTime.length == 8) {
-    //     // document.getElementsByName("start time")[0].value="";
-    //     document.getElementsByName("start time")[0].placeholder=this.competition.startTime;
-    //   }
-    //   else {
-    //     document.getElementsByName("start time")[0].placeholder="Start Time";
-    //   }
-    //   if (this.competition.endTime && this.competition.endTime.length == 8) {
-    //     // document.getElementsByName("end time")[0].value="";
-    //     document.getElementsByName("end time")[0].placeholder=this.competition.endTime;
-    //   }
-    //   else {
-    //     document.getElementsByName("end time")[0].placeholder="End Time";
-    //   }
-    // },
     async addNewCompetition() {
-      if (!this.$refs.competitionform.validate() || (this.startTimeString.length != 8 || this.endTimeString.length != 8)) {
-        return;
+      //all 3 conditions must be true to call addCompetition, otherwise return
+      if (
+        this.isValidTime(this.competition.startTime) &&
+        this.isValidTime(this.competition.endTime) &&
+        this.$refs.competitionform.validate()
+      ) {
+        await this.addCompetition(this.competition);
       }
-      await this.addCompetition(this.competition);
-      // this.$router.push('/events/competitions');
+      return;
     },
     async update() {
-      if (!this.$refs.competitionform.validate()) {
-        return;
+      //all 3 conditions must be true to call updateCompetition, otherwise return
+      if (
+        this.isValidTime(this.competition.startTime) &&
+        this.isValidTime(this.competition.endTime) &&
+        this.$refs.competitionform.validate()
+      ) {
+        await this.updateCompetition(this.competition);
       }
-      await this.updateCompetition(this.competition);
-      // this.$router.push('/events/competitions');
+      return;
     },
     async removeCompetition() {
       await this.deleteCompetition(this.competition.id);
@@ -378,24 +356,25 @@ export default {
     updateTimeZone() {
       this.competition.timeZone = this.selectedTimeZone;
     },
-    // updateStartTime() {
-    //   if(!this.competition.startTime) //if startTime is currently empty, replace with startTimeString
-    //     this.competition.startTime = this.startTimeString;
-    //   //if startTime already has a time and startTimeString is not empty, then it is an update
-    //   else if(this.competition.startTime && this.startTimeString) 
-    //     this.competition.startTime = this.startTimeString;
-    //   else //if startTime already has a time and startTimeString is empty, do nothing
-    //     return;
-    // },
-    // updateEndTime() {
-    //   if(!this.competition.endTime) //if endTime is currently empty, replace with endTimeString
-    //     this.competition.endTime = this.endTimeString;
-    //   //if endTime already has a time and endTimeString is not empty, then it is an update
-    //   else if(this.competition.endTime && this.endTimeString)
-    //     this.competition.endTime = this.endTimeString;
-    //   else //if endTime already has a time and endTimeString is empty, do nothing
-    //     return;
-    // },
+    isValidTime(str) {
+      // Regex to check valid
+      // time in 12-hour format
+      let regex = new RegExp(/((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))/);
+
+      //  if str
+      // is empty return false
+      if (str == null) {
+        return false;
+      }
+
+      // Return true if the str
+      // matched the ReGex
+      if (regex.test(str) == true) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   watch: {
     competition() {
@@ -404,21 +383,18 @@ export default {
       }
       this.timeZone = this.timeZones.findIndex(
         (zone) => zone == this.competition.timeZone
-      )
+      );
       if (this.competition.startTime) {
-        this.competition.startTime = JSON.stringify(this.competition.startTime)
+        this.competition.startTime = this.competition.startTime.toString();
       }
       if (this.competition.endTime) {
-        this.competition.endTime = JSON.stringify(this.competition.endTime)
+        this.competition.endTime = this.competition.endTime.toString();
       }
     },
   },
   mounted() {
     this.$refs.competitionform.resetValidation();
   },
-  updated() {
-    // this.showTime()
-  }
 };
 </script>
 
@@ -451,10 +427,4 @@ export default {
   display: flex;
 }
 
-/* does not work with vue-timepicker */
-input::placeholder {
-    font-weight: bold;
-    opacity: 0.5;
-    color: red;
-}
 </style>
