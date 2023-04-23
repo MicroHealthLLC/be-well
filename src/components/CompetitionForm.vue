@@ -126,9 +126,11 @@
             <vue-timepicker
               :minute-interval="15"
               input-width="10em"
+              label="Start"
               placeholder="Start Time"
               format="hh:mm A"
               class="v-text-field"
+              :class="[ (isValidTime(competition.startTime) == false && saved == true) ? 'st' : '' ]"
               v-model="competition.startTime"
               :rules="[(v) => !!v || 'Start Time is required']"
               required
@@ -137,11 +139,13 @@
 
             <!-- End Time Picker -->
             <vue-timepicker
+              lazy
               :minute-interval="15"
               input-width="10em"
               class="v-text-field"
               placeholder="End Time"
               format="hh:mm A"
+              :class="[ (isValidTime(competition.endTime) == false && saved == true) ? 'st' : '' ]"
               v-model="competition.endTime"
               :rules="[(v) => !!v || 'End Time is required']"
               required
@@ -160,6 +164,7 @@
           </div>
 
           <!-- Photo Input -->
+          <!-- accept any image file types (i.e. png, jpg) -->
           <v-file-input
             v-if="newImage"
             v-model="competition.image"
@@ -295,8 +300,7 @@ export default {
         "Weight Loss",
         "Miscellaneous",
       ],
-      startTimeString: "",
-      endTimeString: "",
+      saved: false,
     };
   },
   computed: {
@@ -318,25 +322,29 @@ export default {
   methods: {
     ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
     async addNewCompetition() {
+      this.saved = true;
       //all 3 conditions must be true to call addCompetition, otherwise return
       if (
+        this.$refs.competitionform.validate() &&
         this.isValidTime(this.competition.startTime) &&
-        this.isValidTime(this.competition.endTime) &&
-        this.$refs.competitionform.validate()
+        this.isValidTime(this.competition.endTime)
       ) {
-        await this.addCompetition(this.competition);
+        this.addCompetition(this.competition);
       }
       return;
     },
     async update() {
+      this.saved = true;
       //all 3 conditions must be true to call updateCompetition, otherwise return
       if (
+        this.$refs.competitionform.validate() &&
         this.isValidTime(this.competition.startTime) &&
-        this.isValidTime(this.competition.endTime) &&
-        this.$refs.competitionform.validate()
+        this.isValidTime(this.competition.endTime)
       ) {
-        await this.updateCompetition(this.competition);
+        this.updateCompetition(this.competition);
       }
+      console.log(this.competition);
+      console.log(this.isValidTime(this.competition.startTime))
       return;
     },
     async removeCompetition() {
@@ -425,6 +433,10 @@ export default {
 
 .dates {
   display: flex;
+}
+
+.vue__time-picker.st ::v-deep input.display-time {
+  border: 1px solid red;
 }
 
 </style>

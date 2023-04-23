@@ -29,14 +29,6 @@
         </div>
         <!-- beginning of chips -->
         <div class="mb-2">
-          <!-- <v-chip 
-            class="mr-2" 
-            color="primary" 
-            small 
-            outlined
-            >
-            {{ shortDate(competition.startDate) }}</v-chip
-          > -->
           <v-chip 
             v-if="this.competition.campaignType"
             class="mr-2" 

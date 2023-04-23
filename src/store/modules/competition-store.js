@@ -11,8 +11,8 @@ export default {
       hostEmail: "",
       startDate: "",
       endDate: "",
-      startTime: "",
-      endTime: "",
+      startTime: null,
+      endTime: null,
       image: null,
       description: "",
       rules: "",
@@ -190,7 +190,7 @@ export default {
         if (submission.media) {
           const name = `competitions/submissions/${submission.media.name}`;
           const media = await Storage.put(name, submission.media);
-          submission.s3Key = media.key;
+          submission.s3Key = media.key
         }
 
         delete submission.media;

@@ -280,6 +280,7 @@ enum TimeZone {
 enum SubmissionType {
   PHOTO
   VIDEO
+  TEXT
 }
 
 

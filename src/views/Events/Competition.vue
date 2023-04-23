@@ -31,10 +31,137 @@
         }}</v-card-title>
         <v-card-subtitle class="d-flex flex-column px-0"
           ><div class="mb-2">Hosted by: {{ competition.hostName }}</div>
+          <!-- beginning of chips  -->
           <div>
-            <v-chip class="mr-1" color="primary" outlined small
-              ><v-icon small left>mdi-office-building</v-icon>Company Clash</v-chip
-            ><v-chip color="primary" outlined small>{{
+            <v-chip
+              v-if="this.competition.campaignType"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-bullhorn-variant</v-icon
+              >{{ this.competition.campaignType }}</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Mental Health'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-brain</v-icon>Mental Health</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Fitness'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-run</v-icon>Fitness</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Weight Loss'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-scale-bathroom</v-icon>Weight Loss</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Cooking'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-chef-hat</v-icon>Cooking</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Balance'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-gymnastics</v-icon>Balance</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Nutrition'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-food-apple</v-icon>Cooking</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Stretch'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-yoga</v-icon>Stretch</v-chip
+            >
+            <v-chip
+              v-if="this.competition.category === 'Miscellaneous'"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-shape-plus</v-icon>Miscellaneous</v-chip
+            >
+            <v-chip
+              v-if="this.competition.isPrivate"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-lock</v-icon>Private</v-chip
+            >
+            <v-chip
+              v-if="!this.competition.isPrivate"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-lock-open-variant</v-icon>Public</v-chip
+            >
+            <!-- <v-chip 
+            v-if="this.competition.isAnonymous"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-incognito</v-icon
+            >Anonymous</v-chip
+          > -->
+            <v-chip
+              v-if="this.competition.groupParticipation"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-human-queue</v-icon>Group</v-chip
+            >
+            <v-chip
+              v-if="!this.competition.groupParticipation"
+              class="mr-2"
+              color="primary"
+              small
+              outlined
+            >
+              <v-icon small left>mdi-human</v-icon>Individual</v-chip
+            >
+            <v-chip color="primary" outlined small>{{
               timeDistance(
                 competition.startDate,
                 competition.startTime,
@@ -42,6 +169,7 @@
               )
             }}</v-chip>
           </div>
+          <!-- end of chips -->
         </v-card-subtitle>
         <v-divider class="mx-0 mb-5 pa-0" color="#9ec64c"></v-divider>
         <div v-if="competition.imageURL" class="px-0">
@@ -49,7 +177,7 @@
             lazy-src="/img/placeholder.png"
             :src="competition.imageURL"
             class="header-image mx-0 fill-width"
-            max-height="600"
+            max-height="400"
             ><template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
@@ -105,14 +233,7 @@
                     }}</a>
                   </div>
                   <div
-                    class="
-                      d-flex
-                      flex-column
-                      description
-                      text-pre-wrap
-                      pb-2
-                      mt-5
-                    "
+                    class="d-flex flex-column description text-pre-wrap pb-2 mt-5"
                   >
                     <div><strong class="pr-2">Description:</strong></div>
                     <div>{{ competition.description }}</div>
@@ -144,6 +265,7 @@
                     <div
                       v-for="submission in competition.submissions.items"
                       :key="submission.id"
+
                       class="d-flex mx-auto align-center justify-center"
                     >
                       <video
@@ -283,8 +405,8 @@
       </v-card>
     </v-dialog>
     <!-- Photo Dialog -->
-    <v-dialog v-model="photoDialog" class="overflow-auto">
-      <v-card max-width="700">
+    <v-dialog v-model="photoDialog" class="overflow-auto" style="transform-origin: center center;display: contents;">
+      <v-card max-width="700" style="margin: auto;">
         <div class="d-flex justify-end pr-5 pt-2">
           <v-btn @click="photoDialog = false" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -335,8 +457,8 @@
       </v-card>
     </v-dialog>
     <!-- Video Dialog -->
-    <v-dialog v-model="videoDialog" class="overflow-auto">
-      <v-card width="700">
+    <v-dialog v-model="videoDialog" class="overflow-auto" >
+      <v-card width="700" style="margin: auto;">
         <div class="d-flex justify-end pr-5 pt-2">
           <v-btn @click="videoDialog = false" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -533,22 +655,29 @@ export default {
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
         type: mediaType,
       };
+      // console.log(this.competition.submissions.items[0].id)
       await this.addSubmission(submission);
       this.closeSubmissionForm();
     },
     openPhoto(submission, e) {
-      let photoURL = e.path[0].src;
+      console.log(e)
+      console.log(submission)
+      // let photoURL = e.path[0].src;
+      let photoURL = submission.url;
       this.dialogPhoto.description = submission.description;
       this.dialogPhoto.src = photoURL;
+      console.log(photoURL);
       this.dialogPhoto.submittedBy = submission.submittedBy;
       this.photoDialog = true;
       this.selectedSubmission = submission;
     },
     openVideo(submission, e) {
+      console.log(e)
       let video = e.target;
       video.onplay = () => video.pause();
       this.dialogVideo.description = submission.description;
       this.dialogVideo.src = video.currentSrc;
+      console.log(this.dialogVideo.src);
       this.dialogVideo.submittedBy = submission.submittedBy;
       this.videoDialog = true;
       this.selectedSubmission = submission;
@@ -683,4 +812,6 @@ amplify-s3-image {
 .submission {
   max-height: inherit;
 }
+
+
 </style>
