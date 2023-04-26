@@ -241,6 +241,7 @@ type CompetitionSubmission
   createdAt: AWSDateTime!
   isApproved: Boolean @default(value: "true")
   type: SubmissionType
+  url: String
 }
 
 enum Category {
@@ -284,4 +285,4 @@ enum SubmissionType {
 }
 
 
-                    
+                      

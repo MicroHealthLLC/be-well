@@ -167,10 +167,32 @@ export default {
         console.log(error);
       }
     },
-    async deleteCompetitor({ commit }, id) {
+    async deleteCompetitor({ commit }, competitor) {
       try {
+        // get all submissions of this competition
+        let subs = competitor.competition.submissions.items;
+        console.log(subs.length)
+        // loop through submissions and delete the ones that belong to this competitor
+        var i = 0;
+        while( i < subs.length ) {
+          console.log(i + ":" + subs[i].competitorId)
+          console.log(competitor.competitorId)
+          if(subs[i].competitorId == competitor.competitorId) {
+            API.graphql(
+              graphqlOperation(deleteCompetitionSubmission, { input: { id: subs[i].id } })
+            );
+            commit("REMOVE_SUBMISSION", subs[i].id);
+          }
+          else { 
+            if (i == subs.length - 1)
+              return;
+            i++; 
+          }
+        }
+
+
         const res = await API.graphql(
-          graphqlOperation(deleteCompetitor, { input: { id: id } })
+          graphqlOperation(deleteCompetitor, { input: { id: competitor.competitorId } })
         );
 
         commit("REMOVE_COMPETITOR", res.data.deleteCompetitor.id);
@@ -184,7 +206,7 @@ export default {
       }
     },
     // Media (photo or video) Submission Requests
-    async addSubmission({ commit }, submission) {
+    async addSubmission({ commit, getters }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
         if (submission.media) {
@@ -196,14 +218,28 @@ export default {
         delete submission.media;
 
         const res = await API.graphql(
-          graphqlOperation(createCompetitionSubmission, { input: submission })
+          graphqlOperation(createCompetitionSubmission, { input: submission, isApproved: true })
         );
 
         const newSubmission = res.data.createCompetitionSubmission;
-        if (newSubmission.type == "VIDEO") {
+        if (newSubmission.type == "VIDEO" || newSubmission.type == "PHOTO") {
           const url = await Storage.get(submission.s3Key);
           newSubmission.url = url;
         }
+
+        // Update Competitor score
+        let points = submission.type == "VIDEO" ? 5 : 2;
+        let newScore =
+          getters.competitors.find(
+            (competitor) => competitor.id == submission.competitorId
+          ).score + points;
+        // Send request to increase competitor score
+        const res2 = await API.graphql(
+          graphqlOperation(updateCompetitor, {
+            input: { id: submission.competitorId, score: newScore },
+          })
+        );
+        commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
 
         commit("ADD_SUBMISSION", newSubmission);
         commit("SET_SNACKBAR", {
@@ -216,13 +252,30 @@ export default {
       }
       commit("TOGGLE_SAVING", false);
     },
-    async deleteSubmission({ commit }, id) {
+    async deleteSubmission({ commit, getters }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
+        if(submission.isApproved) {
+          // Update Competitor score
+          let points = submission.type == "VIDEO" ? 5 : 2;
+          let newScore =
+            getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score - points;
+          // Send request to increase competitor score
+          const res2 = await API.graphql(
+            graphqlOperation(updateCompetitor, {
+              input: { id: submission.competitorId, score: newScore },
+            })
+          );
+          commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
+        }
+
         API.graphql(
-          graphqlOperation(deleteCompetitionSubmission, { input: { id: id } })
+          graphqlOperation(deleteCompetitionSubmission, { input: { id: submission.id } })
         );
-        commit("REMOVE_SUBMISSION", id);
+
+        commit("REMOVE_SUBMISSION", submission.id);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successfully Removed",
@@ -238,11 +291,11 @@ export default {
         // Send request to mark submission as true
         const res = await API.graphql(
           graphqlOperation(updateCompetitionSubmission, {
-            input: { id: submission.id, isApproved: true },
+            input: { id: submission.id, isApproved: true, url: submission.url },
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 3;
+        let points = submission.type == "VIDEO" ? 5 : 2;
         let newScore =
           getters.competitors.find(
             (competitor) => competitor.id == submission.competitorId
@@ -275,16 +328,16 @@ export default {
         // Send request to mark submission as true
         const res = await API.graphql(
           graphqlOperation(updateCompetitionSubmission, {
-            input: { id: submission.id, isApproved: false },
+            input: { id: submission.id, isApproved: false, url: submission.url},
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 3;
+        let points = submission.type == "VIDEO" ? 5 : 2;
         let newScore =
           getters.competitors.find(
             (competitor) => competitor.id == submission.competitorId
           ).score - points;
-        // Send request to increase competitor score
+        // Send request to decrease competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
             input: { id: submission.competitorId, score: newScore },

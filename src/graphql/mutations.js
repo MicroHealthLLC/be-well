@@ -813,6 +813,7 @@ export const createCompetition = /* GraphQL */ `
           createdAt
           isApproved
           type
+          url
           updatedAt
           owner
         }
@@ -871,6 +872,7 @@ export const updateCompetition = /* GraphQL */ `
           createdAt
           isApproved
           type
+          url
           updatedAt
           owner
         }
@@ -929,6 +931,7 @@ export const deleteCompetition = /* GraphQL */ `
           createdAt
           isApproved
           type
+          url
           updatedAt
           owner
         }
@@ -1010,6 +1013,7 @@ export const createCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      url
       updatedAt
       owner
     }
@@ -1031,6 +1035,7 @@ export const updateCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      url
       updatedAt
       owner
     }
@@ -1052,6 +1057,7 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      url
       updatedAt
       owner
     }

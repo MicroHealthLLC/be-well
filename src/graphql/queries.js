@@ -554,6 +554,7 @@ export const getCompetitionSubmission = /* GraphQL */ `
       createdAt
       isApproved
       type
+      url
       updatedAt
       owner
     }
@@ -581,6 +582,7 @@ export const listCompetitionSubmissions = /* GraphQL */ `
         createdAt
         isApproved
         type
+        url
         updatedAt
         owner
       }
@@ -807,6 +809,7 @@ export const getCompetition = /* GraphQL */ `
           createdAt
           isApproved
           type
+          url
           updatedAt
           owner
         }

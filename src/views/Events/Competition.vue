@@ -276,7 +276,7 @@
                         class="clickable"
                       ></video>
                       <amplify-s3-image
-                        @click="openPhoto(submission, $event)"
+                        @click="openPhoto(submission)"
                         v-else
                         :img-key="submission.s3Key"
                         class="clickable"
@@ -614,7 +614,7 @@ export default {
       this.addCompetitor(competitor);
     },
     leaveCompetition() {
-      this.deleteCompetitor(this.competitorId);
+      this.deleteCompetitor(this);
     },
     typeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
@@ -651,33 +651,28 @@ export default {
         competitionId: this.competition.id,
         userId: this.user.attributes.sub,
         media: this.newSubmission.media,
+        isApproved: true,
         description: this.newSubmission.description,
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
         type: mediaType,
       };
-      // console.log(this.competition.submissions.items[0].id)
       await this.addSubmission(submission);
+      console.log(submission)
       this.closeSubmissionForm();
     },
-    openPhoto(submission, e) {
-      console.log(e)
-      console.log(submission)
-      // let photoURL = e.path[0].src;
+    openPhoto(submission) {
       let photoURL = submission.url;
       this.dialogPhoto.description = submission.description;
       this.dialogPhoto.src = photoURL;
-      console.log(photoURL);
       this.dialogPhoto.submittedBy = submission.submittedBy;
       this.photoDialog = true;
       this.selectedSubmission = submission;
     },
     openVideo(submission, e) {
-      console.log(e)
       let video = e.target;
       video.onplay = () => video.pause();
       this.dialogVideo.description = submission.description;
       this.dialogVideo.src = video.currentSrc;
-      console.log(this.dialogVideo.src);
       this.dialogVideo.submittedBy = submission.submittedBy;
       this.videoDialog = true;
       this.selectedSubmission = submission;
@@ -703,7 +698,7 @@ export default {
       this.selectedSubmission.isApproved = false;
     },
     removeSubmission() {
-      this.deleteSubmission(this.selectedSubmission.id);
+      this.deleteSubmission(this.selectedSubmission);
       this.photoDialog = false;
       this.videoDialog = false;
     },
