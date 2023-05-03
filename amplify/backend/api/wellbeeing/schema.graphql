@@ -187,6 +187,9 @@ type Competition
   isPrivate: Boolean! 
   # isAnonymous: Boolean! 
   groupParticipation: Boolean!
+  manualScoring: Boolean
+  unit: String
+  scoringVal: Float
   category: String!
   description: String!
   rules: String!
@@ -215,7 +218,7 @@ type Competitor
   userId: ID!
   firstName: String!
   lastName: String!
-  score: Int @default(value: "0")
+  score: Float @default(value: "0")
 }
 
 type CompetitionSubmission
@@ -242,6 +245,9 @@ type CompetitionSubmission
   isApproved: Boolean @default(value: "true")
   type: SubmissionType
   url: String
+  manualScoring: Boolean
+  scoringVal: Float
+  mAmount: Float
 }
 
 enum Category {
@@ -285,4 +291,4 @@ enum SubmissionType {
 }
 
 
-                      
+                           

@@ -14,6 +14,8 @@ export default {
       startTime: null,
       endTime: null,
       image: null,
+      unit: null,
+      scoringVal: null,
       description: "",
       rules: "",
       timeZone: "",
@@ -171,28 +173,26 @@ export default {
       try {
         // get all submissions of this competition
         let subs = competitor.competition.submissions.items;
-        console.log(subs.length)
         // loop through submissions and delete the ones that belong to this competitor
         var i = 0;
-        while( i < subs.length ) {
-          console.log(i + ":" + subs[i].competitorId)
-          console.log(competitor.competitorId)
-          if(subs[i].competitorId == competitor.competitorId) {
+        while (i < subs.length) {
+          if (subs[i].competitorId == competitor.competitorId) {
             API.graphql(
-              graphqlOperation(deleteCompetitionSubmission, { input: { id: subs[i].id } })
+              graphqlOperation(deleteCompetitionSubmission, {
+                input: { id: subs[i].id },
+              })
             );
             commit("REMOVE_SUBMISSION", subs[i].id);
-          }
-          else { 
-            if (i == subs.length - 1)
-              return;
-            i++; 
+          } else {
+            if (i == subs.length - 1) return;
+            i++;
           }
         }
 
-
         const res = await API.graphql(
-          graphqlOperation(deleteCompetitor, { input: { id: competitor.competitorId } })
+          graphqlOperation(deleteCompetitor, {
+            input: { id: competitor.competitorId },
+          })
         );
 
         commit("REMOVE_COMPETITOR", res.data.deleteCompetitor.id);
@@ -212,13 +212,16 @@ export default {
         if (submission.media) {
           const name = `competitions/submissions/${submission.media.name}`;
           const media = await Storage.put(name, submission.media);
-          submission.s3Key = media.key
+          submission.s3Key = media.key;
         }
 
         delete submission.media;
 
         const res = await API.graphql(
-          graphqlOperation(createCompetitionSubmission, { input: submission, isApproved: true })
+          graphqlOperation(createCompetitionSubmission, {
+            input: submission,
+            isApproved: true,
+          })
         );
 
         const newSubmission = res.data.createCompetitionSubmission;
@@ -228,11 +231,23 @@ export default {
         }
 
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 2;
+        let points;
+        var multiplier = Math.pow(10, 1 || 0);
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points = Math.round(points * multiplier) / multiplier;
+        }
+
         let newScore =
-          getters.competitors.find(
-            (competitor) => competitor.id == submission.competitorId
-          ).score + points;
+            Math.round((getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score + points) * multiplier) / multiplier;
+
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
@@ -255,13 +270,28 @@ export default {
     async deleteSubmission({ commit, getters }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
-        if(submission.isApproved) {
+        if (submission.isApproved) {
           // Update Competitor score
-          let points = submission.type == "VIDEO" ? 5 : 2;
+          let points;
+          var multiplier = Math.pow(10, 1 || 0);
+          // Automatic scoring
+          if (!submission.manualScoring) {
+            points = submission.type == "VIDEO" ? 5 : 2;
+          }
+          // Manual scoring
+          else {
+            points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+            points = Math.round(points * multiplier) / multiplier;
+          }
+
+          // console.log(getters.competitors.find(
+          //   (competitor) => competitor.id == submission.competitorId
+          // ).score)
           let newScore =
-            getters.competitors.find(
+            Math.round((getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score - points;
+            ).score - points) * multiplier) / multiplier;
+
           // Send request to increase competitor score
           const res2 = await API.graphql(
             graphqlOperation(updateCompetitor, {
@@ -272,7 +302,9 @@ export default {
         }
 
         API.graphql(
-          graphqlOperation(deleteCompetitionSubmission, { input: { id: submission.id } })
+          graphqlOperation(deleteCompetitionSubmission, {
+            input: { id: submission.id },
+          })
         );
 
         commit("REMOVE_SUBMISSION", submission.id);
@@ -295,11 +327,23 @@ export default {
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 2;
+        let points;
+        var multiplier = Math.pow(10, 1 || 0);
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points = Math.round(points * multiplier) / multiplier;
+        }
+
         let newScore =
-          getters.competitors.find(
-            (competitor) => competitor.id == submission.competitorId
-          ).score + points;
+            Math.round((getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score + points) * multiplier) / multiplier;
+
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
@@ -328,15 +372,31 @@ export default {
         // Send request to mark submission as true
         const res = await API.graphql(
           graphqlOperation(updateCompetitionSubmission, {
-            input: { id: submission.id, isApproved: false, url: submission.url},
+            input: {
+              id: submission.id,
+              isApproved: false,
+              url: submission.url,
+            },
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 2;
+        let points;
+        var multiplier = Math.pow(10, 1 || 0);
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points = Math.round(points * multiplier) / multiplier;
+        }
+
         let newScore =
-          getters.competitors.find(
-            (competitor) => competitor.id == submission.competitorId
-          ).score - points;
+            Math.round((getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score - points) * multiplier) / multiplier;
+
         // Send request to decrease competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {

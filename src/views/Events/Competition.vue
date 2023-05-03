@@ -265,7 +265,6 @@
                     <div
                       v-for="submission in competition.submissions.items"
                       :key="submission.id"
-
                       class="d-flex mx-auto align-center justify-center"
                     >
                       <video
@@ -327,11 +326,39 @@
             dark
             >Join Campaign<v-icon right>mdi-plus</v-icon></v-btn
           >
-          <v-btn v-else @click="leaveCompetition" outlined
+          <!-- Confirm dialog to withdraw from campaign -->
+          <v-btn v-else @click="withdrawDialog = true" outlined
             >Withdraw from Campaign</v-btn
           >
+          <v-dialog v-model="withdrawDialog" width="50%">
+          <v-card>
+          <v-card-text style="position: relative; top: 18px;"
+            >Are you sure you want to withdraw from
+            <strong>{{ competition.title }}</strong
+            >?
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+              @click="withdrawDialog = false"
+              color="secondary"
+              small
+              outlined
+              >Cancel</v-btn
+            >
+            <v-btn
+              @click="leaveCompetition"
+              class="px-5"
+              color="var(--mh-blue)"
+              small
+              dark
+              >Withdraw</v-btn
+            >
+          </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- End confirm dialog for withdrawing from campaign -->
         </v-card-actions>
-      </v-card>
+      </v-card>  
     </div>
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
@@ -345,6 +372,19 @@
         >
         <v-card-text>
           <v-form ref="submissionform" :disabled="saving">
+            <div class="manual-score">
+            <!-- Manual Scoring -->
+            <v-text-field
+                v-if="competition.manualScoring"
+                prepend-icon="mdi-tally-mark-5"
+                type="number"
+                placeholder="Amount"
+                v-model="newSubmission.mAmount"
+                :suffix=competition.unit
+                :rules="[(v) => !!v || 'Amount is required', (v) => parseFloat(v) > 0.0 || 'Invalid amount']"
+                required
+              ></v-text-field>
+            <!-- End of Manual Scoring -->
             <v-file-input
               v-model="newSubmission.media"
               @change="uploadMedia"
@@ -356,6 +396,8 @@
               required
               :rules="mediaRules"
             ></v-file-input>
+
+            </div>
             <v-textarea
               v-model="newSubmission.description"
               label="Description"
@@ -366,10 +408,7 @@
               rows="4"
               auto-grow
               required
-              :rules="[
-                (v) => !!v || 'Description is required',
-                (v) => v.length <= 300 || 'Max 300 characters',
-              ]"
+              :rules="[(v) => v.length <= 300 || 'Max 300 characters']"
             ></v-textarea>
           </v-form>
           <div v-if="mediaURL" class="submission-container">
@@ -405,8 +444,12 @@
       </v-card>
     </v-dialog>
     <!-- Photo Dialog -->
-    <v-dialog v-model="photoDialog" class="overflow-auto" style="transform-origin: center center;display: contents;">
-      <v-card max-width="700" style="margin: auto;">
+    <v-dialog
+      v-model="photoDialog"
+      class="overflow-auto"
+      style="transform-origin: center center; display: contents"
+    >
+      <v-card max-width="700" style="margin: auto">
         <div class="d-flex justify-end pr-5 pt-2">
           <v-btn @click="photoDialog = false" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -445,7 +488,7 @@
           </div>
           <v-btn
             v-if="canRemoveSubmission"
-            @click="removeSubmission"
+            @click="deleteDialog = true"
             class="ml-2"
             small
             depressed
@@ -453,12 +496,39 @@
             :loading="saving"
             ><v-icon small left>mdi-delete</v-icon>Delete</v-btn
           >
+          <!-- Confirm dialog for remove submission -->
+          <v-dialog v-model="deleteDialog" width="50%">
+          <v-card>
+          <v-card-text style="position: relative; top: 18px;"
+            >Are you sure you want to delete this submission?
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              color="secondary"
+              small
+              outlined
+              >Cancel</v-btn
+            >
+            <v-btn
+              @click="removeSubmission"
+              @change="removeSubmission = false"
+              class="px-5"
+              color="var(--mh-blue)"
+              small
+              dark
+              >Delete</v-btn
+            >
+          </v-card-actions>
+          </v-card>
+          </v-dialog>
+          <!-- End of confirm dialog for delete submission -->
         </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- Video Dialog -->
-    <v-dialog v-model="videoDialog" class="overflow-auto" >
-      <v-card width="700" style="margin: auto;">
+    <v-dialog v-model="videoDialog" class="overflow-auto">
+      <v-card width="700" style="margin: auto">
         <div class="d-flex justify-end pr-5 pt-2">
           <v-btn @click="videoDialog = false" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -525,6 +595,8 @@ export default {
   mixins: [dateMixin],
   data() {
     return {
+      withdrawDialog: false,
+      deleteDialog: false,
       submissionDialog: false,
       photoDialog: false,
       videoDialog: false,
@@ -544,6 +616,7 @@ export default {
       newSubmission: {
         media: null,
         description: "",
+        mAmount: null,
       },
       selectedSubmission: {},
       headers: [
@@ -615,6 +688,7 @@ export default {
     },
     leaveCompetition() {
       this.deleteCompetitor(this);
+      this.withdrawDialog = false;
     },
     typeIcon(type) {
       return type == "Live Virtual" ? "mdi-laptop" : "mdi-account-group";
@@ -655,9 +729,11 @@ export default {
         description: this.newSubmission.description,
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
         type: mediaType,
+        manualScoring: this.competition.manualScoring,
+        scoringVal: this.competition.scoringVal,
+        mAmount: this.newSubmission.mAmount
       };
       await this.addSubmission(submission);
-      console.log(submission)
       this.closeSubmissionForm();
     },
     openPhoto(submission) {
@@ -678,7 +754,7 @@ export default {
       this.selectedSubmission = submission;
     },
     openSubmissionForm() {
-      this.newSubmission = { photo: null, description: "" };
+      this.newSubmission = { photo: null, description: "", mAmount: null };
       this.mediaURL = null;
       this.submissionDialog = true;
       if (this.$refs.submissionform) {
@@ -807,6 +883,9 @@ amplify-s3-image {
 .submission {
   max-height: inherit;
 }
-
-
+.manual-score {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+}
 </style>

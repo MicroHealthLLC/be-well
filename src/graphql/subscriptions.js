@@ -806,6 +806,9 @@ export const onCreateCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -827,6 +830,9 @@ export const onUpdateCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -848,6 +854,9 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -865,6 +874,9 @@ export const onCreateCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -900,6 +912,9 @@ export const onCreateCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -923,6 +938,9 @@ export const onUpdateCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -958,6 +976,9 @@ export const onUpdateCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -981,6 +1002,9 @@ export const onDeleteCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -1016,6 +1040,9 @@ export const onDeleteCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }

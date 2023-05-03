@@ -555,6 +555,9 @@ export const getCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -583,6 +586,9 @@ export const listCompetitionSubmissions = /* GraphQL */ `
         isApproved
         type
         url
+        manualScoring
+        scoringVal
+        mAmount
         updatedAt
         owner
       }
@@ -775,6 +781,9 @@ export const getCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -810,6 +819,9 @@ export const getCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -836,6 +848,9 @@ export const listCompetitions = /* GraphQL */ `
         campaignType
         isPrivate
         groupParticipation
+        manualScoring
+        unit
+        scoringVal
         category
         description
         rules

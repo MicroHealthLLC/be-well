@@ -779,6 +779,9 @@ export const createCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -814,6 +817,9 @@ export const createCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -838,6 +844,9 @@ export const updateCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -873,6 +882,9 @@ export const updateCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -897,6 +909,9 @@ export const deleteCompetition = /* GraphQL */ `
       campaignType
       isPrivate
       groupParticipation
+      manualScoring
+      unit
+      scoringVal
       category
       description
       rules
@@ -932,6 +947,9 @@ export const deleteCompetition = /* GraphQL */ `
           isApproved
           type
           url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -1014,6 +1032,9 @@ export const createCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -1036,6 +1057,9 @@ export const updateCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -1058,6 +1082,9 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
       isApproved
       type
       url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }

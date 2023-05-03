@@ -130,7 +130,11 @@
               placeholder="Start Time"
               format="hh:mm A"
               class="v-text-field"
-              :class="[ (isValidTime(competition.startTime) == false && saved == true) ? 'st' : '' ]"
+              :class="[
+                isValidTime(competition.startTime) == false && saved == true
+                  ? 'st'
+                  : '',
+              ]"
               v-model="competition.startTime"
               :rules="[(v) => !!v || 'Start Time is required']"
               required
@@ -145,7 +149,11 @@
               class="v-text-field"
               placeholder="End Time"
               format="hh:mm A"
-              :class="[ (isValidTime(competition.endTime) == false && saved == true) ? 'st' : '' ]"
+              :class="[
+                isValidTime(competition.endTime) == false && saved == true
+                  ? 'st'
+                  : '',
+              ]"
               v-model="competition.endTime"
               :rules="[(v) => !!v || 'End Time is required']"
               required
@@ -216,6 +224,52 @@
             :rules="[(v) => !!v || 'Rules is required']"
             required
           ></v-textarea>
+          <div class="scoring">
+            <v-checkbox
+              v-model="competition.manualScoring"
+              hide-details
+              label="Enable manual scoring"
+              class="shrink mr-2 mt-0"
+            ></v-checkbox>
+            <v-subheader 
+              class="scoring-message"
+              v-if="!competition.manualScoring"
+            >
+                *Automatic scoring is 2 points per photo submission and 5 points per video submission
+              </v-subheader>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+            >
+              <v-text-field
+              :disabled="!competition.manualScoring"
+                label="Input unit of measurement"
+                hint="e.g., Steps, Minutes, Meals"
+                v-model="competition.unit"
+                :rules="[(v) => !!v || 'Unit of Measurement is required']"
+                required
+              ></v-text-field>
+            </v-col>
+
+            <v-col
+              cols="12"
+              sm="6"
+            >
+              <v-text-field
+              :disabled="!competition.manualScoring"
+                label="1 unit of measurement is worth:"
+                value="0.00"
+                type="number"
+                suffix="points"
+                hint="e.g., If 1 Step is worth 0.001 points, then 1,000 Steps = 1 point"
+                v-model="competition.scoringVal"
+                :rules="[(v) => !!v || 'Scoring Value is required', (v) => parseFloat(v) > 0.0 || 'Invalid Scoring Value']"
+                required
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          </div>
         </div>
       </v-form>
     </v-card-text>
@@ -330,6 +384,7 @@ export default {
         this.isValidTime(this.competition.endTime)
       ) {
         this.addCompetition(this.competition);
+        console.log(this.competition);
       }
       return;
     },
@@ -342,9 +397,8 @@ export default {
         this.isValidTime(this.competition.endTime)
       ) {
         this.updateCompetition(this.competition);
+        console.log(this.competition);
       }
-      console.log(this.competition);
-      console.log(this.isValidTime(this.competition.startTime))
       return;
     },
     async removeCompetition() {
@@ -415,7 +469,8 @@ export default {
 
 .header-image,
 .description,
-.rules {
+.rules,
+.scoring {
   grid-column: 1 / span 2;
 }
 @media (max-width: 600px) {
@@ -437,6 +492,14 @@ export default {
 
 .vue__time-picker.st ::v-deep input.display-time {
   border: 1px solid red;
+}
+
+.scoring-message {
+  left: 0px;
+  position: relative;
+  font-size: 12.5px;
+  padding: inherit;
+  color: indianred;
 }
 
 </style>

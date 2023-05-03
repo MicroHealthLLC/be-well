@@ -48,6 +48,9 @@ export default {
       isPrivate: false,
       // isAnonymous: false,
       groupParticipation: false,
+      manualScoring: false,
+      unit: "",
+      scoringVal: null,
       timeZone: "",
     });
   },
