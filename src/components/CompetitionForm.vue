@@ -243,7 +243,7 @@
               sm="6"
             >
               <v-text-field
-              :disabled="!competition.manualScoring"
+                v-if="competition.manualScoring"
                 label="Input unit of measurement"
                 hint="e.g., Steps, Minutes, Meals"
                 v-model="competition.unit"
@@ -257,7 +257,7 @@
               sm="6"
             >
               <v-text-field
-              :disabled="!competition.manualScoring"
+                v-if="competition.manualScoring"
                 label="1 unit of measurement is worth:"
                 value="0.00"
                 type="number"

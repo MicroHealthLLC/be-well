@@ -463,6 +463,7 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogPhoto.submittedBy }}
           </div>
+          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}</div>
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -547,6 +548,7 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogVideo.submittedBy }}
           </div>
+          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}</div>
           <div><strong>Description: </strong>{{ dialogVideo.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -606,11 +608,13 @@ export default {
         src: "",
         description: "",
         submittedBy: "",
+        mAmount: null,
       },
       dialogVideo: {
         src: "",
         description: "",
         submittedBy: "",
+        mAmount: null,
       },
       tab: null,
       newSubmission: {
@@ -741,6 +745,8 @@ export default {
       this.dialogPhoto.description = submission.description;
       this.dialogPhoto.src = photoURL;
       this.dialogPhoto.submittedBy = submission.submittedBy;
+      this.dialogPhoto.unit = submission.unit;
+      this.dialogPhoto.mAmount = submission.mAmount;
       this.photoDialog = true;
       this.selectedSubmission = submission;
     },
@@ -750,6 +756,8 @@ export default {
       this.dialogVideo.description = submission.description;
       this.dialogVideo.src = video.currentSrc;
       this.dialogVideo.submittedBy = submission.submittedBy;
+      this.dialogVideo.unit = submission.unit;
+      this.dialogVideo.mAmount = submission.mAmount;
       this.videoDialog = true;
       this.selectedSubmission = submission;
     },
