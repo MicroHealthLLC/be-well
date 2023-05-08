@@ -790,6 +790,7 @@ export const createCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
       competitors {
         items {
           id
@@ -797,6 +798,7 @@ export const createCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
           score
           createdAt
           updatedAt
@@ -855,6 +857,7 @@ export const updateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
       competitors {
         items {
           id
@@ -862,6 +865,7 @@ export const updateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
           score
           createdAt
           updatedAt
@@ -920,6 +924,7 @@ export const deleteCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
       competitors {
         items {
           id
@@ -927,6 +932,7 @@ export const deleteCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
           score
           createdAt
           updatedAt
@@ -972,6 +978,7 @@ export const createCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
       score
       createdAt
       updatedAt
@@ -990,6 +997,7 @@ export const updateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
       score
       createdAt
       updatedAt
@@ -1008,6 +1016,7 @@ export const deleteCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
       score
       createdAt
       updatedAt
