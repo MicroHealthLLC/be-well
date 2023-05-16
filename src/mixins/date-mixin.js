@@ -43,6 +43,18 @@ export default {
         }
       }
     },
+    startTimePassed(startDate, startTime, timeZone) {
+      if (startDate && startTime) {
+        let dateStart = new Date(`${startDate} ${startTime} ${timeZone}`)
+
+        // If deadline to sign up has passed, then chip is red
+        if (isPast(dateStart)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
     // Input is timestamp, ex: 2000-01-01T00:00:00.000Z
     shortDate(date) {
       if (date) {
