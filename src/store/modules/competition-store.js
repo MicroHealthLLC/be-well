@@ -619,7 +619,7 @@ export default {
         console.log(group);
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Successfully made new group!",
+          message: "Group Successfully Added!",
           color: "var(--mh-green)",
         });
       } catch (error) {
@@ -632,6 +632,11 @@ export default {
       try {
         const res = await API.graphql(graphqlOperation(updateGroup, { input: group }));
         commit("UPDATE_GROUP", res.data.updateGroup);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Group Successfully Updated!",
+          color: "var(--mh-green)",
+        });
       } catch (error) {
         console.log(error);
       }
@@ -648,7 +653,7 @@ export default {
         commit("REMOVE_GROUP", res.data.deleteGroup.id);
         commit("SET_SNACKBAR", {
           show: true,
-          message: "Successfully deleted group",
+          message: "Group Successfully Deleted",
           color: "var(--mh-orange)",
         });
       } catch (error) {

@@ -323,14 +323,6 @@
                 </v-tab-item>
                 <!-- Beginning of Groups Tab -->
                 <v-tab-item>
-                  <div
-                    v-if="competition.groups.items.length <= 0"
-                    class="d-flex justify-center align-center pa-10"
-                  >
-                    No groups yet...
-                  </div>
-                  <!-- Display groups -->
-                  <div v-else></div>
                   <!-- Add a new Group -->
                   <v-btn
                     class="d-flex justify-content-start"
@@ -341,6 +333,22 @@
                     outlined
                     >Add Group<v-icon small right>mdi-plus</v-icon>
                   </v-btn>
+                  <!-- Display Groups -->
+                  <div
+                    v-if="competition.groups.items.length <= 0"
+                    class="d-flex justify-center align-center pa-10"
+                  >
+                    No groups yet...
+                  </div>
+                  <!-- <div v-else>
+                    <br>
+                    <GroupCard
+                      v-for="group in sortedGroups"
+                      :key="group.groupName"
+                      :group="group"
+                    />GroupCard
+                  </div> -->
+                  <!-- Start of regular group list display -->
                   <div
                     class="d-flex flex-column description text-pre-wrap pb-2 mt-5"
                   >
@@ -383,6 +391,7 @@
                       </div>
                     </div>
                   </div>
+                  <!-- End of regular group list display -->
                 </v-tab-item>
                 <!-- End of Groups Tab -->
               </v-tabs-items>
@@ -415,9 +424,9 @@
                       sort-desc
                       no-data-text="No groups have been made yet"
                     >
-                      <template #[`item.groupName`]="{ item }"
-                        >{{ item.groupName }}</template
-                      >
+                      <template #[`item.groupName`]="{ item }">{{
+                        item.groupName
+                      }}</template>
                       <template v-slot:top>
                         <div class="text-h6 pl-4 pt-4">
                           <v-icon left>mdi-trophy</v-icon>Leaderboard
@@ -445,7 +454,7 @@
                       >
                       <template v-slot:top>
                         <div class="text-h6 pl-4 pt-4">
-                          <v-icon left>mdi-trophy</v-icon>Leaderboard invid
+                          <v-icon left>mdi-trophy</v-icon>Leaderboard
                         </div></template
                       >
                     </v-data-table>
@@ -622,7 +631,7 @@
       </v-card>
     </v-dialog>
     <!-- New Group Dialog -->
-    <v-dialog v-model="newGroupDialog" width="700">
+    <v-dialog v-model="newGroupDialog" width="450">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Add New Group</div>
@@ -648,23 +657,35 @@
               ]"
             ></v-text-field>
             <!-- Add members to the group -->
-            <h5><strong> Participants available to add </strong></h5>
+            <h5 class="mt-0"><strong> Participants available to add </strong></h5>
+            <hr class="group_hr">
             <template v-if="ungroupedCompetitors.length !== 0">
-              <v-row>
-                <v-col
-                  cols="6"
-                  v-for="competitor in ungroupedCompetitors"
-                  :key="competitor.id"
-                >
-                  <v-checkbox
-                    v-model="selected"
-                    :value="competitor"
-                    :label="competitor.firstName + ' ' + competitor.lastName"
-                  ></v-checkbox>
+              <v-row style="max-height: 200px; overflow-y: auto">
+                <v-col class= "pa-0" cols="6">
+                  <ul
+                    v-for="competitor in ungroupedCompetitors"
+                    :key="competitor.id"
+                    style="
+                      list-style-type: none;
+                      max-height: 2rem;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <li>
+                      <v-checkbox
+                        class="p_checkbox"
+                        v-model="selected"
+                        :value="competitor"
+                        :label="
+                          competitor.firstName + ' ' + competitor.lastName
+                        "
+                      ></v-checkbox>
+                    </li>
+                  </ul>
                 </v-col>
               </v-row>
             </template>
-            <p v-else><br />None</p>
+            <p v-else class="pl-0.75"><br />No participants available at this time</p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -682,7 +703,7 @@
       </v-card>
     </v-dialog>
     <!-- Edit Group Dialog -->
-    <v-dialog v-model="editGroupDialog" width="700">
+    <v-dialog v-model="editGroupDialog" width="450">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Edit Group</div>
@@ -705,25 +726,76 @@
               ]"
             ></v-text-field>
             <!-- Edit members of the group -->
-            <h5><strong> Participants available to edit or add </strong></h5>
-            <template>
-              <v-row>
-                <v-col
-                  cols="6"
-                  v-for="competitor in curr_available"
-                  :key="competitor.id"
-                >
-                  <v-checkbox
-                    v-model="curr_selected"
-                    :value="competitor"
-                    :label="competitor.firstName + ' ' + competitor.lastName"
-                  ></v-checkbox>
+            <h5 class="mt-0"><strong> Participants available to edit or add </strong></h5>
+            <template v-if="curr_available.length !== 0">
+              <hr class="group_hr">
+              <v-row style="max-height: 200px; overflow-y: auto">
+                <v-col class= "pa-0" cols="6">
+                  <ul
+                    v-for="competitor in curr_available"
+                    :key="competitor.id"
+                    style="
+                      list-style-type: none;
+                      max-height: 2rem;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <li>
+                      <v-checkbox
+                        class="p_checkbox"
+                        v-model="curr_selected"
+                        :value="competitor"
+                        :label="
+                          competitor.firstName + ' ' + competitor.lastName
+                        "
+                      ></v-checkbox>
+                    </li>
+                </ul>
                 </v-col>
               </v-row>
             </template>
+            <p v-else class="pl-0.75"><br /><center>No participants available at this time</center></p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
+          <v-btn
+            @click="deleteGroupDialog = true"
+            class="px-5 mr-2"
+            :disabled="saving"
+            color="secondary"
+            outlined
+            depressed
+            :dark="!saving"
+            :loading="saving"
+            >Delete</v-btn
+          >
+          <!-- Confirm Dialog to delete group -->
+          <v-dialog v-model="deleteGroupDialog" width="25%">
+            <v-card>
+              <v-card-text style="position: relative; top: 18px"
+                >Are you sure you want to delete
+                <strong>{{ this.curr_group_name }}</strong
+                >?
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  @click="deleteGroupDialog = false"
+                  color="secondary"
+                  small
+                  outlined
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="removeGroup"
+                  class="px-5"
+                  color="var(--mh-blue)"
+                  small
+                  dark
+                  >Delete</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-btn
             @click="updateGroup()"
             class="px-5"
@@ -889,9 +961,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import dateMixin from "../../mixins/date-mixin";
+// import GroupCard from "../../components/GroupCard.vue";
 
 export default {
   name: "Competition",
+  // components: {
+  //   GroupCard,
+  // },
   mixins: [dateMixin],
   data() {
     return {
@@ -900,6 +976,7 @@ export default {
       submissionDialog: false,
       newGroupDialog: false,
       editGroupDialog: false,
+      deleteGroupDialog: false,
       curr_group: null,
       curr_group_name: "",
       curr_selected: [],
@@ -981,8 +1058,24 @@ export default {
         (competitor) => competitor.groupName === ""
       );
     },
+    allGroups() {
+      return this.competition.groups.items;
+    },
     allGroupNames() {
       return this.competition.groups.items.map((group) => group.groupName);
+    },
+    sortedGroups() {
+      let groups = this.groups
+      groups.sort(function (a, b) { // sort alphabetically
+        if (a.groupName < b.groupName) {
+          return -1;
+        }
+        if (a.groupName > b.groupName) {
+          return 1;
+        }
+        return 0;
+      });
+      return groups //return the sorted list
     },
     additionalCompetitors() {
       return [
@@ -1082,11 +1175,9 @@ export default {
       }
 
       //add up all scores of members to calculate group score
-      let memberScores = this.selected.map(
-        (member) => member.score
-      )
-      let s = 0
-      for(let i = 0; i < memberScores.length; i++) {
+      let memberScores = this.selected.map((member) => member.score);
+      let s = 0;
+      for (let i = 0; i < memberScores.length; i++) {
         s += memberScores[i];
       }
 
@@ -1106,11 +1197,9 @@ export default {
       }
 
       //add up all scores of members to calculate group score
-      let memberScores = this.curr_selected.map(
-        (member) => member.score
-      )
-      let s = 0
-      for(let i = 0; i < memberScores.length; i++) {
+      let memberScores = this.curr_selected.map((member) => member.score);
+      let s = 0;
+      for (let i = 0; i < memberScores.length; i++) {
         s += memberScores[i];
       }
 
@@ -1213,6 +1302,7 @@ export default {
     },
     closeNewGroupForm() {
       this.newGroupDialog = false;
+      this.selected = [];
     },
     openEditGroupForm(cg) {
       this.curr_group = cg;
@@ -1227,6 +1317,19 @@ export default {
       }
     },
     closeEditGroupForm() {
+      this.editGroupDialog = false;
+    },
+    removeGroup() {
+      this.deleteGroup(this.curr_group);
+      // members of deleted group must have their group updated to empty
+      for (let i = 0; i < this.curr_selected.length; i++) {
+        this.updateCompetitorById({
+          id: this.curr_selected[i].id,
+          groupName: "",
+        });
+      }
+      console.log(this.allGroups);
+      this.deleteGroupDialog = false;
       this.editGroupDialog = false;
     },
     async approve() {
@@ -1351,5 +1454,16 @@ amplify-s3-image {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1rem;
+}
+::v-deep .p_checkbox .v-label {
+  margin-top: 10px;
+  padding: 0px;
+}
+
+::v-deep .group_hr {
+  margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 255);
 }
 </style>
