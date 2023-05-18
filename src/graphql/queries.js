@@ -547,6 +547,7 @@ export const getCompetitor = /* GraphQL */ `
       lastName
       groupParticipation
       groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -569,6 +570,7 @@ export const listCompetitors = /* GraphQL */ `
         lastName
         groupParticipation
         groupName
+        groupId
         score
         createdAt
         updatedAt
@@ -851,6 +853,7 @@ export const getCompetition = /* GraphQL */ `
           lastName
           groupParticipation
           groupName
+          groupId
           score
           createdAt
           updatedAt

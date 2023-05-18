@@ -790,6 +790,7 @@ export const onCreateCompetitor = /* GraphQL */ `
       lastName
       groupParticipation
       groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -809,6 +810,7 @@ export const onUpdateCompetitor = /* GraphQL */ `
       lastName
       groupParticipation
       groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -828,6 +830,7 @@ export const onDeleteCompetitor = /* GraphQL */ `
       lastName
       groupParticipation
       groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -952,6 +955,7 @@ export const onCreateCompetition = /* GraphQL */ `
           lastName
           groupParticipation
           groupName
+          groupId
           score
           createdAt
           updatedAt
@@ -1031,6 +1035,7 @@ export const onUpdateCompetition = /* GraphQL */ `
           lastName
           groupParticipation
           groupName
+          groupId
           score
           createdAt
           updatedAt
@@ -1110,6 +1115,7 @@ export const onDeleteCompetition = /* GraphQL */ `
           lastName
           groupParticipation
           groupName
+          groupId
           score
           createdAt
           updatedAt

@@ -241,7 +241,6 @@ type Competitor
   lastName: String!
   groupParticipation: Boolean
   groupName: String
-  groupId: String
   score: Float @default(value: "0")
 }
 
