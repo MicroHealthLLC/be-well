@@ -1,10 +1,11 @@
-import { format, formatDistanceToNow, isAfter } from "date-fns";
+import { format, formatDistanceToNow, isAfter, isPast } from "date-fns";
 
 export default {
   data() {
     return {
       formatDistanceToNow,
       isAfter,
+      isPast,
     };
   },
   methods: {
@@ -27,6 +28,30 @@ export default {
               addSuffix: true,
             })
           );
+        }
+      }
+    },
+    deadlinePassed(deadline, timeZone) {
+      if (deadline) {
+        let dateDeadline = new Date(`${deadline} 23:59 ${timeZone}`)
+
+        // If deadline to sign up has passed, then chip is red
+        if (isPast(dateDeadline)) {
+          return 'red';
+        } else {
+          return 'green';
+        }
+      }
+    },
+    startTimePassed(startDate, startTime, timeZone) {
+      if (startDate && startTime) {
+        let dateStart = new Date(`${startDate} ${startTime} ${timeZone}`)
+
+        // If deadline to sign up has passed, then chip is red
+        if (isPast(dateStart)) {
+          return true;
+        } else {
+          return false;
         }
       }
     },
