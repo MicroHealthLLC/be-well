@@ -20,8 +20,81 @@
           class="groupParticipation"
           label="Group Participation"
         ></v-switch>
+        <!-- Add Group Names -->
+        <v-btn
+          class="group-btn"
+          small
+          :disabled="!competition.groupParticipation"
+          @click="groupDialog = true"
+        >
+          <v-dialog v-model="groupDialog" activator="parent">
+            <v-card>
+              <v-card-title class="d-flex pt-5">Add Groups</v-card-title>
+              <!-- Beginning of Add Groups (Bootstrap)-->
+              <div class="d-flex pt-5 pb-10 pl-10 pr-10">
+                <b-form-tags v-model="competition.groupNames" no-outer-focus class="mb-2">
+                  <template
+                    v-slot="{
+                      tags,
+                      inputAttrs,
+                      inputHandlers,
+                      addTag,
+                      removeTag,
+                    }"
+                  >
+                    <b-input-group class="mb-2">
+                      <b-form-input
+                        v-bind="inputAttrs"
+                        v-on="inputHandlers"
+                        placeholder="New Group name - Press enter to add"
+                        class="form-control"
+                      ></b-form-input>
+                      <b-input-group-append>
+                        <b-button @click="addTag()" variant="primary"
+                          >Add</b-button
+                        >
+                      </b-input-group-append>
+                    </b-input-group>
+                    <div class="d-inline-block" style="font-size: 1.25rem">
+                      <b-form-tag
+                        v-for="tag in tags"
+                        @remove="removeTag(tag)"
+                        :key="tag"
+                        :title="tag"
+                        variant="light"
+                        class="mr-1"
+                        >{{ tag }}</b-form-tag
+                      >
+                    </div>
+                    <v-card-actions class="justify-end">
+                <!-- Discard any changes made -->
+                <v-btn
+                  @click="cancelGroupChanges()"
+                  color="secondary"
+                  small
+                  outlined
+                  >Cancel</v-btn
+                >
+                <!-- Save changes -->
+                <v-btn
+                  @click="saveGroups(tags)"
+                  class="px-5"
+                  color="var(--mh-blue)"
+                  small
+                  dark
+                  >Save</v-btn
+                >
+              </v-card-actions>
+                  </template>
+                </b-form-tags>
+              </div>
+              <!-- End of Add Groups (Bootstrap) -->
+            </v-card>
+          </v-dialog>
+          Add Groups
+        </v-btn>
+        <!-- End of Add Group Names -->
       </div>
-
       <v-form ref="competitionform" v-model="formValid">
         <div class="form-fields mt-10">
           <div class="row" style="grid-column: 1 / span 2">
@@ -150,6 +223,7 @@
           <div class="time">
             <v-icon>mdi-clock-time-four-outline</v-icon>
             <vue-timepicker
+              v-model="competition.startTime"
               :minute-interval="15"
               input-width="10em"
               label="Start"
@@ -161,7 +235,6 @@
                   ? 'st'
                   : '',
               ]"
-              v-model="competition.startTime"
               :rules="[(v) => !!v || 'Start Time is required']"
               required
             >
@@ -169,6 +242,7 @@
 
             <!-- End Time Picker -->
             <vue-timepicker
+              v-model="competition.endTime"
               lazy
               :minute-interval="15"
               input-width="10em"
@@ -180,7 +254,6 @@
                   ? 'st'
                   : '',
               ]"
-              v-model="competition.endTime"
               :rules="[(v) => !!v || 'End Time is required']"
               required
             >
@@ -257,44 +330,42 @@
               label="Enable manual scoring"
               class="shrink mr-2 mt-0"
             ></v-checkbox>
-            <v-subheader 
+            <v-subheader
               class="scoring-message"
               v-if="!competition.manualScoring"
             >
-                *Automatic scoring is 2 points per photo submission and 5 points per video submission
-              </v-subheader>
-          <v-row>
-            <v-col
-              cols="12"
-              sm="6"
-            >
-              <v-text-field
-                v-if="competition.manualScoring"
-                label="Input unit of measurement"
-                hint="e.g., Steps, Minutes, Meals"
-                v-model="competition.unit"
-                :rules="[(v) => !!v || 'Unit of Measurement is required']"
-                required
-              ></v-text-field>
-            </v-col>
+              *Automatic scoring is 2 points per photo submission and 5 points
+              per video submission
+            </v-subheader>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-if="competition.manualScoring"
+                  label="Input unit of measurement"
+                  hint="e.g., Steps, Minutes, Meals"
+                  v-model="competition.unit"
+                  :rules="[(v) => !!v || 'Unit of Measurement is required']"
+                  required
+                ></v-text-field>
+              </v-col>
 
-            <v-col
-              cols="12"
-              sm="6"
-            >
-              <v-text-field
-                v-if="competition.manualScoring"
-                label="1 unit of measurement is worth:"
-                value="0.00"
-                type="number"
-                suffix="points"
-                hint="e.g., If 1 Step is worth 0.001 points, then 1,000 Steps = 1 point"
-                v-model="competition.scoringVal"
-                :rules="[(v) => !!v || 'Scoring Value is required', (v) => parseFloat(v) > 0.0 || 'Invalid Scoring Value']"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-if="competition.manualScoring"
+                  label="1 unit of measurement is worth:"
+                  value="0.00"
+                  type="number"
+                  suffix="points"
+                  hint="e.g., If 1 Step is worth 0.001 points, then 1,000 Steps = 1 point"
+                  v-model="competition.scoringVal"
+                  :rules="[
+                    (v) => !!v || 'Scoring Value is required',
+                    (v) => parseFloat(v) > 0.0 || 'Invalid Scoring Value',
+                  ]"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </div>
         </div>
       </v-form>
@@ -382,6 +453,8 @@ export default {
         "Miscellaneous",
       ],
       saved: false,
+      groupDialog: false,
+      recentGroups: [],
     };
   },
   computed: {
@@ -444,6 +517,18 @@ export default {
     },
     updateTimeZone() {
       this.competition.timeZone = this.selectedTimeZone;
+    },
+    saveGroups(tags) {
+      this.groupDialog = false;
+      this.competition.groupNames = [];
+      this.competition.groupNames = tags;
+      this.recentGroups = this.competition.groupNames;
+      console.log("recentGroups: " + this.recentGroups )
+      console.log("Group Names: " + this.competition.groupNames)
+    },
+    cancelGroupChanges() {
+      this.competition.groupNames = this.recentGroups;
+      this.groupDialog = false;
     },
     isValidTime(str) {
       // Regex to check valid
@@ -529,4 +614,9 @@ export default {
   color: indianred;
 }
 
+.group-btn {
+  display: flex;
+  margin-left: 15px;
+  margin-top: 17px;
+}
 </style>
