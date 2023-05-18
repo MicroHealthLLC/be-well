@@ -788,9 +788,12 @@ export const onCreateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+<<<<<<< HEAD
       groupParticipation
       groupName
       groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
       score
       createdAt
       updatedAt
@@ -808,9 +811,12 @@ export const onUpdateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+<<<<<<< HEAD
       groupParticipation
       groupName
       groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
       score
       createdAt
       updatedAt
@@ -828,9 +834,12 @@ export const onDeleteCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+<<<<<<< HEAD
       groupParticipation
       groupName
       groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
       score
       createdAt
       updatedAt
@@ -933,6 +942,7 @@ export const onCreateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+<<<<<<< HEAD
       deadline
       groups {
         items {
@@ -946,6 +956,8 @@ export const onCreateCompetition = /* GraphQL */ `
         }
         nextToken
       }
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
       competitors {
         items {
           id
@@ -953,9 +965,12 @@ export const onCreateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+<<<<<<< HEAD
           groupParticipation
           groupName
           groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
           score
           createdAt
           updatedAt
@@ -1013,19 +1028,6 @@ export const onUpdateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
-      groups {
-        items {
-          id
-          competitionId
-          groupName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       competitors {
         items {
           id
@@ -1033,9 +1035,12 @@ export const onUpdateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+<<<<<<< HEAD
           groupParticipation
           groupName
           groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
           score
           createdAt
           updatedAt
@@ -1093,6 +1098,7 @@ export const onDeleteCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+<<<<<<< HEAD
       deadline
       groups {
         items {
@@ -1106,6 +1112,8 @@ export const onDeleteCompetition = /* GraphQL */ `
         }
         nextToken
       }
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
       competitors {
         items {
           id
@@ -1113,9 +1121,12 @@ export const onDeleteCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+<<<<<<< HEAD
           groupParticipation
           groupName
           groupId
+=======
+>>>>>>> parent of 3bddc9f (added sign-up deadline and group part. snackbar)
           score
           createdAt
           updatedAt
