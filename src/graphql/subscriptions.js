@@ -788,8 +788,6 @@ export const onCreateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
-      groupName
       score
       createdAt
       updatedAt
@@ -807,8 +805,6 @@ export const onUpdateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
-      groupName
       score
       createdAt
       updatedAt
@@ -826,8 +822,6 @@ export const onDeleteCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
-      groupName
       score
       createdAt
       updatedAt
@@ -930,19 +924,6 @@ export const onCreateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
-      groups {
-        items {
-          id
-          competitionId
-          groupName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       competitors {
         items {
           id
@@ -950,8 +931,6 @@ export const onCreateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
-          groupName
           score
           createdAt
           updatedAt
@@ -1009,19 +988,6 @@ export const onUpdateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
-      groups {
-        items {
-          id
-          competitionId
-          groupName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       competitors {
         items {
           id
@@ -1029,8 +995,6 @@ export const onUpdateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
-          groupName
           score
           createdAt
           updatedAt
@@ -1088,19 +1052,6 @@ export const onDeleteCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
-      groups {
-        items {
-          id
-          competitionId
-          groupName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       competitors {
         items {
           id
@@ -1108,8 +1059,6 @@ export const onDeleteCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
-          groupName
           score
           createdAt
           updatedAt

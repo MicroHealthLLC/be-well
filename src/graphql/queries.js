@@ -545,8 +545,6 @@ export const getCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
-      groupName
       score
       createdAt
       updatedAt
@@ -567,8 +565,6 @@ export const listCompetitors = /* GraphQL */ `
         userId
         firstName
         lastName
-        groupParticipation
-        groupName
         score
         createdAt
         updatedAt
@@ -829,19 +825,6 @@ export const getCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
-      groups {
-        items {
-          id
-          competitionId
-          groupName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       competitors {
         items {
           id
@@ -849,8 +832,6 @@ export const getCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
-          groupName
           score
           createdAt
           updatedAt
@@ -911,10 +892,6 @@ export const listCompetitions = /* GraphQL */ `
         startTime
         endTime
         timeZone
-        deadline
-        groups {
-          nextToken
-        }
         competitors {
           nextToken
         }

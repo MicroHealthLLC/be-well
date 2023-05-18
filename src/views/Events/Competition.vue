@@ -260,9 +260,7 @@
                         )
                       "
                       outlined
-                      >Add Submission<v-icon small right
-                        >mdi-plus</v-icon
-                      ></v-btn
+                      >Add<v-icon small right>mdi-plus</v-icon></v-btn
                     >
                   </div>
                   <div
@@ -323,14 +321,6 @@
                 </v-tab-item>
                 <!-- Beginning of Groups Tab -->
                 <v-tab-item>
-                  <div
-                    v-if="competition.groups.items.length <= 0"
-                    class="d-flex justify-center align-center pa-10"
-                  >
-                    No groups yet...
-                  </div>
-                  <!-- Display groups -->
-                  <div v-else></div>
                   <!-- Add a new Group -->
                   <v-btn
                     class="d-flex justify-content-start"
@@ -341,6 +331,22 @@
                     outlined
                     >Add Group<v-icon small right>mdi-plus</v-icon>
                   </v-btn>
+                  <!-- Display Groups -->
+                  <div
+                    v-if="competition.groups.items.length <= 0"
+                    class="d-flex justify-center align-center pa-10"
+                  >
+                    No groups yet...
+                  </div>
+                  <!-- <div v-else>
+                    <br>
+                    <GroupCard
+                      v-for="group in sortedGroups"
+                      :key="group.groupName"
+                      :group="group"
+                    />GroupCard
+                  </div> -->
+                  <!-- Start of regular group list display -->
                   <div
                     class="d-flex flex-column description text-pre-wrap pb-2 mt-5"
                   >
@@ -383,81 +389,15 @@
                       </div>
                     </div>
                   </div>
+                  <!-- End of regular group list display -->
                 </v-tab-item>
                 <!-- End of Groups Tab -->
               </v-tabs-items>
             </v-tabs>
           </div>
-          <!-- Leaderboard Tables -->
-          <!-- Leaderboard if campaign has group participation -->
+          <!-- Leaderboard Table -->
           <div class="leaderboard">
-            <v-tabs
-              v-if="competition.groupParticipation"
-              v-model="lb_tab"
-              background-color="var(--mh-orange)"
-              centered
-              dense
-            >
-              <v-tabs-slider color="var(--mh-green)">></v-tabs-slider>
-              <v-tab style="font-size: 13px">Group</v-tab>
-              <v-tab style="font-size: 13px">Individual</v-tab>
-
-              <v-tabs-items v-model="lb_tab">
-                <!-- Beginning of tab 1 -->
-                <v-tab-item>
-                  <div>
-                    <v-data-table
-                      ref="leaderboard"
-                      class="leaderboard-table"
-                      :headers="headersGroup"
-                      :items="groups"
-                      sort-by="score"
-                      sort-desc
-                      no-data-text="No groups have been made yet"
-                    >
-                      <template #[`item.groupName`]="{ item }"
-                        >{{ item.groupName }}</template
-                      >
-                      <template v-slot:top>
-                        <div class="text-h6 pl-4 pt-4">
-                          <v-icon left>mdi-trophy</v-icon>Leaderboard
-                        </div></template
-                      >
-                    </v-data-table>
-                  </div>
-                </v-tab-item>
-                <!-- End of tab 1 -->
-
-                <!-- Beginning of tab 2 -->
-                <v-tab-item>
-                  <div>
-                    <v-data-table
-                      ref="leaderboard"
-                      class="leaderboard-table"
-                      :headers="headers"
-                      :items="competitors"
-                      sort-by="score"
-                      sort-desc
-                      no-data-text="No one has signed up yet"
-                    >
-                      <template #[`item.fullName`]="{ item }"
-                        >{{ item.firstName }} {{ item.lastName }}</template
-                      >
-                      <template v-slot:top>
-                        <div class="text-h6 pl-4 pt-4">
-                          <v-icon left>mdi-trophy</v-icon>Leaderboard invid
-                        </div></template
-                      >
-                    </v-data-table>
-                  </div>
-                </v-tab-item>
-                <!-- End of tab 2 -->
-              </v-tabs-items>
-            </v-tabs>
-
-            <!-- If individual participation -->
             <v-data-table
-              v-else
               ref="leaderboard"
               class="leaderboard-table"
               :headers="headers"
@@ -479,11 +419,7 @@
         </v-card-text>
         <v-card-actions class="px-0">
           <v-btn
-            v-if="
-              !isCompeting(competition) &&
-              deadlinePassed(competition.deadline, competition.timeZone) ===
-                'green'
-            "
+            v-if="!isCompeting(competition)"
             @click="joinCompetition"
             class="px-5"
             color="var(--mh-blue)"
@@ -491,50 +427,38 @@
             >Join Campaign<v-icon right>mdi-plus</v-icon></v-btn
           >
           <!-- Confirm dialog to withdraw from campaign -->
-          <v-btn
-            v-else-if="
-              isCompeting(competition) &&
-              deadlinePassed(competition.deadline, competition.timeZone) ===
-                'green'
-            "
-            @click="withdrawDialog = true"
-            outlined
+          <v-btn v-else @click="withdrawDialog = true" outlined
             >Withdraw from Campaign</v-btn
           >
-          <!-- disabled join and withdraw buttons -->
-          <v-alert v-else color="gray" outlined dense
-            ><v-icon left color="red">mdi-alert-outline</v-icon>Deadline to
-            join/withdraw has passed</v-alert
-          >
           <v-dialog v-model="withdrawDialog" width="50%">
-            <v-card>
-              <v-card-text style="position: relative; top: 18px"
-                >Are you sure you want to withdraw from
-                <strong>{{ competition.title }}</strong
-                >?
-              </v-card-text>
-              <v-card-actions class="justify-end">
-                <v-btn
-                  @click="withdrawDialog = false"
-                  color="secondary"
-                  small
-                  outlined
-                  >Cancel</v-btn
-                >
-                <v-btn
-                  @click="leaveCompetition"
-                  class="px-5"
-                  color="var(--mh-blue)"
-                  small
-                  dark
-                  >Withdraw</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <!-- End confirm dialog for withdrawing from campaign -->
+          <v-card>
+          <v-card-text style="position: relative; top: 18px;"
+            >Are you sure you want to withdraw from
+            <strong>{{ competition.title }}</strong
+            >?
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+              @click="withdrawDialog = false"
+              color="secondary"
+              small
+              outlined
+              >Cancel</v-btn
+            >
+            <v-btn
+              @click="leaveCompetition"
+              class="px-5"
+              color="var(--mh-blue)"
+              small
+              dark
+              >Withdraw</v-btn
+            >
+          </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- End confirm dialog for withdrawing from campaign -->
         </v-card-actions>
-      </v-card>
+      </v-card>  
     </div>
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
@@ -549,36 +473,34 @@
         <v-card-text>
           <v-form ref="submissionform" :disabled="saving">
             <div class="manual-score">
-              <!-- Manual Scoring -->
-              <v-text-field
+            <!-- Manual Scoring -->
+            <v-text-field
                 v-if="competition.manualScoring"
                 prepend-icon="mdi-tally-mark-5"
                 type="number"
                 placeholder="Amount"
                 v-model="newSubmission.mAmount"
-                :suffix="competition.unit"
-                :rules="[
-                  (v) => !!v || 'Amount is required',
-                  (v) => parseFloat(v) > 0.0 || 'Invalid amount',
-                ]"
+                :suffix=competition.unit
+                :rules="[(v) => !!v || 'Amount is required', (v) => parseFloat(v) > 0.0 || 'Invalid amount']"
                 required
               ></v-text-field>
-              <!-- End of Manual Scoring -->
-              <v-file-input
-                v-model="newSubmission.media"
-                @change="uploadMedia"
-                @click:clear="removeMedia"
-                label="Photo or Video"
-                accept="image/*,video/*"
-                prepend-icon="mdi-camera"
-                truncate-length="50"
-                required
-                :rules="mediaRules"
-              ></v-file-input>
+            <!-- End of Manual Scoring -->
+            <v-file-input
+              v-model="newSubmission.media"
+              @change="uploadMedia"
+              @click:clear="removeMedia"
+              label="Photo or Video"
+              accept="image/*,video/*"
+              prepend-icon="mdi-camera"
+              truncate-length="50"
+              required
+              :rules="mediaRules"
+            ></v-file-input>
+
             </div>
             <v-textarea
               v-model="newSubmission.description"
-              label="Description (optional)"
+              label="Description"
               class="mt-2"
               filled
               outlined
@@ -622,7 +544,7 @@
       </v-card>
     </v-dialog>
     <!-- New Group Dialog -->
-    <v-dialog v-model="newGroupDialog" width="700">
+    <v-dialog v-model="newGroupDialog" width="450">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Add New Group</div>
@@ -648,23 +570,35 @@
               ]"
             ></v-text-field>
             <!-- Add members to the group -->
-            <h5><strong> Participants available to add </strong></h5>
+            <h5 class="mt-0"><strong> Participants available to add </strong></h5>
+            <hr class="group_hr">
             <template v-if="ungroupedCompetitors.length !== 0">
-              <v-row>
-                <v-col
-                  cols="6"
-                  v-for="competitor in ungroupedCompetitors"
-                  :key="competitor.id"
-                >
-                  <v-checkbox
-                    v-model="selected"
-                    :value="competitor"
-                    :label="competitor.firstName + ' ' + competitor.lastName"
-                  ></v-checkbox>
+              <v-row style="max-height: 200px; overflow-y: auto">
+                <v-col class= "pa-0" cols="6">
+                  <ul
+                    v-for="competitor in ungroupedCompetitors"
+                    :key="competitor.id"
+                    style="
+                      list-style-type: none;
+                      max-height: 2rem;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <li>
+                      <v-checkbox
+                        class="p_checkbox"
+                        v-model="selected"
+                        :value="competitor"
+                        :label="
+                          competitor.firstName + ' ' + competitor.lastName
+                        "
+                      ></v-checkbox>
+                    </li>
+                  </ul>
                 </v-col>
               </v-row>
             </template>
-            <p v-else><br />None</p>
+            <p v-else class="pl-0.75"><br />No participants available at this time</p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -682,7 +616,7 @@
       </v-card>
     </v-dialog>
     <!-- Edit Group Dialog -->
-    <v-dialog v-model="editGroupDialog" width="700">
+    <v-dialog v-model="editGroupDialog" width="450">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Edit Group</div>
@@ -705,25 +639,76 @@
               ]"
             ></v-text-field>
             <!-- Edit members of the group -->
-            <h5><strong> Participants available to edit or add </strong></h5>
-            <template>
-              <v-row>
-                <v-col
-                  cols="6"
-                  v-for="competitor in curr_available"
-                  :key="competitor.id"
-                >
-                  <v-checkbox
-                    v-model="curr_selected"
-                    :value="competitor"
-                    :label="competitor.firstName + ' ' + competitor.lastName"
-                  ></v-checkbox>
+            <h5 class="mt-0"><strong> Participants available to edit or add </strong></h5>
+            <template v-if="curr_available.length !== 0">
+              <hr class="group_hr">
+              <v-row style="max-height: 200px; overflow-y: auto">
+                <v-col class= "pa-0" cols="6">
+                  <ul
+                    v-for="competitor in curr_available"
+                    :key="competitor.id"
+                    style="
+                      list-style-type: none;
+                      max-height: 2rem;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <li>
+                      <v-checkbox
+                        class="p_checkbox"
+                        v-model="curr_selected"
+                        :value="competitor"
+                        :label="
+                          competitor.firstName + ' ' + competitor.lastName
+                        "
+                      ></v-checkbox>
+                    </li>
+                </ul>
                 </v-col>
               </v-row>
             </template>
+            <p v-else class="pl-0.75"><br /><center>No participants available at this time</center></p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
+          <v-btn
+            @click="deleteGroupDialog = true"
+            class="px-5 mr-2"
+            :disabled="saving"
+            color="secondary"
+            outlined
+            depressed
+            :dark="!saving"
+            :loading="saving"
+            >Delete</v-btn
+          >
+          <!-- Confirm Dialog to delete group -->
+          <v-dialog v-model="deleteGroupDialog" width="25%">
+            <v-card>
+              <v-card-text style="position: relative; top: 18px"
+                >Are you sure you want to delete
+                <strong>{{ this.curr_group_name }}</strong
+                >?
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  @click="deleteGroupDialog = false"
+                  color="secondary"
+                  small
+                  outlined
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="removeGroup"
+                  class="px-5"
+                  color="var(--mh-blue)"
+                  small
+                  dark
+                  >Delete</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-btn
             @click="updateGroup()"
             class="px-5"
@@ -757,9 +742,7 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogPhoto.submittedBy }}
           </div>
-          <div v-if="competition.manualScoring">
-            <strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}
-          </div>
+          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}</div>
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -795,29 +778,29 @@
           >
           <!-- Confirm dialog for remove submission -->
           <v-dialog v-model="deleteDialog" width="50%">
-            <v-card>
-              <v-card-text style="position: relative; top: 18px"
-                >Are you sure you want to delete this submission?
-              </v-card-text>
-              <v-card-actions class="justify-end">
-                <v-btn
-                  @click="deleteDialog = false"
-                  color="secondary"
-                  small
-                  outlined
-                  >Cancel</v-btn
-                >
-                <v-btn
-                  @click="removeSubmission"
-                  @change="removeSubmission = false"
-                  class="px-5"
-                  color="var(--mh-blue)"
-                  small
-                  dark
-                  >Delete</v-btn
-                >
-              </v-card-actions>
-            </v-card>
+          <v-card>
+          <v-card-text style="position: relative; top: 18px;"
+            >Are you sure you want to delete this submission?
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+              @click="deleteDialog = false"
+              color="secondary"
+              small
+              outlined
+              >Cancel</v-btn
+            >
+            <v-btn
+              @click="removeSubmission"
+              @change="removeSubmission = false"
+              class="px-5"
+              color="var(--mh-blue)"
+              small
+              dark
+              >Delete</v-btn
+            >
+          </v-card-actions>
+          </v-card>
           </v-dialog>
           <!-- End of confirm dialog for delete submission -->
         </v-card-actions>
@@ -844,9 +827,7 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogVideo.submittedBy }}
           </div>
-          <div v-if="competition.manualScoring">
-            <strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}
-          </div>
+          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}</div>
           <div><strong>Description: </strong>{{ dialogVideo.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -889,9 +870,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import dateMixin from "../../mixins/date-mixin";
+// import GroupCard from "../../components/GroupCard.vue";
 
 export default {
   name: "Competition",
+  // components: {
+  //   GroupCard,
+  // },
   mixins: [dateMixin],
   data() {
     return {
@@ -900,6 +885,7 @@ export default {
       submissionDialog: false,
       newGroupDialog: false,
       editGroupDialog: false,
+      deleteGroupDialog: false,
       curr_group: null,
       curr_group_name: "",
       curr_selected: [],
@@ -922,7 +908,6 @@ export default {
         mAmount: null,
       },
       tab: null,
-      lb_tab: null,
       newSubmission: {
         media: null,
         description: "",
@@ -957,8 +942,8 @@ export default {
         (v) => !!v || "A photo or video is required",
         () =>
           this.newSubmission.media?.type.includes("image") ||
-          this.videoDuration <= 300 ||
-          "Video duration must be less than 5 minutes",
+          this.videoDuration < 60 ||
+          "Video duration must be less than 60 seconds",
       ],
     };
   },
@@ -981,8 +966,24 @@ export default {
         (competitor) => competitor.groupName === ""
       );
     },
+    allGroups() {
+      return this.competition.groups.items;
+    },
     allGroupNames() {
       return this.competition.groups.items.map((group) => group.groupName);
+    },
+    sortedGroups() {
+      let groups = this.groups
+      groups.sort(function (a, b) { // sort alphabetically
+        if (a.groupName < b.groupName) {
+          return -1;
+        }
+        if (a.groupName > b.groupName) {
+          return 1;
+        }
+        return 0;
+      });
+      return groups //return the sorted list
     },
     additionalCompetitors() {
       return [
@@ -1026,8 +1027,6 @@ export default {
         competitionId: this.competition.id,
         firstName: this.user.attributes.given_name,
         lastName: this.user.attributes.family_name,
-        groupParticipation: this.competition.groupParticipation,
-        groupName: "",
       };
       this.addCompetitor(competitor);
     },
@@ -1082,11 +1081,9 @@ export default {
       }
 
       //add up all scores of members to calculate group score
-      let memberScores = this.selected.map(
-        (member) => member.score
-      )
-      let s = 0
-      for(let i = 0; i < memberScores.length; i++) {
+      let memberScores = this.selected.map((member) => member.score);
+      let s = 0;
+      for (let i = 0; i < memberScores.length; i++) {
         s += memberScores[i];
       }
 
@@ -1106,11 +1103,9 @@ export default {
       }
 
       //add up all scores of members to calculate group score
-      let memberScores = this.curr_selected.map(
-        (member) => member.score
-      )
-      let s = 0
-      for(let i = 0; i < memberScores.length; i++) {
+      let memberScores = this.curr_selected.map((member) => member.score);
+      let s = 0;
+      for (let i = 0; i < memberScores.length; i++) {
         s += memberScores[i];
       }
 
@@ -1166,7 +1161,7 @@ export default {
         type: mediaType,
         manualScoring: this.competition.manualScoring,
         scoringVal: this.competition.scoringVal,
-        mAmount: this.newSubmission.mAmount,
+        mAmount: this.newSubmission.mAmount
       };
       await this.addSubmission(submission);
       this.closeSubmissionForm();
@@ -1213,6 +1208,7 @@ export default {
     },
     closeNewGroupForm() {
       this.newGroupDialog = false;
+      this.selected = [];
     },
     openEditGroupForm(cg) {
       this.curr_group = cg;
@@ -1227,6 +1223,19 @@ export default {
       }
     },
     closeEditGroupForm() {
+      this.editGroupDialog = false;
+    },
+    removeGroup() {
+      this.deleteGroup(this.curr_group);
+      // members of deleted group must have their group updated to empty
+      for (let i = 0; i < this.curr_selected.length; i++) {
+        this.updateCompetitorById({
+          id: this.curr_selected[i].id,
+          groupName: "",
+        });
+      }
+      console.log(this.allGroups);
+      this.deleteGroupDialog = false;
       this.editGroupDialog = false;
     },
     async approve() {
@@ -1351,5 +1360,16 @@ amplify-s3-image {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1rem;
+}
+::v-deep .p_checkbox .v-label {
+  margin-top: 10px;
+  padding: 0px;
+}
+
+::v-deep .group_hr {
+  margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 255);
 }
 </style>
