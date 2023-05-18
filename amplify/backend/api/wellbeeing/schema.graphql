@@ -198,11 +198,29 @@ type Competition
   startTime: String!
   endTime: String!
   timeZone: TimeZone!
-  deadline: AWSDate!
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
   submissions: [CompetitionSubmission]
     @hasMany(indexName: "bySubmission", fields: ["id"])
   image: String
+}
+
+type Group
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [create, read, update, delete]
+      },
+      { allow: owner, operations: [create, delete] },
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  competitionId: ID! @index(name: "byCompetition", sortKeyFields: ["groupName"])
+  groupName: String!
+  score:Float @default(value: "0")
 }
 
 type Competitor
@@ -219,7 +237,6 @@ type Competitor
   userId: ID!
   firstName: String!
   lastName: String!
-  groupParticipation: Boolean
   score: Float @default(value: "0")
 }
 
@@ -293,4 +310,4 @@ enum SubmissionType {
 }
 
 
-                               
+                            
