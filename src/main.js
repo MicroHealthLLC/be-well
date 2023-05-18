@@ -12,7 +12,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import { Amplify } from "aws-amplify";
 //import sso_config from "./sso-exports"
 import aws_exports from "./aws-exports";
-import VueConfetti from 'vue-confetti'
+import VueConfetti from 'vue-confetti';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 import {
   applyPolyfills,
   defineCustomElements,
@@ -32,6 +35,8 @@ Vue.use(TiptapVuetifyPlugin, {
 });
 
 Vue.use(ElementUI);
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 new Vue({
   router,

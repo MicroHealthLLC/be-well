@@ -790,7 +790,6 @@ export const createCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
       competitors {
         items {
           id
@@ -798,7 +797,6 @@ export const createCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
           score
           createdAt
           updatedAt
@@ -857,7 +855,6 @@ export const updateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
       competitors {
         items {
           id
@@ -865,7 +862,6 @@ export const updateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
           score
           createdAt
           updatedAt
@@ -924,7 +920,6 @@ export const deleteCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
       competitors {
         items {
           id
@@ -932,7 +927,6 @@ export const deleteCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
           score
           createdAt
           updatedAt
@@ -967,6 +961,54 @@ export const deleteCompetition = /* GraphQL */ `
     }
   }
 `;
+export const createGroup = /* GraphQL */ `
+  mutation CreateGroup(
+    $input: CreateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    createGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateGroup = /* GraphQL */ `
+  mutation UpdateGroup(
+    $input: UpdateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    updateGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteGroup = /* GraphQL */ `
+  mutation DeleteGroup(
+    $input: DeleteGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    deleteGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createCompetitor = /* GraphQL */ `
   mutation CreateCompetitor(
     $input: CreateCompetitorInput!
@@ -978,7 +1020,6 @@ export const createCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
       score
       createdAt
       updatedAt
@@ -997,7 +1038,6 @@ export const updateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
       score
       createdAt
       updatedAt
@@ -1016,7 +1056,6 @@ export const deleteCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
       score
       createdAt
       updatedAt

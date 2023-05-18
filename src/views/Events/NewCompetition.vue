@@ -40,7 +40,6 @@ export default {
       hostEmail: "",
       startDate: "",
       endDate: "",
-      deadline: "",
       startTime: null,
       endTime: null,
       image: null,

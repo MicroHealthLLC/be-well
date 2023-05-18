@@ -504,6 +504,39 @@ export const listEvents = /* GraphQL */ `
     }
   }
 `;
+export const getGroup = /* GraphQL */ `
+  query GetGroup($id: ID!) {
+    getGroup(id: $id) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listGroups = /* GraphQL */ `
+  query ListGroups(
+    $filter: ModelGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        competitionId
+        groupName
+        score
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getCompetitor = /* GraphQL */ `
   query GetCompetitor($id: ID!) {
     getCompetitor(id: $id) {
@@ -512,7 +545,6 @@ export const getCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
-      groupParticipation
       score
       createdAt
       updatedAt
@@ -533,7 +565,6 @@ export const listCompetitors = /* GraphQL */ `
         userId
         firstName
         lastName
-        groupParticipation
         score
         createdAt
         updatedAt
@@ -794,7 +825,6 @@ export const getCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
-      deadline
       competitors {
         items {
           id
@@ -802,7 +832,6 @@ export const getCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
-          groupParticipation
           score
           createdAt
           updatedAt
@@ -863,7 +892,6 @@ export const listCompetitions = /* GraphQL */ `
         startTime
         endTime
         timeZone
-        deadline
         competitors {
           nextToken
         }
