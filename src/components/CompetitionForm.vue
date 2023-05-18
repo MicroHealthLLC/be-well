@@ -139,6 +139,32 @@
             validate-on-blur
           ></v-text-field>
           <div class="dates">
+            <!-- Deadline date picker -->
+            <v-menu
+              v-model="deadlineMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="competition.deadline"
+                  label="Sign-Up Deadline"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="[(v) => !!v || 'Sign-Up Deadline is required']"
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="competition.deadline"
+                @input="menu = false"
+              ></v-date-picker>
+            </v-menu>
             <!-- Start Date Picker -->
             <v-menu
               v-model="startDateMenu"
@@ -405,6 +431,7 @@ export default {
       formValid: true,
       startDateMenu: false,
       endDateMenu: false,
+      deadlineMenu: false,
       timeZones: ["CST", "EST", "MST", "PST"],
       campaignTypes: [
         "Awareness",

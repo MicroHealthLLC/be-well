@@ -11,8 +11,9 @@ export default {
       hostEmail: "",
       startDate: "",
       endDate: "",
-      startTime: null,
-      endTime: null,
+      deadline: "",
+      startTime: "",
+      endTime: "",
       image: null,
       unit: null,
       scoringVal: null,
@@ -162,11 +163,20 @@ export default {
           graphqlOperation(createCompetitor, { input: competitor })
         );
         commit("ADD_COMPETITOR", res.data.createCompetitor);
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Successfully Joined Competition!",
-          color: "var(--mh-green)",
-        });
+        if (competitor.groupParticipation) {
+          commit("SET_SNACKBAR", {
+            show: true,
+            message:
+              "Successfully Joined Competition! You will be added to a group.",
+            color: "var(--mh-green)",
+          });
+        } else {
+          commit("SET_SNACKBAR", {
+            show: true,
+            message: "Successfully Joined Competition!",
+            color: "var(--mh-green)",
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -293,14 +303,19 @@ export default {
         }
         // Manual scoring
         else {
-          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
           points = Math.round(points * multiplier) / multiplier;
         }
 
         let newScore =
-            Math.round((getters.competitors.find(
+          Math.round(
+            (getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score + points) * multiplier) / multiplier;
+            ).score +
+              points) *
+              multiplier
+          ) / multiplier;
 
         // Send request to increase competitor score
         const res2 = await API.graphql(
@@ -362,14 +377,20 @@ export default {
           }
           // Manual scoring
           else {
-            points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+            points =
+              parseFloat(submission.mAmount) *
+              parseFloat(submission.scoringVal);
             points = Math.round(points * multiplier) / multiplier;
           }
 
           let newScore =
-            Math.round((getters.competitors.find(
-              (competitor) => competitor.id == submission.competitorId
-            ).score - points) * multiplier) / multiplier;
+            Math.round(
+              (getters.competitors.find(
+                (competitor) => competitor.id == submission.competitorId
+              ).score -
+                points) *
+                multiplier
+            ) / multiplier;
 
           // Send request to increase competitor score
           const res2 = await API.graphql(
@@ -441,14 +462,19 @@ export default {
         }
         // Manual scoring
         else {
-          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
           points = Math.round(points * multiplier) / multiplier;
         }
 
         let newScore =
-            Math.round((getters.competitors.find(
+          Math.round(
+            (getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score + points) * multiplier) / multiplier;
+            ).score +
+              points) *
+              multiplier
+          ) / multiplier;
 
         // Send request to increase competitor score
         const res2 = await API.graphql(
@@ -520,14 +546,19 @@ export default {
         }
         // Manual scoring
         else {
-          points = parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
           points = Math.round(points * multiplier) / multiplier;
         }
 
         let newScore =
-            Math.round((getters.competitors.find(
+          Math.round(
+            (getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score - points) * multiplier) / multiplier;
+            ).score -
+              points) *
+              multiplier
+          ) / multiplier;
 
         // Send request to decrease competitor score
         const res2 = await API.graphql(

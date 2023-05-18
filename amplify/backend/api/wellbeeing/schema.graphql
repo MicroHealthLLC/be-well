@@ -198,6 +198,8 @@ type Competition
   startTime: String!
   endTime: String!
   timeZone: TimeZone!
+  deadline: AWSDate!
+  groups: [Group] @hasMany(indexName: "byCompetition", fields: ["id"])
   competitors: [Competitor] @hasMany(indexName: "byCompetition", fields: ["id"])
   submissions: [CompetitionSubmission]
     @hasMany(indexName: "bySubmission", fields: ["id"])
@@ -237,6 +239,9 @@ type Competitor
   userId: ID!
   firstName: String!
   lastName: String!
+  groupParticipation: Boolean
+  groupName: String
+  groupId: String
   score: Float @default(value: "0")
 }
 
@@ -310,4 +315,4 @@ enum SubmissionType {
 }
 
 
-                           
+                                             

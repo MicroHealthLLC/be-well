@@ -260,7 +260,9 @@
                         )
                       "
                       outlined
-                      >Add<v-icon small right>mdi-plus</v-icon></v-btn
+                      >Add Submission<v-icon small right
+                        >mdi-plus</v-icon
+                      ></v-btn
                     >
                   </div>
                   <div
@@ -395,9 +397,76 @@
               </v-tabs-items>
             </v-tabs>
           </div>
-          <!-- Leaderboard Table -->
+          <!-- Leaderboard Tables -->
+          <!-- Leaderboard if campaign has group participation -->
           <div class="leaderboard">
+            <v-tabs
+              v-if="competition.groupParticipation"
+              v-model="lb_tab"
+              background-color="var(--mh-orange)"
+              centered
+              dense
+            >
+              <v-tabs-slider color="var(--mh-green)">></v-tabs-slider>
+              <v-tab style="font-size: 13px">Group</v-tab>
+              <v-tab style="font-size: 13px">Individual</v-tab>
+
+              <v-tabs-items v-model="lb_tab">
+                <!-- Beginning of tab 1 -->
+                <v-tab-item>
+                  <div>
+                    <v-data-table
+                      ref="leaderboard"
+                      class="leaderboard-table"
+                      :headers="headersGroup"
+                      :items="groups"
+                      sort-by="score"
+                      sort-desc
+                      no-data-text="No groups have been made yet"
+                    >
+                      <template #[`item.groupName`]="{ item }">{{
+                        item.groupName
+                      }}</template>
+                      <template v-slot:top>
+                        <div class="text-h6 pl-4 pt-4">
+                          <v-icon left>mdi-trophy</v-icon>Leaderboard
+                        </div></template
+                      >
+                    </v-data-table>
+                  </div>
+                </v-tab-item>
+                <!-- End of tab 1 -->
+
+                <!-- Beginning of tab 2 -->
+                <v-tab-item>
+                  <div>
+                    <v-data-table
+                      ref="leaderboard"
+                      class="leaderboard-table"
+                      :headers="headers"
+                      :items="competitors"
+                      sort-by="score"
+                      sort-desc
+                      no-data-text="No one has signed up yet"
+                    >
+                      <template #[`item.fullName`]="{ item }"
+                        >{{ item.firstName }} {{ item.lastName }}</template
+                      >
+                      <template v-slot:top>
+                        <div class="text-h6 pl-4 pt-4">
+                          <v-icon left>mdi-trophy</v-icon>Leaderboard
+                        </div></template
+                      >
+                    </v-data-table>
+                  </div>
+                </v-tab-item>
+                <!-- End of tab 2 -->
+              </v-tabs-items>
+            </v-tabs>
+
+            <!-- If individual participation -->
             <v-data-table
+              v-else
               ref="leaderboard"
               class="leaderboard-table"
               :headers="headers"
@@ -419,7 +488,11 @@
         </v-card-text>
         <v-card-actions class="px-0">
           <v-btn
-            v-if="!isCompeting(competition)"
+            v-if="
+              !isCompeting(competition) &&
+              deadlinePassed(competition.deadline, competition.timeZone) ===
+                'green'
+            "
             @click="joinCompetition"
             class="px-5"
             color="var(--mh-blue)"
@@ -427,38 +500,50 @@
             >Join Campaign<v-icon right>mdi-plus</v-icon></v-btn
           >
           <!-- Confirm dialog to withdraw from campaign -->
-          <v-btn v-else @click="withdrawDialog = true" outlined
+          <v-btn
+            v-else-if="
+              isCompeting(competition) &&
+              deadlinePassed(competition.deadline, competition.timeZone) ===
+                'green'
+            "
+            @click="withdrawDialog = true"
+            outlined
             >Withdraw from Campaign</v-btn
           >
+          <!-- disabled join and withdraw buttons -->
+          <v-alert v-else color="gray" outlined dense
+            ><v-icon left color="red">mdi-alert-outline</v-icon>Deadline to
+            join/withdraw has passed</v-alert
+          >
           <v-dialog v-model="withdrawDialog" width="50%">
-          <v-card>
-          <v-card-text style="position: relative; top: 18px;"
-            >Are you sure you want to withdraw from
-            <strong>{{ competition.title }}</strong
-            >?
-          </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn
-              @click="withdrawDialog = false"
-              color="secondary"
-              small
-              outlined
-              >Cancel</v-btn
-            >
-            <v-btn
-              @click="leaveCompetition"
-              class="px-5"
-              color="var(--mh-blue)"
-              small
-              dark
-              >Withdraw</v-btn
-            >
-          </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <!-- End confirm dialog for withdrawing from campaign -->
+            <v-card>
+              <v-card-text style="position: relative; top: 18px"
+                >Are you sure you want to withdraw from
+                <strong>{{ competition.title }}</strong
+                >?
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  @click="withdrawDialog = false"
+                  color="secondary"
+                  small
+                  outlined
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="leaveCompetition"
+                  class="px-5"
+                  color="var(--mh-blue)"
+                  small
+                  dark
+                  >Withdraw</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- End confirm dialog for withdrawing from campaign -->
         </v-card-actions>
-      </v-card>  
+      </v-card>
     </div>
     <!-- Submission Dialog -->
     <v-dialog v-model="submissionDialog" width="700">
@@ -473,34 +558,36 @@
         <v-card-text>
           <v-form ref="submissionform" :disabled="saving">
             <div class="manual-score">
-            <!-- Manual Scoring -->
-            <v-text-field
+              <!-- Manual Scoring -->
+              <v-text-field
                 v-if="competition.manualScoring"
                 prepend-icon="mdi-tally-mark-5"
                 type="number"
                 placeholder="Amount"
                 v-model="newSubmission.mAmount"
-                :suffix=competition.unit
-                :rules="[(v) => !!v || 'Amount is required', (v) => parseFloat(v) > 0.0 || 'Invalid amount']"
+                :suffix="competition.unit"
+                :rules="[
+                  (v) => !!v || 'Amount is required',
+                  (v) => parseFloat(v) > 0.0 || 'Invalid amount',
+                ]"
                 required
               ></v-text-field>
-            <!-- End of Manual Scoring -->
-            <v-file-input
-              v-model="newSubmission.media"
-              @change="uploadMedia"
-              @click:clear="removeMedia"
-              label="Photo or Video"
-              accept="image/*,video/*"
-              prepend-icon="mdi-camera"
-              truncate-length="50"
-              required
-              :rules="mediaRules"
-            ></v-file-input>
-
+              <!-- End of Manual Scoring -->
+              <v-file-input
+                v-model="newSubmission.media"
+                @change="uploadMedia"
+                @click:clear="removeMedia"
+                label="Photo or Video"
+                accept="image/*,video/*"
+                prepend-icon="mdi-camera"
+                truncate-length="50"
+                required
+                :rules="mediaRules"
+              ></v-file-input>
             </div>
             <v-textarea
               v-model="newSubmission.description"
-              label="Description"
+              label="Description (optional)"
               class="mt-2"
               filled
               outlined
@@ -742,7 +829,9 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogPhoto.submittedBy }}
           </div>
-          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}</div>
+          <div v-if="competition.manualScoring">
+            <strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}
+          </div>
           <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -778,29 +867,29 @@
           >
           <!-- Confirm dialog for remove submission -->
           <v-dialog v-model="deleteDialog" width="50%">
-          <v-card>
-          <v-card-text style="position: relative; top: 18px;"
-            >Are you sure you want to delete this submission?
-          </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn
-              @click="deleteDialog = false"
-              color="secondary"
-              small
-              outlined
-              >Cancel</v-btn
-            >
-            <v-btn
-              @click="removeSubmission"
-              @change="removeSubmission = false"
-              class="px-5"
-              color="var(--mh-blue)"
-              small
-              dark
-              >Delete</v-btn
-            >
-          </v-card-actions>
-          </v-card>
+            <v-card>
+              <v-card-text style="position: relative; top: 18px"
+                >Are you sure you want to delete this submission?
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  @click="deleteDialog = false"
+                  color="secondary"
+                  small
+                  outlined
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="removeSubmission"
+                  @change="removeSubmission = false"
+                  class="px-5"
+                  color="var(--mh-blue)"
+                  small
+                  dark
+                  >Delete</v-btn
+                >
+              </v-card-actions>
+            </v-card>
           </v-dialog>
           <!-- End of confirm dialog for delete submission -->
         </v-card-actions>
@@ -827,7 +916,9 @@
           <div>
             <strong>Submitted By: </strong>{{ dialogVideo.submittedBy }}
           </div>
-          <div v-if="competition.manualScoring"><strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}</div>
+          <div v-if="competition.manualScoring">
+            <strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}
+          </div>
           <div><strong>Description: </strong>{{ dialogVideo.description }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
@@ -908,6 +999,7 @@ export default {
         mAmount: null,
       },
       tab: null,
+      lb_tab: null,
       newSubmission: {
         media: null,
         description: "",
@@ -942,8 +1034,8 @@ export default {
         (v) => !!v || "A photo or video is required",
         () =>
           this.newSubmission.media?.type.includes("image") ||
-          this.videoDuration < 60 ||
-          "Video duration must be less than 60 seconds",
+          this.videoDuration <= 300 ||
+          "Video duration must be less than 5 minutes",
       ],
     };
   },
@@ -1027,6 +1119,8 @@ export default {
         competitionId: this.competition.id,
         firstName: this.user.attributes.given_name,
         lastName: this.user.attributes.family_name,
+        groupParticipation: this.competition.groupParticipation,
+        groupName: "",
       };
       this.addCompetitor(competitor);
     },
@@ -1161,7 +1255,7 @@ export default {
         type: mediaType,
         manualScoring: this.competition.manualScoring,
         scoringVal: this.competition.scoringVal,
-        mAmount: this.newSubmission.mAmount
+        mAmount: this.newSubmission.mAmount,
       };
       await this.addSubmission(submission);
       this.closeSubmissionForm();

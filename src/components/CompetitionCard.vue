@@ -25,7 +25,7 @@
       <v-card-subtitle class="d-flex flex-column">
         <div style= "color:#616D7E" class="text-caption mb-2">
           Hosted by: {{ competition.hostName }} <br>
-          {{ shortDate(competition.startDate) }} - {{ shortDate(competition.endDate) }}
+          {{ shortISODate(competition.startDate) }} - {{ shortISODate(competition.endDate) }}
         </div>
         <!-- beginning of chips -->
         <div class="mb-2">
@@ -168,6 +168,15 @@
             >
             <v-icon small left>mdi-human</v-icon
             >Individual</v-chip
+          >
+          <v-chip 
+            class="mr-2" 
+            :color="deadlinePassed(this.competition.deadline, this.competition.timeZone)"
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-clipboard-account</v-icon
+            >{{ shortISODate(this.competition.deadline) }}</v-chip
           >
         </div></v-card-subtitle
       >
