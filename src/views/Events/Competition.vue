@@ -657,10 +657,10 @@
               ]"
             ></v-text-field>
             <!-- Add members to the group -->
-            <h5 class="mt-0"><strong> Participants available to add </strong></h5>
+            <h4 class="mt-0"><strong> Participants available to add </strong></h4>
             <hr class="group_hr">
             <template v-if="ungroupedCompetitors.length !== 0">
-              <v-row style="max-height: 200px; overflow-y: auto">
+              <v-row style="min-height: 100px; max-height: 200px; overflow-y: auto">
                 <v-col class= "pa-0" cols="6">
                   <ul
                     v-for="competitor in ungroupedCompetitors"
