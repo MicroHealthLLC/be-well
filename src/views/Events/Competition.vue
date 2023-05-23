@@ -340,58 +340,17 @@
                   >
                     No groups yet...
                   </div>
-                  <!-- <div v-else>
+                  <div v-else>
                     <br>
                     <GroupCard
                       v-for="group in sortedGroups"
                       :key="group.groupName"
                       :group="group"
-                    />GroupCard
-                  </div> -->
-                  <!-- Start of regular group list display -->
-                  <div
-                    class="d-flex flex-column description text-pre-wrap pb-2 mt-5"
-                  >
-                    <div
-                      v-for="group in competition.groups.items"
-                      :key="group.id"
-                      class="mb-10"
-                      style="display: flex"
-                    >
-                      <v-btn
-                        v-if="isEditor"
-                        @click="openEditGroupForm(group)"
-                        x-small
-                        depressed
-                        style="position: relative"
-                        ><v-icon>mdi-pencil-box</v-icon></v-btn
-                      >
-                      <div style="flex: 1">
-                        <h4 style="display: inline-block; margin: 0">
-                          <strong class="pr-2">{{ group.groupName }}</strong>
-                        </h4>
-                        <ul
-                          v-for="participant in getGroupedCompetitors(
-                            group.groupName
-                          )"
-                          :key="participant.id"
-                          style="position: relative; left: -55px"
-                        >
-                          <li
-                            style="
-                              position: relative;
-                              left: 40px;
-                              list-style-type: none;
-                            "
-                          >
-                            {{ participant.firstName }}
-                            {{ participant.lastName }}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                      :isEditor="isEditor"
+                      :items="getGroupedCompetitors(group.groupName)"
+                      @wasClicked="openEditGroupForm(group)"
+                    > </GroupCard>
                   </div>
-                  <!-- End of regular group list display -->
                 </v-tab-item>
                 <!-- End of Groups Tab -->
               </v-tabs-items>
@@ -635,6 +594,7 @@
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Add New Group</div>
+          <hr class="group_hr">
           <v-spacer></v-spacer>
           <v-btn @click="closeNewGroupForm" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -649,7 +609,7 @@
               outlined
               required
               :rules="[
-                (v) => v.length <= 30 || 'Max 30 characters',
+                (v) => v.length <= 25 || 'Max 25 characters',
                 (v) =>
                   allGroupNames.includes(v.trim()) === false ||
                   'Group Name already exists',
@@ -657,9 +617,9 @@
               ]"
             ></v-text-field>
             <!-- Add members to the group -->
-            <h4 class="mt-0"><strong> Participants available to add </strong></h4>
-            <hr class="group_hr">
+            <h3 class="mt-0"><strong> Participants available to add </strong></h3>
             <template v-if="ungroupedCompetitors.length !== 0">
+              <hr class="group_hr">
               <v-row style="min-height: 100px; max-height: 200px; overflow-y: auto">
                 <v-col class= "pa-0" cols="6">
                   <ul
@@ -705,13 +665,13 @@
     <!-- Edit Group Dialog -->
     <v-dialog v-model="editGroupDialog" width="450">
       <v-card :disabled="saving" :loading="saving">
-        <v-card-title
+        <v-card-title class="pb-0"
           ><div>Edit Group</div>
           <v-spacer></v-spacer>
           <v-btn @click="closeEditGroupForm" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
-          ></v-card-title
-        >
+        ></v-card-title>
+        <hr class="group_hr">
         <v-card-text>
           <v-form ref="editgroupform" :disabled="saving">
             <!-- Edit Group Name -->
@@ -726,10 +686,10 @@
               ]"
             ></v-text-field>
             <!-- Edit members of the group -->
-            <h5 class="mt-0"><strong> Participants available to edit or add </strong></h5>
+            <h3 class="mt-0"><strong> Participants available to edit or add </strong></h3>
             <template v-if="curr_available.length !== 0">
               <hr class="group_hr">
-              <v-row style="max-height: 200px; overflow-y: auto">
+              <v-row style="min-height: 100px; max-height: 200px; overflow-y: auto">
                 <v-col class= "pa-0" cols="6">
                   <ul
                     v-for="competitor in curr_available"
@@ -754,7 +714,7 @@
                 </v-col>
               </v-row>
             </template>
-            <p v-else class="pl-0.75"><br /><center>No participants available at this time</center></p>
+            <p v-else class="pl-0.75"><br />No participants available at this time</p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -961,13 +921,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import dateMixin from "../../mixins/date-mixin";
-// import GroupCard from "../../components/GroupCard.vue";
+import GroupCard from "../../components/GroupCard.vue";
 
 export default {
   name: "Competition",
-  // components: {
-  //   GroupCard,
-  // },
+  components: {
+    GroupCard,
+  },
   mixins: [dateMixin],
   data() {
     return {
@@ -1456,14 +1416,13 @@ amplify-s3-image {
   grid-column-gap: 1rem;
 }
 ::v-deep .p_checkbox .v-label {
-  margin-top: 10px;
+  margin-top: 1 rem;
   padding: 0px;
 }
 
 ::v-deep .group_hr {
-  margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(255, 255, 255, 255);
+  margin-top: 1.75rem;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 255);
 }
 </style>
