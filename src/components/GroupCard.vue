@@ -32,7 +32,7 @@
           <ul v-for="participant in items" :key="participant.id">
             <li style="position: relative; right: 15px; list-style-type: none">
               {{ participant.firstName }}
-              {{ participant.lastName }}
+              {{ participant.lastName }} - {{ participant.score}} points
             </li>
           </ul>
         </span>
