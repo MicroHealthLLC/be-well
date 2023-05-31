@@ -193,7 +193,6 @@ export default {
           if (subs[i].competitorId == competitor.competitorId) {
             groupSubs.push(subs[i]);
             let points;
-            var multiplier = Math.pow(10, 1 || 0);
             // Automatic scoring
             if (!subs[i].manualScoring) {
               points = subs[i].type == "VIDEO" ? 5 : 2;
@@ -202,7 +201,6 @@ export default {
             else {
               points =
                 parseFloat(subs[i].mAmount) * parseFloat(subs[i].scoringVal);
-              points = Math.round(points * multiplier) / multiplier;
             }
             total += points;
             API.graphql(
@@ -234,7 +232,7 @@ export default {
               input: { 
                 id: g.id,
                 groupName: g.groupName, 
-                score: g.score - total, 
+                score: (g.score - total).toFixed(1), 
               },
             })
           );
@@ -296,7 +294,6 @@ export default {
 
         // Update Competitor score
         let points;
-        var multiplier = Math.pow(10, 1 || 0);
         // Automatic scoring
         if (!submission.manualScoring) {
           points = submission.type == "VIDEO" ? 5 : 2;
@@ -305,22 +302,16 @@ export default {
         else {
           points =
             parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
-          points = Math.round(points * multiplier) / multiplier;
         }
 
-        let newScore =
-          Math.round(
-            (getters.competitors.find(
+        let newScore = getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score +
-              points) *
-              multiplier
-          ) / multiplier;
+            ).score + points;
 
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
-            input: { id: submission.competitorId, score: newScore },
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
           })
         );
 
@@ -340,9 +331,9 @@ export default {
                       (group) => group.groupName === curr_groupName
                     ).id,
                     groupName: curr_groupName, 
-                    score: getters.groups.find(
+                    score: (getters.groups.find(
                       (group) => group.groupName === curr_groupName
-                    ).score + points 
+                    ).score + points).toFixed(1), 
                   },
                 })
               );
@@ -370,7 +361,6 @@ export default {
         if (submission.isApproved) {
           // Update Competitor score
           let points;
-          var multiplier = Math.pow(10, 1 || 0);
           // Automatic scoring
           if (!submission.manualScoring) {
             points = submission.type == "VIDEO" ? 5 : 2;
@@ -378,24 +368,17 @@ export default {
           // Manual scoring
           else {
             points =
-              parseFloat(submission.mAmount) *
-              parseFloat(submission.scoringVal);
-            points = Math.round(points * multiplier) / multiplier;
+              parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
           }
 
-          let newScore =
-            Math.round(
-              (getters.competitors.find(
+          let newScore = getters.competitors.find(
                 (competitor) => competitor.id == submission.competitorId
-              ).score -
-                points) *
-                multiplier
-            ) / multiplier;
+              ).score - points;
 
           // Send request to increase competitor score
           const res2 = await API.graphql(
             graphqlOperation(updateCompetitor, {
-              input: { id: submission.competitorId, score: newScore },
+              input: { id: submission.competitorId, score: newScore.toFixed(1) },
             })
           );
 
@@ -415,9 +398,9 @@ export default {
                       (group) => group.groupName === curr_groupName
                     ).id,
                     groupName: curr_groupName, 
-                    score: getters.groups.find(
+                    score: (getters.groups.find(
                       (group) => group.groupName === curr_groupName
-                    ).score - points 
+                    ).score - points).toFixed(1),
                   },
                 })
               );
@@ -455,7 +438,6 @@ export default {
         );
         // Update Competitor score
         let points;
-        var multiplier = Math.pow(10, 1 || 0);
         // Automatic scoring
         if (!submission.manualScoring) {
           points = submission.type == "VIDEO" ? 5 : 2;
@@ -464,22 +446,16 @@ export default {
         else {
           points =
             parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
-          points = Math.round(points * multiplier) / multiplier;
         }
 
-        let newScore =
-          Math.round(
-            (getters.competitors.find(
+        let newScore = getters.competitors.find(
               (competitor) => competitor.id == submission.competitorId
-            ).score +
-              points) *
-              multiplier
-          ) / multiplier;
+            ).score + points
 
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
-            input: { id: submission.competitorId, score: newScore },
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
           })
         );
 
@@ -499,9 +475,9 @@ export default {
                       (group) => group.groupName === curr_groupName
                     ).id,
                     groupName: curr_groupName, 
-                    score: getters.groups.find(
+                    score: (getters.groups.find(
                       (group) => group.groupName === curr_groupName
-                    ).score + points
+                    ).score + points).toFixed(1),
                   },
                 })
               );
@@ -539,7 +515,6 @@ export default {
         );
         // Update Competitor score
         let points;
-        var multiplier = Math.pow(10, 1 || 0);
         // Automatic scoring
         if (!submission.manualScoring) {
           points = submission.type == "VIDEO" ? 5 : 2;
@@ -548,22 +523,15 @@ export default {
         else {
           points =
             parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
-          points = Math.round(points * multiplier) / multiplier;
         }
 
-        let newScore =
-          Math.round(
-            (getters.competitors.find(
-              (competitor) => competitor.id == submission.competitorId
-            ).score -
-              points) *
-              multiplier
-          ) / multiplier;
+        let newScore = getters.competitors.find(
+          (competitor) => competitor.id == submission.competitorId).score - points
 
         // Send request to decrease competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
-            input: { id: submission.competitorId, score: newScore },
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
           })
         );
 
@@ -583,9 +551,9 @@ export default {
                       (group) => group.groupName === curr_groupName
                     ).id,
                     groupName: curr_groupName, 
-                    score: getters.groups.find(
+                    score: (getters.groups.find(
                       (group) => group.groupName === curr_groupName
-                    ).score - points 
+                    ).score - points).toFixed(1), 
                   },
                 })
               );

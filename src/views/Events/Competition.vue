@@ -190,9 +190,9 @@
           ></v-img>
           <v-divider class="mx-0 mt-5 pa-0" color="#9ec64c"></v-divider>
         </div>
-        <v-card-text class="grid px-0">
+        <v-card-text class="px-0 row mt-4 ml-1">
           <!-- Competition Details -->
-          <div>
+          <div class="tabs col-6 pr-6" style="width: 100%">
             <v-tabs
               v-model="tab"
               background-color="transparent"
@@ -247,7 +247,7 @@
                 <!-- Submission Photos -->
                 <v-tab-item class="mb-5">
                   <!-- Submissions only allowed if Campaign has started -->
-                  <div class="d-flex justify-end mb-3">
+                  <div class="d-flex justify-start mb-8">
                     <v-btn
                       v-if="tab == 1 && isCompeting(competition)"
                       @click="openSubmissionForm"
@@ -325,12 +325,11 @@
                 <v-tab-item>
                   <!-- Add a new Group -->
                   <v-btn
-                    class="d-flex justify-content-start"
-                    style="position: absolute; right: 5%; top: 0%"
                     v-if="isEditor"
                     @click="openNewGroupForm"
                     small
                     outlined
+                    class="d-flex justify-start mb-3"
                     >Add Group<v-icon small right>mdi-plus</v-icon>
                   </v-btn>
                   <!-- Display Groups -->
@@ -340,16 +339,16 @@
                   >
                     No groups yet...
                   </div>
-                  <div v-else>
-                    <br>
+                  <div class="group-cards pb-7" v-else>
                     <GroupCard
                       v-for="group in sortedGroups"
                       :key="group.groupName"
                       :group="group"
-                      :isEditor="isEditor"
+                      :isEditor = isEditor
                       :items="getGroupedCompetitors(group.groupName)"
-                      @wasClicked="openEditGroupForm(group)"
-                    > </GroupCard>
+                      @click.native=openEditGroupForm(group)
+                    >
+                    </GroupCard>
                   </div>
                 </v-tab-item>
                 <!-- End of Groups Tab -->
@@ -358,22 +357,22 @@
           </div>
           <!-- Leaderboard Tables -->
           <!-- Leaderboard if campaign has group participation -->
-          <div class="leaderboard">
+          <div class="leaderboard col-6 px-6">
             <v-tabs
               v-if="competition.groupParticipation"
-              v-model="lb_tab"
-              background-color="var(--mh-orange)"
-              centered
+              v-model="lb_tab"       
+              background-color="transparent"
+              height="35"
               dense
             >
               <v-tabs-slider color="var(--mh-green)">></v-tabs-slider>
-              <v-tab style="font-size: 13px">Group</v-tab>
-              <v-tab style="font-size: 13px">Individual</v-tab>
+              <v-tab>Group</v-tab>
+              <v-tab>Individual</v-tab>
 
               <v-tabs-items v-model="lb_tab">
                 <!-- Beginning of tab 1 -->
                 <v-tab-item>
-                  <div>
+                    <v-card elevation="5" class="ma-3">
                     <v-data-table
                       ref="leaderboard"
                       class="leaderboard-table"
@@ -387,18 +386,18 @@
                         item.groupName
                       }}</template>
                       <template v-slot:top>
-                        <div class="text-h6 pl-4 pt-4">
+                        <div class="leaderboard-title">
                           <v-icon left>mdi-trophy</v-icon>Leaderboard
                         </div></template
                       >
                     </v-data-table>
-                  </div>
+                    </v-card>
                 </v-tab-item>
                 <!-- End of tab 1 -->
 
                 <!-- Beginning of tab 2 -->
                 <v-tab-item>
-                  <div>
+                  <v-card elevation="5" class="ma-3">
                     <v-data-table
                       ref="leaderboard"
                       class="leaderboard-table"
@@ -408,24 +407,24 @@
                       sort-desc
                       no-data-text="No one has signed up yet"
                     >
-                      <template #[`item.fullName`]="{ item }"
+                      <template #[`item.lastName`]="{ item }"
                         >{{ item.firstName }} {{ item.lastName }}</template
                       >
                       <template v-slot:top>
-                        <div class="text-h6 pl-4 pt-4">
+                        <div class="leaderboard-title">
                           <v-icon left>mdi-trophy</v-icon>Leaderboard
                         </div></template
                       >
                     </v-data-table>
-                  </div>
+                  </v-card>
                 </v-tab-item>
                 <!-- End of tab 2 -->
               </v-tabs-items>
             </v-tabs>
 
             <!-- If individual participation -->
+            <v-card v-else elevation="5">
             <v-data-table
-              v-else
               ref="leaderboard"
               class="leaderboard-table"
               :headers="headers"
@@ -434,15 +433,16 @@
               sort-desc
               no-data-text="No one has signed up yet"
             >
-              <template #[`item.fullName`]="{ item }"
+              <template #[`item.lastName`]="{ item }"
                 >{{ item.firstName }} {{ item.lastName }}</template
               >
               <template v-slot:top
-                ><div class="text-h6 pl-4 pt-4">
+                ><div class="leaderboard-title">
                   <v-icon left>mdi-trophy</v-icon>Leaderboard
                 </div></template
               >
             </v-data-table>
+            </v-card>
           </div>
         </v-card-text>
         <v-card-actions class="px-0">
@@ -594,7 +594,7 @@
       <v-card :disabled="saving" :loading="saving">
         <v-card-title
           ><div>Add New Group</div>
-          <hr class="group_hr">
+          <hr class="group_hr" />
           <v-spacer></v-spacer>
           <v-btn @click="closeNewGroupForm" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
@@ -617,11 +617,15 @@
               ]"
             ></v-text-field>
             <!-- Add members to the group -->
-            <h3 class="mt-0"><strong> Participants available to add </strong></h3>
+            <h3 class="mt-0">
+              <strong> Participants available to add </strong>
+            </h3>
             <template v-if="ungroupedCompetitors.length !== 0">
-              <hr class="group_hr">
-              <v-row style="min-height: 100px; max-height: 200px; overflow-y: auto">
-                <v-col class= "pa-0" cols="6">
+              <hr class="group_hr" />
+              <v-row
+                style="min-height: 100px; max-height: 200px; overflow-y: auto"
+              >
+                <v-col class="pa-0" cols="6">
                   <ul
                     v-for="competitor in ungroupedCompetitors"
                     :key="competitor.id"
@@ -645,7 +649,9 @@
                 </v-col>
               </v-row>
             </template>
-            <p v-else class="pl-0.75"><br />No participants available at this time</p>
+            <p v-else class="pl-0.75">
+              <br />No participants available at this time
+            </p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -663,15 +669,16 @@
       </v-card>
     </v-dialog>
     <!-- Edit Group Dialog -->
-    <v-dialog v-model="editGroupDialog" width="450">
+    <v-dialog v-model="editGroupDialog" width="450" v-if="isEditor">
       <v-card :disabled="saving" :loading="saving">
         <v-card-title class="pb-0"
           ><div>Edit Group</div>
           <v-spacer></v-spacer>
           <v-btn @click="closeEditGroupForm" fab depressed x-small outlined
             ><v-icon>mdi-close</v-icon></v-btn
-        ></v-card-title>
-        <hr class="group_hr">
+          ></v-card-title
+        >
+        <hr class="group_hr" />
         <v-card-text>
           <v-form ref="editgroupform" :disabled="saving">
             <!-- Edit Group Name -->
@@ -686,11 +693,15 @@
               ]"
             ></v-text-field>
             <!-- Edit members of the group -->
-            <h3 class="mt-0"><strong> Participants available to edit or add </strong></h3>
+            <h3 class="mt-0">
+              <strong> Participants available to edit or add </strong>
+            </h3>
             <template v-if="curr_available.length !== 0">
-              <hr class="group_hr">
-              <v-row style="min-height: 100px; max-height: 200px; overflow-y: auto">
-                <v-col class= "pa-0" cols="6">
+              <hr class="group_hr" />
+              <v-row
+                style="min-height: 100px; max-height: 200px; overflow-y: auto"
+              >
+                <v-col class="pa-0" cols="6">
                   <ul
                     v-for="competitor in curr_available"
                     :key="competitor.id"
@@ -710,11 +721,13 @@
                         "
                       ></v-checkbox>
                     </li>
-                </ul>
+                  </ul>
                 </v-col>
               </v-row>
             </template>
-            <p v-else class="pl-0.75"><br />No participants available at this time</p>
+            <p v-else class="pl-0.75">
+              <br />No participants available at this time
+            </p>
           </v-form>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
@@ -973,7 +986,7 @@ export default {
       headers: [
         {
           text: "Name",
-          value: "fullName",
+          value: "lastName",
         },
         {
           text: "Score",
@@ -1025,8 +1038,9 @@ export default {
       return this.competition.groups.items.map((group) => group.groupName);
     },
     sortedGroups() {
-      let groups = this.groups
-      groups.sort(function (a, b) { // sort alphabetically
+      let groups = this.groups;
+      groups.sort(function (a, b) {
+        // sort alphabetically
         if (a.groupName < b.groupName) {
           return -1;
         }
@@ -1035,7 +1049,7 @@ export default {
         }
         return 0;
       });
-      return groups //return the sorted list
+      return groups; //return the sorted list
     },
     additionalCompetitors() {
       return [
@@ -1339,14 +1353,28 @@ a {
   text-decoration: none;
 }
 .leaderboard-table {
-  background-color: var(--mh-orange);
-  color: white;
+  margin-top: 16px;
+}
+::v-deep .leaderboard-title {
+  font-size: 24px;
+  padding-left: 16px;
+  padding-top: 16px;
+  font-weight: bold;
+  color: var(--mh-orange);
+}
+.leaderboard {
+  border-left: solid 1px var(--mh-green);
+}
+::v-deep .v-data-footer {
+  color: var(--mh-orange);
+}
+/* .leaderboard-table {
   border: 1px solid gray;
-}
-.leaderboard-table >>> tr:hover {
-  background-color: var(--mh-orange) !important;
-  filter: brightness(105%);
-}
+} */
+/* In case we want to change the background color on hover */
+/* .leaderboard-table >>> tr:hover {
+   filter: brightness(105%); 
+} */
 .v-tabs-items {
   background-color: transparent;
 }
@@ -1355,8 +1383,8 @@ a {
 }
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-  grid-auto-rows: 175px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-auto-rows: 100px;
   grid-gap: 1rem;
 }
 .photo-grid > div {
@@ -1424,5 +1452,13 @@ amplify-s3-image {
   margin-top: 1.75rem;
   border: 0;
   border-top: 1px solid rgba(255, 255, 255, 255);
+}
+
+.group-cards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-row-gap: 1em;
+  grid-column-gap: 1em;
 }
 </style>

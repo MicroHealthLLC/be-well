@@ -6,38 +6,41 @@
       min-height="50px"
       color="var(--mh-blue)"
       class="mb-5"
+      :class="isEditor ? 'change-cursor' : ''"
     >
       <div class="d-flex justify-space-between">
-      <v-tooltip left nudge-left="10" :disabled="!isEditor">
-        <template v-slot:activator="{ on, attrs }">
-          <v-card-title
-            class="groupTitle ml-1"
-            v-bind="attrs"
-            v-on="on"
-            @click="$emit('wasClicked')"
-          >
-            {{ group.groupName }}
-          </v-card-title>
-        </template>
-        <span>Click to edit</span>
-      </v-tooltip>
+        <v-card-title class="groupTitle ml-1">
+          {{ group.groupName }}
+        </v-card-title>
 
-      <v-tooltip right nudge-right="25">
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon color="white" v-bind="attrs" v-on="on" class="mr-5">
-            mdi-account-group
-          </v-icon>
+        <template>
+          
+          <v-menu open-on-hover right offset-x nudge-right="25" rounded>
+            
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon color="white" v-bind="attrs" v-on="on" class="mr-5">
+                mdi-account-group
+              </v-icon>
+              
+            </template>
+            <v-app>
+            <span class="members" v-if="items.length !== 0">
+              <ul v-for="participant in items" :key="participant.id">
+                <li
+                  style="position: relative; right: 15px; list-style-type: none;"
+                >
+                  {{ participant.firstName }}
+                  {{ participant.lastName }} - {{ participant.score }} points
+                </li>
+              </ul>
+            </span>
+            <span class="no-members text-center" v-else>None</span>
+            </v-app>
+            
+          </v-menu>
+          
         </template>
-        <span v-if="items.length !== 0">
-          <ul v-for="participant in items" :key="participant.id">
-            <li style="position: relative; right: 15px; list-style-type: none">
-              {{ participant.firstName }}
-              {{ participant.lastName }} - {{ participant.score}} points
-            </li>
-          </ul>
-        </span>
-        <span v-else>None</span>
-      </v-tooltip>
+        
       </div>
     </v-card>
   </div>
@@ -56,7 +59,7 @@ export default {
     },
     isEditor: {
       type: Boolean,
-    }
+    },
   },
 };
 </script>
@@ -68,4 +71,15 @@ export default {
   justify-content: space-between;
   display: inline-flex;
 }
+
+.change-cursor {
+  cursor: pointer;
+}
+
+::v-deep .v-application--wrap {
+  min-height: 3vh;
+  min-width: 8vh;
+  padding: 4px;
+}
+
 </style>
