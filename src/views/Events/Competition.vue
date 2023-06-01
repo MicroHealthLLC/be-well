@@ -292,7 +292,7 @@
 
                   <div v-else class="photo-grid">
                     <div
-                      v-for="submission in competition.submissions.items"
+                      v-for="submission in this.getDisplayedSubmissions()"
                       :key="submission.id"
                       class="d-flex mx-auto align-center justify-center"
                     >
@@ -320,6 +320,13 @@
                       </div>
                     </div>
                   </div>
+                  <v-btn
+                    v-if="sortedSubmissions.length > 25"
+                    class="ma-10"
+                    right
+                  >
+                    View all {{ sortedSubmissions.length }} submissions
+                  </v-btn>
                 </v-tab-item>
                 <!-- Beginning of Groups Tab -->
                 <v-tab-item>
@@ -1016,11 +1023,19 @@ export default {
     ...mapGetters([
       "competition",
       "competitors",
+      "submissions",
       "groups",
       "isEditor",
       "saving",
       "user",
     ]),
+    sortedSubmissions() {
+      let submissions = this.submissions 
+      submissions.sort((a,b) => { 
+        return new Date(b.createdAt) - new Date(a.createdAt); //sort submission list by descending createdAt time
+      })
+      return submissions //return the sorted submission list
+    },
     competitorId() {
       return this.competition.competitors.items.find(
         (competitor) => competitor.userId == this.user.attributes.sub
@@ -1113,6 +1128,11 @@ export default {
         : -1;
 
       return index >= 0 ? true : false;
+    },
+    getDisplayedSubmissions() {
+      if(this.competition.submissions.items.length > 25)
+        return this.sortedSubmissions.slice(0, 25);
+      return this.sortedSubmissions;
     },
     getGroupedCompetitors(gn) {
       return this.competition.competitors.items.filter(
@@ -1383,8 +1403,8 @@ a {
 }
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  grid-auto-rows: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  grid-auto-rows: 125px;
   grid-gap: 1rem;
 }
 .photo-grid > div {
@@ -1413,6 +1433,7 @@ amplify-s3-image {
     flex-direction: column;
   }
   .photo-grid {
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: 250px;
   }
