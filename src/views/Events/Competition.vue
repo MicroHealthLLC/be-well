@@ -323,7 +323,6 @@
                   <v-btn
                     v-if="sortedSubmissions.length > 25"
                     class="ma-10"
-                    right
                   >
                     View all {{ sortedSubmissions.length }} submissions
                   </v-btn>
