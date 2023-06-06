@@ -265,7 +265,7 @@
                       ></v-btn
                     >
                   </div>
-                  <div
+                  <!-- <div
                     v-if="
                       startTimePassed(
                         competition.startDate,
@@ -319,13 +319,48 @@
                         >
                       </div>
                     </div>
+                  </div> -->
+                  <div class="carousel pa-10">
+                    <vueper-slides
+                      class="no-shadow"
+                      :visible-slides="3"
+                      slide-multiple
+                      :gap="3"
+                      :arrows="true"
+                      :slide-ratio="1 / 4"
+                      :dragging-distance="200"
+                      :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }">
+                      <vueper-slide v-for="submission in this.getDisplayedSubmissions()"
+                      :key="submission.id"
+                      :style="'background-color: black'">
+                      <template #content>
+                      <video
+                        v-if="submission.type == 'VIDEO'"
+                        @click="openVideo(submission, $event)"
+                        :src="submission.url"
+                        height="100%"
+                        class="clickable"
+                        style="width: -webkit-fill-available;"
+                      ></video>
+                      <amplify-s3-image
+                        @click="openPhoto(submission)"
+                        v-else
+                        :img-key="submission.s3Key"
+                        class="clickable"
+                      ></amplify-s3-image>
+                      <div
+                        v-if="submission.isApproved"
+                        class="label"
+                        title="Approved Submission"
+                      >
+                        <v-icon color="success"
+                          >mdi-check-circle-outline</v-icon
+                        >
+                      </div>
+                      </template>
+                      </vueper-slide>
+                    </vueper-slides>
                   </div>
-                  <v-btn
-                    v-if="sortedSubmissions.length > 25"
-                    class="ma-10"
-                  >
-                    View all {{ sortedSubmissions.length }} submissions
-                  </v-btn>
                 </v-tab-item>
                 <!-- Beginning of Groups Tab -->
                 <v-tab-item>
@@ -350,9 +385,9 @@
                       v-for="group in sortedGroups"
                       :key="group.groupName"
                       :group="group"
-                      :isEditor = isEditor
+                      :isEditor="isEditor"
                       :items="getGroupedCompetitors(group.groupName)"
-                      @click.native=openEditGroupForm(group)
+                      @click.native="openEditGroupForm(group)"
                     >
                     </GroupCard>
                   </div>
@@ -366,7 +401,7 @@
           <div class="leaderboard col-6 px-6">
             <v-tabs
               v-if="competition.groupParticipation"
-              v-model="lb_tab"       
+              v-model="lb_tab"
               background-color="transparent"
               height="35"
               dense
@@ -378,7 +413,7 @@
               <v-tabs-items v-model="lb_tab">
                 <!-- Beginning of tab 1 -->
                 <v-tab-item>
-                    <v-card elevation="5" class="ma-3">
+                  <v-card elevation="5" class="ma-3">
                     <v-data-table
                       ref="leaderboard"
                       class="leaderboard-table"
@@ -397,7 +432,7 @@
                         </div></template
                       >
                     </v-data-table>
-                    </v-card>
+                  </v-card>
                 </v-tab-item>
                 <!-- End of tab 1 -->
 
@@ -430,24 +465,24 @@
 
             <!-- If individual participation -->
             <v-card v-else elevation="5">
-            <v-data-table
-              ref="leaderboard"
-              class="leaderboard-table"
-              :headers="headers"
-              :items="competitors"
-              sort-by="score"
-              sort-desc
-              no-data-text="No one has signed up yet"
-            >
-              <template #[`item.lastName`]="{ item }"
-                >{{ item.firstName }} {{ item.lastName }}</template
+              <v-data-table
+                ref="leaderboard"
+                class="leaderboard-table"
+                :headers="headers"
+                :items="competitors"
+                sort-by="score"
+                sort-desc
+                no-data-text="No one has signed up yet"
               >
-              <template v-slot:top
-                ><div class="leaderboard-title">
-                  <v-icon left>mdi-trophy</v-icon>Leaderboard
-                </div></template
-              >
-            </v-data-table>
+                <template #[`item.lastName`]="{ item }"
+                  >{{ item.firstName }} {{ item.lastName }}</template
+                >
+                <template v-slot:top
+                  ><div class="leaderboard-title">
+                    <v-icon left>mdi-trophy</v-icon>Leaderboard
+                  </div></template
+                >
+              </v-data-table>
             </v-card>
           </div>
         </v-card-text>
@@ -938,14 +973,19 @@
 </template>
 
 <script>
+// @ts-ignore
 import { mapActions, mapGetters } from "vuex";
 import dateMixin from "../../mixins/date-mixin";
 import GroupCard from "../../components/GroupCard.vue";
+import { VueperSlides, VueperSlide } from 'vueperslides'
+import 'vueperslides/dist/vueperslides.css'
 
 export default {
   name: "Competition",
   components: {
     GroupCard,
+    VueperSlides, 
+    VueperSlide
   },
   mixins: [dateMixin],
   data() {
@@ -1029,11 +1069,11 @@ export default {
       "user",
     ]),
     sortedSubmissions() {
-      let submissions = this.submissions 
-      submissions.sort((a,b) => { 
+      let submissions = this.submissions;
+      submissions.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt); //sort submission list by descending createdAt time
-      })
-      return submissions //return the sorted submission list
+      });
+      return submissions; //return the sorted submission list
     },
     competitorId() {
       return this.competition.competitors.items.find(
@@ -1129,7 +1169,7 @@ export default {
       return index >= 0 ? true : false;
     },
     getDisplayedSubmissions() {
-      if(this.competition.submissions.items.length > 25)
+      if (this.competition.submissions.items.length > 25)
         return this.sortedSubmissions.slice(0, 25);
       return this.sortedSubmissions;
     },
@@ -1350,6 +1390,10 @@ export default {
 </script>
 
 <style scoped>
+/* .carousel {
+  background-color: white;
+} */
+
 .grid {
   display: grid;
   grid-template-columns: 1.95fr 1.05fr;
@@ -1422,9 +1466,9 @@ a {
   right: 5px;
 }
 amplify-s3-image {
-  --width: 125%;
-  position: relative;
-  transform: translateX(-10%);
+  --width: 100%;
+  --height: 100%;
+  width: -webkit-fill-available; 
 }
 @media (max-width: 600px) {
   .grid {
