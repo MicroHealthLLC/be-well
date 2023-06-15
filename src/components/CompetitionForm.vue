@@ -152,9 +152,7 @@
             <vue-timepicker
               :minute-interval="15"
               input-width="10em"
-              label="Start"
               placeholder="Start Time"
-              format="hh:mm A"
               class="v-text-field"
               :class="[
                 isValidTime(competition.startTime) == false && saved == true
@@ -162,26 +160,24 @@
                   : '',
               ]"
               v-model="competition.startTime"
-              :rules="[(v) => !!v || 'Start Time is required']"
+              format="hh:mm A"
               required
             >
             </vue-timepicker>
 
             <!-- End Time Picker -->
             <vue-timepicker
-              lazy
               :minute-interval="15"
               input-width="10em"
               class="v-text-field"
               placeholder="End Time"
-              format="hh:mm A"
               :class="[
                 isValidTime(competition.endTime) == false && saved == true
                   ? 'st'
                   : '',
               ]"
               v-model="competition.endTime"
-              :rules="[(v) => !!v || 'End Time is required']"
+              format="hh:mm A"
               required
             >
             </vue-timepicker>
@@ -404,27 +400,29 @@ export default {
     ...mapActions(["addCompetition", "deleteCompetition", "updateCompetition"]),
     async addNewCompetition() {
       this.saved = true;
+      console.log(this.competition);
       //all 3 conditions must be true to call addCompetition, otherwise return
       if (
         this.$refs.competitionform.validate() &&
         this.isValidTime(this.competition.startTime) &&
         this.isValidTime(this.competition.endTime)
       ) {
+        console.log('*+');
         this.addCompetition(this.competition);
-        console.log(this.competition);
       }
       return;
     },
     async update() {
       this.saved = true;
+      console.log(this.competition);
       //all 3 conditions must be true to call updateCompetition, otherwise return
       if (
         this.$refs.competitionform.validate() &&
         this.isValidTime(this.competition.startTime) &&
         this.isValidTime(this.competition.endTime)
       ) {
+        console.log('*+');
         this.updateCompetition(this.competition);
-        console.log(this.competition);
       }
       return;
     },
@@ -473,12 +471,12 @@ export default {
       this.timeZone = this.timeZones.findIndex(
         (zone) => zone == this.competition.timeZone
       );
-      if (this.competition.startTime) {
-        this.competition.startTime = this.competition.startTime.toString();
-      }
-      if (this.competition.endTime) {
-        this.competition.endTime = this.competition.endTime.toString();
-      }
+      // if (this.stringStartTime) {
+      //   this.competition.startTime = this.stringStartTime;
+      // }
+      // if (this.stringEndTime) {
+      //   this.competition.endTime = this.stringEndTime;
+      // }
     },
   },
   mounted() {

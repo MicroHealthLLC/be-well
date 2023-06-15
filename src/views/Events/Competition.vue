@@ -265,61 +265,6 @@
                       ></v-btn
                     >
                   </div>
-                  <!-- <div
-                    v-if="
-                      startTimePassed(
-                        competition.startDate,
-                        competition.startTime,
-                        competition.timeZone
-                      ) && competition.submissions.items.length === 0
-                    "
-                    class="d-flex justify-center align-center pa-10"
-                  >
-                    No One has submitted anything yet...
-                  </div>
-                  <div
-                    v-else-if="
-                      !startTimePassed(
-                        competition.startDate,
-                        competition.startTime,
-                        competition.timeZone
-                      ) && competition.submissions.items.length === 0
-                    "
-                    class="d-flex justify-center align-center pa-10"
-                  >
-                    {{ competition.title }} has not started yet...
-                  </div>
-
-                  <div v-else class="photo-grid">
-                    <div
-                      v-for="submission in this.getDisplayedSubmissions()"
-                      :key="submission.id"
-                      class="d-flex mx-auto align-center justify-center"
-                    >
-                      <video
-                        v-if="submission.type == 'VIDEO'"
-                        @click="openVideo(submission, $event)"
-                        :src="submission.url"
-                        height="100%"
-                        class="clickable"
-                      ></video>
-                      <amplify-s3-image
-                        @click="openPhoto(submission)"
-                        v-else
-                        :img-key="submission.s3Key"
-                        class="clickable"
-                      ></amplify-s3-image>
-                      <div
-                        v-if="submission.isApproved"
-                        class="label"
-                        title="Approved Submission"
-                      >
-                        <v-icon color="success"
-                          >mdi-check-circle-outline</v-icon
-                        >
-                      </div>
-                    </div>
-                  </div> -->
                   <div class="carousel pa-10">
                     <vueper-slides
                       class="no-shadow"
