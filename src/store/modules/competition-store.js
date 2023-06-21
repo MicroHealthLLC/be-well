@@ -283,6 +283,7 @@ export default {
           graphqlOperation(createCompetitionSubmission, {
             input: submission,
             isApproved: true,
+            likes: 0,
           })
         );
 
@@ -568,6 +569,27 @@ export default {
           message: "Competition Submission Denied!",
           color: "var(--mh-orange)",
         });
+      } catch (error) {
+        console.log(error);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: error.errors[0].message,
+          color: "var(--mh-orange)",
+        });
+      }
+    },
+    async updateLikes({ commit }, submission) {
+      try {
+        // Send request to update like count
+        const res = await API.graphql(
+          graphqlOperation(updateCompetitionSubmission, {
+            input: {
+              id: submission.id,
+              likes: submission.likes,
+            },
+          })
+        );
+        commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
       } catch (error) {
         console.log(error);
         commit("SET_SNACKBAR", {

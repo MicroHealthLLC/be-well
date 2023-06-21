@@ -266,6 +266,7 @@ type CompetitionSubmission
   description: String
   submittedBy: String
   createdAt: AWSDateTime!
+  likes: Int
   isApproved: Boolean @default(value: "true")
   type: SubmissionType
   url: String
@@ -315,4 +316,4 @@ enum SubmissionType {
 }
 
 
-                                                
+                                                          

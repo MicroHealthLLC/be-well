@@ -302,6 +302,25 @@
                           >mdi-check-circle-outline</v-icon
                         >
                       </div>
+                      <div>
+                        <!-- <v-btn-toggle
+                          v-model="toggle_likes"
+                          multiple
+                        > -->
+                        <v-btn
+                          id="submission.id"
+                          class="like"
+                          icon
+                          dark
+                          @click="likeSubmission(submission, $event)"
+                        >
+                          <v-icon 
+                          color="primary"
+                          small
+                          >{{ liked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline' }}</v-icon>
+                        </v-btn>
+                        <!-- </v-btn-toggle> -->
+                      </div>
                       </template>
                       </vueper-slide>
                     </vueper-slides>
@@ -935,6 +954,8 @@ export default {
   mixins: [dateMixin],
   data() {
     return {
+      liked: false,
+      toggle_likes: [],
       withdrawDialog: false,
       deleteDialog: false,
       submissionDialog: false,
@@ -1081,6 +1102,7 @@ export default {
       "deleteSubmission",
       "deleteGroup",
       "denySubmission",
+      "updateLikes",
       "fetchCompetition",
       "deleteCompetitor",
       "updateCompetitorById",
@@ -1228,6 +1250,7 @@ export default {
         userId: this.user.attributes.sub,
         media: this.newSubmission.media,
         isApproved: true,
+        likes: 0,
         description: this.newSubmission.description,
         submittedBy: `${this.user.attributes.given_name} ${this.user.attributes.family_name}`,
         type: mediaType,
@@ -1317,6 +1340,20 @@ export default {
     async deny() {
       await this.denySubmission(this.selectedSubmission);
       this.selectedSubmission.isApproved = false;
+    },
+    async likeSubmission(submission, e) {
+      if(this.liked) {
+        this.liked = false;
+        submission.likes--;
+      }
+      else {
+        this.liked = true;
+        submission.likes++;
+      }
+      console.log(e);
+      console.log(this.liked);
+      await this.updateLikes(submission);
+      console.log("Number of likes: " + submission.likes);
     },
     removeSubmission() {
       this.deleteSubmission(this.selectedSubmission);
@@ -1409,6 +1446,15 @@ a {
   border-radius: 5px;
   top: 5px;
   right: 5px;
+}
+
+.like {
+  max-width: 15%;
+  max-height: 20%;
+  background-color: white;
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
 }
 amplify-s3-image {
   --width: 100%;
