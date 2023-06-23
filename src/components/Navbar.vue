@@ -94,6 +94,14 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/events/competitions" link>
+            <v-list-item-icon>
+              <v-icon>mdi-medal</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Campaigns</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/activities/goals" link>
             <v-list-item-icon>
               <v-icon>mdi-flag-checkered</v-icon>
