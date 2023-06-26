@@ -8,6 +8,7 @@ import goalStore from "./modules/goal-store";
 import reminderStore from "./modules/reminder-store";
 import videoStore from "./modules/video-store";
 import photoStore from "./modules/photo-store";
+import likeButtonStore from "./modules/likeButton-store";
 import preferencesStore from "./modules/preferences-store";
 import watchedVideoStore from "./modules/watched-video-store";
 
@@ -44,6 +45,7 @@ export default new Vuex.Store({
     reminderStore,
     videoStore,
     photoStore,
+    likeButtonStore,
     preferencesStore,
     watchedVideoStore,
   },

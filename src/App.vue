@@ -90,7 +90,7 @@ export default {
   },
   mixins: [utilitiesMixin],
   methods: {
-    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences", "addPreferences"]),
+    ...mapActions(["fetchCurrentUser", "fetchReminders", "fetchPreferences", "addPreferences", "fetchLikeButtons", "addLikeButton"]),
     ...mapMutations(["CLOSE_SNACKBAR", "TOGGLE_REMINDERS_ON"]),
     checkReminders() {
       // Get current time for check
@@ -138,7 +138,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["reminders", "remindersOn", "snackbar", "user", "preferences"]),
+    ...mapGetters(["reminders", "remindersOn", "snackbar", "user", "preferences", "likeButtons"]),
     filteredReminders() {
       const now = new Date();
       const day = now.getDay();
@@ -158,6 +158,7 @@ export default {
     if (this.user) {
       this.fetchReminders();
       this.fetchPreferences();
+      this.fetchLikeButtons();
     }
     this.TOGGLE_REMINDERS_ON(true);
   },

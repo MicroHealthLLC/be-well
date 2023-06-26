@@ -851,6 +851,7 @@ export const onCreateCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
@@ -875,6 +876,7 @@ export const onUpdateCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
@@ -899,12 +901,61 @@ export const onDeleteCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
       manualScoring
       scoringVal
       mAmount
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateLikeButton = /* GraphQL */ `
+  subscription OnCreateLikeButton(
+    $filter: ModelSubscriptionLikeButtonFilterInput
+    $owner: String
+  ) {
+    onCreateLikeButton(filter: $filter, owner: $owner) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateLikeButton = /* GraphQL */ `
+  subscription OnUpdateLikeButton(
+    $filter: ModelSubscriptionLikeButtonFilterInput
+    $owner: String
+  ) {
+    onUpdateLikeButton(filter: $filter, owner: $owner) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteLikeButton = /* GraphQL */ `
+  subscription OnDeleteLikeButton(
+    $filter: ModelSubscriptionLikeButtonFilterInput
+    $owner: String
+  ) {
+    onDeleteLikeButton(filter: $filter, owner: $owner) {
+      id
+      subId
+      liked
+      icon
+      createdAt
       updatedAt
       owner
     }
@@ -973,6 +1024,7 @@ export const onCreateCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
@@ -1053,6 +1105,7 @@ export const onUpdateCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
@@ -1133,6 +1186,7 @@ export const onDeleteCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url

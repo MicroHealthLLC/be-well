@@ -275,8 +275,9 @@
                       :slide-ratio="1 / 4"
                       :dragging-distance="200"
                       :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }">
-                      <vueper-slide v-for="submission in this.getDisplayedSubmissions()"
+                      <vueper-slide v-for="(submission, index) in this.sortedSubmissions"
                       :key="submission.id"
+                      :index="index"
                       :style="'background-color: black'">
                       <template #content>
                       <video
@@ -292,7 +293,8 @@
                         v-else
                         :img-key="submission.s3Key"
                         class="clickable"
-                      ></amplify-s3-image>
+                      >
+                      </amplify-s3-image>
                       <div
                         v-if="submission.isApproved"
                         class="label"
@@ -302,25 +304,19 @@
                           >mdi-check-circle-outline</v-icon
                         >
                       </div>
-                      <div>
-                        <!-- <v-btn-toggle
-                          v-model="toggle_likes"
-                          multiple
-                        > -->
-                        <v-btn
-                          id="submission.id"
-                          class="like"
-                          icon
-                          dark
-                          @click="likeSubmission(submission, $event)"
-                        >
-                          <v-icon 
-                          color="primary"
-                          small
-                          >{{ liked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline' }}</v-icon>
-                        </v-btn>
-                        <!-- </v-btn-toggle> -->
-                      </div>
+                      <v-btn
+                        v-if="getLikeButton(submission) !== null"    
+                        class="like"
+                        icon
+                        dark
+                        @click="likeSubmission(submission)"
+                      >
+                        <v-icon 
+                        color="primary"
+                        small
+                        >{{ getLikeButton(submission) ? getLikeButton(submission).icon : 'mdi-thumb-up-outline' }}
+                        </v-icon>
+                      </v-btn>
                       </template>
                       </vueper-slide>
                     </vueper-slides>
@@ -810,7 +806,8 @@
           <div v-if="competition.manualScoring">
             <strong>{{ competition.unit }}: </strong>{{ dialogPhoto.mAmount }}
           </div>
-          <div><strong>Description: </strong>{{ dialogPhoto.description }}</div>
+          <div><strong>Description: </strong>{{ dialogPhoto.description ? dialogPhoto.description : "N/A" }}</div>
+          <div><strong>Likes: </strong>{{ dialogPhoto.likes }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
           <div v-if="isEditor">
@@ -897,7 +894,8 @@
           <div v-if="competition.manualScoring">
             <strong>{{ competition.unit }}: </strong>{{ dialogVideo.mAmount }}
           </div>
-          <div><strong>Description: </strong>{{ dialogVideo.description }}</div>
+          <div><strong>Description: </strong>{{ dialogVideo.description ? dialogVideo.description : "N/A" }}</div>
+          <div><strong>Likes: </strong>{{ dialogVideo.likes }}</div>
         </v-card-text>
         <v-card-actions class="pb-5">
           <div v-if="isEditor">
@@ -954,7 +952,6 @@ export default {
   mixins: [dateMixin],
   data() {
     return {
-      liked: false,
       toggle_likes: [],
       withdrawDialog: false,
       deleteDialog: false,
@@ -976,12 +973,14 @@ export default {
         description: "",
         submittedBy: "",
         mAmount: null,
+        likes: null,
       },
       dialogVideo: {
         src: "",
         description: "",
         submittedBy: "",
         mAmount: null,
+        likes: null,
       },
       tab: null,
       lb_tab: null,
@@ -995,6 +994,7 @@ export default {
         score: 0,
       },
       selectedSubmission: {},
+      selectedLikeButton: {},
       headers: [
         {
           text: "Name",
@@ -1022,6 +1022,18 @@ export default {
           this.videoDuration <= 300 ||
           "Video duration must be less than 5 minutes",
       ],
+      // likeButtons: [
+      //   {
+      //     subId: "4b769b5a-e32d-4609-bdb4-00b9b9aa2088",
+      //     liked: false,
+      //     icon: 'mdi-thumb-up-outline',
+      //   },
+      //   {
+      //     subId: "3ad1aea2-56b3-4a87-a633-60f6e89aa75e",
+      //     liked: false,
+      //     icon: 'mdi-thumb-up-outline',
+      //   },
+      // ],
     };
   },
   computed: {
@@ -1029,6 +1041,7 @@ export default {
       "competition",
       "competitors",
       "submissions",
+      "likeButtons",
       "groups",
       "isEditor",
       "saving",
@@ -1045,6 +1058,14 @@ export default {
       return this.competition.competitors.items.find(
         (competitor) => competitor.userId == this.user.attributes.sub
       ).id;
+    },
+    likeButtonId() {
+      return this.likeButtons.find(
+        (likeButton) => this.selectedSubmission.id === likeButton.subId
+      ).id;
+    },
+    likeButtonsList() {
+      return this.likeButtons;
     },
     ungroupedCompetitors() {
       return this.competition.competitors.items.filter(
@@ -1107,6 +1128,10 @@ export default {
       "deleteCompetitor",
       "updateCompetitorById",
       "updateGroupById",
+      "addLikeButton",
+      "deleteLikeButton",
+      "updateLikeButtonById",
+      "fetchLikeButtons",
     ]),
     joinCompetition() {
       let competitor = {
@@ -1134,11 +1159,6 @@ export default {
         : -1;
 
       return index >= 0 ? true : false;
-    },
-    getDisplayedSubmissions() {
-      if (this.competition.submissions.items.length > 25)
-        return this.sortedSubmissions.slice(0, 25);
-      return this.sortedSubmissions;
     },
     getGroupedCompetitors(gn) {
       return this.competition.competitors.items.filter(
@@ -1244,6 +1264,7 @@ export default {
         ? "PHOTO"
         : "VIDEO";
 
+      //add submission to database
       let submission = {
         competitorId: this.competitorId,
         competitionId: this.competition.id,
@@ -1259,6 +1280,18 @@ export default {
         mAmount: this.newSubmission.mAmount,
       };
       await this.addSubmission(submission);
+
+      //add like button to database with respective submission
+      let likeButton = {
+        subId: this.sortedSubmissions[0].id,
+        liked: false,
+        icon: 'mdi-thumb-up-outline',
+      };
+      await this.addLikeButton(likeButton);
+      this.selectedLikeButton =  this.likeButtons.find(
+        (likeButton) => this.sortedSubmissions[0].id === likeButton.subId
+      );
+
       this.closeSubmissionForm();
     },
     openPhoto(submission) {
@@ -1266,6 +1299,7 @@ export default {
       this.dialogPhoto.description = submission.description;
       this.dialogPhoto.src = photoURL;
       this.dialogPhoto.submittedBy = submission.submittedBy;
+      this.dialogPhoto.likes = submission.likes;
       this.dialogPhoto.unit = submission.unit;
       this.dialogPhoto.mAmount = submission.mAmount;
       this.photoDialog = true;
@@ -1277,6 +1311,7 @@ export default {
       this.dialogVideo.description = submission.description;
       this.dialogVideo.src = video.currentSrc;
       this.dialogVideo.submittedBy = submission.submittedBy;
+      this.dialogVideo.likes = submission.likes;
       this.dialogVideo.unit = submission.unit;
       this.dialogVideo.mAmount = submission.mAmount;
       this.videoDialog = true;
@@ -1341,22 +1376,48 @@ export default {
       await this.denySubmission(this.selectedSubmission);
       this.selectedSubmission.isApproved = false;
     },
-    async likeSubmission(submission, e) {
-      if(this.liked) {
-        this.liked = false;
+    setLikeButton(submission) {
+      this.selectedLikeButton =  this.likeButtons.find(
+        (likeButton) => submission.id === likeButton.subId
+      );
+    },
+    getLikeButton(submission) {
+      return this.likeButtons.find(
+        (likeButton) => submission.id === likeButton.subId
+      );
+    },
+    async likeSubmission(submission) {
+      this.selectedLikeButton = this.likeButtons.find(
+        (likeButton) => submission.id === likeButton.subId
+      );
+      console.log(submission.url)
+      if(this.selectedLikeButton && this.selectedLikeButton.liked) {
+        await this.updateLikeButtonById({
+          id: this.selectedLikeButton.id,
+          subId: this.selectedLikeButton.subId,
+          liked: false,
+          icon: "mdi-thumb-up-outline",
+        });
         submission.likes--;
       }
       else {
-        this.liked = true;
+        await this.updateLikeButtonById({
+          id: this.selectedLikeButton.id,
+          subId: this.selectedLikeButton.subId,
+          liked: true,
+          icon: "mdi-thumb-up",
+          });
         submission.likes++;
       }
-      console.log(e);
-      console.log(this.liked);
+      console.log(submission.id);
       await this.updateLikes(submission);
       console.log("Number of likes: " + submission.likes);
+      console.log(submission.url)
     },
     removeSubmission() {
       this.deleteSubmission(this.selectedSubmission);
+      //delete associated like button
+      this.deleteLikeButton(this.likeButtonId);
       this.photoDialog = false;
       this.videoDialog = false;
     },
@@ -1367,7 +1428,11 @@ export default {
   },
   mounted() {
     this.fetchCompetition(this.$route.params.competitionId);
+    this.fetchLikeButtons();
   },
+  watch: {
+
+  }
 };
 </script>
 

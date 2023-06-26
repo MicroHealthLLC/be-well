@@ -275,6 +275,13 @@ type CompetitionSubmission
   mAmount: Float
 }
 
+type likeButton @model @auth (rules: [{ allow: owner }]) {
+  id: ID!
+  subId: String!
+  liked: Boolean! @default(value: "false")
+  icon: String!
+}
+
 enum Category {
   MEDITATION
   MUSCLE
@@ -316,4 +323,4 @@ enum SubmissionType {
 }
 
 
-                                                          
+                                                               

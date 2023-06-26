@@ -830,6 +830,7 @@ export const createCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
@@ -911,6 +912,7 @@ export const updateCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
@@ -992,6 +994,7 @@ export const deleteCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
@@ -1134,6 +1137,7 @@ export const createCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
@@ -1159,6 +1163,7 @@ export const updateCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
@@ -1184,12 +1189,61 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
       manualScoring
       scoringVal
       mAmount
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createLikeButton = /* GraphQL */ `
+  mutation CreateLikeButton(
+    $input: CreateLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    createLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateLikeButton = /* GraphQL */ `
+  mutation UpdateLikeButton(
+    $input: UpdateLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    updateLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteLikeButton = /* GraphQL */ `
+  mutation DeleteLikeButton(
+    $input: DeleteLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    deleteLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
       updatedAt
       owner
     }

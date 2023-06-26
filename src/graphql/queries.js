@@ -591,6 +591,7 @@ export const getCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
       url
@@ -622,12 +623,46 @@ export const listCompetitionSubmissions = /* GraphQL */ `
         description
         submittedBy
         createdAt
+        likes
         isApproved
         type
         url
         manualScoring
         scoringVal
         mAmount
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getLikeButton = /* GraphQL */ `
+  query GetLikeButton($id: ID!) {
+    getLikeButton(id: $id) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listLikeButtons = /* GraphQL */ `
+  query ListLikeButtons(
+    $filter: ModelLikeButtonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLikeButtons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        subId
+        liked
+        icon
+        createdAt
         updatedAt
         owner
       }
@@ -871,6 +906,7 @@ export const getCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
           url
