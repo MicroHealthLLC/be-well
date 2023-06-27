@@ -10,8 +10,8 @@ import ElementUI from 'element-ui';
 // import moment from 'moment-timezone';
 import 'element-ui/lib/theme-chalk/index.css';
 import { Amplify } from "aws-amplify";
-//import sso_config from "./sso-exports"
-import aws_exports from "./aws-exports";
+import sso_config from "./sso-exports"
+//import aws_exports from "./aws-exports";
 import VueConfetti from 'vue-confetti'
 import {
   applyPolyfills,
@@ -22,7 +22,7 @@ applyPolyfills().then(() => {
   defineCustomElements(window);
 });
 
-Amplify.configure(aws_exports);
+Amplify.configure(sso_config);
 
 Vue.config.productionTip = false;
 Vue.use(VueConfetti)
