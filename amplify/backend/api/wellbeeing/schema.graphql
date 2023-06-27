@@ -266,20 +266,12 @@ type CompetitionSubmission
   description: String
   submittedBy: String
   createdAt: AWSDateTime!
-  likes: Int
   isApproved: Boolean @default(value: "true")
   type: SubmissionType
   url: String
   manualScoring: Boolean
   scoringVal: Float
   mAmount: Float
-}
-
-type likeButton @model @auth (rules: [{ allow: owner }]) {
-  id: ID!
-  subId: String!
-  liked: Boolean! @default(value: "false")
-  icon: String!
 }
 
 enum Category {
@@ -323,4 +315,4 @@ enum SubmissionType {
 }
 
 
-                                                               
+                                                        
