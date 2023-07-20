@@ -412,15 +412,15 @@ export default {
   color: var(--mh-blue);
 }
 
-::v-deep .text-start:first-child {
+:deep .text-start:first-child {
   font-weight: 600;
 }
 
-::v-deep tr:hover {
+:deep tr:hover {
   cursor: pointer;
 }
 
-::v-deep tr.v-data-table__empty-wrapper {
+:deep tr.v-data-table__empty-wrapper {
   margin: auto;
 }
 

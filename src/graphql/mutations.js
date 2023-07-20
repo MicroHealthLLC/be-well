@@ -127,6 +127,48 @@ export const deleteReminder = /* GraphQL */ `
     }
   }
 `;
+export const createPhoto = /* GraphQL */ `
+  mutation CreatePhoto(
+    $input: CreatePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    createPhoto(input: $input, condition: $condition) {
+      id
+      title
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePhoto = /* GraphQL */ `
+  mutation UpdatePhoto(
+    $input: UpdatePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    updatePhoto(input: $input, condition: $condition) {
+      id
+      title
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePhoto = /* GraphQL */ `
+  mutation DeletePhoto(
+    $input: DeletePhotoInput!
+    $condition: ModelPhotoConditionInput
+  ) {
+    deletePhoto(input: $input, condition: $condition) {
+      id
+      title
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createGoal = /* GraphQL */ `
   mutation CreateGoal(
     $input: CreateGoalInput!
@@ -734,6 +776,13 @@ export const createCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      manualScoring
+      unit
+      scoringVal
+      category
       description
       rules
       startDate
@@ -741,6 +790,19 @@ export const createCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
+      groups {
+        items {
+          id
+          competitionId
+          groupName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       competitors {
         items {
           id
@@ -748,6 +810,9 @@ export const createCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
+          groupName
+          groupId
           score
           createdAt
           updatedAt
@@ -765,8 +830,13 @@ export const createCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
+          url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -788,6 +858,13 @@ export const updateCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      manualScoring
+      unit
+      scoringVal
+      category
       description
       rules
       startDate
@@ -795,6 +872,19 @@ export const updateCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
+      groups {
+        items {
+          id
+          competitionId
+          groupName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       competitors {
         items {
           id
@@ -802,6 +892,9 @@ export const updateCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
+          groupName
+          groupId
           score
           createdAt
           updatedAt
@@ -819,8 +912,13 @@ export const updateCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
+          url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -842,6 +940,13 @@ export const deleteCompetition = /* GraphQL */ `
       hostName
       hostEmail
       title
+      campaignType
+      isPrivate
+      groupParticipation
+      manualScoring
+      unit
+      scoringVal
+      category
       description
       rules
       startDate
@@ -849,6 +954,19 @@ export const deleteCompetition = /* GraphQL */ `
       startTime
       endTime
       timeZone
+      deadline
+      groups {
+        items {
+          id
+          competitionId
+          groupName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       competitors {
         items {
           id
@@ -856,6 +974,9 @@ export const deleteCompetition = /* GraphQL */ `
           userId
           firstName
           lastName
+          groupParticipation
+          groupName
+          groupId
           score
           createdAt
           updatedAt
@@ -873,8 +994,13 @@ export const deleteCompetition = /* GraphQL */ `
           description
           submittedBy
           createdAt
+          likes
           isApproved
           type
+          url
+          manualScoring
+          scoringVal
+          mAmount
           updatedAt
           owner
         }
@@ -883,6 +1009,54 @@ export const deleteCompetition = /* GraphQL */ `
       image
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createGroup = /* GraphQL */ `
+  mutation CreateGroup(
+    $input: CreateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    createGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateGroup = /* GraphQL */ `
+  mutation UpdateGroup(
+    $input: UpdateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    updateGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteGroup = /* GraphQL */ `
+  mutation DeleteGroup(
+    $input: DeleteGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    deleteGroup(input: $input, condition: $condition) {
+      id
+      competitionId
+      groupName
+      score
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
@@ -897,6 +1071,9 @@ export const createCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
+      groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -915,6 +1092,9 @@ export const updateCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
+      groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -933,6 +1113,9 @@ export const deleteCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
+      groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -954,8 +1137,13 @@ export const createCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
+      url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -975,8 +1163,13 @@ export const updateCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
+      url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -996,8 +1189,61 @@ export const deleteCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
+      url
+      manualScoring
+      scoringVal
+      mAmount
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createLikeButton = /* GraphQL */ `
+  mutation CreateLikeButton(
+    $input: CreateLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    createLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateLikeButton = /* GraphQL */ `
+  mutation UpdateLikeButton(
+    $input: UpdateLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    updateLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteLikeButton = /* GraphQL */ `
+  mutation DeleteLikeButton(
+    $input: DeleteLikeButtonInput!
+    $condition: ModelLikeButtonConditionInput
+  ) {
+    deleteLikeButton(input: $input, condition: $condition) {
+      id
+      subId
+      liked
+      icon
+      createdAt
       updatedAt
       owner
     }

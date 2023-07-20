@@ -1,5 +1,5 @@
 let baseURL = "https://beta-bewell.microhealthllc.com/"
-let graphQLEndpoint = "https://ljertf3kdrghnnu37weavbpf5u.appsync-api.us-east-1.amazonaws.com/graphql"
+let graphQLEndpoint = "https://yyxtzhm4c5a7ti3wohpnubx77e.appsync-api.us-east-1.amazonaws.com/graphql/graphql"
 
 if (process.env.NODE_ENV == "development") {
     console.log(process.env)
@@ -43,7 +43,7 @@ const awsmobile = {
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_appsync_dangerously_connect_to_http_endpoint_for_testing": true,
-    "aws_user_files_s3_bucket": "wellbeeing3f58a2ecb03248c2988066b315cb3ceb124038-sandbox",
+    "aws_user_files_s3_bucket": "bewell6c12f71c8e78482ebcb5400c268db822114344-betadevtwo",
     "aws_user_files_s3_bucket_region": "us-east-1",
     "aws_user_files_s3_dangerously_connect_to_http_endpoint_for_testing": true
 };

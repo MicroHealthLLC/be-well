@@ -1,9 +1,15 @@
 <template>
   <div>
     <div class="d-flex justify-space-between mb-2 align-center">
-      <div class="text-h6 text-sm-h5">Edit Competition</div>
-      <v-btn to="/events/competitions" exact-path color="#2f53b6" dark outlined small
-        ><v-icon>mdi-arrow-left</v-icon>Competitions</v-btn
+      <div class="text-h6 text-sm-h5">Edit Campaign</div>
+      <v-btn 
+        to="/events/competitions" 
+        exact-path 
+        color="#2f53b6" 
+        dark 
+        outlined 
+        small
+        ><v-icon>mdi-arrow-left</v-icon>Campaigns</v-btn
       >
     </div>
     <v-divider class="mb-4"></v-divider>

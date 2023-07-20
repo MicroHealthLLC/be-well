@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getCompetition, listCompetitions } from "@/graphql/queries";
-import { createCompetition, createCompetitionSubmission, createCompetitor, deleteCompetition, deleteCompetitor, deleteCompetitionSubmission, updateCompetition, updateCompetitor, updateCompetitionSubmission } from "@/graphql/mutations"; // prettier-ignore
+import { createCompetition, createCompetitionSubmission, createGroup, createCompetitor, deleteCompetition, deleteCompetitor, deleteCompetitionSubmission, deleteGroup, updateCompetition, updateCompetitor, updateGroup, updateCompetitionSubmission} from "@/graphql/mutations"; // prettier-ignore
 
 export default {
   state: {
@@ -11,14 +11,18 @@ export default {
       hostEmail: "",
       startDate: "",
       endDate: "",
-      startTime: null,
-      endTime: null,
+      deadline: "",
+      startTime: "",
+      endTime: "",
       image: null,
+      unit: null,
+      scoringVal: null,
       description: "",
       rules: "",
-      timeZone: "EST",
+      timeZone: "",
       competitors: { items: [] },
       submissions: { items: [] },
+      groups: { items: [] },
     },
     competitions: [],
   },
@@ -54,6 +58,7 @@ export default {
       delete competition.updatedAt;
       delete competition.competitors;
       delete competition.submissions;
+      delete competition.groups;
 
       try {
         if (competition.image && competition.image.name) {
@@ -158,19 +163,86 @@ export default {
           graphqlOperation(createCompetitor, { input: competitor })
         );
         commit("ADD_COMPETITOR", res.data.createCompetitor);
-        commit("SET_SNACKBAR", {
-          show: true,
-          message: "Successfully Joined Competition!",
-          color: "var(--mh-green)",
-        });
+        if (competitor.groupParticipation) {
+          commit("SET_SNACKBAR", {
+            show: true,
+            message:
+              "Successfully Joined Competition! You will be added to a group.",
+            color: "var(--mh-green)",
+          });
+        } else {
+          commit("SET_SNACKBAR", {
+            show: true,
+            message: "Successfully Joined Competition!",
+            color: "var(--mh-green)",
+          });
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    async deleteCompetitor({ commit }, id) {
+    async deleteCompetitor({ commit, getters }, competitor) {
       try {
+        // get all submissions of this competition
+        let subs = competitor.competition.submissions.items;
+        // loop through submissions and delete the ones that belong to this competitor
+        var i = 0;
+        var total = 0;
+        let groupSubs = [];
+        while (i < subs.length) {
+          if (subs[i].competitorId == competitor.competitorId) {
+            groupSubs.push(subs[i]);
+            let points;
+            // Automatic scoring
+            if (!subs[i].manualScoring) {
+              points = subs[i].type == "VIDEO" ? 5 : 2;
+            }
+            // Manual scoring
+            else {
+              points =
+                parseFloat(subs[i].mAmount) * parseFloat(subs[i].scoringVal);
+            }
+            total += points;
+            API.graphql(
+              graphqlOperation(deleteCompetitionSubmission, {
+                input: { id: subs[i].id },
+              })
+            );
+            commit("REMOVE_SUBMISSION", subs[i].id);
+          } else {
+            if (i == subs.length - 1) return;
+            i++;
+          }
+        }
+        // update group score for group that competitor was in
+        let g;
+        let c = getters.competitors.find( 
+          (comp) => comp.id === competitor.competitorId
+        )
+        if(c) {
+          g = getters.groups.find(
+            (group) => group.groupName === c.groupName
+          );
+        }
+        console.log(g)
+        if(g) {
+          i = 0;
+          const res3 = await API.graphql(
+            graphqlOperation(updateGroup, {
+              input: { 
+                id: g.id,
+                groupName: g.groupName, 
+                score: (g.score - total).toFixed(1), 
+              },
+            })
+          );
+          commit("UPDATE_GROUP", res3.data.updateGroup);
+        }
+
         const res = await API.graphql(
-          graphqlOperation(deleteCompetitor, { input: { id: id } })
+          graphqlOperation(deleteCompetitor, {
+            input: { id: competitor.competitorId },
+          })
         );
 
         commit("REMOVE_COMPETITOR", res.data.deleteCompetitor.id);
@@ -183,8 +255,20 @@ export default {
         console.log(error);
       }
     },
+    async updateCompetitorById({ commit }, competitor) {
+      commit("TOGGLE_SAVING", true);
+      try {
+        const res = await API.graphql(
+          graphqlOperation(updateCompetitor, { input: competitor })
+        );
+        commit("UPDATE_COMPETITOR", res.data.updateCompetitor);
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
     // Media (photo or video) Submission Requests
-    async addSubmission({ commit }, submission) {
+    async addSubmission({ commit, getters }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
         if (submission.media) {
@@ -196,33 +280,145 @@ export default {
         delete submission.media;
 
         const res = await API.graphql(
-          graphqlOperation(createCompetitionSubmission, { input: submission })
+          graphqlOperation(createCompetitionSubmission, {
+            input: submission,
+            isApproved: true,
+            likes: 0,
+          })
         );
 
         const newSubmission = res.data.createCompetitionSubmission;
-        if (newSubmission.type == "VIDEO") {
+        if (newSubmission.type == "VIDEO" || newSubmission.type == "PHOTO") {
           const url = await Storage.get(submission.s3Key);
           newSubmission.url = url;
         }
 
+        // Update Competitor score
+        let points;
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+        }
+
+        let newScore = getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score + points;
+
+        // Send request to increase competitor score
+        const res2 = await API.graphql(
+          graphqlOperation(updateCompetitor, {
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
+          })
+        );
+
+        // Send request to update group score
+        if(getters.competitors.find(
+          (competitor) => competitor.id === submission.competitorId
+          ).groupParticipation) {
+            const curr_groupName = getters.competitors.find(
+              (competitor) => competitor.id === submission.competitorId
+              ).groupName;
+            // Check if competitor is in a group
+            if(curr_groupName) {
+              const res3 = await API.graphql(
+                graphqlOperation(updateGroup, {
+                  input: { 
+                    id: getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).id,
+                    groupName: curr_groupName, 
+                    score: (getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).score + points).toFixed(1), 
+                  },
+                })
+              );
+              commit("UPDATE_GROUP", res3.data.updateGroup);
+            }
+        }
+
+        commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
         commit("ADD_SUBMISSION", newSubmission);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successful!",
           color: "var(--mh-green)",
         });
+
+        // If group participation, add score to respective team as well
       } catch (error) {
         console.log(error);
       }
       commit("TOGGLE_SAVING", false);
     },
-    async deleteSubmission({ commit }, id) {
+    async deleteSubmission({ commit, getters }, submission) {
       commit("TOGGLE_SAVING", true);
       try {
+        if (submission.isApproved) {
+          // Update Competitor score
+          let points;
+          // Automatic scoring
+          if (!submission.manualScoring) {
+            points = submission.type == "VIDEO" ? 5 : 2;
+          }
+          // Manual scoring
+          else {
+            points =
+              parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+          }
+
+          let newScore = getters.competitors.find(
+                (competitor) => competitor.id == submission.competitorId
+              ).score - points;
+
+          // Send request to increase competitor score
+          const res2 = await API.graphql(
+            graphqlOperation(updateCompetitor, {
+              input: { id: submission.competitorId, score: newScore.toFixed(1) },
+            })
+          );
+
+        // Send request to update group score
+        if(getters.competitors.find(
+          (competitor) => competitor.id === submission.competitorId
+          ).groupParticipation) {
+            const curr_groupName = getters.competitors.find(
+              (competitor) => competitor.id === submission.competitorId
+              ).groupName;
+            // Check if competitor is in a group
+            if(curr_groupName) {
+              const res3 = await API.graphql(
+                graphqlOperation(updateGroup, {
+                  input: { 
+                    id: getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).id,
+                    groupName: curr_groupName, 
+                    score: (getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).score - points).toFixed(1),
+                  },
+                })
+              );
+              commit("UPDATE_GROUP", res3.data.updateGroup);
+            }
+        }
+
+          commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
+        }
+
         API.graphql(
-          graphqlOperation(deleteCompetitionSubmission, { input: { id: id } })
+          graphqlOperation(deleteCompetitionSubmission, {
+            input: { id: submission.id },
+          })
         );
-        commit("REMOVE_SUBMISSION", id);
+
+        commit("REMOVE_SUBMISSION", submission.id);
         commit("SET_SNACKBAR", {
           show: true,
           message: "Competition Submission Successfully Removed",
@@ -238,21 +434,57 @@ export default {
         // Send request to mark submission as true
         const res = await API.graphql(
           graphqlOperation(updateCompetitionSubmission, {
-            input: { id: submission.id, isApproved: true },
+            input: { id: submission.id, isApproved: true, url: submission.url },
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 3;
-        let newScore =
-          getters.competitors.find(
-            (competitor) => competitor.id == submission.competitorId
-          ).score + points;
+        let points;
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+        }
+
+        let newScore = getters.competitors.find(
+              (competitor) => competitor.id == submission.competitorId
+            ).score + points
+
         // Send request to increase competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
-            input: { id: submission.competitorId, score: newScore },
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
           })
         );
+
+        // Send request to update group score
+        if(getters.competitors.find(
+          (competitor) => competitor.id === submission.competitorId
+          ).groupParticipation) {
+            const curr_groupName = getters.competitors.find(
+              (competitor) => competitor.id === submission.competitorId
+              ).groupName;
+            // Check if competitor is in a group
+            if(curr_groupName) {
+              const res3 = await API.graphql(
+                graphqlOperation(updateGroup, {
+                  input: { 
+                    id: getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).id,
+                    groupName: curr_groupName, 
+                    score: (getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).score + points).toFixed(1),
+                  },
+                })
+              );
+              commit("UPDATE_GROUP", res3.data.updateGroup);
+            }
+        }
 
         commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
         commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
@@ -275,21 +507,60 @@ export default {
         // Send request to mark submission as true
         const res = await API.graphql(
           graphqlOperation(updateCompetitionSubmission, {
-            input: { id: submission.id, isApproved: false },
+            input: {
+              id: submission.id,
+              isApproved: false,
+              url: submission.url,
+            },
           })
         );
         // Update Competitor score
-        let points = submission.type == "VIDEO" ? 5 : 3;
-        let newScore =
-          getters.competitors.find(
-            (competitor) => competitor.id == submission.competitorId
-          ).score - points;
-        // Send request to increase competitor score
+        let points;
+        // Automatic scoring
+        if (!submission.manualScoring) {
+          points = submission.type == "VIDEO" ? 5 : 2;
+        }
+        // Manual scoring
+        else {
+          points =
+            parseFloat(submission.mAmount) * parseFloat(submission.scoringVal);
+        }
+
+        let newScore = getters.competitors.find(
+          (competitor) => competitor.id == submission.competitorId).score - points
+
+        // Send request to decrease competitor score
         const res2 = await API.graphql(
           graphqlOperation(updateCompetitor, {
-            input: { id: submission.competitorId, score: newScore },
+            input: { id: submission.competitorId, score: newScore.toFixed(1) },
           })
         );
+
+        // Send request to update group score
+        if(getters.competitors.find(
+          (competitor) => competitor.id === submission.competitorId
+          ).groupParticipation) {
+            const curr_groupName = getters.competitors.find(
+              (competitor) => competitor.id === submission.competitorId
+              ).groupName;
+            // Check if competitor is in a group
+            if(curr_groupName) {
+              const res3 = await API.graphql(
+                graphqlOperation(updateGroup, {
+                  input: { 
+                    id: getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).id,
+                    groupName: curr_groupName, 
+                    score: (getters.groups.find(
+                      (group) => group.groupName === curr_groupName
+                    ).score - points).toFixed(1), 
+                  },
+                })
+              );
+              commit("UPDATE_GROUP", res3.data.updateGroup);
+            }
+        }
 
         commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
         commit("UPDATE_COMPETITOR", res2.data.updateCompetitor);
@@ -305,6 +576,78 @@ export default {
           message: error.errors[0].message,
           color: "var(--mh-orange)",
         });
+      }
+    },
+    async updateLikes({ commit }, submission) {
+      try {
+        // Send request to update like count
+        const res = await API.graphql(
+          graphqlOperation(updateCompetitionSubmission, {
+            input: {
+              id: submission.id,
+              likes: submission.likes,
+            },
+          })
+        );
+        commit("UPDATE_SUBMISSION", res.data.updateCompetitionSubmission);
+      } catch (error) {
+        console.log(error);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: error.errors[0].message,
+          color: "var(--mh-orange)",
+        });
+      }
+    },
+    async addGroup({ commit }, group) {
+      commit("TOGGLE_SAVING", true);
+      try {
+        const res = await API.graphql(
+          graphqlOperation(createGroup, { input: group })
+        );
+        commit("ADD_GROUP", res.data.createGroup);
+        console.log(group);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Group Successfully Added!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async updateGroupById({ commit }, group) {
+      commit("TOGGLE_SAVING", true);
+      try {
+        const res = await API.graphql(graphqlOperation(updateGroup, { input: group }));
+        commit("UPDATE_GROUP", res.data.updateGroup);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Group Successfully Updated!",
+          color: "var(--mh-green)",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      commit("TOGGLE_SAVING", false);
+    },
+    async deleteGroup({ commit }, group) {
+      try {
+        const res = await API.graphql(
+          graphqlOperation(deleteGroup, {
+            input: { id: group.id },
+          })
+        );
+
+        commit("REMOVE_GROUP", res.data.deleteGroup.id);
+        commit("SET_SNACKBAR", {
+          show: true,
+          message: "Group Successfully Deleted",
+          color: "var(--mh-orange)",
+        });
+      } catch (error) {
+        console.log(error);
       }
     },
   },
@@ -343,10 +686,25 @@ export default {
       );
       Vue.set(submissions, index, updatedSubmission);
     },
+
+    ADD_GROUP: (state, group) => state.competition.groups.items.unshift(group),
+    REMOVE_GROUP: (state, id) => {
+      const index = state.competition.groups.items.findIndex(
+        (group) => group.id == id
+      );
+      state.competition.groups.items.splice(index, 1);
+    },
+    UPDATE_GROUP: (state, updatedGroup) => {
+      const groups = state.competition.groups.items;
+      const index = groups.findIndex((group) => group.id == updatedGroup.id);
+      Vue.set(groups, index, updatedGroup);
+    },
   },
   getters: {
     competition: (state) => state.competition,
     competitions: (state) => state.competitions,
     competitors: (state) => state.competition.competitors.items,
+    submissions: (state) => state.competition.submissions.items,
+    groups: (state) => state.competition.groups.items,
   },
 };

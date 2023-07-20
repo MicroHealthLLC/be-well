@@ -1,6 +1,5 @@
 <template>
-  <div></div>
-  <!-- <v-row>
+  <v-row>
     <v-col>
       <div class="d-flex justify-center align-center main-container">
         <v-card class="pt-0 pr-5 pb-5 pl-5" max-width="600" :loading="loading">
@@ -68,11 +67,12 @@
         </v-card>
       </div>
     </v-col>
-  </v-row> -->
+  </v-row>
+  <!-- <span></span> -->
 </template>
 
 <script>
-//import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { Auth } from "aws-amplify";
 
 export default {
@@ -88,7 +88,7 @@ export default {
     };
   },
   methods: {
-    /* ...mapActions(["login"]),
+    ...mapActions(["login"]),
     async userLogin() {
       if (!this.$refs.form.validate()) {
         return;
@@ -105,7 +105,7 @@ export default {
         this.hasError = true;
         this.error = error.message;
       }
-    }, */
+    },
     fedSignIn() {
       Auth.federatedSignIn()
     }
@@ -114,7 +114,7 @@ export default {
     this.fedSignIn()
   },
   computed: {
-    //...mapGetters(["loading"]),
+    ...mapGetters(["loading"]),
   },
 };
 </script>

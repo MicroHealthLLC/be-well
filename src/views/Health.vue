@@ -360,7 +360,7 @@ export default {
   max-height: 200px;
   object-fit: cover;
 }
-::v-deep .text-start:first-child {
+:deep .text-start:first-child {
   font-weight: 500;
 }
 a {

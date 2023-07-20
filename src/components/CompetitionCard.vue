@@ -23,19 +23,164 @@
     >
       <v-card-title>{{ competition.title }}</v-card-title>
       <v-card-subtitle class="d-flex flex-column">
-        <div class="text-caption mb-2">
-          Hosted by: {{ competition.hostName }}
+        <div style= "color:#616D7E" class="text-caption mb-2">
+          Hosted by: {{ competition.hostName }} <br>
+          {{ shortISODate(competition.startDate) }} - {{ shortISODate(competition.endDate) }}
         </div>
+        <!-- beginning of chips -->
         <div class="mb-2">
-          <v-chip class="mr-2" color="primary" small outlined
-            ><v-icon small left>mdi-office-building</v-icon
-            >Company Clash</v-chip
+          <v-chip 
+            v-if="this.competition.campaignType"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-bullhorn-variant</v-icon
+            >{{ this.competition.campaignType }}</v-chip
           >
-          <v-chip color="primary" small outlined>{{
-            fullDate(competition.startDate)
-          }}</v-chip>
+          <v-chip 
+            v-if="this.competition.category === 'Mental Health'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-brain</v-icon
+            >Mental Health</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Fitness'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-run</v-icon
+            >Fitness</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Weight Loss'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-scale-bathroom</v-icon
+            >Weight Loss</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Cooking'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-chef-hat</v-icon
+            >Cooking</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Balance'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-gymnastics</v-icon
+            >Balance</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Nutrition'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-food-apple</v-icon
+            >Cooking</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Stretch'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-yoga</v-icon
+            >Stretch</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.category === 'Miscellaneous'"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-shape-plus</v-icon
+            >Miscellaneous</v-chip
+          >
+          <v-chip 
+            v-if="this.competition.isPrivate"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-lock</v-icon
+            >Private</v-chip
+          >
+          <v-chip 
+            v-if="!this.competition.isPrivate"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-lock-open-variant</v-icon
+            >Public</v-chip
+          >
+          <!-- <v-chip 
+            v-if="this.competition.isAnonymous"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-incognito</v-icon
+            >Anonymous</v-chip
+          > -->
+          <v-chip 
+            v-if="this.competition.groupParticipation"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-human-queue</v-icon
+            >Group</v-chip
+          >
+          <v-chip 
+            v-if="!this.competition.groupParticipation"
+            class="mr-2" 
+            color="primary" 
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-human</v-icon
+            >Individual</v-chip
+          >
+          <v-chip 
+            class="mr-2" 
+            :color="deadlinePassed(this.competition.deadline, this.competition.timeZone)"
+            small 
+            outlined
+            >
+            <v-icon small left>mdi-clipboard-account</v-icon
+            >{{ shortISODate(this.competition.deadline) }}</v-chip
+          >
         </div></v-card-subtitle
       >
+      <!-- end of chips -->
       <v-card-text
         ><div class="clamp-text">{{ competition.description }}</div>
       </v-card-text>

@@ -79,6 +79,35 @@ export const listReminders = /* GraphQL */ `
     }
   }
 `;
+export const getPhoto = /* GraphQL */ `
+  query GetPhoto($id: ID!) {
+    getPhoto(id: $id) {
+      id
+      title
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPhotos = /* GraphQL */ `
+  query ListPhotos(
+    $filter: ModelPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getGoal = /* GraphQL */ `
   query GetGoal($id: ID!) {
     getGoal(id: $id) {
@@ -475,85 +504,34 @@ export const listEvents = /* GraphQL */ `
     }
   }
 `;
-export const getCompetition = /* GraphQL */ `
-  query GetCompetition($id: ID!) {
-    getCompetition(id: $id) {
+export const getGroup = /* GraphQL */ `
+  query GetGroup($id: ID!) {
+    getGroup(id: $id) {
       id
-      hostName
-      hostEmail
-      title
-      description
-      rules
-      startDate
-      endDate
-      startTime
-      endTime
-      timeZone
-      competitors {
-        items {
-          id
-          competitionId
-          userId
-          firstName
-          lastName
-          score
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      submissions {
-        items {
-          id
-          competitionId
-          competitorId
-          userId
-          s3Key
-          description
-          submittedBy
-          createdAt
-          isApproved
-          type
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      image
+      competitionId
+      groupName
+      score
       createdAt
       updatedAt
+      owner
     }
   }
 `;
-export const listCompetitions = /* GraphQL */ `
-  query ListCompetitions(
-    $filter: ModelCompetitionFilterInput
+export const listGroups = /* GraphQL */ `
+  query ListGroups(
+    $filter: ModelGroupFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listCompetitions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        hostName
-        hostEmail
-        title
-        description
-        rules
-        startDate
-        endDate
-        startTime
-        endTime
-        timeZone
-        competitors {
-          nextToken
-        }
-        submissions {
-          nextToken
-        }
-        image
+        competitionId
+        groupName
+        score
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -567,6 +545,9 @@ export const getCompetitor = /* GraphQL */ `
       userId
       firstName
       lastName
+      groupParticipation
+      groupName
+      groupId
       score
       createdAt
       updatedAt
@@ -587,6 +568,9 @@ export const listCompetitors = /* GraphQL */ `
         userId
         firstName
         lastName
+        groupParticipation
+        groupName
+        groupId
         score
         createdAt
         updatedAt
@@ -607,8 +591,13 @@ export const getCompetitionSubmission = /* GraphQL */ `
       description
       submittedBy
       createdAt
+      likes
       isApproved
       type
+      url
+      manualScoring
+      scoringVal
+      mAmount
       updatedAt
       owner
     }
@@ -634,8 +623,46 @@ export const listCompetitionSubmissions = /* GraphQL */ `
         description
         submittedBy
         createdAt
+        likes
         isApproved
         type
+        url
+        manualScoring
+        scoringVal
+        mAmount
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getLikeButton = /* GraphQL */ `
+  query GetLikeButton($id: ID!) {
+    getLikeButton(id: $id) {
+      id
+      subId
+      liked
+      icon
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listLikeButtons = /* GraphQL */ `
+  query ListLikeButtons(
+    $filter: ModelLikeButtonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLikeButtons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        subId
+        liked
+        icon
+        createdAt
         updatedAt
         owner
       }
@@ -811,6 +838,129 @@ export const videosByCategory = /* GraphQL */ `
         resourceId
         level
         category
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCompetition = /* GraphQL */ `
+  query GetCompetition($id: ID!) {
+    getCompetition(id: $id) {
+      id
+      hostName
+      hostEmail
+      title
+      campaignType
+      isPrivate
+      groupParticipation
+      manualScoring
+      unit
+      scoringVal
+      category
+      description
+      rules
+      startDate
+      endDate
+      startTime
+      endTime
+      timeZone
+      deadline
+      groups {
+        items {
+          id
+          competitionId
+          groupName
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      competitors {
+        items {
+          id
+          competitionId
+          userId
+          firstName
+          lastName
+          groupParticipation
+          groupName
+          groupId
+          score
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      submissions {
+        items {
+          id
+          competitionId
+          competitorId
+          userId
+          s3Key
+          description
+          submittedBy
+          createdAt
+          likes
+          isApproved
+          type
+          url
+          manualScoring
+          scoringVal
+          mAmount
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCompetitions = /* GraphQL */ `
+  query ListCompetitions(
+    $filter: ModelCompetitionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompetitions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        hostName
+        hostEmail
+        title
+        campaignType
+        isPrivate
+        groupParticipation
+        manualScoring
+        unit
+        scoringVal
+        category
+        description
+        rules
+        startDate
+        endDate
+        startTime
+        endTime
+        timeZone
+        deadline
+        groups {
+          nextToken
+        }
+        competitors {
+          nextToken
+        }
+        submissions {
+          nextToken
+        }
+        image
         createdAt
         updatedAt
       }
