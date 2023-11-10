@@ -11,7 +11,7 @@
     "@aws-amplify/ui-components": "^1.9.6",
     "@aws-amplify/ui-vue": "^2.2.2",
     "aws-amplify": "^4.3.15",
-    "axios": "^0.24.0",
+    "axios": "^1.6.0",
     "core-js": "^3.6.5",
     "date-fns": "^2.28.0",
     "register-service-worker": "^1.7.1",
